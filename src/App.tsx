@@ -1,12 +1,17 @@
-import { Button } from "./components/ui/button"
-
+import { Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/auth/login";
+import DasboardPage from "./pages/dasboard";
+import PegawaiPage from "./pages/pegawai";
 
 function App() {
 
   return (
     <>
-      <h1 className="text-red-500 text-4xl font-bold">SIAKAD UIKA</h1>
-      <Button>Test</Button>
+      <Routes>
+        <Route path="/gate/login" Component={LoginPage} />
+        <Route path="/gate/dasboard" Component={DasboardPage} />
+        <Route path="/gate/pegawai" Component={PegawaiPage} />
+      </Routes> 
     </>
   )
 }

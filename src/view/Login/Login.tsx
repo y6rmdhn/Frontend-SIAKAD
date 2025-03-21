@@ -1,9 +1,8 @@
-import React from 'react'
 
 const Login = () => {
   return (
     <div>
-      <h1>login</h1>
+      <h1>Tulis code kalian di sini (untuk halaman login)</h1>
     </div>
   )
 }
