@@ -1,0 +1,134 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { FaSave } from "react-icons/fa";
+import { FiSearch } from "react-icons/fi";
+import { IoIosArrowBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import dataConstant from "../../../../constant/dataShiftKerja/index";
+
+const FormFieldGenerator = ({ form, fields }) => {
+  return fields.map(({ label, name, placeholder, select, type, required }) => (
+    <FormField
+      key={name}
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="flex">
+          <FormLabel className="w-full text-[#3F6FA9]">
+            {label} {required && <span className="text-[#FF0000]">*</span>}
+          </FormLabel>
+          <FormControl>
+            {select ? (
+              <Select {...field}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={placeholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Semua</SelectLabel>
+                    <SelectItem value="apple">Apple</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="blueberry">Blueberry</SelectItem>
+                    <SelectItem value="grapes">Grapes</SelectItem>
+                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            ) : type === "file" ? (
+              <Input
+                type="file"
+                onChange={(e) => form.setValue(name, e.target.files[0])}
+              />
+            ) : (
+              <Input
+                {...field}
+                type={type || "text"}
+                placeholder={placeholder}
+              />
+            )}
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  ));
+};
+
+const DataShiftKerja = () => {
+  const form = useForm();
+  const navigate = useNavigate();
+
+  return (
+    <div className="mt-10 mb-20">
+      <h1 className="text-2xl font-semibold">
+        Shift Kerja{" "}
+        <span className="text-muted-foreground font-normal text-[16px]">
+          Daftar Shift Kerja
+        </span>
+      </h1>
+      <Form {...form}>
+        <form>
+          <Card className="mt-5  border-t-yellow-uika border-t-3">
+            <CardHeader>
+              <div className="flex justify-between">
+                <div className="relative">
+                  <Input className="w-2xs pr-8" placeholder="Search" />
+                  <FiSearch className="absolute -translate-y-1/2 top-1/2 right-2" />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => navigate("/gate/pegawai")}
+                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
+                  >
+                    <IoIosArrowBack />
+                    Kembali ke Daftar
+                  </Button>
+
+                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer">
+                    <FaSave />
+                    Simpan
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="mt-10 grid-rows-4 grid-flow-col grid gap-5">
+              <FormFieldGenerator
+                form={form}
+                fields={dataConstant.formFieldsDataShiftKerja}
+              />
+            </CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+export default DataShiftKerja;

@@ -59,6 +59,12 @@
   --chart-5: hsl(340 75% 55%);
 }
 
+@theme {
+  --color-green-uika: #106D63;
+  --color-green-light-uika: #3ABC68;
+  --color-yellow-uika: #FDA31A;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
