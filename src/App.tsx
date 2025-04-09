@@ -9,6 +9,7 @@ import ShiftKerjaPage from "./pages/operasional/kehadiran/shiftKerja";
 import DataShiftKerjaPage from "./pages/operasional/kehadiran/dataShiftKerja";
 import DaftarMonitoringKehadiranPage from "./pages/operasional/kehadiran/daftarMonitoringKehadiran";
 import RekapKehadiranPage from "./pages/operasional/kehadiran/rekapKehadiran";
+import InputKehadiranPage from "./pages/operasional/kehadiran/InputKehadiran";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
             Component={DaftarMonitoringKehadiranPage}
           />
           <Route path="rekap-kehadiran" Component={RekapKehadiranPage} />
-          <Route path="input-kehadiran" Component={RekapKehadiranPage} />
+          <Route path="input-kehadiran" Component={InputKehadiranPage} />
         </Route>
       </Routes>
     </>

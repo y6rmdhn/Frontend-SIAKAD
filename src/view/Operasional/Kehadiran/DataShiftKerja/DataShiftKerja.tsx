@@ -123,7 +123,14 @@ const DataShiftKerja = () => {
                 fields={dataConstant.formFieldsDataShiftKerja}
               />
             </CardContent>
-            <CardFooter></CardFooter>
+            <CardFooter>
+              <div className="bg-[#F6E9E9] w-full p-4 border-l-4 border-l-[#E3CBCB]">
+                <h1>
+                  <span className="text-red-500">Keterangan :</span>Jika jam
+                  pada hari shift dikosongi maka dianggap sebagai hari libur
+                </h1>
+              </div>
+            </CardFooter>
           </Card>
         </form>
       </Form>
