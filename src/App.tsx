@@ -10,6 +10,10 @@ import DataShiftKerjaPage from "./pages/operasional/kehadiran/dataShiftKerja";
 import DaftarMonitoringKehadiranPage from "./pages/operasional/kehadiran/daftarMonitoringKehadiran";
 import RekapKehadiranPage from "./pages/operasional/kehadiran/rekapKehadiran";
 import InputKehadiranPage from "./pages/operasional/kehadiran/InputKehadiran";
+import MonitoringRekapKehadiranPage from "./pages/operasional/monitoringKegiatan";
+import MonitoringSisaCutiPage from "./pages/operasional/cuti/monitoringSisaCuti";
+import PermohonanIzinPage from "./pages/operasional/cuti/permohonanIzin";
+import PeriodeCutiPage from "./pages/operasional/cuti/periodeCuti";
 
 function App() {
   return (
@@ -34,6 +38,16 @@ function App() {
           />
           <Route path="rekap-kehadiran" Component={RekapKehadiranPage} />
           <Route path="input-kehadiran" Component={InputKehadiranPage} />
+          <Route
+            path="monitoring-kegiatan"
+            Component={MonitoringRekapKehadiranPage}
+          />
+          <Route
+            path="cuti/monitoring-sisa-cuti"
+            Component={MonitoringSisaCutiPage}
+          />
+          <Route path="cuti/permohonan-izin" Component={PermohonanIzinPage} />
+          <Route path="cuti/periode-cuti" Component={PeriodeCutiPage} />
         </Route>
       </Routes>
     </>

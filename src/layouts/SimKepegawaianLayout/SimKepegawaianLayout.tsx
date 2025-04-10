@@ -17,7 +17,7 @@ const SimKepegawaianLayout = (props: PropsType) => {
       <Header />
       <main className="px-20">
         <Navigation />
-        <div>{children}</div>
+        <section>{children}</section>
       </main>
     </>
   );
