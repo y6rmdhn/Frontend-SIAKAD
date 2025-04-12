@@ -1,0 +1,33 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import DetailPegawai from "@/view/admin/DetailPegawai";
+
+const DetailPegawaiPage = () => {
+  return (
+    <SimKepegawaianLayout>
+      <div>
+        <Breadcrumb className="mt-10 pl-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Data Pegawai</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <DetailPegawai />
+      </div>
+    </SimKepegawaianLayout>
+  );
+};
+
+export default DetailPegawaiPage;

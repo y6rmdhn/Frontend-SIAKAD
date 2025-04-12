@@ -45,24 +45,26 @@ const components: { title: string; href: string }[] = [
 const Navigation = () => {
   return (
     <div className="mt-6">
-      <NavigationMenu>
+      <NavigationMenu className="bg-[#D4D2D2] rounded-md">
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link to="/docs">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink className="bg-[#D4D2D2] font-semibold px-5">
                 Dasboard
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link to="/docs">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink className="bg-[#D4D2D2] font-semibold px-5">
                 Pegawai
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Operasional</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-[#D4D2D2]">
+              Operasional
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[300px] md:grid-cols-1 lg:w-[300px]">
                 {components.map((component) => (
@@ -76,7 +78,9 @@ const Navigation = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Validasi Data</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-[#D4D2D2]">
+              Validasi Data
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {components.map((component) => (
@@ -90,7 +94,9 @@ const Navigation = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Referensi</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-[#D4D2D2]">
+              Referensi
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {components.map((component) => (
@@ -104,7 +110,9 @@ const Navigation = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Laporan</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-[#D4D2D2]">
+              Laporan
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-3">

@@ -1,19 +1,22 @@
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/auth/login";
-import DasboardPage from "./pages/dasboard";
-import PegawaiPage from "./pages/pegawai";
-import DetailPegawaiPage from "./pages/detailPegawai";
-import HubunganKerjaPegawaiPage from "./pages/operasional/hubunganKerjaPegawai";
-import SettingKehadiranPage from "./pages/operasional/kehadiran/settingKehadiran";
-import ShiftKerjaPage from "./pages/operasional/kehadiran/shiftKerja";
-import DataShiftKerjaPage from "./pages/operasional/kehadiran/dataShiftKerja";
-import DaftarMonitoringKehadiranPage from "./pages/operasional/kehadiran/daftarMonitoringKehadiran";
-import RekapKehadiranPage from "./pages/operasional/kehadiran/rekapKehadiran";
-import InputKehadiranPage from "./pages/operasional/kehadiran/InputKehadiran";
-import MonitoringRekapKehadiranPage from "./pages/operasional/monitoringKegiatan";
-import MonitoringSisaCutiPage from "./pages/operasional/cuti/monitoringSisaCuti";
-import PermohonanIzinPage from "./pages/operasional/cuti/permohonanIzin";
-import PeriodeCutiPage from "./pages/operasional/cuti/periodeCuti";
+import DasboardPage from "./pages/admin/dasboard";
+import PegawaiPage from "./pages/admin/pegawai";
+import DetailPegawaiPage from "./pages/admin/detailPegawai";
+import HubunganKerjaPegawaiPage from "./pages/admin/operasional/hubunganKerjaPegawai";
+import SettingKehadiranPage from "./pages/admin/operasional/kehadiran/settingKehadiran";
+import ShiftKerjaPage from "./pages/admin/operasional/kehadiran/shiftKerja";
+import DataShiftKerjaPage from "./pages/admin/operasional/kehadiran/dataShiftKerja";
+import DaftarMonitoringKehadiranPage from "./pages/admin/operasional/kehadiran/daftarMonitoringKehadiran";
+import RekapKehadiranPage from "./pages/admin/operasional/kehadiran/rekapKehadiran";
+import InputKehadiranPage from "./pages/admin/operasional/kehadiran/InputKehadiran";
+import MonitoringRekapKehadiranPage from "./pages/admin/operasional/monitoringKegiatan";
+import MonitoringSisaCutiPage from "./pages/admin/operasional/cuti/monitoringSisaCuti";
+import PermohonanIzinPage from "./pages/admin/operasional/cuti/permohonanIzin";
+import PeriodeCutiPage from "./pages/admin/operasional/cuti/periodeCuti";
+import PermohonanCutiPage from "./pages/admin/operasional/cuti/permohonanCuti";
+import PelanggaranPage from "./pages/admin/operasional/kompensasi/pelanggaran";
+import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran";
 
 function App() {
   return (
@@ -46,8 +49,21 @@ function App() {
             path="cuti/monitoring-sisa-cuti"
             Component={MonitoringSisaCutiPage}
           />
-          <Route path="cuti/permohonan-izin" Component={PermohonanIzinPage} />
-          <Route path="cuti/periode-cuti" Component={PeriodeCutiPage} />
+
+          <Route path="cuti">
+            <Route
+              path="monitoring-sisa-cuti"
+              Component={MonitoringSisaCutiPage}
+            />
+            <Route path="permohonan-izin" Component={PermohonanIzinPage} />
+            <Route path="periode-cuti" Component={PeriodeCutiPage} />
+            <Route path="permohonan-cuti" Component={PermohonanCutiPage} />
+          </Route>
+          <Route path="kompensasi/pelanggaran" Component={PelanggaranPage} />
+          <Route
+            path="kompensasi/detail-riwayat-pelanggaran"
+            Component={DetailRiwayatPelanggaranPage}
+          />
         </Route>
       </Routes>
     </>
