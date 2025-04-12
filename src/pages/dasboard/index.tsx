@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Dasboard from "@/view/Dasboard";
+import DasboardUser from "@/view/Dasboard/DasboardUser";
 import React from "react";
 
 const DasboardPageUser = () => {
@@ -29,7 +29,7 @@ const DasboardPageUser = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Dasboard />
+      <DasboardUser />
     </SimKepegawaianLayout>
   );
 };
