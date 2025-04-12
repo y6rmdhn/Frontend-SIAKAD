@@ -17,53 +17,61 @@ import PeriodeCutiPage from "./pages/admin/operasional/cuti/periodeCuti";
 import PermohonanCutiPage from "./pages/admin/operasional/cuti/permohonanCuti";
 import PelanggaranPage from "./pages/admin/operasional/kompensasi/pelanggaran";
 import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran";
+import DasboardPageUser from "./pages/dasboard";
+import KehadiranPage from "./pages/kehadiran";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/gate/login" Component={LoginPage} />
-        <Route path="/gate/dasboard" Component={DasboardPage} />
-        <Route path="/gate/pegawai" Component={PegawaiPage} />
-        <Route path="/gate/pegawai/:pegawaiID" Component={DetailPegawaiPage} />
+        <Route path="/login" Component={LoginPage} />
+        {/* for user path */}
+        <Route path="/dasboard" Component={DasboardPageUser} />
+        <Route path="/kehadiran" Component={KehadiranPage} />
 
-        <Route path="/gate/operasional">
-          <Route
-            path="hubungan-kerja-pegawai"
-            Component={HubunganKerjaPegawaiPage}
-          />
-          <Route path="setting-kehadiran" Component={SettingKehadiranPage} />
-          <Route path="shift-kerja" Component={ShiftKerjaPage} />
-          <Route path="data-shift-kerja" Component={DataShiftKerjaPage} />
-          <Route
-            path="daftar-monitoring-kehadiran"
-            Component={DaftarMonitoringKehadiranPage}
-          />
-          <Route path="rekap-kehadiran" Component={RekapKehadiranPage} />
-          <Route path="input-kehadiran" Component={InputKehadiranPage} />
-          <Route
-            path="monitoring-kegiatan"
-            Component={MonitoringRekapKehadiranPage}
-          />
-          <Route
-            path="cuti/monitoring-sisa-cuti"
-            Component={MonitoringSisaCutiPage}
-          />
+        {/* for admin path */}
+        <Route path="/admin">
+          <Route path="dasboard" Component={DasboardPage} />
+          <Route path="pegawai" Component={PegawaiPage} />
+          <Route path="pegawai/:pegawaiID" Component={DetailPegawaiPage} />
 
-          <Route path="cuti">
+          <Route path="operasional">
             <Route
-              path="monitoring-sisa-cuti"
-              Component={MonitoringSisaCutiPage}
+              path="hubungan-kerja-pegawai"
+              Component={HubunganKerjaPegawaiPage}
             />
-            <Route path="permohonan-izin" Component={PermohonanIzinPage} />
-            <Route path="periode-cuti" Component={PeriodeCutiPage} />
-            <Route path="permohonan-cuti" Component={PermohonanCutiPage} />
+            <Route path="setting-kehadiran" Component={SettingKehadiranPage} />
+            <Route path="shift-kerja" Component={ShiftKerjaPage} />
+            <Route path="data-shift-kerja" Component={DataShiftKerjaPage} />
+            <Route
+              path="daftar-monitoring-kehadiran"
+              Component={DaftarMonitoringKehadiranPage}
+            />
+            <Route path="rekap-kehadiran" Component={RekapKehadiranPage} />
+            <Route path="input-kehadiran" Component={InputKehadiranPage} />
+            <Route
+              path="monitoring-kegiatan"
+              Component={MonitoringRekapKehadiranPage}
+            />
+
+            <Route path="cuti">
+              <Route
+                path="monitoring-sisa-cuti"
+                Component={MonitoringSisaCutiPage}
+              />
+              <Route path="permohonan-izin" Component={PermohonanIzinPage} />
+              <Route path="periode-cuti" Component={PeriodeCutiPage} />
+              <Route path="permohonan-cuti" Component={PermohonanCutiPage} />
+            </Route>
+
+            <Route path="kompensasi">
+              <Route path="pelanggaran" Component={PelanggaranPage} />
+              <Route
+                path="detail-riwayat-pelanggaran"
+                Component={DetailRiwayatPelanggaranPage}
+              />
+            </Route>
           </Route>
-          <Route path="kompensasi/pelanggaran" Component={PelanggaranPage} />
-          <Route
-            path="kompensasi/detail-riwayat-pelanggaran"
-            Component={DetailRiwayatPelanggaranPage}
-          />
         </Route>
       </Routes>
     </>

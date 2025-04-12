@@ -7,9 +7,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import DetailPegawai from "@/view/admin/DetailPegawai";
+import Dasboard from "@/view/Dasboard";
+import React from "react";
 
-const DetailPegawaiPage = () => {
+const DasboardPageUser = () => {
   return (
     <SimKepegawaianLayout>
       <Breadcrumb className="mt-10 pl-4">
@@ -19,14 +20,18 @@ const DetailPegawaiPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Data Pegawai</BreadcrumbPage>
+            <BreadcrumbLink href="/gate/pegawai">Kehadiran</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Kegiatan Harian</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <DetailPegawai />
+      <Dasboard />
     </SimKepegawaianLayout>
   );
 };
 
-export default DetailPegawaiPage;
+export default DasboardPageUser;
