@@ -19,11 +19,13 @@ import PelanggaranPage from "./pages/admin/operasional/kompensasi/pelanggaran";
 import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran";
 import DasboardPageUser from "./pages/dasboard";
 import KehadiranPage from "./pages/kehadiran";
+import ModulePage from "./pages/module";
 
 function App() {
   return (
     <>
       <Routes>
+        <Route path="/" Component={ModulePage} />
         <Route path="/login" Component={LoginPage} />
         {/* for user path */}
         <Route path="/dasboard" Component={DasboardPageUser} />

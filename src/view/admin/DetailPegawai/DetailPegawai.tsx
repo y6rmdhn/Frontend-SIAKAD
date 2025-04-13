@@ -11,79 +11,15 @@ import { Input } from "@/components/ui/input";
 import { FiSearch } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { HiMiniXMark } from "react-icons/hi2";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import formFieldsCustom from "../../../constant/InputPegawai/index";
-
-const FormFieldGenerator = ({ form, fields }) => {
-  return fields.map(({ label, name, placeholder, select, type, required }) => (
-    <FormField
-      key={name}
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="flex">
-          <FormLabel className="w-full text-[#3F6FA9]">
-            {label} {required && <span className="text-[#FF0000]">*</span>}
-          </FormLabel>
-          <FormControl>
-            {select ? (
-              <Select {...field}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={placeholder} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Semua</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            ) : type === "file" ? (
-              <Input
-                type="file"
-                onChange={(e) => form.setValue(name, e.target.files[0])}
-              />
-            ) : (
-              <Input
-                {...field}
-                type={type || "text"}
-                placeholder={placeholder}
-              />
-            )}
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ));
-};
+import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
 
 const DetailPegawai = () => {
   const navigate = useNavigate();
@@ -117,58 +53,77 @@ const DetailPegawai = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="mt-10 grid-cols-2 grid gap-5">
-              <FormFieldGenerator
+            <CardContent className="mt-10 grid grid-rows-5 grid-flow-col gap-5">
+              <FormFieldInput
                 form={form}
-                fields={formFieldsCustom.formFieldsBiodata}
+                label="NIP"
+                name="nip"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
               />
-
-              <FormField
-                control={form.control}
-                name="Nip"
-                render={({ ...field }) => (
-                  <FormItem className="flex">
-                    <FormLabel className="w-full text-[#3F6FA9]">
-                      Jenis Kelamin
-                      <span className="text-[#FF0000]">*</span>
-                    </FormLabel>
-
-                    <FormControl>
-                      <div className="flex gap-5 w-full">
-                        <div className="flex items-center gap-3">
-                          <Checkbox
-                            className="data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer"
-                            id="statusNikah"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                          <Label>Laki-Laki</Label>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <Checkbox
-                            className="data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer"
-                            id="statusNikah"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                          <Label>Perempuan</Label>
-                        </div>
-                      </div>
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <FormFieldInput
+                form={form}
+                label="Nama Lengkap"
+                name="nama_lengkap"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
               />
-
-              <div className="w-full flex">
-                <Label className="text-[#3F6FA9]">
-                  Terhubung dengan Sister
-                </Label>
-
-                <HiMiniXMark className="w-5 h-5 ml-28 text-[#FF0000]" />
-              </div>
+              <FormFieldInput
+                form={form}
+                label="Gelar Depan"
+                name="gelar_depan"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+              />
+              <FormFieldInput
+                form={form}
+                label="Gelar_Belakang"
+                name="gelar_belakang"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+              />
+              <FormFieldInput
+                form={form}
+                label="Jenis Kelamin"
+                name="jelas_kelamin"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+              />
+              <FormFieldInput
+                form={form}
+                label="Agama"
+                name="agama"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
+              />
+              <FormFieldInput
+                form={form}
+                label="Tempat Lahir"
+                name="tempat_lahir"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+              />
+              <FormFieldInput
+                form={form}
+                label="Tgl Lahir"
+                name="tgl_lahir"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
+              />
+              <FormFieldInput
+                form={form}
+                label="Status Nikah"
+                name="status_nikah"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+              />
+              <FormFieldInput
+                form={form}
+                label="Terhubung dengan Sister"
+                name="terhubung_dengan_sister"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+              />
             </CardContent>
             <CardFooter>
               <Tabs defaultValue="kepegawaian" className="w-full mt-14">
@@ -192,59 +147,478 @@ const DetailPegawai = () => {
                     Lain-Lain
                   </TabsTrigger>
                 </TabsList>
-
                 <TabsContent
                   value="kepegawaian"
                   className="grid grid-rows-5 grid-flow-col gap-5 mt-10"
                 >
-                  <FormFieldGenerator
+                  <FormFieldSelect
                     form={form}
-                    fields={formFieldsCustom.formFieldsKepegawaian}
+                    label="Unit Kerja"
+                    name="unit_kerja"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="Universitas Ibn Khaldun"
+                    required={true}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Status Aktif"
+                    name="status_aktif"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Status Aktif--"
+                    required={true}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Hubungan Kerja"
+                    name="hubungan_kerja"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Hubungan Kerja--"
+                    required={true}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Email Perguruan Tinggi"
+                    name="email_pergguruan_tinggi"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No Akun finger"
+                    name="no_akun_finger"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Unit Kerja"
+                    name="unit_kerja"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Jabatan Akademik--"
+                    required={true}
                   />
                 </TabsContent>
                 <TabsContent
                   value="domisili"
                   className="grid grid-rows-6 grid-flow-col gap-5 mt-10"
                 >
-                  <FormFieldGenerator
+                  <FormFieldInput
                     form={form}
-                    fields={formFieldsCustom.formFieldsAlamat}
+                    label="File Sertifikasi Dosen"
+                    name="file_sertifikasi_dosen"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Provinsi"
+                    name="pilih_provinsi"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Provinsi--"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Kota"
+                    name="kota"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Kota--"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Kecamatan"
+                    name="kecamatan"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Kecamatan--"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Alamat / Jalan"
+                    name="alamat"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Kode Pos"
+                    name="alamat"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Jarak Rumah (KM)"
+                    name="alamat"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    placeholder="Tuliskan Jarak dalam KM"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No.Telpon"
+                    name="no_telpon"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No.Telpon Kantor"
+                    name="no_telpon_kantor"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No.Telpon Utama"
+                    name="no_telpon_utama"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Kepemilikan No.Hp Utama"
+                    name="kecamatan"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Kepemilikan No Hp Utama--"
+                    required={false}
                   />
                 </TabsContent>
                 <TabsContent
                   value="kependudukan"
                   className="grid grid-rows-6 grid-flow-col gap-5 mt-10"
                 >
-                  <FormFieldGenerator
+                  <FormFieldInput
                     form={form}
-                    fields={formFieldsCustom.formFieldsKependudukan}
+                    label="Email Pribadi"
+                    name="email_pribadi"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No.KTP"
+                    name="no_ktp"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No.KK"
+                    name="no_k"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Warga Negara"
+                    name="warga_negara"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Negara--"
+                    required={true}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Provinsi"
+                    name="provinsi"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Provinsi--"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Kota"
+                    name="kota"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Kecamatan--"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Kecamatan"
+                    name="kecamatan"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Kecamatan--"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Alamat"
+                    name="alamat"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Alamat"
+                    name="alamat"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Kode Pos"
+                    name="kode_pos"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Kecamatan"
+                    name="kecamatan"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Kecamatan--"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="file KTP"
+                    name="file_ktp"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
                   />
                 </TabsContent>
                 <TabsContent
                   value="rekening-bank"
                   className="grid grid-rows-3 grid-flow-col gap-5 mt-10"
                 >
-                  <FormFieldGenerator
+                  <FormFieldInput
                     form={form}
-                    fields={formFieldsCustom.formFieldsRekeningBank}
+                    label="File KK"
+                    name="file_kk"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Nama BANK"
+                    name="nama_bank"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih BANK--"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No Rekening"
+                    name="no_rekening"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Atas Nama Rekening"
+                    name="nama_rekening"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Cabang BANK"
+                    name="cabang_bank"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
                   />
                 </TabsContent>
                 <TabsContent
                   value="dokumen"
                   className="grid grid-rows-5 grid-flow-col gap-5 mt-10"
                 >
-                  <FormFieldGenerator
+                  <FormFieldInput
                     form={form}
-                    fields={formFieldsCustom.formFieldsDokumen}
+                    label="File Rekening"
+                    name="file_rekening"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="KAPREG"
+                    name="kapreg"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="File KAPREG"
+                    name="file_kapreg"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="NPWP"
+                    name="npwp"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="File NPWP"
+                    name="file_npwp"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No BPJS"
+                    name="no_bpjs"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No BPJS Ketenagakerjaan"
+                    name="no_bpjs_ketenagaKerjaan"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="No BPJS Pensiun"
+                    name="no_bpjs_pensiun"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="File BPJS"
+                    name="file_bpjs"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="File BPJS Ketenagakerjaan"
+                    name="file_bpjs_ketenagakerjaan"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
                   />
                 </TabsContent>
                 <TabsContent
                   value="lain-lain"
                   className="grid grid-rows-3 grid-flow-col gap-5 mt-10"
                 >
-                  <FormFieldGenerator
+                  <FormFieldInput
                     form={form}
-                    fields={formFieldsCustom.formFieldsLainLain}
+                    label="File BPJS Pensiun"
+                    name="file_kk"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Golongan Darah"
+                    name="golongan_darah"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "User", value: "user" },
+                      { label: "Guest", value: "guest" },
+                    ]}
+                    placeholder="--Pilih Status Aktif--"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Tinggi Badan"
+                    name="tinggi_badan"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Berat Badan (kg)"
+                    name="file_kk"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="File Tanda Tangan"
+                    name="file_tanda_tangan"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    type="file"
                   />
                 </TabsContent>
               </Tabs>
