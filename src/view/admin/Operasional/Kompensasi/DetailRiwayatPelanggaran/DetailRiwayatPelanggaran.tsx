@@ -1,71 +1,19 @@
 import CustomCard from "@/components/commons/card";
+import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoSaveSharp } from "react-icons/io5";
 
-// const FormFieldGenerator = ({ form, fields }) => {
-//   return fields.map(({ label, name, placeholder, select, type, required }) => (
-//     <FormField
-//       key={name}
-//       control={form.control}
-//       name={name}
-//       render={({ field }) => (
-//         <FormItem className="flex">
-//           <FormLabel className="w-full text-[#3F6FA9]">
-//             {label} {required && <span className="text-[#FF0000]">*</span>}
-//           </FormLabel>
-//           <FormControl>
-//             {select ? (
-//               <Select {...field}>
-//                 <SelectTrigger className="w-full">
-//                   <SelectValue placeholder={placeholder} />
-//                 </SelectTrigger>
-//                 <SelectContent>
-//                   <SelectGroup>
-//                     <SelectLabel>Semua</SelectLabel>
-//                     <SelectItem value="apple">Apple</SelectItem>
-//                     <SelectItem value="banana">Banana</SelectItem>
-//                     <SelectItem value="blueberry">Blueberry</SelectItem>
-//                     <SelectItem value="grapes">Grapes</SelectItem>
-//                     <SelectItem value="pineapple">Pineapple</SelectItem>
-//                   </SelectGroup>
-//                 </SelectContent>
-//               </Select>
-//             ) : type === "file" ? (
-//               <Input
-//                 type="file"
-//                 onChange={(e) => form.setValue(name, e.target.files[0])}
-//               />
-//             ) : (
-//               <Input
-//                 {...field}
-//                 type={type || "text"}
-//                 placeholder={placeholder}
-//               />
-//             )}
-//           </FormControl>
-//           <FormMessage />
-//         </FormItem>
-//       )}
-//     />
-//   ));
-// };
-
 const DetailRiwayatPelanggaran = () => {
+  const form = useForm();
+
   return (
     <div className="mt-10 mb-20">
       <h1 className="text-2xl font-semibold">
@@ -75,36 +23,104 @@ const DetailRiwayatPelanggaran = () => {
         </span>
       </h1>
 
-      <CustomCard
-        actions={
-          <div className="flex justify-between mt-10">
-            <div className="flex gap-6">
-              <div className="relative">
-                <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                <Input placeholder="Search" className="w-96 pr-8" />
+      <Form {...form}>
+        <form>
+          <CustomCard
+            actions={
+              <div className="flex justify-between mt-10">
+                <div className="flex gap-6">
+                  <div className="relative">
+                    <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
+                    <Input placeholder="Search" className="w-96 pr-8" />
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+                    <IoIosArrowBack /> Kembali ke Daftar
+                  </Button>
+
+                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+                    <IoSaveSharp /> Simpan
+                  </Button>
+                </div>
               </div>
+            }
+          >
+            <div className="grid grid-rows-4 grid-flow-col gap-x-5 items-center">
+              <FormFieldInput
+                form={form}
+                label="Pegawai"
+                name="pegawai"
+                required={true}
+                labelStyle="text-[#3F6FA9]"
+                placeholder="Cari Pegawai"
+              />
+              <FormFieldInput
+                form={form}
+                label="Tgl Pelanggaran"
+                name="tgl_pelanggaran"
+                required={true}
+                labelStyle="text-[#3F6FA9]"
+                type="date"
+              />
+              <FormFieldSelect
+                form={form}
+                label="Jenis Pelanggaran"
+                name="jenis_pelanggaran"
+                labelStyle="text-[#3F6FA9]"
+                options={[
+                  {
+                    value: "1",
+                    label: "Pelanggaran Ringan",
+                  },
+                  {
+                    value: "2",
+                    label: "Pelanggaran Sedang",
+                  },
+                  {
+                    value: "3",
+                    label: "Pelanggaran Berat",
+                  },
+                ]}
+                required={true}
+                placeholder="Terlambat atau Alpa"
+              />
+              <FormFieldInput
+                form={form}
+                label="No.SK"
+                name="no_sk"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldInput
+                form={form}
+                label="Tgl.SK"
+                name="tgl_sk"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+                type="date"
+              />
+              <FormFieldInput
+                form={form}
+                label="Keterangan"
+                name="keterangan"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+                type="textarea"
+              />
+              <FormFieldInput
+                form={form}
+                label="File Keterangan"
+                name="file_keterangan"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+                type="file"
+              />
             </div>
-
-            <div className="flex gap-4">
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                <IoIosArrowBack /> Kembali ke Daftar
-              </Button>
-
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                <IoSaveSharp /> Simpan
-              </Button>
-            </div>
-          </div>
-        }
-      >
-        <div className="grid grid-rows-4 grid-flow-col gap-5">
-          <div className="">
-            <Label>
-              Pegawai<span className="">*</span>
-            </Label>
-          </div>
-        </div>
-      </CustomCard>
+          </CustomCard>
+        </form>
+      </Form>
     </div>
   );
 };

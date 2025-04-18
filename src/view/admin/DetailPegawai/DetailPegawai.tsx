@@ -39,7 +39,7 @@ const DetailPegawai = () => {
                 </div>
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => navigate("/gate/pegawai")}
+                    onClick={() => navigate("/admin/pegawai")}
                     className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
                   >
                     <IoIosArrowBack />

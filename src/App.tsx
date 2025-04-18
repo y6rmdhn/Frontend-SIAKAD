@@ -20,6 +20,21 @@ import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/d
 import DasboardPageUser from "./pages/dasboard";
 import KehadiranPage from "./pages/kehadiran";
 import ModulePage from "./pages/module";
+import RiwayatPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan";
+import DetailPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan";
+import DokumenInternalPage from "./pages/admin/operasional/kompensasi/dokumenInternal";
+import DetailDokumenInternalPage from "./pages/admin/operasional/kompensasi/detailDokumenInternal";
+import SettingValidasiPage from "./pages/admin/validasiData/settingValidasi";
+import KeluargaPage from "./pages/admin/validasiData/keluarga";
+import MonitoringPage from "./pages/admin/validasiData/monitoring";
+import HomebasePage from "./pages/admin/validasiData/kepegawaian/homebase";
+import HubunganKerjaKepegawaianPage from "./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian";
+import JabatanAkademikPage from "./pages/admin/validasiData/kepegawaian/jabatanAkademik";
+import JabatanFungionalPage from "./pages/admin/validasiData/kepegawaian/jabatanFungsional";
+import JabatanStrukturalPage from "./pages/admin/validasiData/kepegawaian/jabatanStruktural";
+import PangkatPage from "./pages/admin/validasiData/kepegawaian/pangkat";
+import SertifikasiPage from "./pages/admin/validasiData/kompetensi/sertifikasi";
+import TesPage from "./pages/admin/validasiData/kompetensi/tes";
 
 function App() {
   return (
@@ -72,6 +87,45 @@ function App() {
                 path="detail-riwayat-pelanggaran"
                 Component={DetailRiwayatPelanggaranPage}
               />
+              <Route path="penghargaan" Component={RiwayatPenghargaanPage} />
+              <Route
+                path="detail-penghargaan"
+                Component={DetailPenghargaanPage}
+              />
+              <Route path="dokumen-internal" Component={DokumenInternalPage} />
+              <Route
+                path="detail-dokumen-internal"
+                Component={DetailDokumenInternalPage}
+              />
+            </Route>
+          </Route>
+
+          <Route path="validasi-data">
+            <Route path="setting-validasi" Component={SettingValidasiPage} />
+            <Route path="keluarga" Component={KeluargaPage} />
+            <Route path="monitoring" Component={MonitoringPage} />
+
+            <Route path="kepegawaian">
+              <Route path="homebase" Component={HomebasePage} />
+              <Route
+                path="hubungan-kerja"
+                Component={HubunganKerjaKepegawaianPage}
+              />
+              <Route path="jabatan-akademik" Component={JabatanAkademikPage} />
+              <Route
+                path="jabatan-fungsional"
+                Component={JabatanFungionalPage}
+              />
+              <Route
+                path="jabatan-struktural"
+                Component={JabatanStrukturalPage}
+              />
+              <Route path="pangkat" Component={PangkatPage} />
+            </Route>
+
+            <Route path="kompetensi">
+              <Route path="sertifikasi" Component={SertifikasiPage} />
+              <Route path="tes" Component={TesPage} />
             </Route>
           </Route>
         </Route>

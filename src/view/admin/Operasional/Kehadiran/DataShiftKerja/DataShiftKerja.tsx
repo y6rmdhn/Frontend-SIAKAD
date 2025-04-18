@@ -31,6 +31,8 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import dataConstant from "../../../../../constant/dataShiftKerja/index";
+import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
 
 const FormFieldGenerator = ({ form, fields }) => {
   return fields.map(({ label, name, placeholder, select, type, required }) => (
@@ -103,7 +105,7 @@ const DataShiftKerja = () => {
                 </div>
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => navigate("/gate/pegawai")}
+                    onClick={() => navigate("/admin/pegawai")}
                     className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
                   >
                     <IoIosArrowBack />
@@ -118,9 +120,104 @@ const DataShiftKerja = () => {
               </div>
             </CardHeader>
             <CardContent className="mt-10 grid-rows-4 grid-flow-col grid gap-5">
-              <FormFieldGenerator
+              <FormFieldInput
                 form={form}
-                fields={dataConstant.formFieldsDataShiftKerja}
+                label="Nama Shift"
+                name="nama_shift"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+              />
+
+              <FormFieldSelect
+                form={form}
+                label="Senin"
+                name="senin"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Senin--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
+              <FormFieldSelect
+                form={form}
+                label="Selasa"
+                name="selasa"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Selasa--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
+              <FormFieldSelect
+                form={form}
+                label="Rabu"
+                name="rabu"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Rabu--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
+              <FormFieldSelect
+                form={form}
+                label="Kamis"
+                name="kamis"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Kamis--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
+              <FormFieldSelect
+                form={form}
+                label="Jumat"
+                name="jumat"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Jumat--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
+              <FormFieldSelect
+                form={form}
+                label="Sabtu"
+                name="sabtu"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Sabtu--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
+              <FormFieldSelect
+                form={form}
+                label="Minggu"
+                name="minggu"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                placeholder="--Pilih Minggu--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
               />
             </CardContent>
             <CardFooter>
