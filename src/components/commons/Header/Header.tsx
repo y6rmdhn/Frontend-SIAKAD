@@ -5,7 +5,7 @@ import { FaBell } from "react-icons/fa";
 
 const Header = () => {
   return (
-    <header className="h-20 grid grid-cols-[2fr_1fr] gap-4 justify-between items-center ">
+    <header className="h-20 font-roboto grid grid-cols-[2fr_1fr] gap-4 justify-between items-center ">
       <div className="bg-green-uika h-full flex pl-3 items-center rounded-tr-[40px]">
         <div className="flex gap-5">
           <img

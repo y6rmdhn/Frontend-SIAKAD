@@ -12,8 +12,8 @@ const Module = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-screen p-40 relative flex justify-center items-center ">
-      <div className="w-full bg-white/40 rounded-lg">
+    <div className="w-full font-roboto h-screen relative flex justify-center items-center ">
+      <div className="w-[1000px] max-w-[1000px] min-w-[1000px] bg-white/40 rounded-lg">
         <div className="bg-white m-5 rounded-lg overflow-hidden">
           <div className="relative">
             <div className="h-36 flex overflow-hidden">
@@ -45,12 +45,14 @@ const Module = () => {
             </div>
 
             <div className="absolute top-0 w-full h-full px-10 flex justify-between items-center">
-              <div className="flex gap-6 items-center">
-                <img
-                  src="/images/logo/uika-logo.jpg"
-                  alt="logo-uika"
-                  className="w-20 rounded-xl"
-                />
+              <div className="flex gap-4 items-center">
+                <div className="bg-white p-2 rounded-3xl overflow-hidden">
+                  <img
+                    src="/images/logo/uika-logo.jpg"
+                    alt="logo-uika"
+                    className="w-16"
+                  />
+                </div>
                 <div className="flex flex-col text-white">
                   <p>Sistem Informasi Akademik</p>
                   <h1 className="font-bold">UNIVERSITAS IBN KHALDUN</h1>
@@ -68,12 +70,12 @@ const Module = () => {
             </div>
           </div>
 
-          <div className="bg-[#F4F3F3] h-96">
+          <div className="bg-[#F4F3F3] h-[410px]">
             <div className="grid grid-cols-[60%_40%] h-full">
               <div className="w-full h-full pt-5">
-                <h1 className="font-semibold text-lg pl-4">Daftar Modul</h1>
+                <h1 className="font-semibold text-lg pl-8">Daftar Modul</h1>
 
-                <div className="gap-5 mt-3 grid grid-cols-[150px_150px_150px] grid-flow-row px-4">
+                <div className="gap-5 mt-3 grid grid-cols-[150px_150px_150px] grid-flow-row px-8">
                   <div
                     onMouseEnter={() => setHovered("adminEnterMouse")}
                     onMouseLeave={() => setHovered("adminLeaveMouse")}
@@ -81,26 +83,28 @@ const Module = () => {
                       setRole("admin");
                       setSelected("admin");
                     }}
-                    className={`bg-white hover:bg-[#DDE4EA] flex items-center justify-center rounded-lg cursor-pointer shadow-sm ${
-                      selected === "admin" ? "!bg-[#DDE4EA]" : ""
+                    className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${
+                      selected === "admin" ? "!bg-[#cfd6db]" : ""
                     }`}
                   >
                     <div
-                      className={`grid grid-rows-2 justify-items-center items-center ${
+                      className={`bg-white/50 w-full h-full rounded-xl ${
                         hovered === "adminEnterMouse"
-                          ? "scale-105 transition-transform duration-300"
-                          : " scale-100 transition-transform duration-300"
+                          ? "scale-110 transition-transform duration-500"
+                          : "scale-100 transition-transform duration-300"
                       }`}
                     >
-                      <img
-                        src="/images/logo/image 10 (1).png"
-                        alt="background-header"
-                        className="w-14 self-center"
-                      />
+                      <div className="grid grid-rows-2 justify-items-center p-5  h-full">
+                        <img
+                          src="/images/logo/image 10 (1).png"
+                          alt="background-header"
+                          className="w-10 self-center"
+                        />
 
-                      <h1 className="flex flex-col text-muted-foreground font-medium items-center mt-3">
-                        Administrasi <span>Aplikasi</span>
-                      </h1>
+                        <h1 className="flex flex-col text-[#585858] font-medium items-center text-wrap text-sm text-center">
+                          Administrasi Aplikasi
+                        </h1>
+                      </div>
                     </div>
                   </div>
 
@@ -111,32 +115,36 @@ const Module = () => {
                       setRole("kepegawaian");
                       setSelected("kepegawaian");
                     }}
-                    className={`bg-white hover:bg-[#DDE4EA] py-5 px-7 rounded-lg cursor-pointer shadow-sm ${
-                      selected === "kepegawaian" ? "!bg-[#DDE4EA]" : ""
+                    className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${
+                      selected === "kepegawaian"
+                        ? "!bg-[#cfd6db] transition-transform"
+                        : ""
                     }`}
                   >
                     <div
-                      className={`grid grid-rows-2 justify-items-center ${
+                      className={`bg-white/50 w-full h-full rounded-xl ${
                         hovered === "kepegawaianEnterMouse"
-                          ? "scale-105 transition-transform duration-300"
-                          : " scale-100 transition-transform duration-300"
+                          ? "scale-110 transition-transform duration-500"
+                          : "scale-100 transition-transform duration-300"
                       }`}
                     >
-                      <img
-                        src="/images/logo/image 11.png"
-                        alt="background-header"
-                        className="w-14"
-                      />
+                      <div className="grid grid-rows-2 justify-items-center p-5 h-full">
+                        <img
+                          src="/images/logo/image 11.png"
+                          alt="background-header"
+                          className="w-10 self-center"
+                        />
 
-                      <h1 className="flex flex-col text-muted-foreground font-medium items-center mt-3">
-                        SIM <span>Kepegawaian</span>
-                      </h1>
+                        <h1 className="flex flex-col text-[#585858] font-medium items-center text-wrap text-sm text-center">
+                          SIM Kepegawaian
+                        </h1>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full h-full pt-5 px-4 bg-[#EEEEEE]">
+              <div className="w-full h-full pt-5 px-8 bg-[#EEEEEE]">
                 {role && (
                   <div>
                     <h1 className="font-semibold text-lg">Daftar Role</h1>

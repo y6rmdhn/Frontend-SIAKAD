@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/auth/login";
 import DasboardPage from "./pages/admin/dasboard";
 import PegawaiPage from "./pages/admin/pegawai";
-import DetailPegawaiPage from "./pages/admin/detailPegawai";
+import DataPegawaiPage from "./pages/admin/dataPegawai";
 import HubunganKerjaPegawaiPage from "./pages/admin/operasional/hubunganKerjaPegawai";
 import SettingKehadiranPage from "./pages/admin/operasional/kehadiran/settingKehadiran";
 import ShiftKerjaPage from "./pages/admin/operasional/kehadiran/shiftKerja";
@@ -18,7 +18,7 @@ import PermohonanCutiPage from "./pages/admin/operasional/cuti/permohonanCuti";
 import PelanggaranPage from "./pages/admin/operasional/kompensasi/pelanggaran";
 import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran";
 import DasboardPageUser from "./pages/dasboard";
-import KehadiranPage from "./pages/kehadiran";
+import RiwayatKehadiranPage from "./pages/riwayatKehadiran";
 import ModulePage from "./pages/module";
 import RiwayatPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan";
 import DetailPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan";
@@ -35,6 +35,37 @@ import JabatanStrukturalPage from "./pages/admin/validasiData/kepegawaian/jabata
 import PangkatPage from "./pages/admin/validasiData/kepegawaian/pangkat";
 import SertifikasiPage from "./pages/admin/validasiData/kompetensi/sertifikasi";
 import TesPage from "./pages/admin/validasiData/kompetensi/tes";
+import BahanAjarPage from "./pages/admin/validasiData/pelaksanaanPendidikan/bahanAjar";
+import DataseringPage from "./pages/admin/validasiData/pelaksanaanPendidikan/datasering";
+import OrasiIlmiahPage from "./pages/admin/validasiData/pelaksanaanPendidikan/orasiIlmiah";
+import TugasTambahanPage from "./pages/admin/validasiData/pelaksanaanPendidikan/tugasTambahan";
+import PatenPage from "./pages/admin/validasiData/pelaksanaanPenelitian/paten";
+import PenelitianPage from "./pages/admin/validasiData/pelaksanaanPenelitian/penelitian";
+import PublikasiPage from "./pages/admin/validasiData/pelaksanaanPenelitian/publikasi";
+import JabatanStrukturalKepegawaianPage from "./pages/admin/validasiData/pelaksanaanPengabdian/jabatanStruktural";
+import PembicaraPage from "./pages/admin/validasiData/pelaksanaanPengabdian/pembicara";
+import PengabdianPage from "./pages/admin/validasiData/pelaksanaanPengabdian/pengabdian";
+import KemampuanBahasaPage from "./pages/admin/validasiData/pengembangan/kemampuanBahasa";
+import OrganisasiPage from "./pages/admin/validasiData/pengembangan/organisasi";
+import OrganisasiPenunjangPage from "./pages/admin/validasiData/penunjang/organisasi";
+import PenghargaanPenunjangPage from "./pages/admin/validasiData/penunjang/penghargaan";
+import PenunjangLainPage from "./pages/admin/validasiData/penunjang/penunjangLain";
+import KegiatanHarianPage from "./pages/kegiatanHarian";
+import JenisLuaranPage from "./pages/admin/referensi/aktifitas/jenisLuaran";
+import JenisPelanggaranReferensiPage from "./pages/admin/referensi/aktifitas/jenisPelanggaran";
+import JenisPengabdianReferensiPage from "./pages/admin/referensi/aktifitas/jenisPengabdian";
+import JenisPenghargaanReferensiPage from "./pages/admin/referensi/aktifitas/jenisPenghargaan";
+import JenisPublikasiReferensiPage from "./pages/admin/referensi/aktifitas/jenisPublikasi";
+import JenisSertifikasiReferensiPage from "./pages/admin/referensi/aktifitas/jenisSertifikasi";
+import JenisTesReferensiPage from "./pages/admin/referensi/aktifitas/jenisTes";
+import OutputPenelitianReferensiPage from "./pages/admin/referensi/aktifitas/outputPenelitian";
+import JamKerjaReferensiPage from "./pages/admin/referensi/kehadiran/jamKerja";
+import JenisCutiReferensiPage from "./pages/admin/referensi/kehadiran/jenisCuti";
+import JenisHariReferensiPage from "./pages/admin/referensi/kehadiran/jenisHari";
+import JenisIzinReferensiPage from "./pages/admin/referensi/kehadiran/jenisIzin";
+import JenisKehadiranReferensiPage from "./pages/admin/referensi/kehadiran/jenisKehadiran";
+import HariLiburReferensiPage from "./pages/admin/referensi/kehadiran/hariLibur";
+import BiodataPage from "./pages/admin/DetailPegawai/Biodata";
 
 function App() {
   return (
@@ -44,13 +75,18 @@ function App() {
         <Route path="/login" Component={LoginPage} />
         {/* for user path */}
         <Route path="/dasboard" Component={DasboardPageUser} />
-        <Route path="/kehadiran" Component={KehadiranPage} />
+        <Route path="/riwayat-kehadiran" Component={RiwayatKehadiranPage} />
+        <Route path="/kegiatan-harian" Component={KegiatanHarianPage} />
 
         {/* for admin path */}
         <Route path="/admin">
           <Route path="dasboard" Component={DasboardPage} />
           <Route path="pegawai" Component={PegawaiPage} />
-          <Route path="pegawai/:pegawaiID" Component={DetailPegawaiPage} />
+          <Route path="pegawai/data-pegawai" Component={DataPegawaiPage} />
+
+          <Route path="detail-pegawai">
+            <Route path=":id/biodata" Component={BiodataPage} />
+          </Route>
 
           <Route path="operasional">
             <Route
@@ -126,6 +162,82 @@ function App() {
             <Route path="kompetensi">
               <Route path="sertifikasi" Component={SertifikasiPage} />
               <Route path="tes" Component={TesPage} />
+            </Route>
+
+            <Route path="pelaksanaan-pendidikan">
+              <Route path="bahan-ajar" Component={BahanAjarPage} />
+              <Route path="datasering" Component={DataseringPage} />
+              <Route path="orasi-ilmiah" Component={OrasiIlmiahPage} />
+              <Route path="tugas-tambahan" Component={TugasTambahanPage} />
+            </Route>
+
+            <Route path="pelaksanaan-penelitian">
+              <Route path="paten" Component={PatenPage} />
+              <Route path="penelitian" Component={PenelitianPage} />
+              <Route path="publikasi" Component={PublikasiPage} />
+            </Route>
+
+            <Route path="pelaksanaan-pengabdian">
+              <Route
+                path="jabatan-struktural"
+                Component={JabatanStrukturalKepegawaianPage}
+              />
+              <Route path="pembicara" Component={PembicaraPage} />
+              <Route path="pengabdian" Component={PengabdianPage} />
+            </Route>
+
+            <Route path="pengembangan">
+              <Route path="kemampuan-bahasa" Component={KemampuanBahasaPage} />
+              <Route path="organisasi" Component={OrganisasiPage} />
+            </Route>
+
+            <Route path="penunjang">
+              <Route path="organisasi" Component={OrganisasiPenunjangPage} />
+              <Route path="penghargaan" Component={PenghargaanPenunjangPage} />
+              <Route path="penunjang-lain" Component={PenunjangLainPage} />
+            </Route>
+          </Route>
+
+          <Route path="referensi">
+            <Route path="aktifitas">
+              <Route path="jenis-luaran" Component={JenisLuaranPage} />
+              <Route
+                path="jenis-pelanggaran"
+                Component={JenisPelanggaranReferensiPage}
+              />
+              <Route
+                path="jenis-pengabdian"
+                Component={JenisPengabdianReferensiPage}
+              />
+              <Route
+                path="jenis-penghargaan"
+                Component={JenisPenghargaanReferensiPage}
+              />
+              <Route
+                path="jenis-publikasi"
+                Component={JenisPublikasiReferensiPage}
+              />
+              <Route
+                path="jenis-sertifikasi"
+                Component={JenisSertifikasiReferensiPage}
+              />
+              <Route path="jenis-tes" Component={JenisTesReferensiPage} />
+              <Route
+                path="output-penelitian"
+                Component={OutputPenelitianReferensiPage}
+              />
+            </Route>
+
+            <Route path="kehadiran">
+              <Route path="hari-libur" Component={HariLiburReferensiPage} />
+              <Route path="jam-kerja" Component={JamKerjaReferensiPage} />
+              <Route path="jenis-cuti" Component={JenisCutiReferensiPage} />
+              <Route path="jenis-hari" Component={JenisHariReferensiPage} />
+              <Route path="jenis-izin" Component={JenisIzinReferensiPage} />
+              <Route
+                path="jenis-kehadiran"
+                Component={JenisKehadiranReferensiPage}
+              />
             </Route>
           </Route>
         </Route>

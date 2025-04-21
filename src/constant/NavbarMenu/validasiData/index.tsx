@@ -62,10 +62,42 @@ const validasiData: {
   {
     title: "Pelaksanaan Pendidikan",
     href: "",
+    childrenItems: [
+      {
+        title: "Bahan Ajar",
+        href: "/admin/validasi-data/pelaksanaan-pendidikan/bahan-ajar",
+      },
+      {
+        title: "Datasering",
+        href: "/admin/validasi-data/pelaksanaan-pendidikan/datasering",
+      },
+      {
+        title: "Orasi Ilmiah",
+        href: "/admin/validasi-data/pelaksanaan-pendidikan/orasi-ilmiah",
+      },
+      {
+        title: "Tugas Tambahan",
+        href: "/admin/validasi-data/pelaksanaan-pendidikan/tugas-tambahan",
+      },
+    ],
   },
   {
     title: "Pelaksanaan Penelitian",
-    href: "/admin/operasional/kompensasi/dokumen-internal",
+    href: "",
+    childrenItems: [
+      {
+        title: "Peten",
+        href: "/admin/validasi-data/pelaksanaan-penelitian/paten",
+      },
+      {
+        title: "Penelitian",
+        href: "/admin/validasi-data/pelaksanaan-penelitian/penelitian",
+      },
+      {
+        title: "Publikasi",
+        href: "/admin/validasi-data/pelaksanaan-penelitian/publikasi",
+      },
+    ],
   },
   {
     title: "Kualifikasi",
@@ -73,15 +105,53 @@ const validasiData: {
   },
   {
     title: "Pelaksanaan Pengabdian",
-    href: "/admin/operasional/kompensasi/dokumen-internal",
+    href: "",
+    childrenItems: [
+      {
+        title: "Jabatan Struktural",
+        href: "/admin/validasi-data/pelaksanaan-pengabdian/jabatan-struktural",
+      },
+      {
+        title: "Pembicara",
+        href: "/admin/validasi-data/pelaksanaan-pengabdian/pembicara",
+      },
+      {
+        title: "Pengabdian",
+        href: "/admin/validasi-data/pelaksanaan-pengabdian/pengabdian",
+      },
+    ],
   },
   {
     title: "Penunjang",
-    href: "/admin/operasional/kompensasi/dokumen-internal",
+    href: "",
+    childrenItems: [
+      {
+        title: "Organisasi",
+        href: "/admin/validasi-data/penunjang/organisasi",
+      },
+      {
+        title: "Penghargaan",
+        href: "/admin/validasi-data/penunjang/penghargaan",
+      },
+      {
+        title: "Penunjang Lain",
+        href: "/admin/validasi-data/penunjang/penunjang-lain",
+      },
+    ],
   },
   {
     title: "Pengembangan",
-    href: "/admin/operasional/kompensasi/dokumen-internal",
+    href: "",
+    childrenItems: [
+      {
+        title: "Kemampuan Bahasa",
+        href: "/admin/validasi-data/pengembangan/kemampuan-bahasa",
+      },
+      {
+        title: "Organisasi",
+        href: "/admin/validasi-data/pengembangan/organisasi",
+      },
+    ],
   },
 ];
 

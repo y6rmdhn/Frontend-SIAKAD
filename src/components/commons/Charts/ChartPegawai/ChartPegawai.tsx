@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { TrendingUp } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -10,13 +10,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
@@ -24,14 +24,14 @@ const chartData = [
   { month: "April", desktop: 73 },
   { month: "May", desktop: 209 },
   { month: "June", desktop: 214 },
-]
+];
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartPegawai() {
   return (
@@ -44,14 +44,15 @@ export function ChartPegawai() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
+          <AreaChart data={chartData} margin={{ left: 12, right: 12 }}>
+            {/* Gradient definition */}
+            <defs>
+              <linearGradient id="colorDesktop" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#106D63" stopOpacity={0.5} />
+                <stop offset="100%" stopColor="#106D63" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -67,9 +68,9 @@ export function ChartPegawai() {
             <Area
               dataKey="desktop"
               type="linear"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              fill="url(#colorDesktop)"
+              stroke="#106D63"
+              strokeWidth={2}
             />
           </AreaChart>
         </ChartContainer>
@@ -87,5 +88,5 @@ export function ChartPegawai() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

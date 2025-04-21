@@ -2,7 +2,6 @@ import FilterPegawai from "@/components/commons/FilterPegawai";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -37,7 +36,7 @@ import { MdEdit } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaSyncAlt } from "react-icons/fa";
 import Status from "@/components/commons/Status";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import CustomCard from "@/components/commons/card";
 
 const Pegawai = () => {
@@ -45,7 +44,8 @@ const Pegawai = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-10">
+      <h1 className="text-2xl font-normal">Pegawai</h1>
       <CustomCard title="Filter">
         <FilterPegawai />
       </CustomCard>
@@ -75,9 +75,11 @@ const Pegawai = () => {
         </div>
 
         <div className="flex gap-2">
-          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-            <FaPlus /> Tambah
-          </Button>
+          <Link to="/admin/pegawai/data-pegawai">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+              <FaPlus /> Tambah
+            </Button>
+          </Link>
 
           <Button variant="destructive" className="cursor-pointer">
             <FaRegTrashAlt /> Hapus
@@ -143,42 +145,11 @@ const Pegawai = () => {
                   <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                 </Button>
                 <Button
-                  onClick={() => navigate("/gate/pegawai/" + params.pegawaiID)}
-                  size="icon"
-                  variant="ghost"
-                  className="cursor-pointer"
-                >
-                  <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <FaRegTrashAlt className="text-red-500" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="font-medium">
-              <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-            </TableCell>
-            <TableCell className="text-center">0001016434</TableCell>
-            <TableCell className="text-center">0001016434</TableCell>
-            <TableCell className="text-center">
-              Prof.Dr.Hj. Indupumahayu,Dra.,Ak,MM.,CA.
-            </TableCell>
-            <TableCell className="text-center">Ekonomi Syariah (S3)</TableCell>
-            <TableCell className="text-center">AA</TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center h-full">
-                <FaCheck className="text-green-light-uika" />
-              </div>
-            </TableCell>
-            <TableCell className="text-center w-28">
-              <div className="flex">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-                <Button
-                  onClick={() => navigate("/gate/pegawai/" + params.pegawaiID)}
+                  onClick={() =>
+                    navigate(
+                      "/admin/pegawai/detail-pegawai/" + params.pegawaiID
+                    )
+                  }
                   size="icon"
                   variant="ghost"
                   className="cursor-pointer"
