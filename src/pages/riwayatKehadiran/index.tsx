@@ -9,6 +9,7 @@ import {
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import Kehadiran from "@/view/RiwayatKehadiran";
 import React from "react";
+import { MdGroups } from "react-icons/md";
 
 const RiwayatKehadiranPage = () => {
   return (
@@ -16,7 +17,8 @@ const RiwayatKehadiranPage = () => {
       <Breadcrumb className="mt-10 pl-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>
+            <BreadcrumbLink href="/gate/pegawai " className="flex items-center gap-2" >
+             <MdGroups className="w-6 h-6"/>Pegawai</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

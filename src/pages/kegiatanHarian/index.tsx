@@ -7,6 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import { MdGroups } from "react-icons/md";
 import KegiatanHarian from "@/view/KegiatanHarian";
 import React from "react";
 
@@ -16,7 +17,8 @@ const KegiatanHarianPage = () => {
       <Breadcrumb className="mt-10 pl-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>
+            <BreadcrumbLink href="/gate/pegawai" className="flex items-center gap-2" > 
+            <MdGroups className="w-6 h-6"/>Pegawai</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
