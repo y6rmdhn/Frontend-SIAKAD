@@ -35,7 +35,7 @@ import { MdEdit } from "react-icons/md";
 const PeriodeCuti = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">Periode Cuti</h1>
+      <h1 className="text-2xl font-normal">Periode Cuti</h1>
 
       <CustomCard
         actions={

@@ -37,7 +37,7 @@ import { FaFileImport } from "react-icons/fa";
 const InputKehadiran = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">Input Presensi</h1>
+      <h1 className="text-2xl font-normal">Input Presensi</h1>
       <CustomCard
         actions={
           <div className="grid grid-rows-2 grid-flow-col gap-6">

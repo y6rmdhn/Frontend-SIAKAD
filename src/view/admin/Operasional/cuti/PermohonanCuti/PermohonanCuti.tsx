@@ -35,7 +35,7 @@ import { FiSearch } from "react-icons/fi";
 const PermohonanCuti = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Permohonan Cuti{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Permohonan Cuti

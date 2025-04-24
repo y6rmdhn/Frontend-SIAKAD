@@ -38,7 +38,7 @@ import { Link } from "react-router-dom";
 const DokumenInternal = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Dokumen Internal Detail{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Dokumen Internal

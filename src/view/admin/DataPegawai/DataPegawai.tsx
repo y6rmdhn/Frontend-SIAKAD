@@ -22,7 +22,7 @@ const DataPegawai = () => {
 
   return (
     <div className="mt-10 mb-10">
-      <h1 className="text-2xl font-semibold">Data Pegawai</h1>
+      <h1 className="text-2xl font-normal">Data Pegawai</h1>
       <Form {...form}>
         <form>
           <Card className="mt-5  border-t-yellow-uika border-t-3">

@@ -15,7 +15,7 @@ const DetailDokumenInternal = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Dokumen Internal{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Detail Dokumen Internal
@@ -47,7 +47,7 @@ const DetailDokumenInternal = () => {
             }
           >
             <div className="w-full border-b-2 border-b-green-light-uika mt-4">
-              <h1 className="text-xl font-semibold text-green-light-uika">
+              <h1 className="text-xl font-normal text-green-light-uika">
                 Data Dokumen
               </h1>
             </div>
@@ -205,7 +205,7 @@ const DetailDokumenInternal = () => {
             </div>
 
             <div className="w-full border-b-2 border-b-green-light-uika mt-4">
-              <h1 className="text-xl font-semibold text-green-light-uika">
+              <h1 className="text-xl font-normal text-green-light-uika">
                 Penerima
               </h1>
             </div>
@@ -213,7 +213,7 @@ const DetailDokumenInternal = () => {
             <div className="flex flex-col mt-4">
               <div className="bg-[#E7ECF2] w-full p-3 flex justify-between items-center">
                 <div />
-                <h1 className="text-lg font-semibold">Pegawai</h1>
+                <h1 className="text-lg font-normal">Pegawai</h1>
                 <Button
                   size="icon"
                   className="bg-green-light-uika hover:bg-[#329C59]"

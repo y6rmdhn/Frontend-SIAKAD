@@ -34,12 +34,11 @@ import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
-import { Link } from "react-router-dom";
 
 const Pelanggaran = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Riwayat Pelanggaran{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Pelanggaran

@@ -131,14 +131,12 @@ const Monitoring = () => {
             <TableCell className="text-center">
               <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
             </TableCell>
-            <TableCell className="text-center">
-              aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-            </TableCell>
-            <TableCell className="text-center">aaa</TableCell>
-            <TableCell className="text-center">aaa</TableCell>
-            <TableCell className="text-center">aaa</TableCell>
-            <TableCell className="text-center">aaaa</TableCell>
-            <TableCell className="text-center">aaa</TableCell>
+            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">

@@ -86,7 +86,7 @@ const validasiData: {
     href: "",
     childrenItems: [
       {
-        title: "Peten",
+        title: "Paten",
         href: "/admin/validasi-data/pelaksanaan-penelitian/paten",
       },
       {
@@ -101,7 +101,7 @@ const validasiData: {
   },
   {
     title: "Kualifikasi",
-    href: "/admin/operasional/kompensasi/dokumen-internal",
+    href: "",
   },
   {
     title: "Pelaksanaan Pengabdian",

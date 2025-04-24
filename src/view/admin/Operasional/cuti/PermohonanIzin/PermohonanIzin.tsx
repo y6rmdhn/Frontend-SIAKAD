@@ -37,7 +37,7 @@ import { MdEdit } from "react-icons/md";
 const PermohonanIzin = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Validasi Pengajuan Cuti{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Pengajuan Cuti

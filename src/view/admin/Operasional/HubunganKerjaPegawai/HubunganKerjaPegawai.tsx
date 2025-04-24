@@ -35,7 +35,7 @@ import { MdEdit } from "react-icons/md";
 const HubunganKerjaPegawai = () => {
   return (
     <div className="mt-10 mb-10">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Monitoring{" "}
         <span className="text-muted-foreground text-[16px] font-normal">
           hubungan kerja

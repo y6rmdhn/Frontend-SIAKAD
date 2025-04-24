@@ -36,7 +36,7 @@ import { IoEyeOutline } from "react-icons/io5";
 const RekapKehadiran = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Rekapitulasi{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Presensi Bulanan Pegawai

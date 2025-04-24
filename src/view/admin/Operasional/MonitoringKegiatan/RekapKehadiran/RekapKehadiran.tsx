@@ -45,7 +45,7 @@ import { FiSearch } from "react-icons/fi";
 const RekapKehadiran = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">Monitoring Kegiatan</h1>
+      <h1 className="text-2xl font-normal">Monitoring Kegiatan</h1>
       <CustomCard
         actions={
           <div className="grid grid-cols-2 grid-flow-col gap-10">

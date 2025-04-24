@@ -29,7 +29,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import React from "react";
-import { FaCheck, FaFileImport, FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { FaCheck, FaFileImport } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdEdit } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
@@ -37,7 +37,7 @@ import { IoEyeOutline } from "react-icons/io5";
 const MonitoringSisaCuti = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Sisa Cuti Pegawai{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Sisa Cuti Pegawai

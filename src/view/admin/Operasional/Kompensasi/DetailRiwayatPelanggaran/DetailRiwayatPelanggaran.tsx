@@ -4,7 +4,6 @@ import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFor
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
@@ -16,7 +15,7 @@ const DetailRiwayatPelanggaran = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-2xl font-normal">
         Pelanggaran{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Detail Riwayat Pelanggaran

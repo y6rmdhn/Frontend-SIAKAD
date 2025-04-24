@@ -1,12 +1,5 @@
 import CustomCard from "@/components/commons/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -19,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { useForm } from "react-hook-form";
-import dataConstant from "../../../../../constant/dataShiftKerja/index";
 import { FiSearch } from "react-icons/fi";
 import {
   Table,
@@ -38,69 +30,53 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
-const FormFieldGenerator = ({ form, fields }) => {
-  return fields.map(({ label, name, placeholder, select, type, required }) => (
-    <FormField
-      key={name}
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="flex">
-          <FormLabel className="w-full text-[#FDA31A]">
-            {label} {required && <span className="text-[#FF0000]">*</span>}
-          </FormLabel>
-          <FormControl>
-            {select ? (
-              <Select {...field}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={placeholder} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Semua</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            ) : type === "file" ? (
-              <Input
-                type="file"
-                onChange={(e) => form.setValue(name, e.target.files[0])}
-              />
-            ) : (
-              <Input
-                {...field}
-                type={type || "text"}
-                placeholder={placeholder}
-              />
-            )}
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  ));
-};
+import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
+import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
 
 const DaftarMonitoringKehadiran = () => {
   const form = useForm();
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">Daftar Monitoring Kehadiran</h1>
+      <h1 className="text-2xl font-normal">Daftar Monitoring Kehadiran</h1>
       <Form {...form}>
         <form>
           <CustomCard
             actions={
               <div className="mt-10 grid-rows-2 grid-flow-col grid gap-5">
-                <FormFieldGenerator
-                  fields={dataConstant.formFieldsDaftarMonitoringKehadiran}
+                <FormFieldSelect
                   form={form}
+                  label="Unit Kerja"
+                  name="unit_kerja"
+                  labelStyle="text-[#FDA31A]"
+                  options={[
+                    { label: "Admin", value: "admin" },
+                    { label: "User", value: "user" },
+                    { label: "Guest", value: "guest" },
+                  ]}
+                  placeholder="--041001 Universitas Ibn Khaldun--"
+                  required={false}
+                />
+                <FormFieldSelect
+                  form={form}
+                  label="Status Presensi"
+                  name="status_presensi"
+                  labelStyle="text-[#FDA31A]"
+                  options={[
+                    { label: "Admin", value: "admin" },
+                    { label: "User", value: "user" },
+                    { label: "Guest", value: "guest" },
+                  ]}
+                  placeholder="--Semua Status Presensi--"
+                  required={false}
+                />
+                <FormFieldInput
+                  form={form}
+                  label="Tanggal"
+                  name="tanggal"
+                  labelStyle="text-[#FDA31A]"
+                  required={false}
+                  type="date"
                 />
               </div>
             }

@@ -1,6 +1,17 @@
 import CustomCard from "@/components/commons/card";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -10,24 +21,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import biodataDummy from "@/constant/biodataDummy/biodataDummy";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
+import { IoEyeOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Keluarga = () => {
   return (
     <DetailPegawaiLayout title="Keluarga Pegawai" subTitile="Daftar Keluarga">
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex w-full">
+          <div className="flex w-full bg-[#F6FBFF] border-l-4 border-l-[#92D3FF]">
             <div className="flex flex-col w-full">
               {biodataDummy.leftColumn.map((item, index) => (
                 <div
                   key={index}
                   className="border-b flex justify-between items-center py-2 pl-2"
                 >
-                  <h1 className="text-[#3F6FA9]">{item.label}</h1>
+                  <h1 className="text-[#3F6FA9] font-semibold">{item.label}</h1>
                   <h1>{item.value}</h1>
                 </div>
               ))}
@@ -36,9 +57,9 @@ const Keluarga = () => {
               {biodataDummy.rightColumn.map((item, index) => (
                 <div
                   key={index}
-                  className="border-b flex justify-between items-center py-2 pl-5"
+                  className="border-b flex justify-between items-center py-2 pl-5 pr-2"
                 >
-                  <h1 className="text-[#3F6FA9]">{item.label}</h1>
+                  <h1 className="text-[#3F6FA9] font-semibold">{item.label}</h1>
                   <h1>{item.value}</h1>
                 </div>
               ))}
@@ -95,6 +116,82 @@ const Keluarga = () => {
             </div>
           </div>
         </div>
+
+        <Table className="mt-10 table-auto border-separate border-spacing-x-[1px]">
+          <TableHeader>
+            <TableRow className="bg-[#004680]">
+              <TableHead className="text-center text-white rounded-tl-lg"></TableHead>
+              <TableHead className="text-center text-white">
+                Nama Keluarga
+              </TableHead>
+              <TableHead className="text-center text-white">
+                Jenis Kelamin
+              </TableHead>
+              <TableHead className="text-center text-white">
+                Tgl Lahir
+              </TableHead>
+              <TableHead className="text-center text-white">
+                Jenis Status
+              </TableHead>
+              <TableHead className="text-center text-white">
+                Status Pengajuan
+              </TableHead>
+              <TableHead className="text-center text-white rounded-tr-lg">
+                Aksi
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="bg-[#E7ECF2]">
+            <TableRow>
+              <TableCell className="flex justify-items-center">
+                <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+              </TableCell>
+              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center"></TableCell>
+              <TableCell className="h-full">
+                <div className="flex justify-center items-center w-full h-full">
+                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+
+        <Pagination className="mt-8 flex justify-end">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </DetailPegawaiLayout>
   );

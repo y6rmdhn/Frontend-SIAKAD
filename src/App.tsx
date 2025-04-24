@@ -73,6 +73,24 @@ import { Toaster } from "@/components/ui/sonner";
 import BeritaOperasionalUserPage from "./pages/operasional/berita";
 import DetailDokumenInternalUserPage from "./pages/operasional/dokumenInternal/detailDokumen";
 import DokumenInternalUserPage from "./pages/operasional/dokumenInternal/dokumen";
+import KepegawaianHomebasePage from "./pages/admin/DetailPegawai/kepegawaian/homebase";
+import KepegawaianPangkatPage from "./pages/admin/DetailPegawai/kepegawaian/pangkat";
+import KepegawaianJabatanAkademikPage from "./pages/admin/DetailPegawai/kepegawaian/jabatanAkademik";
+import KepegawaianJabatanFungsionalPage from "./pages/admin/DetailPegawai/kepegawaian/jabatanFungsional";
+import KepegawaianJabatanStrukturalPage from "./pages/admin/DetailPegawai/kepegawaian/jabatanStruktural";
+import KepegawaianHubunganKerjaPage from "./pages/admin/DetailPegawai/kepegawaian/hubunganKerja";
+import KepegawaianPendidikanFormalPage from "./pages/admin/DetailPegawai/kualifikasi/pendidikanFormal";
+import KepegawaianDiklatPage from "./pages/admin/DetailPegawai/kualifikasi/diklat";
+import KepegawaianRiwayatPekerjaanPage from "./pages/admin/DetailPegawai/kualifikasi/riwayatPekerjaan";
+import KepegawaianRiwayatSertifikasiPage from "./pages/admin/DetailPegawai/kompetensi/riwayatSertifikasi";
+import KepegawaianRiwayatTesPage from "./pages/admin/DetailPegawai/kompetensi/riwayatTes";
+import KepegawaianPresensiPage from "./pages/admin/DetailPegawai/presensi";
+import KepegawaianPengajaranPage from "./pages/admin/DetailPegawai/pendidikan/pengajaran";
+import KepegawaianBimbinganMahasiswaPage from "./pages/admin/DetailPegawai/pendidikan/bimbingan";
+import KepegawaianTugasTambahanPage from "./pages/admin/DetailPegawai/pendidikan/tugasTambahan";
+import KepegawaianPengujianMahasiswaPage from "./pages/admin/DetailPegawai/pendidikan/pengujianMahasiswa";
+import KepegawaianVisitingscientistPage from "./pages/admin/DetailPegawai/pendidikan/visitingscientist";
+import KepegawaianPembinaanMahasiswaPage from "./pages/admin/DetailPegawai/pendidikan/pembinaanMahasiswa";
 
 function App() {
   return (
@@ -107,8 +125,80 @@ function App() {
           <Route path="pegawai/data-pegawai" Component={DataPegawaiPage} />
 
           <Route path="detail-pegawai">
-            <Route path=":id/biodata" Component={BiodataPage} />
-            <Route path=":id/keluarga" Component={DetailKeluargaPage} />
+            <Route path="biodata/:id" Component={BiodataPage} />
+            <Route path="keluarga/:id" Component={DetailKeluargaPage} />
+            <Route path="presensi/:id" Component={KepegawaianPresensiPage} />
+
+            <Route path="kepegawaian">
+              <Route path="homebase/:id" Component={KepegawaianHomebasePage} />
+              <Route path="pangkat/:id" Component={KepegawaianPangkatPage} />
+              <Route
+                path="jabatan-akademik/:id"
+                Component={KepegawaianJabatanAkademikPage}
+              />
+              <Route
+                path="jabatan-fungsional/:id"
+                Component={KepegawaianJabatanFungsionalPage}
+              />
+              <Route
+                path="jabatan-struktural/:id"
+                Component={KepegawaianJabatanStrukturalPage}
+              />
+              <Route
+                path="hubungan-kerja/:id"
+                Component={KepegawaianHubunganKerjaPage}
+              />
+            </Route>
+
+            <Route path="kualifikasi">
+              <Route
+                path="pendidikan-formal/:id"
+                Component={KepegawaianPendidikanFormalPage}
+              />
+              <Route path="diklat/:id" Component={KepegawaianDiklatPage} />
+              <Route
+                path="riwayat-pekerjaan/:id"
+                Component={KepegawaianRiwayatPekerjaanPage}
+              />
+            </Route>
+
+            <Route path="kompetensi">
+              <Route
+                path="riwayat-sertifikasi/:id"
+                Component={KepegawaianRiwayatSertifikasiPage}
+              />
+              <Route
+                path="riwayat-tes/:id"
+                Component={KepegawaianRiwayatTesPage}
+              />
+            </Route>
+
+            <Route path="pendidikan">
+              <Route
+                path="pengajaran/:id"
+                Component={KepegawaianPengajaranPage}
+              />
+              <Route
+                path="bimbingan-mahasiswa/:id"
+                Component={KepegawaianBimbinganMahasiswaPage}
+              />
+              <Route
+                path="tugas-tambahan/:id"
+                Component={KepegawaianTugasTambahanPage}
+              />
+              <Route
+                path="pengujian-mahasiswa/:id"
+                Component={KepegawaianPengujianMahasiswaPage}
+              />
+              <Route
+                path="visiting-scientist/:id"
+                Component={KepegawaianVisitingscientistPage}
+              />
+              <Route
+                path="pembinaan-mahasiswa/:id"
+                Component={KepegawaianPembinaanMahasiswaPage}
+              />
+            </Route>
           </Route>
 
           <Route path="operasional">
