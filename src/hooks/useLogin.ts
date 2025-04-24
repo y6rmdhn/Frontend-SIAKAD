@@ -10,7 +10,7 @@ const loginFormSchema = z.object({
     .string()
     .regex(/^\d+$/, "Nomor Induk Pegawai harus berupa angka")
     .min(1, "Nomor Induk Pegawai tidak boleh kosong")
-    .max(20, "Nomor Induk Pegawai tidak boleh lebih dari 20 karakter"),
+    .max(20, "Nomor Induk Pegawai tidak boleh lebih dari 20 digit"),
   password: z.string().min(8, "Kata Sandi tidak boleh kurang dari 8 karakter"),
 });
 
