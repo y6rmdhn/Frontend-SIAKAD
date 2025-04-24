@@ -3,9 +3,32 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
@@ -16,7 +39,9 @@ const KegiatanHarian = () => {
   return (
     <div className="mt-9">
       <h1 className="text-2xl font-normal ">Kegiatan Harian</h1>
-      <CustomCard actions={<div className="grid grid-rows-1 grid-flow-col gap-6">
+      <CustomCard
+        actions={
+          <div className="grid grid-rows-1 grid-flow-col gap-6">
             <div className="flex">
               <Label className="w-full text-[#FDA31A]">Bulan</Label>
               <Select>
@@ -53,10 +78,10 @@ const KegiatanHarian = () => {
                 </SelectContent>
               </Select>
             </div>
-
-          
-          </div>}/>
-          <div className="flex justify-between mt-10">
+          </div>
+        }
+      />
+      <div className="flex justify-between mt-10">
         <div className="flex gap-6">
           <Select>
             <SelectTrigger className="w-32">
@@ -79,8 +104,6 @@ const KegiatanHarian = () => {
             <Input placeholder="Search" className="w-80 pr-8" />
           </div>
         </div>
-
-        
       </div>
 
       <Table className="mt-10 table-auto">
@@ -88,15 +111,21 @@ const KegiatanHarian = () => {
           <TableRow className="bg-[#002E5A] ">
             <TableHead className="text-center text-white"></TableHead>
             <TableHead className="text-center text-white">NIP</TableHead>
-            <TableHead className="text-center text-white">Nama Pegawai</TableHead>
-            <TableHead className="text-center text-white">Tugas Tambahan</TableHead>
+            <TableHead className="text-center text-white">
+              Nama Pegawai
+            </TableHead>
+            <TableHead className="text-center text-white">
+              Tugas Tambahan
+            </TableHead>
             <TableHead className="text-center text-white">
               Perguruan Tinggi Penugasan
             </TableHead>
             <TableHead className="text-center text-white">
               Terhitung Mulai Tanggal
             </TableHead>
-            <TableHead className="text-center text-white">Tgl Disetujui</TableHead>
+            <TableHead className="text-center text-white">
+              Tgl Disetujui
+            </TableHead>
             <TableHead className="text-center text-white">Aksi</TableHead>
           </TableRow>
         </TableHeader>
