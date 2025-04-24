@@ -70,6 +70,9 @@ import DetailKeluargaPage from "./pages/admin/DetailPegawai/Keluarga";
 import CutiPage from "./pages/operasional/pengajuan/berita";
 import IzinPage from "./pages/operasional/pengajuan/Izin";
 import { Toaster } from "@/components/ui/sonner";
+import BeritaOperasionalUserPage from "./pages/operasional/berita";
+import DetailDokumenInternalUserPage from "./pages/operasional/dokumenInternal/detailDokumen";
+import DokumenInternalUserPage from "./pages/operasional/dokumenInternal/dokumen";
 
 function App() {
   return (
@@ -82,9 +85,19 @@ function App() {
         <Route path="/dasboard" Component={DasboardPageUser} />
         <Route path="/riwayat-kehadiran" Component={RiwayatKehadiranPage} />
         <Route path="/kegiatan-harian" Component={KegiatanHarianPage} />
-        <Route path="/operasional/pengajuan">
-          <Route path="cuti" Component={CutiPage} />
-          <Route path="izin" Component={IzinPage} />
+        <Route path="/operasional">
+          <Route path="berita" Component={BeritaOperasionalUserPage} />
+
+          <Route
+            path="detail-dokumen-internal"
+            Component={DetailDokumenInternalUserPage}
+          />
+          <Route path="dokumen-internal" Component={DokumenInternalUserPage} />
+
+          <Route path="pengajuan">
+            <Route path="cuti" Component={CutiPage} />
+            <Route path="izin" Component={IzinPage} />
+          </Route>
         </Route>
 
         {/* for admin path */}
