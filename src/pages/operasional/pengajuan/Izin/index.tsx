@@ -11,7 +11,7 @@ import Izin from "@/view/Operasional/Pengajuan/Izin";
 
 const IzinPage = () => {
   return (
-    <SimKepegawaianLayout>
+    <SimKepegawaianLayout isNavbarUser={true}>
       <Breadcrumb className="mt-10 pl-4">
         <BreadcrumbList>
           <BreadcrumbItem>

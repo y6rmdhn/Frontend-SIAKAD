@@ -34,74 +34,75 @@ import { FiSearch } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { HiMiniTrash } from "react-icons/hi2";
 
-
 const Berita = () => {
   return (
     <div className="mt-10">
-      <h1 className="text-xl  font-bold">
+      <h1 className="text-2xl font-normal">
         Berita{" "}
-        <span className="text-[13px] text-muted-foreground font-normal">
+        <span className="text-[16px] text-muted-foreground font-normal">
           Daftar Berita
         </span>
       </h1>
 
       <CustomCard
         actions={
-          <div className="">
-            <div className="flex">
-              <Label className=" text-[#FDA31A] pr-30">Unit Kerja</Label>
-              <Select>
-                <SelectTrigger className="w-64">
-                  <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="flex">
+            <Label className=" text-[#FDA31A] pr-30">Unit Kerja</Label>
+            <Select>
+              <SelectTrigger className="w-64">
+                <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Unit Kerja</SelectLabel>
+                  <SelectItem value="apple">Apple</SelectItem>
+                  <SelectItem value="banana">Banana</SelectItem>
+                  <SelectItem value="blueberry">Blueberry</SelectItem>
+                  <SelectItem value="grapes">Grapes</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         }
       />
 
-      <CustomCard cardStyle="border-t-[#87E39B]"
+      <CustomCard
+        cardStyle="border-t-[#87E39B]"
         actions={
-          <div className="">
+          <div>
             <div className="flex justify-between">
-              <div className="flex justify-between">
-                <div className="flex gap-6">
-                  <Select>
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="--Semua--" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Unit Kerja</SelectLabel>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+              <div className="flex gap-2">
+                <Select>
+                  <SelectTrigger className="w-32">
+                    <SelectValue placeholder="--Semua--" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Unit Kerja</SelectLabel>
+                      <SelectItem value="apple">Apple</SelectItem>
+                      <SelectItem value="banana">Banana</SelectItem>
+                      <SelectItem value="blueberry">Blueberry</SelectItem>
+                      <SelectItem value="grapes">Grapes</SelectItem>
+                      <SelectItem value="pineapple">Pineapple</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
 
-                  <div className="relative">
-                    <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                    <Input placeholder="Cari Berita" className="w-80 pr-8" />
-                  </div>
-
+                <div className="relative">
+                  <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
+                  <Input placeholder="Cari Berita" className="w-80 pr-8" />
                 </div>
-                <div className="flex gap-6">
-                  <Button className="bg-[#87E39B] text-white"><IoAdd />Tambah</Button>
-                  <Button className="bg-[#FDA31A] text-white"><HiMiniTrash />Hapus</Button>
-                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button className="bg-[#87E39B] text-white">
+                  <IoAdd />
+                  Tambah
+                </Button>
+                <Button className="bg-[#FDA31A] text-white">
+                  <HiMiniTrash />
+                  Hapus
+                </Button>
               </div>
             </div>
 
@@ -109,7 +110,9 @@ const Berita = () => {
               <TableHeader>
                 <TableRow className="bg-[#002E5A] ">
                   <TableHead className="text-center text-white"></TableHead>
-                  <TableHead className="text-center text-white">Unit Kerja</TableHead>
+                  <TableHead className="text-center text-white">
+                    Unit Kerja
+                  </TableHead>
                   <TableHead className="text-center text-white">
                     Judul
                   </TableHead>
@@ -117,11 +120,12 @@ const Berita = () => {
                     Tgl.Posting
                   </TableHead>
                   <TableHead className="text-center text-white">
-                    Prioritas
+                    Tgl.Expired
                   </TableHead>
                   <TableHead className="text-center text-white">
-                    Aksi
+                    Prioritas
                   </TableHead>
+                  <TableHead className="text-center text-white">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -135,10 +139,8 @@ const Berita = () => {
                   <TableCell className="text-center"></TableCell>
                   <TableCell className="text-center"></TableCell>
                   <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
                   <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                    </div>
+                    <div className="flex justify-center items-center w-full h-full"></div>
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -171,8 +173,6 @@ const Berita = () => {
           </div>
         }
       />
-
-
     </div>
   );
 };

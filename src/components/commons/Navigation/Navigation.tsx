@@ -1,3 +1,5 @@
+import * as React from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -6,91 +8,51 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import * as React from "react";
-import { Link } from "react-router-dom";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import operasional from "@/constant/NavbarMenu/operasional";
 import validasiData from "@/constant/NavbarMenu/validasiData";
 import referensi from "@/constant/NavbarMenu/referensi";
 
 const Navigation = () => {
+  const location = useLocation();
+
+  const navItems = [
+    { to: "/admin/dasboard", label: "Dasboard" },
+    { to: "/admin/pegawai", label: "Pegawai" },
+  ];
+
   return (
     <NavigationMenu
       className="bg-[#eeeeee] relative rounded-md mt-10"
       viewport={false}
     >
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link to="/admin/dasboard">
-            <NavigationMenuLink className="bg-[#eeeeee] px-5">
-              Dasboard
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/admin/pegawai">
-            <NavigationMenuLink className="bg-[#eeeeee] px-5">
-              Pegawai
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-[#eeeeee]">
-            Operasional
-          </NavigationMenuTrigger>
-          <NavigationMenuContent className="z-50">
-            <ul className="grid w-52 gap-3 grid-cols-1">
-              {operasional.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                  childrenItems={component.childrenItems}
-                />
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-[#eeeeee]">
-            Validasi Data
-          </NavigationMenuTrigger>
-          <NavigationMenuContent className="z-50">
-            <ul className="grid w-52 gap-3 grid-cols-1">
-              {validasiData.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                  childrenItems={component.childrenItems}
-                />
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-[#eeeeee]">
-            Referensi
-          </NavigationMenuTrigger>
-          <NavigationMenuContent className="z-50">
-            <ul className="grid w-52 gap-3 grid-cols-1">
-              {referensi.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                  childrenItems={component.childrenItems}
-                />
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
+        {navItems.map((item) => (
+          <NavigationMenuItem key={item.to}>
+            <Link to={item.to}>
+              <NavigationMenuLink
+                className={cn(
+                  "bg-[#eeeeee] px-5",
+                  location.pathname === item.to &&
+                    "bg-[#FDA31A] text-white hover:bg-[#FDA31A] hover:text-white"
+                )}
+              >
+                {item.label}
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        ))}
+
+        <MenuGroup title="Operasional" items={operasional} />
+        <MenuGroup title="Validasi Data" items={validasiData} />
+        <MenuGroup title="Referensi" items={referensi} />
+
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-[#eeeeee]">
             Laporan
           </NavigationMenuTrigger>
@@ -123,13 +85,33 @@ const Navigation = () => {
               </ListItem>
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
       </NavigationMenuList>
     </NavigationMenu>
   );
 };
 
-// Komponen ListItem yang mendukung submenu
+const MenuGroup = ({ title, items }) => (
+  <NavigationMenuItem>
+    <NavigationMenuTrigger className="bg-[#eeeeee]">
+      {title}
+    </NavigationMenuTrigger>
+    <NavigationMenuContent className="z-50">
+      <ul className="grid w-52 gap-3 grid-cols-1">
+        {items.map((component) => (
+          <ListItem
+            key={component.title}
+            title={component.title}
+            href={component.href}
+            childrenItems={component.childrenItems}
+          />
+        ))}
+      </ul>
+    </NavigationMenuContent>
+  </NavigationMenuItem>
+);
+
+// ListItem tetap sama
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a"> & {
@@ -139,18 +121,12 @@ const ListItem = React.forwardRef<
   }
 >(({ className, title, children, href, childrenItems, ...props }, ref) => {
   const [open, setOpen] = React.useState(false);
+  const location = useLocation();
 
-  const handleMouseEnter = () => {
-    if (childrenItems && childrenItems.length > 0) {
-      setOpen(true);
-    }
-  };
+  const handleMouseEnter = () => childrenItems?.length && setOpen(true);
+  const handleMouseLeave = () => setOpen(false);
 
-  const handleMouseLeave = () => {
-    setOpen(false);
-  };
-
-  if (childrenItems && childrenItems.length > 0) {
+  if (childrenItems?.length) {
     return (
       <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Popover open={open} onOpenChange={setOpen}>
@@ -158,7 +134,8 @@ const ListItem = React.forwardRef<
             <Link
               to={href}
               className={cn(
-                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:text-accent-foreground",
+                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
+                location.pathname === href && "font-bold text-underline",
                 className
               )}
             >
@@ -197,7 +174,8 @@ const ListItem = React.forwardRef<
           ref={ref}
           to={href}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors ",
+            location.pathname === href && "font-bold text-underline",
             className
           )}
           {...props}

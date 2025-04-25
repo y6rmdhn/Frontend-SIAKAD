@@ -67,7 +67,7 @@ import JenisKehadiranReferensiPage from "./pages/admin/referensi/kehadiran/jenis
 import HariLiburReferensiPage from "./pages/admin/referensi/kehadiran/hariLibur";
 import BiodataPage from "./pages/admin/DetailPegawai/Biodata";
 import DetailKeluargaPage from "./pages/admin/DetailPegawai/Keluarga";
-import CutiPage from "./pages/operasional/pengajuan/berita";
+import CutiPage from "./pages/operasional/pengajuan/cuti";
 import IzinPage from "./pages/operasional/pengajuan/Izin";
 import { Toaster } from "@/components/ui/sonner";
 import BeritaOperasionalUserPage from "./pages/operasional/berita";
@@ -91,6 +91,25 @@ import KepegawaianTugasTambahanPage from "./pages/admin/DetailPegawai/pendidikan
 import KepegawaianPengujianMahasiswaPage from "./pages/admin/DetailPegawai/pendidikan/pengujianMahasiswa";
 import KepegawaianVisitingscientistPage from "./pages/admin/DetailPegawai/pendidikan/visitingscientist";
 import KepegawaianPembinaanMahasiswaPage from "./pages/admin/DetailPegawai/pendidikan/pembinaanMahasiswa";
+import KepegawaianDataseringPage from "./pages/admin/DetailPegawai/pendidikan/datasering";
+import KepegawaianBahanAjarPage from "./pages/admin/DetailPegawai/pendidikan/bahanAjar";
+import KepegawaianOrasiIlmiahPage from "./pages/admin/DetailPegawai/pendidikan/orasiIlmiah";
+import KepegawaianPembimbingDosenPage from "./pages/admin/DetailPegawai/pendidikan/pembimbingDosen";
+import KepegawaianPenelitianPage from "./pages/admin/DetailPegawai/penelitian/penelitian";
+import KepegawaianPublikasiPage from "./pages/admin/DetailPegawai/penelitian/publikasi";
+import KepegawaianPatenHkiPage from "./pages/admin/DetailPegawai/penelitian/patenHki";
+import KepegawaianPengabdianPage from "./pages/admin/DetailPegawai/pengabdian/pengabdian";
+import KepegawaianPengelolaJurnalPage from "./pages/admin/DetailPegawai/pengabdian/pengelolaJurnal";
+import KepegawaianPembicaraPage from "./pages/admin/DetailPegawai/pengabdian/pembicara";
+import KepegawaianJabatanTugasPage from "./pages/admin/DetailPegawai/pengabdian/jabatanTugas";
+import KepegawaianAnggotaProfesiPage from "./pages/admin/DetailPegawai/penunjang/anggotaProfesi";
+import KepegawaianPenghargaanPage from "./pages/admin/DetailPegawai/penunjang/penghargaan";
+import KepegawaianPenunjangLainPage from "./pages/admin/DetailPegawai/penunjang/penunjangLain";
+import KepegawaianOrganisasiPage from "./pages/admin/DetailPegawai/pengembangan/organisasi";
+import KepegawaianKemampuanBahasaPage from "./pages/admin/DetailPegawai/pengembangan/kemampuanBahasa";
+import KepegawaianKompensasiPage from "./pages/admin/DetailPegawai/kompensasi";
+import KepegawaianCutiPage from "./pages/admin/DetailPegawai/permohonan/cuti";
+import KepegawaianIzinPage from "./pages/admin/DetailPegawai/permohonan/izin";
 
 function App() {
   return (
@@ -198,6 +217,89 @@ function App() {
                 path="pembinaan-mahasiswa/:id"
                 Component={KepegawaianPembinaanMahasiswaPage}
               />
+              <Route
+                path="datasering/:id"
+                Component={KepegawaianDataseringPage}
+              />
+              <Route
+                path="bahan-ajar/:id"
+                Component={KepegawaianBahanAjarPage}
+              />
+              <Route
+                path="orasi-ilmiah/:id"
+                Component={KepegawaianOrasiIlmiahPage}
+              />
+              <Route
+                path="pembimbing-dosen/:id"
+                Component={KepegawaianPembimbingDosenPage}
+              />
+            </Route>
+
+            <Route path="penelitian">
+              <Route
+                path="penelitian/:id"
+                Component={KepegawaianPenelitianPage}
+              />
+              <Route
+                path="publikasi/:id"
+                Component={KepegawaianPublikasiPage}
+              />
+              <Route path="paten/:id" Component={KepegawaianPatenHkiPage} />
+            </Route>
+
+            <Route path="pengabdian">
+              <Route
+                path="pengabdian/:id"
+                Component={KepegawaianPengabdianPage}
+              />
+              <Route
+                path="pengelola-jurnal/:id"
+                Component={KepegawaianPengelolaJurnalPage}
+              />
+              <Route
+                path="pembicara/:id"
+                Component={KepegawaianPembicaraPage}
+              />
+              <Route
+                path="jabatan-tugas/:id"
+                Component={KepegawaianJabatanTugasPage}
+              />
+            </Route>
+
+            <Route path="penunjang">
+              <Route
+                path="anggota-profesi/:id"
+                Component={KepegawaianAnggotaProfesiPage}
+              />
+              <Route
+                path="penghargaan/:id"
+                Component={KepegawaianPenghargaanPage}
+              />
+              <Route
+                path="penunjang-lain/:id"
+                Component={KepegawaianPenunjangLainPage}
+              />
+            </Route>
+
+            <Route path="pengembangan">
+              <Route
+                path="organisasi/:id"
+                Component={KepegawaianOrganisasiPage}
+              />
+              <Route
+                path="kemampuan-bahasa/:id"
+                Component={KepegawaianKemampuanBahasaPage}
+              />
+            </Route>
+
+            <Route
+              path="kompensasi/:id"
+              Component={KepegawaianKompensasiPage}
+            />
+
+            <Route path="permohonan">
+              <Route path="cuti/:id" Component={KepegawaianCutiPage} />
+              <Route path="izin/:id" Component={KepegawaianIzinPage} />
             </Route>
           </Route>
 

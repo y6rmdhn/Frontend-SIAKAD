@@ -152,24 +152,24 @@ const Kehadiran = () => {
                               <TableCell className="text-center"></TableCell>
                               <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="cursor-pointer"
-                                    >
-                                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                                    </Button>
-                                  </Link>
-                                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="cursor-pointer"
-                                    >
-                                      <IoIosDocument className="w-5! h-5! text-[#26A1F4]" />
-                                    </Button>
-                                  </Link>
+                                  {/* <Link to="/admin/operasional/kompensasi/detail-dokumen-internal"> */}
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="cursor-pointer"
+                                  >
+                                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                                  </Button>
+                                  {/* </Link> */}
+                                  {/* <Link to="/admin/operasional/kompensasi/detail-dokumen-internal"> */}
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="cursor-pointer"
+                                  >
+                                    <IoIosDocument className="w-5! h-5! text-[#26A1F4]" />
+                                  </Button>
+                                  {/* </Link> */}
                                 </div>
                               </TableCell>
                             </TableRow>
@@ -180,15 +180,15 @@ const Kehadiran = () => {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                    <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <IoIosDocument className="w-5! h-5! text-[#26A1F4]" />
-                      </Button>
-                    </Link>
+                    {/* <Link to="/admin/operasional/kompensasi/detail-dokumen-internal"> */}
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoIosDocument className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                    {/* </Link> */}
                   </TableCell>
                   <TableCell className="h-full align-top text-center"></TableCell>
                 </TableRow>

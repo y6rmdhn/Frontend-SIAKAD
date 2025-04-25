@@ -147,7 +147,7 @@ const Pegawai = () => {
                 <Button
                   onClick={() =>
                     navigate(
-                      "/admin/pegawai/detail-pegawai/" + params.pegawaiID
+                      "/admin/detail-pegawai/biodata/" + params.pegawaiID
                     )
                   }
                   size="icon"

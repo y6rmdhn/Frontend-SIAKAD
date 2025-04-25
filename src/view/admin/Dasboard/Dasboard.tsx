@@ -61,7 +61,7 @@ const Dasboard = () => {
   const [aktifBtn, setAktifBtn] = useState("Fungsional");
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <h1 className="text-2xl font-normal">Dashboard</h1>
       <CustomCard
         actions={
           <div className="flex gap-30">

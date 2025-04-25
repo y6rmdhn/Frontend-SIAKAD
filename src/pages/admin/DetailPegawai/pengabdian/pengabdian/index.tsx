@@ -7,9 +7,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Cuti from "@/view/Operasional/Pengajuan/Cuti";
+import Pengabdian from "@/view/admin/DetailPegawai/Pengabdian/Pengabdian";
 
-const CutiPage = () => {
+const KepegawaianPengabdianPage = () => {
   return (
     <SimKepegawaianLayout>
       <Breadcrumb className="mt-10 pl-4">
@@ -19,22 +19,14 @@ const CutiPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Operasional</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Pengajuan</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Cuti</BreadcrumbPage>
+            <BreadcrumbPage>Pengabdian</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Cuti />
+      <Pengabdian />
     </SimKepegawaianLayout>
   );
 };
 
-export default CutiPage;
+export default KepegawaianPengabdianPage;
