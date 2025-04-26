@@ -110,6 +110,26 @@ import KepegawaianKemampuanBahasaPage from "./pages/admin/DetailPegawai/pengemba
 import KepegawaianKompensasiPage from "./pages/admin/DetailPegawai/kompensasi";
 import KepegawaianCutiPage from "./pages/admin/DetailPegawai/permohonan/cuti";
 import KepegawaianIzinPage from "./pages/admin/DetailPegawai/permohonan/izin";
+import ElesonPage from "./pages/admin/referensi/kepegawaian/eleson";
+import GelarAkademikPage from "./pages/admin/referensi/kepegawaian/gelarAkademik";
+import HubunganKerjaReferensiPage from "./pages/admin/referensi/kepegawaian/hubunganKerja";
+import JabatanAkademikReferensiPage from "./pages/admin/referensi/kepegawaian/jabatanAkademik";
+import JabatanFungsionalReferensiPage from "./pages/admin/referensi/kepegawaian/jabatanFungsional";
+import JabatanStrukturalReferensiPage from "./pages/admin/referensi/kepegawaian/jabatanStruktural";
+import DetailJabatanFungsionalReferensiPage from "./pages/admin/referensi/kepegawaian/jabatanFungsional/detailJabatanFungsional";
+import DetailJabatanStrukturalReferensiPage from "./pages/admin/referensi/kepegawaian/jabatanStruktural/detailJabatanStruktural";
+import JenisKenaikanPangkatReferensiPage from "./pages/admin/referensi/kepegawaian/jenisKenaikanPangkat";
+import JenisSkReferensiPage from "./pages/admin/referensi/kepegawaian/jenisSK";
+import MediaPublikasiReferensiPage from "./pages/admin/referensi/kepegawaian/mediaPublikasi";
+import PangkatReferensiPage from "./pages/admin/referensi/kepegawaian/pangkat";
+import RumpunBidangIlmuReferensiPage from "./pages/admin/referensi/kepegawaian/rumpunBidangIlmu";
+import StatusKeaktifanReferensiPage from "./pages/admin/referensi/kepegawaian/statusKeaktifan";
+import UnitKerjaReferensiPage from "./pages/admin/referensi/kepegawaian/unitKerja";
+import DetailUnitKerjaReferensiPage from "./pages/admin/referensi/kepegawaian/unitKerja/detailUnitKerja";
+import KotaReferensiPage from "./pages/admin/referensi/wilayah/kota";
+import KecamatanReferensiPage from "./pages/admin/referensi/wilayah/kecamatan";
+import NegaraReferensiPage from "./pages/admin/referensi/wilayah/negara";
+import ProvinsiReferensiPage from "./pages/admin/referensi/wilayah/provinsi";
 
 function App() {
   return (
@@ -453,6 +473,65 @@ function App() {
                 path="jenis-kehadiran"
                 Component={JenisKehadiranReferensiPage}
               />
+            </Route>
+
+            <Route path="kepegawaian">
+              <Route path="eleson" Component={ElesonPage} />
+              <Route path="gelar-akademik" Component={GelarAkademikPage} />
+              <Route
+                path="hubungan-kerja"
+                Component={HubunganKerjaReferensiPage}
+              />
+              <Route
+                path="jabatan-akademik"
+                Component={JabatanAkademikReferensiPage}
+              />
+              <Route
+                path="jabatan-fungsional"
+                Component={JabatanFungsionalReferensiPage}
+              />
+              <Route
+                path="jabatan-fungsional/detail-jabatan-fungsional"
+                Component={DetailJabatanFungsionalReferensiPage}
+              />
+              <Route
+                path="jabatan-struktural"
+                Component={JabatanStrukturalReferensiPage}
+              />
+              <Route
+                path="jabatan-struktural/detail-jabatan-struktural"
+                Component={DetailJabatanStrukturalReferensiPage}
+              />
+              <Route
+                path="jenis-kenaikan-pangkat"
+                Component={JenisKenaikanPangkatReferensiPage}
+              />
+              <Route path="jenis-sk" Component={JenisSkReferensiPage} />
+              <Route
+                path="media-publikasi"
+                Component={MediaPublikasiReferensiPage}
+              />
+              <Route path="pangkat" Component={PangkatReferensiPage} />
+              <Route
+                path="rumpun-bidang-ilmu"
+                Component={RumpunBidangIlmuReferensiPage}
+              />
+              <Route
+                path="status-keaktifan"
+                Component={StatusKeaktifanReferensiPage}
+              />
+              <Route path="unit-kerja" Component={UnitKerjaReferensiPage} />
+              <Route
+                path="unit-kerja/detail-unit-kerja"
+                Component={DetailUnitKerjaReferensiPage}
+              />
+            </Route>
+
+            <Route path="wilayah">
+              <Route path="kota" Component={KotaReferensiPage} />
+              <Route path="kecamatan" Component={KecamatanReferensiPage} />
+              <Route path="negara" Component={NegaraReferensiPage} />
+              <Route path="provinsi" Component={ProvinsiReferensiPage} />
             </Route>
           </Route>
         </Route>

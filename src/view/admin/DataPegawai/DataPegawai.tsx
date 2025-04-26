@@ -34,6 +34,7 @@ const DataPegawai = () => {
                 </div>
                 <div className="flex gap-2">
                   <Button
+                    type="button"
                     onClick={() => navigate("/admin/pegawai")}
                     className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
                   >
@@ -41,7 +42,10 @@ const DataPegawai = () => {
                     Kembali ke Daftar
                   </Button>
 
-                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer">
+                  <Button
+                    type="submit"
+                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
+                  >
                     <FaSave />
                     Simpan
                   </Button>

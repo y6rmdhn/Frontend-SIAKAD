@@ -100,8 +100,11 @@
 
 @theme {
   --color-green-uika: #106d63;
+  --color-hover-green-uika: #329C59;
   --color-green-light-uika: #3abc68;
   --color-yellow-uika: #fda31a;
+  --color-hover-yellow-uika: #f08c00;
+  --color-blue-uika: #26A1F4;
   --font-roboto: 'Roboto', sans-serif;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
