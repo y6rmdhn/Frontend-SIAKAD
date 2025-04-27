@@ -17,16 +17,16 @@ const LoginPage = () => {
     useLogin();
 
   return (
-    <main className="min-h-screen flex overflow-x-hidden">
+    <main className="min-h-screen font-roboto flex overflow-x-hidden text-black-uika">
       {/* Bagian Gambar - Sebelah Kiri */}
       <div className="hidden md:flex md:w-[57%] bg-blue-800 relative items-center justify-center">
         <img
           src="/images/UIKAFIX1.png"
           alt="Kampus UIKA"
-          className="absolute inset-0 w-full h-full object-cover opacity-80 max-w-full"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
         />
         <div className="relative z-10 p-8 text-center text-white">
-          <h2 className="text-4xl font-bold mb-6">Selamat Datang</h2>
+          <h2 className="text-4xl font-semibold mb-6">Selamat Datang</h2>
           <p className="text-xl mb-2">
             Sistem Informasi Management Kepegawaian
           </p>
@@ -42,11 +42,11 @@ const LoginPage = () => {
             <img
               src="/images/logo/uika-logo.jpg"
               alt="Logo UIKA"
-              className="h-20 object-contain"
+              className="object-contain w-20"
             />
           </div>
 
-          <h1 className="text-2xl font-bold text-center mb-8">
+          <h1 className="text-2xl font-semibold text-center mb-8 text-[#1a1a1a]">
             Masuk dan Verifikasi
           </h1>
 
@@ -63,6 +63,7 @@ const LoginPage = () => {
                     <FormLabel>Nomor Induk Pegawai</FormLabel>
                     <FormControl>
                       <Input
+                        className="placeholder:text-xs text-xs sm:text-sm sm:placeholder:text-sm"
                         type="text"
                         placeholder="Nomor Induk Pegawai"
                         {...field}
@@ -82,6 +83,7 @@ const LoginPage = () => {
                     <FormControl className="relative">
                       <div className="flex items-center">
                         <Input
+                          className="placeholder:text-xs text-xs sm:text-sm sm:placeholder:text-sm"
                           type={
                             visiblePassword.passwordConfirmation
                               ? "text"
@@ -98,9 +100,9 @@ const LoginPage = () => {
                             className="cursor-pointer"
                           >
                             {visiblePassword.passwordConfirmation ? (
-                              <FaLockOpen />
+                              <FaLockOpen className="w-3! h-3! sm:w-4! sm:h-4!" />
                             ) : (
-                              <FaLock />
+                              <FaLock className="w-3! h-3! sm:w-4! sm:h-4!" />
                             )}
                           </div>
                         </div>
@@ -117,13 +119,13 @@ const LoginPage = () => {
                     id="remember-me"
                     name="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                     // checked={rememberMe}
                     // onChange={(e) => setRememberMe(e.target.checked)}
                   />
                   <label
                     htmlFor="remember-me"
-                    className="ml-2 block text-sm text-gray-900"
+                    className="ml-2 block text-xs sm:text-sm text-gray-900"
                   >
                     Ingat Saya
                   </label>
@@ -132,7 +134,7 @@ const LoginPage = () => {
                 <div className="text-sm">
                   <a
                     href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                    className="hover:underline text-xs sm:text-sm text-indigo-600 hover:text-indigo-500"
                   >
                     Lupa Kata Sandi?
                   </a>
