@@ -130,6 +130,17 @@ import KotaReferensiPage from "./pages/admin/referensi/wilayah/kota";
 import KecamatanReferensiPage from "./pages/admin/referensi/wilayah/kecamatan";
 import NegaraReferensiPage from "./pages/admin/referensi/wilayah/negara";
 import ProvinsiReferensiPage from "./pages/admin/referensi/wilayah/provinsi";
+import HomebaseUserPage from "./pages/dataRiwayat/kepegawaian/homebase";
+import JabatanAkademikUserPage from "./pages/dataRiwayat/kepegawaian/jabatanAkademik";
+import PangkatUserPage from "./pages/dataRiwayat/kepegawaian/pangkat";
+import PendidikanFormalUserPage from "./pages/dataRiwayat/kualifikasi/pendidikanFormal";
+import DiklatUserPage from "./pages/dataRiwayat/kualifikasi/diklat";
+import RiwayatPekerjaanUserPage from "./pages/dataRiwayat/kualifikasi/riwayatPekerjaan";
+import DetailPangkatUserPage from "./pages/dataRiwayat/kepegawaian/pangkat/detailPangkat";
+import DetailJabatanAkademikUserPage from "./pages/dataRiwayat/kepegawaian/jabatanAkademik/detailJabatanAkademik";
+import DetailPendidikanFormalUserPage from "./pages/dataRiwayat/kualifikasi/pendidikanFormal/detailPendidikanFormal";
+import DetailDiklatUserPage from "./pages/dataRiwayat/kualifikasi/diklat/detailDiklat";
+import DetailRiwayatPekerjaanUserPage from "./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detailRiwayatPekerjaan";
 
 function App() {
   return (
@@ -154,6 +165,43 @@ function App() {
           <Route path="pengajuan">
             <Route path="cuti" Component={CutiPage} />
             <Route path="izin" Component={IzinPage} />
+          </Route>
+        </Route>
+
+        <Route path="/data-riwayat">
+          <Route path="kepegawaian">
+            <Route path="homebase" Component={HomebaseUserPage} />
+            <Route
+              path="jabatan-akademik"
+              Component={JabatanAkademikUserPage}
+            />
+            <Route
+              path="detail-jabatan-akademik"
+              Component={DetailJabatanAkademikUserPage}
+            />
+            <Route path="pangkat" Component={PangkatUserPage} />
+            <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
+          </Route>
+
+          <Route path="kualifikasi">
+            <Route
+              path="pendidikan-formal"
+              Component={PendidikanFormalUserPage}
+            />
+            <Route
+              path="detail-pendidikan-formal"
+              Component={DetailPendidikanFormalUserPage}
+            />
+            <Route path="diklat" Component={DiklatUserPage} />
+            <Route path="detail-diklat" Component={DetailDiklatUserPage} />
+            <Route
+              path="riwayat-pekerjaan"
+              Component={RiwayatPekerjaanUserPage}
+            />
+            <Route
+              path="detail-riwayat-pekerjaan"
+              Component={DetailRiwayatPekerjaanUserPage}
+            />
           </Route>
         </Route>
 

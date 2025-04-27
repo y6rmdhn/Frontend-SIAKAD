@@ -16,6 +16,7 @@ import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 import kehadiran from "@/constant/NavbarMenuUser/kehadiran";
 import operasional from "@/constant/NavbarMenuUser/operasional";
+import dataRiwayat from "@/constant/NavbarMenuUser/dataRiwayat";
 
 const NavigationUser = () => {
   const location = useLocation();
@@ -49,7 +50,7 @@ const NavigationUser = () => {
 
         <MenuGroup title="Kehadiran" items={kehadiran} />
         <MenuGroup title="Operasional" items={operasional} />
-        <MenuGroup title="Data Riwayat" items={[]} />
+        <MenuGroup title="Data Riwayat" items={dataRiwayat} />
         <MenuGroup title="Laporan" items={[]} />
       </NavigationMenuList>
     </NavigationMenu>

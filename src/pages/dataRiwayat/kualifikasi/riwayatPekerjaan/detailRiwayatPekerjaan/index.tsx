@@ -7,18 +7,18 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import { MdGroups } from "react-icons/md";
-import KegiatanHarian from "@/view/KegiatanHarian";
+import DetailRiwayatPekerjaan from "@/view/DataRiwayat/Kualifikasi/RiwayatPekerjaan/DetailRiwayatPekerjaan";
 import React from "react";
+import { MdGroups } from "react-icons/md";
 
-const KegiatanHarianPage = () => {
+const DetailRiwayatPekerjaanUserPage = () => {
   return (
     <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              href="/gate/pegawai"
+              href="/dasboard"
               className="flex items-center gap-2"
             >
               <MdGroups className="w-6 h-6" />
@@ -27,18 +27,26 @@ const KegiatanHarianPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Kehadiran</BreadcrumbLink>
+            <BreadcrumbLink href="">Data Riwayat</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Kegiatan Harian</BreadcrumbPage>
+            <BreadcrumbLink href="">Kualifikasi</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="">Riwayat Pekerjaan</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Detail Riwayat Pekerjaan</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <KegiatanHarian />
+      <DetailRiwayatPekerjaan />
     </SimKepegawaianLayout>
   );
 };
 
-export default KegiatanHarianPage;
+export default DetailRiwayatPekerjaanUserPage;
