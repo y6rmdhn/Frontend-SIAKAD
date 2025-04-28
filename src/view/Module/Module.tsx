@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { MdPerson } from "react-icons/md";
 import { IoExit } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "@/layouts/AuthLayout";
 
 const Module = () => {
   const [role, setRole] = useState<string | null>(null);
@@ -12,7 +11,7 @@ const Module = () => {
   const navigate = useNavigate();
 
   return (
-    <AuthLayout>
+    <div className="w-full md:px-20 pt-10 pb-6 font-roboto min-h-[100vh] relative flex justify-center items-start">
       <div className="w-full max-w-[1000px] md:bg-white/40 rounded-lg sm:mx-4">
         <div className="bg-white md:m-5 rounded-lg overflow-hidden lg:max-h-[550px]">
           <div className="relative">
@@ -165,7 +164,7 @@ const Module = () => {
           </div>
         </div>
       </div>
-    </AuthLayout>
+    </div>
   );
 };
 
