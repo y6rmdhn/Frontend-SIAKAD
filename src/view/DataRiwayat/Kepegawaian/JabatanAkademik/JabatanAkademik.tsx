@@ -13,7 +13,7 @@ const JabatanAkademik = () => {
       <CustomCard
         actions={
           <div className="flex justify-end">
-            <Link to="/data-riwayat/kepegawaian/detail-pangkat">
+            <Link to="/data-riwayat/kepegawaian/detail-jabatan-akademik">
               <Button className="bg-yellow-uika hover:bg-hover-yellow-uika">
                 <FaPlus /> Tambah
               </Button>
