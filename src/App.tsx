@@ -141,6 +141,7 @@ import DetailJabatanAkademikUserPage from "./pages/dataRiwayat/kepegawaian/jabat
 import DetailPendidikanFormalUserPage from "./pages/dataRiwayat/kualifikasi/pendidikanFormal/detailPendidikanFormal";
 import DetailDiklatUserPage from "./pages/dataRiwayat/kualifikasi/diklat/detailDiklat";
 import DetailRiwayatPekerjaanUserPage from "./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detailRiwayatPekerjaan";
+import ForgetPasswordPage from "./pages/auth/forgetPassword";
 
 function App() {
   return (
@@ -149,6 +150,7 @@ function App() {
       <Routes>
         <Route path="/" Component={ModulePage} />
         <Route path="/login" Component={LoginPage} />
+        <Route path="/forget-password" Component={ForgetPasswordPage} />
         {/* for user path */}
         <Route path="/dasboard" Component={DasboardPageUser} />
         <Route path="/riwayat-kehadiran" Component={RiwayatKehadiranPage} />

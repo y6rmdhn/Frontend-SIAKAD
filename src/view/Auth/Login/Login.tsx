@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { FaLock } from "react-icons/fa";
 import { FaLockOpen } from "react-icons/fa";
 import useLogin from "@/hooks/useLogin";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const { form, handleLogin, handleVisiblePassword, visiblePassword } =
@@ -132,12 +133,12 @@ const LoginPage = () => {
                 </div>
 
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <Link
+                    to="/forget-password"
                     className="hover:underline text-xs sm:text-sm text-indigo-600 hover:text-indigo-500"
                   >
                     Lupa Kata Sandi?
-                  </a>
+                  </Link>
                 </div>
               </div>
 

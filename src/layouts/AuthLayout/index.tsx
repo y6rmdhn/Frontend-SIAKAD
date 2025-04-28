@@ -1,4 +1,3 @@
-import AuthLayout from "./LoginLayout";
-
+import AuthLayout from "./AuthLayout";
 
 export default AuthLayout;

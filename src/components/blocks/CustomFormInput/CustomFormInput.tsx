@@ -12,10 +12,18 @@ type FormFieldInputProps = {
   form: any;
   name: string;
   label: string;
-  type?: "text" | "date" | "file" | "textarea" | "number" | "checkbox";
+  type?:
+    | "text"
+    | "date"
+    | "file"
+    | "textarea"
+    | "number"
+    | "checkbox"
+    | "password";
   placeholder?: string;
   labelStyle?: string;
   inputStyle?: string;
+  position?: boolean;
   required: boolean;
 };
 
@@ -27,6 +35,7 @@ export const FormFieldInput = ({
   placeholder,
   labelStyle,
   inputStyle,
+  position,
   required,
 }: FormFieldInputProps) => {
   return (
@@ -34,7 +43,13 @@ export const FormFieldInput = ({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex items-center gap-2">
+        <FormItem
+          className={`${
+            position
+              ? "flex flex-col justify-center gap-2"
+              : "flex items-center gap-2"
+          }`}
+        >
           <FormLabel
             className={`w-full ${labelStyle} ${
               type === "checkbox" ? "w-61" : ""
