@@ -1,6 +1,6 @@
-import CustomCard from "@/components/commons/card";
-import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
+import CustomCard from "@/components/blocks/Card";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";

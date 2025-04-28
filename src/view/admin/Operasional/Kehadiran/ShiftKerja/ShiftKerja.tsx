@@ -1,4 +1,4 @@
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form } from "@/components/ui/form";

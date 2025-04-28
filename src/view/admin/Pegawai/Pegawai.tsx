@@ -1,4 +1,4 @@
-import FilterPegawai from "@/components/commons/FilterPegawai";
+import FilterPegawai from "@/components/blocks/FilterPegawai";
 import {
   Table,
   TableBody,
@@ -35,9 +35,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { MdEdit } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaSyncAlt } from "react-icons/fa";
-import Status from "@/components/commons/Status";
+import Status from "@/components/blocks/Status";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 
 const Pegawai = () => {
   const params = useParams();

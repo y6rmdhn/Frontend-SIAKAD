@@ -1,4 +1,4 @@
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 import { FaGraduationCap } from "react-icons/fa";
 import { IoPersonOutline } from "react-icons/io5";
 import { FaUserGroup } from "react-icons/fa6";

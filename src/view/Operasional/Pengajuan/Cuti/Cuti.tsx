@@ -1,43 +1,76 @@
-import CustomCard from '@/components/commons/card'
-import { Button } from '@/components/ui/button'
+import CustomCard from "@/components/blocks/Card";
+import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa6";
 
-import React from 'react'
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FiSearch } from 'react-icons/fi';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from 'react-router-dom';
-import { IoEyeOutline } from 'react-icons/io5';
-import { IoIosDocument } from 'react-icons/io';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import React from "react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { FiSearch } from "react-icons/fi";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from "react-router-dom";
+import { IoEyeOutline } from "react-icons/io5";
+import { IoIosDocument } from "react-icons/io";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Cuti = () => {
   return (
-    <div className=' mt-10'>
-        <h1 className='text-2xl font-normal '>Cuti{' '}
-          <span className='text-muted-foreground font-normal text-[16px]'>Daftar Permohonan Cuti</span>
-        </h1>
-        <CustomCard actions={
-          <div className='flex justify-end '> <Button className='bg-[#FDA31A]' ><FaPlus/> Tambah Baru </Button> </div>
-        }/>
-        <div className='w-full grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 '>
-         <div className='flex flex-col gap-2 text-[#2572BE]'>
+    <div className=" mt-10">
+      <h1 className="text-2xl font-normal ">
+        Cuti{" "}
+        <span className="text-muted-foreground font-normal text-[16px]">
+          Daftar Permohonan Cuti
+        </span>
+      </h1>
+      <CustomCard
+        actions={
+          <div className="flex justify-end ">
+            {" "}
+            <Button className="bg-[#FDA31A]">
+              <FaPlus /> Tambah Baru{" "}
+            </Button>{" "}
+          </div>
+        }
+      />
+      <div className="w-full grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
+        <div className="flex flex-col gap-2 text-[#2572BE]">
           <p>NIP</p>
           <p>Nama</p>
           <p>Unit Kerja</p>
           <p>Status</p>
-           </div>
-           <div className='flex flex-col gap-2 text-[#2572BE]'>
-           <p>Jab. Akademik</p>
+        </div>
+        <div className="flex flex-col gap-2 text-[#2572BE]">
+          <p>Jab. Akademik</p>
           <p>Jab. Fungsional</p>
           <p>Jab. Struktural</p>
           <p>Pendidikan</p>
-           </div>
-           </div>
-           <CustomCard
+        </div>
+      </div>
+      <CustomCard
         actions={
           <div className=" grid grid-rows-2 grid-flow-col gap-4">
             <div className="flex">
@@ -94,52 +127,41 @@ const Cuti = () => {
                 </SelectContent>
               </Select>
             </div>
-            </div>
-        }
-           
-        />
-        <div className="gap-5 flex mt-5">
-            <Select>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="--Semua--" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Unit Kerja</SelectLabel>
-                  <SelectItem value="apple">Apple</SelectItem>
-                  <SelectItem value="banana">Banana</SelectItem>
-                  <SelectItem value="blueberry">Blueberry</SelectItem>
-                  <SelectItem value="grapes">Grapes</SelectItem>
-                  <SelectItem value="pineapple">Pineapple</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <div className="relative">
-              <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-              <Input placeholder="Cari Pengajuan Cuti" className="w-80 pr-8" />
-            </div>
           </div>
-          <Table className="mt-10 table-auto">
+        }
+      />
+      <div className="gap-5 flex mt-5">
+        <Select>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="--Semua--" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Unit Kerja</SelectLabel>
+              <SelectItem value="apple">Apple</SelectItem>
+              <SelectItem value="banana">Banana</SelectItem>
+              <SelectItem value="blueberry">Blueberry</SelectItem>
+              <SelectItem value="grapes">Grapes</SelectItem>
+              <SelectItem value="pineapple">Pineapple</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <div className="relative">
+          <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
+          <Input placeholder="Cari Pengajuan Cuti" className="w-80 pr-8" />
+        </div>
+      </div>
+      <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-[#002E5A] ">
             <TableHead className="text-center text-white"></TableHead>
             <TableHead className="text-center text-white">No</TableHead>
-            <TableHead className="text-center text-white">
-              Tgl. Input
-            </TableHead>
-            <TableHead className="text-center text-white">
-              Jenis Cuti
-            </TableHead>
-            <TableHead className="text-center text-white">
-              Keperluan
-            </TableHead>
-            <TableHead className="text-center text-white">
-              Lama Cuti
-            </TableHead>
-            <TableHead className="text-center text-white">
-              Status
-            </TableHead>
+            <TableHead className="text-center text-white">Tgl. Input</TableHead>
+            <TableHead className="text-center text-white">Jenis Cuti</TableHead>
+            <TableHead className="text-center text-white">Keperluan</TableHead>
+            <TableHead className="text-center text-white">Lama Cuti</TableHead>
+            <TableHead className="text-center text-white">Status</TableHead>
             <TableHead className="text-center text-white">Aksi</TableHead>
           </TableRow>
         </TableHeader>
@@ -205,7 +227,7 @@ const Cuti = () => {
         </PaginationContent>
       </Pagination>
     </div>
-  )
-}
+  );
+};
 
-export default Cuti
+export default Cuti;

@@ -35,7 +35,7 @@ const Module = () => {
                   <img
                     src="/images/logo/uika-logo.jpg"
                     alt="logo-uika"
-                    className="w-10 sm:w-16"
+                    className="w-10 md:w-14 lg:w-16"
                   />
                 </div>
                 <div className="flex flex-col text-white">
@@ -44,7 +44,7 @@ const Module = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center md:flex-col md:items-end lg:flex-row lg:items-center">
                 <Button className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer">
                   <MdPerson className="text-2xl text-white" /> Halaman Profil
                 </Button>
@@ -56,7 +56,7 @@ const Module = () => {
           </div>
 
           <div className="bg-[#F4F3F3] h-full">
-            <div className="grid grid-rows-[40%_60%] lg:grid-cols-[60%_40%] h-full">
+            <div className="grid grid-rows-[auto_auto] mb-10 lg:mb-0 lg:grid-cols-[60%_40%] h-full">
               <div className="w-full h-full pt-5 order-2 lg:order-1">
                 <h1 className="font-medium text-xl pl-8">Daftar Modul</h1>
 

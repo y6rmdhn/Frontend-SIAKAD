@@ -1,7 +1,7 @@
-import CustomCard from "@/components/commons/card";
-import SearchInput from "@/components/commons/SearchInput";
-import SelectFilter from "@/components/commons/SelectFilter";
-import Title from "@/components/commons/Title";
+import CustomCard from "@/components/blocks/Card";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,

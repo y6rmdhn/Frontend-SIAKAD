@@ -1,4 +1,4 @@
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +26,6 @@ import { HiMiniTrash } from "react-icons/hi2";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { MdOutlineFileDownload } from "react-icons/md";
 import React, { useRef, useState } from "react";
-
 
 const DetailDokumenInternal = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,16 +65,21 @@ const DetailDokumenInternal = () => {
               <div className="flex gap-6">
                 <div className="relative">
                   <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                  <Input placeholder="Cari Nama Dokumen Internal" className="w-80 pr-8" />
+                  <Input
+                    placeholder="Cari Nama Dokumen Internal"
+                    className="w-80 pr-8"
+                  />
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <Button className="bg-[#87E39B] text-white cursor-pointer">
-                  <IoChevronBackOutline />Kembali Ke Daftar
+                  <IoChevronBackOutline />
+                  Kembali Ke Daftar
                 </Button>
                 <Button className="bg-[#FDA31A] text-white cursor-pointer">
-                  <MdOutlineFileDownload />Simpan
+                  <MdOutlineFileDownload />
+                  Simpan
                 </Button>
               </div>
             </div>
@@ -83,23 +87,31 @@ const DetailDokumenInternal = () => {
             {/* Data Dokumen Section */}
             <div className="space-y-4">
               <div className="border-b-1 border-[#FDA31A]">
-                <h1 className="text-sm font-normal text-[#FDA31A]">Data Dokumen</h1>
+                <h1 className="text-sm font-normal text-[#FDA31A]">
+                  Data Dokumen
+                </h1>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {/* Kolom Kiri */}
                 <div className="space-y-4">
                   <div className="flex gap-20">
-                    <Label className="w-40 text-[#002E5A]">No. Dokumen<span className="text-red-500">*</span></Label>
+                    <Label className="w-40 text-[#002E5A]">
+                      No. Dokumen<span className="text-red-500">*</span>
+                    </Label>
                     <Input />
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Nama Dokumen<span className="text-red-500">*</span></Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Nama Dokumen<span className="text-red-500">*</span>
+                    </Label>
                     <Input />
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Uraian Singkat</Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Uraian Singkat
+                    </Label>
                     <Input />
                   </div>
 
@@ -109,22 +121,29 @@ const DetailDokumenInternal = () => {
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Tanggal Dokumen<span className="text-red-500">*</span></Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Tanggal Dokumen<span className="text-red-500">*</span>
+                    </Label>
                     <Input type="date" placeholder="dd - mm - yyyy" />
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Jenis Dokumen<span className="text-red-500">*</span></Label>
-                    <Input className="text-center" placeholder="Surat Keputusan" />
+                    <Label className="w-50 text-[#002E5A]">
+                      Jenis Dokumen<span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      className="text-center"
+                      placeholder="Surat Keputusan"
+                    />
                   </div>
                 </div>
-
-
 
                 {/* Kolom Kanan */}
                 <div className="space-y-4">
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Menu referensi</Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Menu referensi
+                    </Label>
                     <Select>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pengajaran" />
@@ -159,7 +178,9 @@ const DetailDokumenInternal = () => {
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Status Dokumen</Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Status Dokumen
+                    </Label>
                     <Select>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Baru" />
@@ -173,7 +194,9 @@ const DetailDokumenInternal = () => {
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Tingkat<span className="text-red-500">*</span></Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Tingkat<span className="text-red-500">*</span>
+                    </Label>
                     <Select>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="--Pilih Tingkat--" />
@@ -187,18 +210,28 @@ const DetailDokumenInternal = () => {
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-80 text-[#002E5A]">Nama Pejabat Penetap</Label>
+                    <Label className="w-80 text-[#002E5A]">
+                      Nama Pejabat Penetap
+                    </Label>
                     <div className="relative w-full">
                       <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                      <Input placeholder="Cari Pejabat Penetap" className="w-80 pr-8" />
+                      <Input
+                        placeholder="Cari Pejabat Penetap"
+                        className="w-80 pr-8"
+                      />
                     </div>
                   </div>
 
                   <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">Nama Validator</Label>
+                    <Label className="w-50 text-[#002E5A]">
+                      Nama Validator
+                    </Label>
                     <div className="relative">
                       <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                      <Input placeholder="Cari Nama Validator" className="w-80 pr-8" />
+                      <Input
+                        placeholder="Cari Nama Validator"
+                        className="w-80 pr-8"
+                      />
                     </div>
                   </div>
                 </div>
@@ -206,17 +239,25 @@ const DetailDokumenInternal = () => {
             </div>
 
             <div className="border-b-1 border-[#FDA31A] mb-5 mt-10">
-                <h1 className="text-sm font-normal text-[#FDA31A]">Data Dokumen</h1>
+              <h1 className="text-sm font-normal text-[#FDA31A]">
+                Data Dokumen
+              </h1>
             </div>
             <Table className=" table-auto">
               <TableHeader>
                 <TableRow className="bg-[#002E5A] ">
-                  <TableHead className="text-center text-white">Pegawai</TableHead>
-                  <TableHead className="w-10 text-center text-white"><Button className="w-5 h-5 bg-[#FDA31A] cursor-pointer"><IoAdd /></Button></TableHead>
+                  <TableHead className="text-center text-white">
+                    Pegawai
+                  </TableHead>
+                  <TableHead className="w-10 text-center text-white">
+                    <Button className="w-5 h-5 bg-[#FDA31A] cursor-pointer">
+                      <IoAdd />
+                    </Button>
+                  </TableHead>
                 </TableRow>
               </TableHeader>
 
-              <TableBody className="bg-white divide-y divide-gray-200" >
+              <TableBody className="bg-white divide-y divide-gray-200">
                 <TableRow className=" even:bg-gray-100">
                   <TableCell className="text-center">
                     <div className="flex justify-between">
@@ -253,12 +294,10 @@ const DetailDokumenInternal = () => {
                 </TableRow>
               </TableBody>
             </Table>
-
           </div>
         }
       />
     </div>
-
   );
 };
 

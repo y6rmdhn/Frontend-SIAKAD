@@ -1,5 +1,5 @@
 import React from "react";
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -69,22 +69,22 @@ const DokumenInternal = () => {
                 </Select>
               </div>
               <div className="flex gap-20">
-              <Label className=" text-[#FDA31A] w-40">Status Dokumen</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="--Semua Status Dokumen--" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Status Dokumen</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                <Label className=" text-[#FDA31A] w-40">Status Dokumen</Label>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="--Semua Status Dokumen--" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Status Dokumen</SelectLabel>
+                      <SelectItem value="apple">Apple</SelectItem>
+                      <SelectItem value="banana">Banana</SelectItem>
+                      <SelectItem value="blueberry">Blueberry</SelectItem>
+                      <SelectItem value="grapes">Grapes</SelectItem>
+                      <SelectItem value="pineapple">Pineapple</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -112,7 +112,8 @@ const DokumenInternal = () => {
         }
       />
 
-      <CustomCard cardStyle="border-t-[#87E39B]"
+      <CustomCard
+        cardStyle="border-t-[#87E39B]"
         actions={
           <div className="">
             <div className="flex justify-between mb-5">
@@ -134,16 +135,21 @@ const DokumenInternal = () => {
               <div className="flex gap-6">
                 <div className="relative">
                   <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                  <Input placeholder="Cari Dokumen Internal" className="w-80 pr-8" />
+                  <Input
+                    placeholder="Cari Dokumen Internal"
+                    className="w-80 pr-8"
+                  />
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <Button className="bg-[#87E39B] text-white cursor-pointer">
-                  <IoAdd />Tambah
+                  <IoAdd />
+                  Tambah
                 </Button>
                 <Button className="bg-[#FDA31A] text-white cursor-pointer">
-                  <HiMiniTrash />Hapus
+                  <HiMiniTrash />
+                  Hapus
                 </Button>
               </div>
             </div>
@@ -152,7 +158,9 @@ const DokumenInternal = () => {
               <TableHeader>
                 <TableRow className="bg-[#002E5A] ">
                   <TableHead className="text-center text-white"></TableHead>
-                  <TableHead className="text-center text-white">Di unggah oleh</TableHead>
+                  <TableHead className="text-center text-white">
+                    Di unggah oleh
+                  </TableHead>
                   <TableHead className="text-center text-white">
                     No. Dokumen
                   </TableHead>
@@ -165,12 +173,8 @@ const DokumenInternal = () => {
                   <TableHead className="text-center text-white">
                     Menu Referensi
                   </TableHead>
-                  <TableHead className="text-center text-white">
-                    File
-                  </TableHead>
-                  <TableHead className="text-center text-white">
-                    Aksi
-                  </TableHead>
+                  <TableHead className="text-center text-white">File</TableHead>
+                  <TableHead className="text-center text-white">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
 

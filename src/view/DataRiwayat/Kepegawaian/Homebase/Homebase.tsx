@@ -1,4 +1,4 @@
-import Title from "@/components/commons/Title";
+import Title from "@/components/blocks/Title";
 import React from "react";
 
 const Homebase = () => {

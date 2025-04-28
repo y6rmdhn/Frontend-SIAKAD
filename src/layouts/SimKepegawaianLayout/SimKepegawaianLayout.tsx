@@ -1,6 +1,6 @@
-import Header from "@/components/commons/Header";
-import Navigation from "@/components/commons/Navigation";
-import NavigationUser from "@/components/commons/NavigationUser";
+import Header from "@/components/sections/Header";
+import Navigation from "@/components/blocks/NavigationAdmin";
+import NavigationUser from "@/components/blocks/NavigationUser";
 import PageHead from "@/components/commons/PageHead";
 import { ReactNode } from "react";
 

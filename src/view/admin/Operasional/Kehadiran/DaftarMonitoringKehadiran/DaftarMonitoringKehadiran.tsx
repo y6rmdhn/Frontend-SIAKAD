@@ -1,4 +1,4 @@
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,8 +30,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
-import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 
 const DaftarMonitoringKehadiran = () => {
   const form = useForm();

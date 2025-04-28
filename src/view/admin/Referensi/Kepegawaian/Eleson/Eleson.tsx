@@ -1,5 +1,5 @@
-import CustomCard from "@/components/commons/card";
-import Title from "@/components/commons/Title";
+import CustomCard from "@/components/blocks/Card";
+import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
   Table,

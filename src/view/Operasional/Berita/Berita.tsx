@@ -1,5 +1,5 @@
 import React from "react";
-import CustomCard from "@/components/commons/card";
+import CustomCard from "@/components/blocks/Card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";

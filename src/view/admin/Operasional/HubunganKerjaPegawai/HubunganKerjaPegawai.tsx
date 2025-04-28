@@ -1,5 +1,5 @@
-import CustomCard from "@/components/commons/card";
-import MonitoringInput from "@/components/commons/monitoringInput";
+import CustomCard from "@/components/blocks/Card";
+import MonitoringInput from "@/components/blocks/MonitoringInput";
 import React from "react";
 import {
   Select,

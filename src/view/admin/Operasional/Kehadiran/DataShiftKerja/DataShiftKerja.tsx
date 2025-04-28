@@ -31,8 +31,8 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import dataConstant from "../../../../../constant/dataShiftKerja/index";
-import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 
 const FormFieldGenerator = ({ form, fields }) => {
   return fields.map(({ label, name, placeholder, select, type, required }) => (

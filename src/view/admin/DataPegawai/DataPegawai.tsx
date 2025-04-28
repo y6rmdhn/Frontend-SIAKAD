@@ -13,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 
 const DataPegawai = () => {
   const navigate = useNavigate();

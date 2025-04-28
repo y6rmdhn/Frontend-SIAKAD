@@ -1,13 +1,13 @@
-import CustomCard from "@/components/commons/card";
-import Title from "@/components/commons/Title";
+import CustomCard from "@/components/blocks/Card";
+import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import React from "react";
 import { IoSaveSharp } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useForm } from "react-hook-form";
-import { FormFieldInput } from "@/components/commons/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/commons/CustomFormSelect/CustomFormSelect";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Link } from "react-router-dom";
 
 const DetailJabatanFungsional = () => {
