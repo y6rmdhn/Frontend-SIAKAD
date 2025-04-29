@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,6 +25,7 @@ type FormFieldInputProps = {
   labelStyle?: string;
   inputStyle?: string;
   position?: boolean;
+  infoFile?: boolean;
   required: boolean;
 };
 
@@ -35,6 +37,7 @@ export const FormFieldInput = ({
   placeholder,
   labelStyle,
   inputStyle,
+  infoFile,
   position,
   required,
 }: FormFieldInputProps) => {
@@ -62,10 +65,15 @@ export const FormFieldInput = ({
           </FormLabel>
           <FormControl>
             {type === "file" ? (
-              <Input
-                type="file"
-                onChange={(e) => field.onChange(e.target.files?.[0])}
-              />
+              <div className="w-full">
+                <Input
+                  type="file"
+                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                />
+                <span className="text-[#3F6FA9] text-xs">
+                  jpg.jpg.pdf(maxsize 2.007152 MB)
+                </span>
+              </div>
             ) : type === "textarea" ? (
               <Textarea
                 className={inputStyle}
