@@ -66,15 +66,17 @@ const Pangkat = () => {
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-300 ">
-            <TableHead className="text-center text-black">TMT Tugas</TableHead>
-            <TableHead className="text-center text-black">Homebase</TableHead>
-            <TableHead className="text-center text-black">File Sk</TableHead>
-            <TableHead className="text-center text-black">Tgl Disetujui</TableHead>
+            <TableHead className="text-center text-black">TMT Pangkas</TableHead>
+            <TableHead className="text-center text-black">Jenis SK</TableHead>
+            <TableHead className="text-center text-black">Nama Pangkat</TableHead>
+            <TableHead className="text-center text-black">Masa Kerja</TableHead>
+            <TableHead className="text-center text-black">Status Pengajuan</TableHead>
             <TableHead className="text-center text-black">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-gray-100">
+            <TableCell className="text-center"></TableCell>
             <TableCell className="text-center"></TableCell>
             <TableCell className="text-center"></TableCell>
             <TableCell className="text-center"></TableCell>
