@@ -58,6 +58,48 @@ const dataRiwayat: {
   {
     title: "Pelaksanaan Pendidikan",
     href: "",
+    childrenItems: [
+      {
+        title: "Bahan Ajar",
+        href: "/data-riwayat/pelaksanaan-pendidikan/bahan-ajar",
+      },
+      {
+        title: "Bimbingan Mahasiswa",
+        href: "/data-riwayat/pelaksanaan-pendidikan/bimbingan-mahasiswa",
+      },
+      {
+        title: "Datasering",
+        href: "/data-riwayat/pelaksanaan-pendidikan/datasering",
+      },
+      {
+        title: "Orasi Ilmiah",
+        href: "/data-riwayat/pelaksanaan-pendidikan/orasi-ilmiah",
+      },
+      {
+        title: "Pembimbing Dosen",
+        href: "/data-riwayat/pelaksanaan-pendidikan/pembimbing-dosen",
+      },
+      {
+        title: "Pembinaan Mahasiswa",
+        href: "/data-riwayat/pelaksanaan-pendidikan/pembinaan-mahasiswa",
+      },
+      {
+        title: "Pengajaran",
+        href: "/data-riwayat/pelaksanaan-pendidikan/pengajaran",
+      },
+      {
+        title: "Pengujian Mahasiswa",
+        href: "/data-riwayat/pelaksanaan-pendidikan/pengujian-mahasiswa",
+      },
+      {
+        title: "Tugas Tambahan",
+        href: "/data-riwayat/pelaksanaan-pendidikan/tugas-tambahan",
+      },
+      {
+        title: "Visiting Scientist",
+        href: "/data-riwayat/pelaksanaan-pendidikan/visiting-scientist",
+      },
+    ],
   },
   {
     title: "Pelaksanaan Penelitian",

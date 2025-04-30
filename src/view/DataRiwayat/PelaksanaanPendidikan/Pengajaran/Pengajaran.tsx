@@ -1,7 +1,9 @@
 import CustomCard from "@/components/blocks/Card";
+import InfoList from "@/components/blocks/InfoList";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -12,15 +14,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,16 +21,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import unitKerjaOptions from "@/constant/dummyFilter";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
-const Homebase = () => {
+const Pengajaran = () => {
   return (
     <div className="mt-10 mb-20">
-      <Title title="Homebase" subTitle="Daftar Homebase" />
+      <Title title="Pengajaran" subTitle="Daftar Pengajaran" />
       <CustomCard
         actions={
           <div className="flex justify-end ">
@@ -48,56 +41,41 @@ const Homebase = () => {
           </div>
         }
       />
-      <div className="w-full grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>NIP</p>
-          <p>Nama</p>
-          <p>Unit Kerja</p>
-          <p>Status</p>
-        </div>
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>Jab. Akademik</p>
-          <p>Jab. Fungsional</p>
-          <p>Jab. Struktural</p>
-          <p>Pendidikan</p>
-        </div>
-      </div>
-      <div className="gap-5 flex mt-5">
-        <Select>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="--Semua--" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Unit Kerja</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
 
-        <div className="relative">
-          <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-          <Input placeholder="Search" className="w-80 pr-8" />
-        </div>
+      <InfoList
+        items={[
+          "NIP",
+          "Nama",
+          "Unit Kerja",
+          "Status",
+          "Jab. Akademik",
+          "Jab. Fungsional",
+          "Jab. Struktural",
+          "Pendidikan",
+        ]}
+      />
+
+      <div className="gap-5 flex mt-5">
+        <SelectFilter options={unitKerjaOptions} placeholder="--Semua--" />
+        <SearchInput />
       </div>
+
       <Table className="mt-10 table-auto">
         <TableHeader>
-          <TableRow className="bg-gray-300 ">
-            <TableHead className="text-center text-black">TMT Tugas</TableHead>
-            <TableHead className="text-center text-black">Homebase</TableHead>
-            <TableHead className="text-center text-black">File Sk</TableHead>
-            <TableHead className="text-center text-black">
-              Tgl Disetujui
-            </TableHead>
-            <TableHead className="text-center text-black">Aksi</TableHead>
+          <TableRow className="bg-gray-100">
+            <TableHead className="text-center">Kurikulum</TableHead>
+            <TableHead className="text-center">Kode MK</TableHead>
+            <TableHead className="text-center">Nama Mk</TableHead>
+            <TableHead className="text-center">SKS MK</TableHead>
+            <TableHead className="text-center">SKS Mengajar</TableHead>
+            <TableHead className="text-center">Kategori Kegiatan</TableHead>
+            <TableHead className="text-center">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-gray-100">
+            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center"></TableCell>
             <TableCell className="text-center"></TableCell>
             <TableCell className="text-center"></TableCell>
             <TableCell className="text-center"></TableCell>
@@ -147,4 +125,4 @@ const Homebase = () => {
   );
 };
 
-export default Homebase;
+export default Pengajaran;

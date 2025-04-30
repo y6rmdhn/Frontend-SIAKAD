@@ -142,10 +142,6 @@ import DetailPendidikanFormalUserPage from "./pages/dataRiwayat/kualifikasi/pend
 import DetailDiklatUserPage from "./pages/dataRiwayat/kualifikasi/diklat/detailDiklat";
 import DetailRiwayatPekerjaanUserPage from "./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detailRiwayatPekerjaan";
 import ForgetPasswordPage from "./pages/auth/forgetPassword";
-import JabatanFungsionalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanfungsional";
-import DetailJabatanFungsionalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanfungsional/detailJabatanFungsional";
-import JabatanStrukturalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanStruktular";
-import DetailJabatanStrukturalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanStruktular/detailJabatanStruktural";
 
 function App() {
   return (
@@ -226,7 +222,6 @@ function App() {
               Component={DetailRiwayatPekerjaanUserPage}
             />
           </Route>
-          
         </Route>
 
         {/* for admin path */}
