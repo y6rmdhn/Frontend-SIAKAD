@@ -42,7 +42,7 @@ const DetailVisitingScientist = () => {
           <CustomCard
             actions={
               <div className="flex justify-end gap-2">
-                <Link to="/data-riwayat/pelaksanaan-pendidikan/datasering">
+                <Link to="/data-riwayat/pelaksanaan-pendidikan/visiting-scientist">
                   <Button
                     type="button"
                     className="bg-green-light-uika hover:bg-hover-green-uika"

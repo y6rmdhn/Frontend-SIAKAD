@@ -29,6 +29,7 @@ import { FaPlus } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoMdDownload } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const DetailBahanAjar = () => {
   const form = useForm();
@@ -41,10 +42,18 @@ const DetailBahanAjar = () => {
           <CustomCard
             actions={
               <div className="flex justify-end gap-2">
-                <Button className="bg-green-light-uika hover:bg-hover-green-uika">
-                  <IoIosArrowBack /> Kembali ke Daftar
-                </Button>
-                <Button className="bg-yellow-uika hover:bg-hover-yellow-uika">
+                <Link to="/data-riwayat/pelaksanaan-pendidikan/bahan-ajar">
+                  <Button
+                    type="button"
+                    className="bg-green-light-uika hover:bg-hover-green-uika"
+                  >
+                    <IoIosArrowBack /> Kembali ke Daftar
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  className="bg-yellow-uika hover:bg-hover-yellow-uika"
+                >
                   <IoMdDownload /> Simpan
                 </Button>
               </div>
