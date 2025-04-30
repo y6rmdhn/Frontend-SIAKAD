@@ -143,44 +143,46 @@ const DokumenInternal = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button className="bg-[#87E39B] text-white cursor-pointer">
+                <Link to="/operasional/detail-dokumen-internal">
+                <Button className="bg-green-light-uika hover:bg-hover-green-uika">
                   <IoAdd />
                   Tambah
                 </Button>
+                </Link>
+                <Link to="">
                 <Button className="bg-[#FDA31A] text-white cursor-pointer">
                   <HiMiniTrash />
                   Hapus
                 </Button>
+                </Link>
               </div>
             </div>
 
             <Table className="mt-10 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#002E5A] ">
-                  <TableHead className="text-center text-white"></TableHead>
-                  <TableHead className="text-center text-white">
+                  <TableHead className="text-center text-white border-1">
                     Di unggah oleh
                   </TableHead>
-                  <TableHead className="text-center text-white">
+                  <TableHead className="text-center text-white border-1">
                     No. Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white">
+                  <TableHead className="text-center text-white border-1">
                     Nama Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white">
+                  <TableHead className="text-center text-white border-1">
                     Jenis Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white">
+                  <TableHead className="text-center text-white border-1">
                     Menu Referensi
                   </TableHead>
-                  <TableHead className="text-center text-white">File</TableHead>
-                  <TableHead className="text-center text-white">Aksi</TableHead>
+                  <TableHead className="text-center text-white border-1">File</TableHead>
+                  <TableHead className="text-center text-white border-1">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody className="divide-y divide-gray-200">
                 <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center"></TableCell>
                   <TableCell className="text-center"></TableCell>
                   <TableCell className="text-center"></TableCell>
                   <TableCell className="text-center"></TableCell>

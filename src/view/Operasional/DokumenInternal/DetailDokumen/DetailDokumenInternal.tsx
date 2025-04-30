@@ -73,14 +73,17 @@ const DetailDokumenInternal = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button className="bg-[#87E39B] text-white cursor-pointer">
-                  <IoChevronBackOutline />
-                  Kembali Ke Daftar
-                </Button>
-                <Button className="bg-[#FDA31A] text-white cursor-pointer">
-                  <MdOutlineFileDownload />
-                  Simpan
-                </Button>
+                <Link to="/operasional/dokumen-internal">
+                  <Button className="bg-green-light-uika hover:bg-hover-green-uika">
+                    <IoChevronBackOutline /> Kembali ke Daftar
+                  </Button>
+                </Link>
+                <Link to="">
+                  <Button className="bg-[#FDA31A] text-white cursor-pointer">
+                    <MdOutlineFileDownload />
+                    Simpan
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -93,7 +96,7 @@ const DetailDokumenInternal = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {/* Kolom Kiri */}
-                <div className="space-y-4">
+                <div className="space-y-7">
                   <div className="flex gap-20">
                     <Label className="w-40 text-[#002E5A]">
                       No. Dokumen<span className="text-red-500">*</span>
@@ -139,7 +142,7 @@ const DetailDokumenInternal = () => {
                 </div>
 
                 {/* Kolom Kanan */}
-                <div className="space-y-4">
+                <div className="space-y-7">
                   <div className="flex gap-14">
                     <Label className="w-50 text-[#002E5A]">
                       Menu referensi
@@ -158,22 +161,27 @@ const DetailDokumenInternal = () => {
 
                   <div className="flex">
                     <Label className="w-50 text-[#002E5A]">File</Label>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        onClick={triggerFileInput}
-                        className="bg-gray-200 rounded border text-black border-gray-400 hover:bg-gray-300"
-                      >
-                        Choose File
-                      </Button>
-                      <span className="italic text-gray-600">{fileName}</span>
-                      <Input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg"
-                        className="hidden"
-                        onChange={handleFileChange}
-                      />
+                    <div>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          onClick={triggerFileInput}
+                          className="h-5 bg-gray-200 rounded border text-black border-gray-400 hover:bg-gray-300"
+                        >
+                          Choose File
+                        </Button>
+                        <span className="text-sm italic text-gray-600">{fileName}</span>
+                        <Input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg"
+                          className="hidden"
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                      <span className="text-blue-600 text-xs">
+                        jpg.jpeg pdf (maxsize 2 MB)
+                      </span>
                     </div>
                   </div>
 
@@ -209,7 +217,7 @@ const DetailDokumenInternal = () => {
                     </Select>
                   </div>
 
-                  <div className="flex gap-14">
+                  <div className="flex gap-5">
                     <Label className="w-80 text-[#002E5A]">
                       Nama Pejabat Penetap
                     </Label>
@@ -217,12 +225,12 @@ const DetailDokumenInternal = () => {
                       <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
                       <Input
                         placeholder="Cari Pejabat Penetap"
-                        className="w-80 pr-8"
+                        className="w-93 pr-8"
                       />
                     </div>
                   </div>
 
-                  <div className="flex gap-14">
+                  <div className="flex gap-5">
                     <Label className="w-50 text-[#002E5A]">
                       Nama Validator
                     </Label>
@@ -230,7 +238,7 @@ const DetailDokumenInternal = () => {
                       <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
                       <Input
                         placeholder="Cari Nama Validator"
-                        className="w-80 pr-8"
+                        className="w-93 pr-8"
                       />
                     </div>
                   </div>
@@ -246,7 +254,7 @@ const DetailDokumenInternal = () => {
             <Table className=" table-auto">
               <TableHeader>
                 <TableRow className="bg-[#002E5A] ">
-                  <TableHead className="text-center text-white">
+                  <TableHead className="text-center text-white border-1">
                     Pegawai
                   </TableHead>
                   <TableHead className="w-10 text-center text-white">
