@@ -213,22 +213,22 @@ const DetailRiwayatPekerjaan = () => {
             <Table className="mt-10 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#002E5A]">
-                  <TableHead className="text-center text-white border-1">
+                  <TableHead className="text-center text-white border">
                     Tipe Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white border-1">
+                  <TableHead className="text-center text-white border">
                     Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white border-1">
+                  <TableHead className="text-center text-white border">
                     Nama Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white border-1">
+                  <TableHead className="text-center text-white border">
                     Jenis Dokumen
                   </TableHead>
-                  <TableHead className="text-center text-white border-1">
+                  <TableHead className="text-center text-white border">
                     Keterangan
                   </TableHead>
-                  <TableHead className="text-center text-white"><Button className="w-5 h-5 bg-[#FDA31A] cursor-pointer">
+                  <TableHead className="text-center text-white border"><Button className="w-5 h-5 bg-[#FDA31A] cursor-pointer">
                     <IoAdd />
                   </Button></TableHead>
                 </TableRow>
@@ -236,7 +236,8 @@ const DetailRiwayatPekerjaan = () => {
 
               <TableBody className="divide-y divide-gray-200">
                 <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center"><Select>
+                  <TableCell className="text-center border border-gray-200">
+                    <Select>
                     <SelectTrigger className="w-32">
                       <SelectValue placeholder="File" />
                     </SelectTrigger>
@@ -253,7 +254,7 @@ const DetailRiwayatPekerjaan = () => {
                   </Select>
                   </TableCell>
 
-                  <TableCell className="">
+                  <TableCell className="border border-gray-200">
                     <div className="flex items-center gap-2">
                       <Button
                         type="button"
@@ -276,8 +277,8 @@ const DetailRiwayatPekerjaan = () => {
                     </span>
                   </TableCell>
 
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center border border-gray-200"></TableCell>
+                  <TableCell className="text-center border border-gray-200">
                     <Select>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="--Pilih Jenis Dokumen --" />
@@ -289,8 +290,8 @@ const DetailRiwayatPekerjaan = () => {
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="h-full">
+                  <TableCell className="text-center border border-gray-200"></TableCell>
+                  <TableCell className="h-full border border-gray-200">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link to="">
                         <Button
