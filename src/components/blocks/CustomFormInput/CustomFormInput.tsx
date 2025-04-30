@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 type FormFieldInputProps = {
@@ -20,13 +21,15 @@ type FormFieldInputProps = {
     | "textarea"
     | "number"
     | "checkbox"
-    | "password";
+    | "password"
+    | "radio";
   placeholder?: string;
   labelStyle?: string;
   inputStyle?: string;
   position?: boolean;
   infoFile?: boolean;
   required: boolean;
+  options?: { label: string; value: string }[]; // hanya untuk radio
 };
 
 export const FormFieldInput = ({
@@ -40,6 +43,7 @@ export const FormFieldInput = ({
   infoFile,
   position,
   required,
+  options = [],
 }: FormFieldInputProps) => {
   return (
     <FormField
@@ -63,17 +67,13 @@ export const FormFieldInput = ({
               <span className="text-red-500">*</span>
             )}
           </FormLabel>
+
           <FormControl>
             {type === "file" ? (
-              <div className="w-full">
-                <Input
-                  type="file"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
-                />
-                <span className="text-[#3F6FA9] text-xs">
-                  jpg.jpg.pdf(maxsize 2.007152 MB)
-                </span>
-              </div>
+              <Input
+                type="file"
+                onChange={(e) => field.onChange(e.target.files?.[0])}
+              />
             ) : type === "textarea" ? (
               <Textarea
                 className={inputStyle}
@@ -87,6 +87,21 @@ export const FormFieldInput = ({
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
+            ) : type === "radio" ? (
+              <div className="flex justify-start gap-10 w-full">
+                {options.map((option) => (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="radio"
+                      value={option.value}
+                      checked={field.value === option.value}
+                      onChange={() => field.onChange(option.value)}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm">{option.label}</span>
+                  </div>
+                ))}
+              </div>
             ) : (
               <Input
                 className={inputStyle}
@@ -96,6 +111,7 @@ export const FormFieldInput = ({
               />
             )}
           </FormControl>
+
           <FormMessage />
         </FormItem>
       )}

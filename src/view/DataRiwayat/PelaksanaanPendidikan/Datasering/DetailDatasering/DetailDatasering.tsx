@@ -29,22 +29,32 @@ import { FaPlus } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoMdDownload } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { FormFieldInputFile } from "@/components/CustomFormInputFile/CustomFormInputFile";
+import { Link } from "react-router-dom";
 
 const DetailDatasering = () => {
   const form = useForm();
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Bahan Ajar" subTitle="Detail Bahan Ajar" />
+      <Title title="Datasering" subTitle="Detail Datasering" />
       <Form {...form}>
         <form>
           <CustomCard
             actions={
               <div className="flex justify-end gap-2">
-                <Button className="bg-green-light-uika hover:bg-hover-green-uika">
-                  <IoIosArrowBack /> Kembali ke Daftar
-                </Button>
-                <Button className="bg-yellow-uika hover:bg-hover-yellow-uika">
+                <Link to="/data-riwayat/pelaksanaan-pendidikan/datasering">
+                  <Button
+                    type="button"
+                    className="bg-green-light-uika hover:bg-hover-green-uika"
+                  >
+                    <IoIosArrowBack /> Kembali ke Daftar
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  className="bg-yellow-uika hover:bg-hover-yellow-uika"
+                >
                   <IoMdDownload /> Simpan
                 </Button>
               </div>
@@ -62,7 +72,7 @@ const DetailDatasering = () => {
                 "Pendidikan",
               ]}
             />
-            <div className="mt-10 grid grid-rows-5 grid-flow-col gap-x-3 w-full">
+            <div className="mt-10 grid grid-rows-5 grid-flow-col gap-2 w-full">
               <FormFieldSelect
                 label="Kategori Kegiatan"
                 name="kategoriKegiatan"
@@ -119,13 +129,28 @@ const DetailDatasering = () => {
                 labelStyle="text-[#3F6FA9]"
               />
 
-              <FormFieldInput
+              <FormFieldInputFile
                 label="Tgl.Selesai"
                 name="tgmMulai"
                 form={form}
-                infoFile={true}
                 type="file"
                 required={false}
+                labelStyle="text-[#3F6FA9]"
+              />
+
+              <FormFieldInput
+                label="Deskripsi Kegiatan"
+                name="deskripsiKegiatan"
+                form={form}
+                required={true}
+                labelStyle="text-[#3F6FA9]"
+              />
+
+              <FormFieldInput
+                label="SK Penugasan"
+                name="skPenugasan"
+                form={form}
+                required={true}
                 labelStyle="text-[#3F6FA9]"
               />
             </div>

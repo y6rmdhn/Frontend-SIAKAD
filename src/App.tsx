@@ -146,6 +146,22 @@ import JabatanFungsionalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanfu
 import DetailJabatanFungsionalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanfungsional/detailJabatanFungsional";
 import JabatanStrukturalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanStruktular";
 import DetailJabatanStrukturalUserPage from "./pages/dataRiwayat/kepegawaian/jabatanStruktular/detailJabatanStruktural";
+import BahanAjarUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar";
+import DetailBahanAjarUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detailBahanAjar";
+import DataseringUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/datasering";
+import DetailDataseringUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detailDatasering";
+import OrasiIlmiahUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah";
+import DetailOrasiIlmiahUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detailOrasiIlmiah";
+import BimbinganMahasiswaUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/bimbinganMahasiswa";
+import PembimbingDosenUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen";
+import PembinaanMahasiswaUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/pembinaanMahasiswa";
+import PengajaranUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/pengajaran";
+import PengujianMahasiswaUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/pengujianMahasiswa";
+import TugasTambahanUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan";
+import VisitingScientistUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist";
+import DetailTugasTambahanUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detailTugasTambahan";
+import DetailVisitingScientistUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detailVisitingScientist";
+import DetailPembimbingDosenUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detailPembimbingDosen";
 
 function App() {
   return (
@@ -224,6 +240,60 @@ function App() {
             <Route
               path="detail-riwayat-pekerjaan"
               Component={DetailRiwayatPekerjaanUserPage}
+            />
+          </Route>
+
+          <Route path="pelaksanaan-pendidikan">
+            <Route path="bahan-ajar" Component={BahanAjarUserPage} />
+            <Route
+              path="detail-bahan-ajar"
+              Component={DetailBahanAjarUserPage}
+            />
+
+            <Route
+              path="bimbingan-mahasiswa"
+              Component={BimbinganMahasiswaUserPage}
+            />
+
+            <Route path="datasering" Component={DataseringUserPage} />
+            <Route
+              path="detail-datasering"
+              Component={DetailDataseringUserPage}
+            />
+            <Route path="orasi-ilmiah" Component={OrasiIlmiahUserPage} />
+            <Route
+              path="detail-orasi-ilmiah"
+              Component={DetailOrasiIlmiahUserPage}
+            />
+            <Route
+              path="pembimbing-dosen"
+              Component={PembimbingDosenUserPage}
+            />
+            <Route
+              path="detail-pembimbing-dosen"
+              Component={DetailPembimbingDosenUserPage}
+            />
+            <Route
+              path="pembinaan-mahasiswa"
+              Component={PembinaanMahasiswaUserPage}
+            />
+            <Route path="pengajaran" Component={PengajaranUserPage} />
+            <Route
+              path="pengujian-mahasiswa"
+              Component={PengujianMahasiswaUserPage}
+            />
+            <Route path="tugas-tambahan" Component={TugasTambahanUserPage} />
+            <Route
+              path="detail-tugas-tambahan"
+              Component={DetailTugasTambahanUserPage}
+            />
+            <Route
+              path="visiting-scientist"
+              Component={VisitingScientistUserPage}
+            />
+            <Route
+              path="detail-visiting-scientist"
+              Component={DetailVisitingScientistUserPage}
             />
           </Route>
         </Route>
