@@ -162,6 +162,10 @@ import VisitingScientistUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan
 import DetailTugasTambahanUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detailTugasTambahan";
 import DetailVisitingScientistUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detailVisitingScientist";
 import DetailPembimbingDosenUserPage from "./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detailPembimbingDosen";
+import SertifikasiUserPage from "./pages/dataRiwayat/Kompetensi/Sertifikasi";
+import DetailSertifikasiUserPage from "./pages/dataRiwayat/Kompetensi/Sertifikasi/detailSertifikasi";
+import TesUserPage from "./pages/dataRiwayat/Kompetensi/Tes";
+import DetailTesUserPage from "./pages/dataRiwayat/Kompetensi/Tes/detailTes";
 
 function App() {
   return (
@@ -241,6 +245,16 @@ function App() {
               path="detail-riwayat-pekerjaan"
               Component={DetailRiwayatPekerjaanUserPage}
             />
+          </Route>
+
+          <Route path="kompetensi">
+            <Route path="sertifikasi" Component={SertifikasiUserPage} />
+            <Route
+              path="detail-sertifikasi"
+              Component={DetailSertifikasiUserPage}
+            />
+            <Route path="tes" Component={TesUserPage} />
+            <Route path="detail-tes" Component={DetailTesUserPage} />
           </Route>
 
           <Route path="pelaksanaan-pendidikan">
