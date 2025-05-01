@@ -185,6 +185,12 @@ import PembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembica
 import DetailPembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara";
 import PengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal";
 import DetailPengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal";
+import AnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi";
+import DetailAnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi/DetailAnggotaProfesi";
+import PenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan";
+import DetailPenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan";
+import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
+import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
 
 function App() {
   return (
@@ -342,6 +348,9 @@ function App() {
               Component={DetailPublikasiUserPage}
             />
           </Route>
+
+{/* DATA RIWAYAT > PELAKSANAAN PENGABDIAN */}
+
           <Route path="pelaksanaan-pengabdian">
             <Route path="pengabdian" 
             Component={PengabdianUserPage}  />
@@ -375,6 +384,18 @@ function App() {
           <Route path="kompensasi">
             <Route path="pelanggaran" Component={PelanggaranUserPage} />
           </Route>
+
+          {/* DATA RIWAYAT > Penunjang */}
+          <Route path="penunjang">
+            <Route path="anggota-profesi" Component={AnggotaProfesiUserPage} />
+            <Route path="detail-anggota-profesi" Component={DetailAnggotaProfesiUserPage} />
+      
+            <Route path="penghargaan" Component={PenghargaanUserPage} />
+            <Route path="detail-penghargaan" Component={DetailPenghargaanUserPage} />
+           
+            <Route path="penunjang-lain" Component={PenunjangLainUserPage} />
+            <Route path="detail-penunjang-lain" Component={DetailPenunjangLainUserPage} />
+            </Route>
 
           {/* DATA RIWAYAT > PELAKSANAAN PENDIDIKAN */}
           <Route path="pelaksanaan-pendidikan">

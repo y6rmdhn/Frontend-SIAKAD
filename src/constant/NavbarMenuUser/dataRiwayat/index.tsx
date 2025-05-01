@@ -150,6 +150,20 @@ const dataRiwayat: {
   {
     title: "Penunjang",
     href: "",
+    childrenItems: [
+      {
+        title: "Anggota Profesi",
+        href: "/data-riwayat/penunjang/anggota-profesi",
+      },
+      {
+        title: "Penghargaan",
+        href: "/data-riwayat/penunjang/penghargaan",
+      },
+      {
+        title: "Penunjang Lain",
+        href: "/data-riwayat/penunjang/penunjang-lain",
+      },
+    ],
   },
   {
     title: "Pengembangan Diri",

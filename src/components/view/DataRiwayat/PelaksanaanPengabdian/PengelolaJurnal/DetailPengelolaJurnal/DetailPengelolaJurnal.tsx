@@ -138,7 +138,7 @@ const DetailPengelolaJurnal = () => {
                    { value: "1", label: "Penugasan 1" },
                    { value: "2", label: "Penugasan 2" },
                  ]}
-                 required={false}
+                 required={true}
                  placeholder="-- Pilih SK Penugasan --"
                />
         <FormFieldInput
