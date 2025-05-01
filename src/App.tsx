@@ -176,6 +176,10 @@ import KemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/Kemamp
 import DetailKemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa";
 import OrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi";
 import PelanggaranUserPage from "./pages/dataRiwayat/Kompensasi/Pelanggaran";
+import HubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja";
+import DetailHubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja";
+import PengabdianUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian";
+import DetailPengabdianUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian";
 
 function App() {
   return (
@@ -231,6 +235,14 @@ function App() {
               path="detail-jabatan-struktural"
               Component={DetailJabatanStrukturalUserPage}
             />
+             <Route
+              path="hubungan-kerja"
+              Component={HubunganKerjaUserPage}
+            />
+            <Route
+              path="detail-hubungan-kerja"
+              Component={DetailHubunganKerjaUserPage}
+            />
 
             <Route path="pangkat" Component={PangkatUserPage} />
             <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
@@ -284,6 +296,13 @@ function App() {
               Component={DetailPublikasiUserPage}
             />
           </Route>
+          <Route path="pelaksanaan-pengabdian">
+            <Route path="pengabdian" 
+            Component={PengabdianUserPage}  />
+            <Route path="detail-pengabdian"
+             Component={DetailPengabdianUserPage}
+            />
+            </Route>
 
           <Route path="pengembangan-diri">
             <Route path="kemampuan-bahasa" Component={KemampuanBahasaUserPage} />

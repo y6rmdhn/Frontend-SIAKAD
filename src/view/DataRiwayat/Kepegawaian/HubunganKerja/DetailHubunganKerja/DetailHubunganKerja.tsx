@@ -8,18 +8,19 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 
-const DetailJabatanStruktural = () => {
+const DetailHubunganKerja = () => {
   const form = useForm()
   return (
     <div className="mt-10 mb-20">
-      <Title title="Jabatan Struktural" subTitle="Detail Jabatan Struktural" />
+      <Title title="Data Hubungan Kerja" subTitle="Detail Hubungan Kerja" />
 
       <CustomCard
   actions={
     <div className="flex justify-end mt-10">
       <div className="flex gap-4">
-        <Link to="/data-riwayat/kepegawaian/jabatan-struktural">
+        <Link to="/data-riwayat/kepegawaian/hubungan-kerja">
           <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
             <IoIosArrowBack />
             Kembali ke Daftar
@@ -50,7 +51,7 @@ const DetailJabatanStruktural = () => {
       </div>
       <Form {...form}>
               <form>
-              <div className="grid grid-rows-4 grid-flow-col gap-x-5 gap-y-5 items-center mt-4">
+              <div className="grid grid-rows-5 grid-flow-col gap-x-5 gap-y-5 items-center mt-4">
               <FormFieldInput
                 form={form}
                 label="Jabatan Struktural "
@@ -73,9 +74,9 @@ const DetailJabatanStruktural = () => {
                 required={false}
                 labelStyle="text-[#3F6FA9]"
               />
-              <div className="flex items-center gap-4">
+             <div className="flex items-center gap-4">
   <label className="text-[#3F6FA9] text-sm font-medium min-w-[180px]">
-    File Jabatan
+    File Hubungan Kerja
   </label>
 
   <div className="flex flex-col">
@@ -91,6 +92,16 @@ const DetailJabatanStruktural = () => {
     </span>
   </div>
 </div> 
+
+            <FormFieldInput
+         form={form}
+        label="Keterangan"
+        name="keterangan"
+        type="textarea"
+        required={false}
+        labelStyle="text-[#3F6FA9]"
+        placeholder="Pegawai Administrasi dengan jam kerja penuh waktu, sesuai ketentuan Universitas"
+      />
               
             <FormFieldInput
                 form={form}
@@ -115,6 +126,18 @@ const DetailJabatanStruktural = () => {
                 required={false}
                 labelStyle="text-[#3F6FA9]"
               />
+              <FormFieldSelect
+                        form={form}
+                        label="Status Aktif"
+                        name="status_aktif"
+                        labelStyle="text-[#3F6FA9]"
+                        options={[
+                          { value: "1", label: "Aktif" },
+                          { value: "2", label: "Tidak Aktif" },
+                        ]}
+                        required={false}
+                        placeholder="-- Pilih Status Aktif --"
+                      />
               <FormFieldInput
                 form={form}
                 label="Tanggal Input"
@@ -131,4 +154,4 @@ const DetailJabatanStruktural = () => {
   );
 };
 
-export default DetailJabatanStruktural;
+export default DetailHubunganKerja;

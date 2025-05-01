@@ -7,11 +7,11 @@ import {
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb";
   import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import DetailJabatanStruktural from "@/view/DataRiwayat/Kepegawaian/JabatanStruktular/DetailJabatanStruktural/DetailJabatanStruktural";
+import HubunganKerja from "@/view/DataRiwayat/Kepegawaian/HubunganKerja";
   import React from "react";
   import { MdGroups } from "react-icons/md";
   
-  const DetailJabatanStrukturalUserPage = () => {
+  const HubunganKerjaUserPage = () => {
     return (
       <SimKepegawaianLayout isNavbarUser={true}>
         <Breadcrumb className="mt-10">
@@ -35,19 +35,15 @@ import DetailJabatanStruktural from "@/view/DataRiwayat/Kepegawaian/JabatanStruk
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="">Jabatan Struktural</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Detail Jabatan Struktural</BreadcrumbPage>
+              <BreadcrumbPage>Hubungan Kerja</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
   
-        <DetailJabatanStruktural />
+        <HubunganKerja />
       </SimKepegawaianLayout>
     );
   };
   
-  export default DetailJabatanStrukturalUserPage;
+  export default HubunganKerjaUserPage;
   

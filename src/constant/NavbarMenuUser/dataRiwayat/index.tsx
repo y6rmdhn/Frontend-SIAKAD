@@ -108,6 +108,20 @@ const dataRiwayat: {
   {
     title: "Pelaksanaan Pengabdian",
     href: "",
+    childrenItems: [
+      {
+        title: "Pengabdian",
+        href: "/data-riwayat/pelaksanaan-pengabdian/pengabdian",
+      },
+      {
+        title: "Pembicara",
+        href: "/data-riwayat/pelaksanaan-pengabdian/pembicara",
+      },
+      {
+        title: "Pengelola Jurnal",
+        href: "/data-riwayat/pelaksanaan-pengabdian/pengelola-jurnal",
+      },
+    ],
   },
   {
     title: "Penunjang",

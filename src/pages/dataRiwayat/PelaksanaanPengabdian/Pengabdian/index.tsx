@@ -7,11 +7,11 @@ import {
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb";
   import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import DetailJabatanStruktural from "@/view/DataRiwayat/Kepegawaian/JabatanStruktular/DetailJabatanStruktural/DetailJabatanStruktural";
+    import Pengabdian from "@/view/DataRiwayat/PelaksanaanPengabdian/Pengabdian";
   import React from "react";
   import { MdGroups } from "react-icons/md";
   
-  const DetailJabatanStrukturalUserPage = () => {
+  const PengabdianUserPage = () => {
     return (
       <SimKepegawaianLayout isNavbarUser={true}>
         <Breadcrumb className="mt-10">
@@ -31,23 +31,19 @@ import DetailJabatanStruktural from "@/view/DataRiwayat/Kepegawaian/JabatanStruk
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="">Kepegawaian</BreadcrumbLink>
+              <BreadcrumbLink href="">Pelaksanaan Pengabdian</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="">Jabatan Struktural</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Detail Jabatan Struktural</BreadcrumbPage>
+              <BreadcrumbPage>Pengabdian</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
   
-        <DetailJabatanStruktural />
+        <Pengabdian />
       </SimKepegawaianLayout>
     );
   };
   
-  export default DetailJabatanStrukturalUserPage;
+  export default PengabdianUserPage;
   
