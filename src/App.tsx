@@ -166,6 +166,16 @@ import SertifikasiUserPage from "./pages/dataRiwayat/Kompetensi/Sertifikasi";
 import DetailSertifikasiUserPage from "./pages/dataRiwayat/Kompetensi/Sertifikasi/detailSertifikasi";
 import TesUserPage from "./pages/dataRiwayat/Kompetensi/Tes";
 import DetailTesUserPage from "./pages/dataRiwayat/Kompetensi/Tes/detailTes";
+import PatenUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/Paten";
+import DetailPatenUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detailPaten";
+import PenelitianUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian";
+import DetailPenelitianUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detailPenelitian";
+import PublikasiUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi";
+import DetailPublikasiUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detailPublikasi";
+import KemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa";
+import DetailKemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa";
+import OrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi";
+import PelanggaranUserPage from "./pages/dataRiwayat/Kompensasi/Pelanggaran";
 import BeritaPage from "./pages/admin/operasional/berita";
 
 function App() {
@@ -267,6 +277,68 @@ function App() {
             />
             <Route path="tes" Component={TesUserPage} />
             <Route path="detail-tes" Component={DetailTesUserPage} />
+          </Route>
+
+          <Route path="pelaksanaan-penelitian">
+            <Route path="paten" Component={PatenUserPage} />
+            <Route path="detail-paten" Component={DetailPatenUserPage} />
+            <Route path="penelitian" Component={PenelitianUserPage} />
+            <Route
+              path="detail-penelitian"
+              Component={DetailPenelitianUserPage}
+            />
+            <Route path="publikasi" Component={PublikasiUserPage} />
+            <Route
+              path="detail-publikasi"
+              Component={DetailPublikasiUserPage}
+            />
+          </Route>
+
+          <Route path="pengembangan-diri">
+            <Route
+              path="kemampuan-bahasa"
+              Component={KemampuanBahasaUserPage}
+            />
+            <Route
+              path="detail-kemampuan-bahasa"
+              Component={DetailKemampuanBahasaUserPage}
+            />
+            <Route path="organisasi" Component={OrganisasiUserPage} />
+          </Route>
+
+          <Route path="kompensasi">
+            <Route path="pelanggaran" Component={PelanggaranUserPage} />
+          </Route>
+
+          <Route path="pelaksanaan-penelitian">
+            <Route path="paten" Component={PatenUserPage} />
+            <Route path="detail-paten" Component={DetailPatenUserPage} />
+            <Route path="penelitian" Component={PenelitianUserPage} />
+            <Route
+              path="detail-penelitian"
+              Component={DetailPenelitianUserPage}
+            />
+            <Route path="publikasi" Component={PublikasiUserPage} />
+            <Route
+              path="detail-publikasi"
+              Component={DetailPublikasiUserPage}
+            />
+          </Route>
+
+          <Route path="pengembangan-diri">
+            <Route
+              path="kemampuan-bahasa"
+              Component={KemampuanBahasaUserPage}
+            />
+            <Route
+              path="detail-kemampuan-bahasa"
+              Component={DetailKemampuanBahasaUserPage}
+            />
+            <Route path="organisasi" Component={OrganisasiUserPage} />
+          </Route>
+
+          <Route path="kompensasi">
+            <Route path="pelanggaran" Component={PelanggaranUserPage} />
           </Route>
 
           {/* DATA RIWAYAT > PELAKSANAAN PENDIDIKAN */}
