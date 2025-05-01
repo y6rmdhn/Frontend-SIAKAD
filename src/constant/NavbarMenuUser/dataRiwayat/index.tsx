@@ -54,6 +54,16 @@ const dataRiwayat: {
   {
     title: "Kompetensi",
     href: "",
+    childrenItems: [
+      {
+        title: "Serifikasi",
+        href: "/data-riwayat/kompetensi/sertifikasi",
+      },
+      {
+        title: "Tes",
+        href: "/data-riwayat/kompetensi/tes",
+      },
+    ],
   },
   {
     title: "Pelaksanaan Pendidikan",

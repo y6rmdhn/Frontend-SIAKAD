@@ -166,6 +166,7 @@ import SertifikasiUserPage from "./pages/dataRiwayat/Kompetensi/Sertifikasi";
 import DetailSertifikasiUserPage from "./pages/dataRiwayat/Kompetensi/Sertifikasi/detailSertifikasi";
 import TesUserPage from "./pages/dataRiwayat/Kompetensi/Tes";
 import DetailTesUserPage from "./pages/dataRiwayat/Kompetensi/Tes/detailTes";
+import BeritaPage from "./pages/admin/operasional/berita";
 
 function App() {
   return (
@@ -175,10 +176,17 @@ function App() {
         <Route path="/" Component={ModulePage} />
         <Route path="/login" Component={LoginPage} />
         <Route path="/forget-password" Component={ForgetPasswordPage} />
-        {/* for user path */}
+
+        {/* USER PAGES */}
         <Route path="/dasboard" Component={DasboardPageUser} />
-        <Route path="/riwayat-kehadiran" Component={RiwayatKehadiranPage} />
-        <Route path="/kegiatan-harian" Component={KegiatanHarianPage} />
+
+        {/* KEHADIRAN */}
+        <Route path="/kehadiran">
+          <Route path="riwayat-kehadiran" Component={RiwayatKehadiranPage} />
+          <Route path="kegiatan-harian" Component={KegiatanHarianPage} />
+        </Route>
+
+        {/* OPERASIONAL */}
         <Route path="/operasional">
           <Route path="berita" Component={BeritaOperasionalUserPage} />
 
@@ -194,7 +202,9 @@ function App() {
           </Route>
         </Route>
 
+        {/* DATA RIWAYAT */}
         <Route path="/data-riwayat">
+          {/* DATA RIWAYAT > KEPEGAWAIAN */}
           <Route path="kepegawaian">
             <Route path="homebase" Component={HomebaseUserPage} />
             <Route
@@ -226,6 +236,7 @@ function App() {
             <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
           </Route>
 
+          {/* DATA RIWAYAT > KUALIFIKASI */}
           <Route path="kualifikasi">
             <Route
               path="pendidikan-formal"
@@ -247,6 +258,7 @@ function App() {
             />
           </Route>
 
+          {/* DATA RIWAYAT > KOMPETENSI */}
           <Route path="kompetensi">
             <Route path="sertifikasi" Component={SertifikasiUserPage} />
             <Route
@@ -257,6 +269,7 @@ function App() {
             <Route path="detail-tes" Component={DetailTesUserPage} />
           </Route>
 
+          {/* DATA RIWAYAT > PELAKSANAAN PENDIDIKAN */}
           <Route path="pelaksanaan-pendidikan">
             <Route path="bahan-ajar" Component={BahanAjarUserPage} />
             <Route
@@ -312,17 +325,19 @@ function App() {
           </Route>
         </Route>
 
-        {/* for admin path */}
+        {/* ADMIN PAGES */}
         <Route path="/admin">
           <Route path="dasboard" Component={DasboardPage} />
           <Route path="pegawai" Component={PegawaiPage} />
           <Route path="pegawai/data-pegawai" Component={DataPegawaiPage} />
 
+          {/* DETAIL PEGAWAI */}
           <Route path="detail-pegawai">
             <Route path="biodata/:id" Component={BiodataPage} />
             <Route path="keluarga/:id" Component={DetailKeluargaPage} />
             <Route path="presensi/:id" Component={KepegawaianPresensiPage} />
 
+            {/* DETAIL PEGAWAI > KEPEGAWAIAN */}
             <Route path="kepegawaian">
               <Route path="homebase/:id" Component={KepegawaianHomebasePage} />
               <Route path="pangkat/:id" Component={KepegawaianPangkatPage} />
@@ -344,6 +359,7 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > KUALIFIKASI */}
             <Route path="kualifikasi">
               <Route
                 path="pendidikan-formal/:id"
@@ -356,6 +372,7 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > KOMPETENSI */}
             <Route path="kompetensi">
               <Route
                 path="riwayat-sertifikasi/:id"
@@ -367,6 +384,7 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > PENDIDIKAN */}
             <Route path="pendidikan">
               <Route
                 path="pengajaran/:id"
@@ -410,6 +428,7 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > PENELITIAN */}
             <Route path="penelitian">
               <Route
                 path="penelitian/:id"
@@ -422,6 +441,7 @@ function App() {
               <Route path="paten/:id" Component={KepegawaianPatenHkiPage} />
             </Route>
 
+            {/* DETAIL PEGAWAI > > PENGABDIAN */}
             <Route path="pengabdian">
               <Route
                 path="pengabdian/:id"
@@ -441,6 +461,7 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > PENUNJANG */}
             <Route path="penunjang">
               <Route
                 path="anggota-profesi/:id"
@@ -456,6 +477,7 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > > PENGEMBANGAN */}
             <Route path="pengembangan">
               <Route
                 path="organisasi/:id"
@@ -467,17 +489,20 @@ function App() {
               />
             </Route>
 
+            {/* DETAIL PEGAWAI > KOMPENSASI */}
             <Route
               path="kompensasi/:id"
               Component={KepegawaianKompensasiPage}
             />
 
+            {/* DETAIL PEGAWAI > PERMOHONAN */}
             <Route path="permohonan">
               <Route path="cuti/:id" Component={KepegawaianCutiPage} />
               <Route path="izin/:id" Component={KepegawaianIzinPage} />
             </Route>
           </Route>
 
+          {/* OPERASIONAL */}
           <Route path="operasional">
             <Route
               path="hubungan-kerja-pegawai"
@@ -497,6 +522,10 @@ function App() {
               Component={MonitoringRekapKehadiranPage}
             />
 
+            {/* OPERASIONAL > BERITA */}
+            <Route path="berita" Component={BeritaPage} />
+
+            {/* OPERASIONAL > CUTI */}
             <Route path="cuti">
               <Route
                 path="monitoring-sisa-cuti"
@@ -507,6 +536,7 @@ function App() {
               <Route path="permohonan-cuti" Component={PermohonanCutiPage} />
             </Route>
 
+            {/* OPERASIONAL > KOMPENSASI */}
             <Route path="kompensasi">
               <Route path="pelanggaran" Component={PelanggaranPage} />
               <Route
@@ -526,11 +556,13 @@ function App() {
             </Route>
           </Route>
 
+          {/* VALIDASI */}
           <Route path="validasi-data">
             <Route path="setting-validasi" Component={SettingValidasiPage} />
             <Route path="keluarga" Component={KeluargaPage} />
             <Route path="monitoring" Component={MonitoringPage} />
 
+            {/* VALIDASI > KEPEGAWAIAN */}
             <Route path="kepegawaian">
               <Route path="homebase" Component={HomebasePage} />
               <Route
@@ -549,11 +581,13 @@ function App() {
               <Route path="pangkat" Component={PangkatPage} />
             </Route>
 
+            {/* VALIDASI > KOMPETENSI */}
             <Route path="kompetensi">
               <Route path="sertifikasi" Component={SertifikasiPage} />
               <Route path="tes" Component={TesPage} />
             </Route>
 
+            {/* VALIDASI > PELAKSANAAN PENDIDIKAN */}
             <Route path="pelaksanaan-pendidikan">
               <Route path="bahan-ajar" Component={BahanAjarPage} />
               <Route path="datasering" Component={DataseringPage} />
@@ -561,12 +595,14 @@ function App() {
               <Route path="tugas-tambahan" Component={TugasTambahanPage} />
             </Route>
 
+            {/* VALIDASI > PELAKSANAAN PENELITIAN */}
             <Route path="pelaksanaan-penelitian">
               <Route path="paten" Component={PatenPage} />
               <Route path="penelitian" Component={PenelitianPage} />
               <Route path="publikasi" Component={PublikasiPage} />
             </Route>
 
+            {/* VALIDASI > PELAKSANAAN PENGABDIAN */}
             <Route path="pelaksanaan-pengabdian">
               <Route
                 path="jabatan-struktural"
@@ -576,11 +612,13 @@ function App() {
               <Route path="pengabdian" Component={PengabdianPage} />
             </Route>
 
+            {/* VALIDASI > PENGEMBANGAN */}
             <Route path="pengembangan">
               <Route path="kemampuan-bahasa" Component={KemampuanBahasaPage} />
               <Route path="organisasi" Component={OrganisasiPage} />
             </Route>
 
+            {/* VALIDASI > PENUNJANG */}
             <Route path="penunjang">
               <Route path="organisasi" Component={OrganisasiPenunjangPage} />
               <Route path="penghargaan" Component={PenghargaanPenunjangPage} />
@@ -588,7 +626,9 @@ function App() {
             </Route>
           </Route>
 
+          {/* REFERENSI */}
           <Route path="referensi">
+            {/* REFERENSI > AKTIVITAS */}
             <Route path="aktifitas">
               <Route path="jenis-luaran" Component={JenisLuaranPage} />
               <Route
@@ -618,6 +658,7 @@ function App() {
               />
             </Route>
 
+            {/* REFERENSI > KEHADIRAN */}
             <Route path="kehadiran">
               <Route path="hari-libur" Component={HariLiburReferensiPage} />
               <Route path="jam-kerja" Component={JamKerjaReferensiPage} />
@@ -630,6 +671,7 @@ function App() {
               />
             </Route>
 
+            {/* REFERENSI > KEPEGAWAIAN */}
             <Route path="kepegawaian">
               <Route path="eleson" Component={ElesonPage} />
               <Route path="gelar-akademik" Component={GelarAkademikPage} />
@@ -682,6 +724,7 @@ function App() {
               />
             </Route>
 
+            {/* REFERENSI > WILAYAH */}
             <Route path="wilayah">
               <Route path="kota" Component={KotaReferensiPage} />
               <Route path="kecamatan" Component={KecamatanReferensiPage} />
