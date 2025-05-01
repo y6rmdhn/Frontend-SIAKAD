@@ -279,6 +279,7 @@ function App() {
             <Route path="detail-tes" Component={DetailTesUserPage} />
           </Route>
 
+          {/* DETAIL RIWAYAT > PELAKSANAAN PENELITIAN */}
           <Route path="pelaksanaan-penelitian">
             <Route path="paten" Component={PatenUserPage} />
             <Route path="detail-paten" Component={DetailPatenUserPage} />
@@ -294,6 +295,7 @@ function App() {
             />
           </Route>
 
+          {/* DATA RIWAYAT > PENGEMBANGAN DIRI */}
           <Route path="pengembangan-diri">
             <Route
               path="kemampuan-bahasa"
