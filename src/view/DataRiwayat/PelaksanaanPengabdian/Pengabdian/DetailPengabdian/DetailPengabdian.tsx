@@ -14,13 +14,13 @@ const DetailPengabdian = () => {
   const form = useForm()
   return (
     <div className="mt-10 mb-20">
-      <Title title="Pangkat" subTitle="Detail Pangkat" />
+      <Title title="Pengabdian" subTitle="Detail Pengabdian" />
 
       <CustomCard
   actions={
     <div className="flex justify-end mt-10">
       <div className="flex gap-4">
-        <Link to="/data-riwayat/kepegawaian/pangkat">
+        <Link to="/data-riwayat/pelaksanaan-pengabdian/pengabdian">
           <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
             <IoIosArrowBack />
             Kembali ke Daftar
