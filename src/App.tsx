@@ -176,7 +176,15 @@ import KemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/Kemamp
 import DetailKemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa";
 import OrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi";
 import PelanggaranUserPage from "./pages/dataRiwayat/Kompensasi/Pelanggaran";
+import HubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja";
+import DetailHubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja";
+import PengabdianUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian";
+import DetailPengabdianUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian";
 import BeritaPage from "./pages/admin/operasional/berita";
+import PembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara";
+import DetailPembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara";
+import PengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal";
+import DetailPengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal";
 
 function App() {
   return (
@@ -240,6 +248,14 @@ function App() {
             <Route
               path="detail-jabatan-struktural"
               Component={DetailJabatanStrukturalUserPage}
+            />
+             <Route
+              path="hubungan-kerja"
+              Component={HubunganKerjaUserPage}
+            />
+            <Route
+              path="detail-hubungan-kerja"
+              Component={DetailHubunganKerjaUserPage}
             />
 
             <Route path="pangkat" Component={PangkatUserPage} />
@@ -326,6 +342,23 @@ function App() {
               Component={DetailPublikasiUserPage}
             />
           </Route>
+          <Route path="pelaksanaan-pengabdian">
+            <Route path="pengabdian" 
+            Component={PengabdianUserPage}  />
+            <Route path="detail-pengabdian"
+             Component={DetailPengabdianUserPage}
+            />
+            <Route path="pembicara" 
+            Component={PembicaraUserPage}  />
+            <Route path="detail-pembicara"
+             Component={DetailPembicaraUserPage}
+            />
+            <Route path="pengelola-jurnal" 
+            Component={PengelolaJurnalUserPage}  />
+            <Route path="detail-pengelola-jurnal"
+             Component={DetailPengelolaJurnalUserPage}
+            />
+            </Route>
 
           <Route path="pengembangan-diri">
             <Route
