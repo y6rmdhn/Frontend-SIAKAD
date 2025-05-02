@@ -54,6 +54,16 @@ const dataRiwayat: {
   {
     title: "Kompetensi",
     href: "",
+    childrenItems: [
+      {
+        title: "Serifikasi",
+        href: "/data-riwayat/kompetensi/sertifikasi",
+      },
+      {
+        title: "Tes",
+        href: "/data-riwayat/kompetensi/tes",
+      },
+    ],
   },
   {
     title: "Pelaksanaan Pendidikan",
@@ -104,6 +114,20 @@ const dataRiwayat: {
   {
     title: "Pelaksanaan Penelitian",
     href: "",
+    childrenItems: [
+      {
+        title: "Paten",
+        href: "/data-riwayat/pelaksanaan-penelitian/paten",
+      },
+      {
+        title: "Penelitian",
+        href: "/data-riwayat/pelaksanaan-penelitian/penelitian",
+      },
+      {
+        title: "Pubikasi",
+        href: "/data-riwayat/pelaksanaan-penelitian/publikasi",
+      },
+    ],
   },
   {
     title: "Pelaksanaan Pengabdian",
@@ -116,6 +140,16 @@ const dataRiwayat: {
   {
     title: "Pengembangan Diri",
     href: "",
+    childrenItems: [
+      {
+        title: "Kemampuan Bahasa",
+        href: "/data-riwayat/pengembangan-diri/kemampuan-bahasa",
+      },
+      {
+        title: "Organisasi",
+        href: "/data-riwayat/pengembangan-diri/organisasi",
+      },
+    ],
   },
   {
     title: "Kompensasi",

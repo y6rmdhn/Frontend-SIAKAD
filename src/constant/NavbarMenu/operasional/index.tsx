@@ -57,7 +57,7 @@ const operasional: {
   },
   {
     title: "Berita",
-    href: "/docs/primitives/tabs",
+    href: "/admin/operasional/berita",
   },
   {
     title: "Kompensasi",

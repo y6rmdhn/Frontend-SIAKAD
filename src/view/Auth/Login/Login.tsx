@@ -20,23 +20,33 @@ const LoginPage = () => {
   return (
     <main className="min-h-screen font-roboto flex overflow-x-hidden text-black-uika">
       {/* Bagian Gambar - Sebelah Kiri */}
-      <div className="hidden md:flex md:w-[57%] bg-blue-800 relative items-center justify-center">
+      <div className="hidden md:flex md:w-[55%] bg-blue-800 relative items-center justify-center">
         <img
-          src="/images/UIKAFIX1.png"
+          src="/images/background/Simpeg_Uika_Masjid.png"
           alt="Kampus UIKA"
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="relative z-10 p-8 text-center text-white">
-          <h2 className="text-4xl font-semibold mb-6">Selamat Datang</h2>
-          <p className="text-xl mb-2">
-            Sistem Informasi Management Kepegawaian
-          </p>
-          <p className="text-lg">Universitas Ibn Khaldun Bogor</p>
-        </div>
+        <img
+          src="/images/logo/Simpeg_Uika_Logo.png"
+          alt="Logo Kampus UIKA"
+          className="absolute top-10 w-72 opacity-70"
+        />
       </div>
 
       {/* Bagian Form - Sebelah Kanan */}
-      <div className="w-full md:w-[43%] flex items-center justify-center p-6 sm:p-8 bg-white">
+      <div className="w-full md:w-[45%] flex items-center relative justify-center p-6 sm:p-8 bg-white">
+        <div className="absolute top-0 left-6 flex items-center">
+          <img
+            src="/images/logo/Simpeg_Uika_Logo.png"
+            alt="Logo Kampus UIKA"
+            className="w-20"
+          />
+          <img
+            src="/images/logo/uit (2) 1 (1).png"
+            alt="Logo simpeg kepegawaian"
+            className="w-16 h-16"
+          />
+        </div>
         <div className="w-full max-w-md">
           {/* Logo kecil di atas form */}
           <div className="flex justify-center mb-6">
@@ -54,17 +64,17 @@ const LoginPage = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleLogin)}
-              className="space-y-4"
+              className="space-y-5"
             >
               <FormField
                 control={form.control}
-                name="nomorIndukPegawai"
+                name="nip"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Induk Pegawai</FormLabel>
+                    <FormLabel className="font-semibold">NIP</FormLabel>
                     <FormControl>
                       <Input
-                        className="placeholder:text-xs text-xs sm:text-sm sm:placeholder:text-sm"
+                        className="bg-[#F9F9F9] h-12 placeholder:text-xs text-xs sm:text-sm sm:placeholder:text-sm"
                         type="text"
                         placeholder="Nomor Induk Pegawai"
                         {...field}
@@ -80,11 +90,11 @@ const LoginPage = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Kata Sandi</FormLabel>
+                    <FormLabel className="font-semibold">Kata Sandi</FormLabel>
                     <FormControl className="relative">
                       <div className="flex items-center">
                         <Input
-                          className="placeholder:text-xs text-xs sm:text-sm sm:placeholder:text-sm"
+                          className="bg-[#F9F9F9] h-12 placeholder:text-xs text-xs sm:text-sm sm:placeholder:text-sm"
                           type={
                             visiblePassword.passwordConfirmation
                               ? "text"
@@ -135,7 +145,7 @@ const LoginPage = () => {
                 <div className="text-sm">
                   <Link
                     to="/forget-password"
-                    className="hover:underline text-xs sm:text-sm text-indigo-600 hover:text-indigo-500"
+                    className="hover:underline text-xs sm:text-sm text-green-uika"
                   >
                     Lupa Kata Sandi?
                   </Link>

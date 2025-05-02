@@ -5,11 +5,11 @@ const kehadiran: {
 }[] = [
   {
     title: "Riwayat Kehadiran",
-    href: "/riwayat-kehadiran",
+    href: "/kehadiran/riwayat-kehadiran",
   },
   {
     title: "Kegiatan Harian",
-    href: "/kegiatan-harian",
+    href: "/kehadiran/kegiatan-harian",
   },
 ];
 

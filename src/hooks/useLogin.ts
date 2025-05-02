@@ -1,3 +1,5 @@
+import authServices from "@/services/auth.services";
+import { ILogin } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,7 +8,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const loginFormSchema = z.object({
-  nomorIndukPegawai: z
+  nip: z
     .string()
     .min(1, "Nomor Induk Pegawai tidak boleh kosong")
     .regex(/^\d+$/, "Nomor Induk Pegawai harus berupa angka")
@@ -23,15 +25,29 @@ const useLogin = () => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   type LoginFormValues = z.infer<typeof loginFormSchema>;
 
-  const handleLogin = (values: LoginFormValues) => {
-    console.log(values);
-    toast.success("Login berhasil!");
-    navigate("/");
+  const authLogin = (payload: ILogin) => {
+    return authServices.login(payload);
+  };
+
+  const handleLogin = async (values: LoginFormValues) => {
+    try {
+      console.log(values);
+      await authLogin(values);
+
+      toast.success("Login berhasil!");
+      form.reset();
+      navigate("/");
+    } catch (error: any) {
+      const err =
+        error.response?.data.message || "Terjadi kesalahan pada server.";
+      toast.error(err);
+      form.reset();
+    }
   };
 
   const form = useForm<LoginFormValues>({
     defaultValues: {
-      nomorIndukPegawai: "",
+      nip: "",
       password: "",
     },
     resolver: zodResolver(loginFormSchema),
