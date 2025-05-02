@@ -48,19 +48,31 @@ const NavigationUser = () => {
           </NavigationMenuItem>
         ))}
 
-        <MenuGroup title="Kehadiran" items={kehadiran} />
-        <MenuGroup title="Operasional" items={operasional} />
-        <MenuGroup title="Data Riwayat" items={dataRiwayat} />
-        <MenuGroup title="Laporan" items={[]} />
+        <MenuGroup title="Kehadiran" items={kehadiran} path="/kehadiran" />
+        <MenuGroup
+          title="Operasional"
+          items={operasional}
+          path="/operasional"
+        />
+        <MenuGroup
+          title="Data Riwayat"
+          items={dataRiwayat}
+          path="/data-riwayat"
+        />
       </NavigationMenuList>
     </NavigationMenu>
   );
 };
 
-const MenuGroup = ({ title, items }) => {
+const MenuGroup = ({ title, items, path }) => {
+  const location = useLocation();
+
+  const isActive = location.pathname.includes(path);
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger className="bg-[#eeeeee]">
+      <NavigationMenuTrigger
+        className={isActive ? "bg-yellow-uika" : "bg-[#eeeeee]"}
+      >
         {title}
       </NavigationMenuTrigger>
       <NavigationMenuContent className="z-50">
@@ -92,11 +104,6 @@ const ListItem = React.forwardRef<
 
   const handleMouseEnter = () => childrenItems?.length && setOpen(true);
   const handleMouseLeave = () => setOpen(false);
-
-  const activeClass =
-    location.pathname === href
-      ? "bg-[#FDA31A] text-white hover:bg-[#FDA31A] hover:text-white"
-      : "";
 
   if (childrenItems?.length) {
     return (
@@ -150,7 +157,6 @@ const ListItem = React.forwardRef<
           to={href}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            activeClass,
             className
           )}
           {...props}

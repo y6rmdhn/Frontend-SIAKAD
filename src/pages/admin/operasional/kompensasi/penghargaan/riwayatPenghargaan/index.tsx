@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import RiwayatPenghargaan from "@/view/admin/Operasional/Kompensasi/Penghargaan/RiwayatPenhan";
+import RiwayatPenghargaan from "@/view/admin/Operasional/Kompensasi/Penghargaan/RiwayatPenghargaan";
 import React from "react";
 
 const RiwayatPenghargaanPage = () => {
