@@ -24,7 +24,7 @@ const DetailPembicara = () => {
   actions={
     <div className="flex justify-end mt-10">
       <div className="flex gap-4">
-        <Link to="/data-riwayat/pelaksanaan-pengabdian/pembicara">
+        <Link to="/data-riwayat/pelaksanaan-pengabdian/pengelola-jurnal">
           <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
             <IoIosArrowBack />
             Kembali ke Daftar
@@ -274,7 +274,7 @@ const DetailPembicara = () => {
                           variant="ghost"
                           className="cursor-pointer"
                         >
-                          <HiMiniTrash className="w-5! h-5! text-[#FD1A1E]" />
+                          <HiMiniTrash className="!w-5 !h-5 text-[#FD1A1E]" />
                         </Button>
                       </Link>
                     </div>
