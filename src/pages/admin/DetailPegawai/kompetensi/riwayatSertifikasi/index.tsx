@@ -6,13 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import RiwayatSertifikasi from "@/components/view/admin/DetailPegawai/Kompetensi/RiwayatSertifikasi";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import RiwayatSertifikasi from "@/view/admin/DetailPegawai/Kompetensi/RiwayatSertifikasi";
+// import RiwayatSertifikasi from "@/view/admin/DetailPegawai/Kompetensi/RiwayatSertifikasi";
 
 const KepegawaianRiwayatSertifikasiPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>

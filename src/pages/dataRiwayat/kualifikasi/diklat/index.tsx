@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Diklat from "@/components/view/DataRiwayat/Kualifikasi/Diklat";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Diklat from "@/view/DataRiwayat/Kualifikasi/Diklat";
+// import Diklat from "@/view/DataRiwayat/Kualifikasi/Diklat";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 

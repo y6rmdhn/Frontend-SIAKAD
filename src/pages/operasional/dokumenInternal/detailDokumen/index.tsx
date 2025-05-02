@@ -9,12 +9,13 @@ import {
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import { MdGroups } from "react-icons/md";
 import React from "react";
-import DetailDokumenInternal from "@/view/Operasional/DokumenInternal/DetailDokumen";
+import DetailDokumenInternal from "@/components/view/Operasional/DokumenInternal/DetailDokumen";
+// import DetailDokumenInternal from "@/view/Operasional/DokumenInternal/DetailDokumen";
 
 const DetailDokumenInternalUserPage = () => {
   return (
     <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink

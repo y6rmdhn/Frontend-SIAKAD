@@ -6,13 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Izin from "@/components/view/Operasional/Pengajuan/Izin";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Izin from "@/view/Operasional/Pengajuan/Izin";
+// import Izin from "@/view/Operasional/Pengajuan/Izin";
 
 const IzinPage = () => {
   return (
     <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>

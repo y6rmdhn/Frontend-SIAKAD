@@ -9,7 +9,7 @@ const operasional: {
   },
   {
     title: "Kehadiran",
-    href: "/admin/operasional/setting-kehadiran",
+    href: "",
     childrenItems: [
       {
         title: "Setting Kehadiran",

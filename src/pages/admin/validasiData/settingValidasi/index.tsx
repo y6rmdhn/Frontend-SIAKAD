@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import SettingValidasi from "@/components/view/admin/ValidasiData/SettingValidasi";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import SettingValidasi from "@/view/admin/ValidasiData/SettingValidasi";
+// import SettingValidasi from "@/view/admin/ValidasiData/SettingValidasi";
 import React from "react";
 
 const SettingValidasiPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Validasi Data</BreadcrumbLink>

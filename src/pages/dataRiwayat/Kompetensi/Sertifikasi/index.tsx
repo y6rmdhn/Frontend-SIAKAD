@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Sertifikasi from "@/components/view/DataRiwayat/Kompetensi/Sertifikasi";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Sertifikasi from "@/view/DataRiwayat/Kompetensi/Sertifikasi";
+// import Sertifikasi from "@/view/DataRiwayat/Kompetensi/Sertifikasi";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 

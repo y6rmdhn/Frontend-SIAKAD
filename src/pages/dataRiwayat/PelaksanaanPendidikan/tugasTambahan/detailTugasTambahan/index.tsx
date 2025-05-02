@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import DetailTugasTambahan from "@/components/view/DataRiwayat/PelaksanaanPendidikan/TugasTambahan/DetailTugasTambahan";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import DetailTugasTambahan from "@/view/DataRiwayat/PelaksanaanPendidikan/TugasTambahan/DetailTugasTambahan";
+// import DetailTugasTambahan from "@/view/DataRiwayat/PelaksanaanPendidikan/TugasTambahan/DetailTugasTambahan";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 

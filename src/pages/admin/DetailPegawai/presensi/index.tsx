@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Presensi from "@/components/view/admin/DetailPegawai/Presensi";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Presensi from "@/view/admin/DetailPegawai/Presensi";
+// import Presensi from "@/view/admin/DetailPegawai/Presensi";
 
 const KepegawaianPresensiPage = () => {
   return (

@@ -35,6 +35,7 @@ const useLogin = () => {
       await authLogin(values);
 
       toast.success("Login berhasil!");
+
       form.reset();
       navigate("/");
     } catch (error: any) {

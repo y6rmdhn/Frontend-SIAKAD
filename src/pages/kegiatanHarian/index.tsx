@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import { MdGroups } from "react-icons/md";
-import KegiatanHarian from "@/view/KegiatanHarian";
+// import KegiatanHarian from "@/view/KegiatanHarian";
 import React from "react";
+import KegiatanHarian from "@/components/view/KegiatanHarian";
 
 const KegiatanHarianPage = () => {
   return (
     <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink

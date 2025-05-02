@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import JabatanFungsional from "@/components/view/DataRiwayat/Kepegawaian/JabatanFungsional";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import JabatanFungsional from "@/view/DataRiwayat/Kepegawaian/JabatanFungsional";
+// import JabatanFungsional from "@/view/DataRiwayat/Kepegawaian/JabatanFungsional";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 

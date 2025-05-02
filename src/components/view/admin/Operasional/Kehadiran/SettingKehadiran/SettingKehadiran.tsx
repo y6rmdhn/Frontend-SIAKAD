@@ -13,7 +13,8 @@ import React from "react";
 import { HiMiniXMark } from "react-icons/hi2";
 import { MdEdit } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
-import data from "../../../../../constant/settingKehadiran/index";
+// import data from "../../../../../constant/settingKehadiran/index";
+import data from "../../../../../../constant/settingKehadiran/index";
 
 const StatusItem = ({ label, status }) => {
   const isCheck = status === "check";

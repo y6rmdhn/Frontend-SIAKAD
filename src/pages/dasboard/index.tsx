@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import DasboardUser from "@/components/view/Dasboard/DasboardUser";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import DasboardUser from "@/view/Dasboard/DasboardUser";
+// import DasboardUser from "@/view/Dasboard/DasboardUser";
 import React from "react";
 
 const DasboardPageUser = () => {

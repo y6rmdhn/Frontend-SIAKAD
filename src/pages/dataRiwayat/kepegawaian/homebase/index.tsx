@@ -6,8 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Homebase from "@/components/view/DataRiwayat/Kepegawaian/Homebase";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Homebase from "@/view/DataRiwayat/Kepegawaian/Homebase";
+// import Homebase from "@/view/DataRiwayat/Kepegawaian/Homebase";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 

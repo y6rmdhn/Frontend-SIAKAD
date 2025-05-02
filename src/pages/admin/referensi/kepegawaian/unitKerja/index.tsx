@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import UnitKerja from "@/components/view/admin/Referensi/Kepegawaian/UnitKerja";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import UnitKerja from "@/view/admin/Referensi/Kepegawaian/UnitKerja";
+// import UnitKerja from "@/view/admin/Referensi/Kepegawaian/UnitKerja";
 import React from "react";
 
 const UnitKerjaReferensiPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Referensi</BreadcrumbLink>

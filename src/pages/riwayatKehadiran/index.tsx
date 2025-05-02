@@ -6,19 +6,25 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Kehadiran from "@/components/view/RiwayatKehadiran";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Kehadiran from "@/view/RiwayatKehadiran";
+// import Kehadiran from "@/view/RiwayatKehadiran";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const RiwayatKehadiranPage = () => {
   return (
     <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai " className="flex items-center gap-2" >
-             <MdGroups className="w-6 h-6"/>Pegawai</BreadcrumbLink>
+            <BreadcrumbLink
+              href="/gate/pegawai "
+              className="flex items-center gap-2"
+            >
+              <MdGroups className="w-6 h-6" />
+              Pegawai
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

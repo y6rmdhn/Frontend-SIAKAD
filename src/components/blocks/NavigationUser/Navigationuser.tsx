@@ -71,7 +71,7 @@ const MenuGroup = ({ title, items, path }) => {
   return (
     <NavigationMenuItem>
       <NavigationMenuTrigger
-        className={isActive ? "bg-yellow-uika" : "bg-[#eeeeee]"}
+        className={isActive ? "bg-yellow-uika text-white" : "bg-[#eeeeee]"}
       >
         {title}
       </NavigationMenuTrigger>
@@ -102,6 +102,10 @@ const ListItem = React.forwardRef<
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
 
+  const isActive =
+    location.pathname === href ||
+    childrenItems?.some((child) => location.pathname === child.href);
+
   const handleMouseEnter = () => childrenItems?.length && setOpen(true);
   const handleMouseLeave = () => setOpen(false);
 
@@ -114,6 +118,7 @@ const ListItem = React.forwardRef<
               to={href}
               className={cn(
                 "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
+                isActive && "font-bold bg-gray-100",
                 className
               )}
             >
@@ -135,7 +140,7 @@ const ListItem = React.forwardRef<
                     className={cn(
                       "block px-2 py-1 text-sm rounded hover:bg-accent",
                       location.pathname === child.href &&
-                        "bg-accent text-accent-foreground"
+                        "bg-gray-100 text-black"
                     )}
                   >
                     {child.title}
@@ -157,6 +162,7 @@ const ListItem = React.forwardRef<
           to={href}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            isActive && "font-bold bg-gray-100",
             className
           )}
           {...props}
