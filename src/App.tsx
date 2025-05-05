@@ -185,12 +185,15 @@ import PembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembica
 import DetailPembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara";
 import PengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal";
 import DetailPengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal";
+<<<<<<< HEAD
 import AnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi";
 import DetailAnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi/DetailAnggotaProfesi";
 import PenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan";
 import DetailPenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan";
 import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
 import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
+=======
+>>>>>>> 3f4a1e5 (your message)
 
 function App() {
   return (
