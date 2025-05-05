@@ -191,6 +191,10 @@ import PenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan";
 import DetailPenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan";
 import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
 import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
+import AnakUserPage from "./pages/dataRiwayat/Keluarga/Anak";
+import DetailAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detailAnak";
+import OrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua";
+import DetailOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua";
 
 
 function App() {
@@ -267,6 +271,16 @@ function App() {
 
             <Route path="pangkat" Component={PangkatUserPage} />
             <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
+          </Route>
+
+          {/* DATA RIWAYAT > KELUARGA */}
+          <Route path="keluarga">
+            <Route path="anak" Component={AnakUserPage} />
+            <Route path="detail-anak" Component={DetailAnakUserPage} 
+            />
+            <Route path="orangtua" Component={OrangtuaUserPage} />
+            <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} 
+            />
           </Route>
 
           {/* DATA RIWAYAT > KUALIFIKASI */}
