@@ -6,14 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import DetailPembicara from "@/view/DataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara/DetailPembicara";
-import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+import Orangtua from "@/components/view/DataRiwayat/Keluarga/Orangtua";
+import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
-const DetailPembicaraUserPage = () => {
+const OrangtuaUserPage = () => {
   return (
-    <SimUserLayout>
+    <SimKepegawaianLayout isNavbarUser={true}>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -31,22 +31,18 @@ const DetailPembicaraUserPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Pelaksanaan Pengabdian</BreadcrumbLink>
+            <BreadcrumbLink href="">Keluarga</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Pembicara</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Detail Pembicara</BreadcrumbPage>
+            <BreadcrumbPage>Orang Tua</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <DetailPembicara />
-    </SimUserLayout>
+      <Orangtua />
+    </SimKepegawaianLayout>
   );
 };
 
-export default DetailPembicaraUserPage;
+export default OrangtuaUserPage;

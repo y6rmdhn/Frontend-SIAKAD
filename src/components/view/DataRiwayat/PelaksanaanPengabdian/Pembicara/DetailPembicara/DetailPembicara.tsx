@@ -24,7 +24,7 @@ const DetailPembicara = () => {
   actions={
     <div className="flex justify-end mt-10">
       <div className="flex gap-4">
-        <Link to="/data-riwayat/pelaksanaan-pengabdian/pengelola-jurnal">
+        <Link to="/data-riwayat/pelaksanaan-pengabdian/pembicara">
           <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
             <IoIosArrowBack />
             Kembali ke Daftar

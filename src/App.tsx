@@ -185,6 +185,17 @@ import PembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembica
 import DetailPembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara";
 import PengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal";
 import DetailPengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal";
+import AnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi";
+import DetailAnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi/DetailAnggotaProfesi";
+import PenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan";
+import DetailPenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan";
+import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
+import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
+import AnakUserPage from "./pages/dataRiwayat/Keluarga/Anak";
+import DetailAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detailAnak";
+import OrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua";
+import DetailOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua";
+
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
 import LoadingText from "./components/blocks/LoadingText";
@@ -275,6 +286,14 @@ function App() {
             <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
           </Route>
 
+          {/* DATA RIWAYAT > KELUARGA */}
+          <Route path="keluarga">
+            <Route path="anak" Component={AnakUserPage} />
+            <Route path="detail-anak" Component={DetailAnakUserPage} />
+            <Route path="orangtua" Component={OrangtuaUserPage} />
+            <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
+          </Route>
+
           {/* DATA RIWAYAT > KUALIFIKASI */}
           <Route path="kualifikasi">
             <Route
@@ -355,6 +374,9 @@ function App() {
               Component={DetailPublikasiUserPage}
             />
           </Route>
+
+          {/* DATA RIWAYAT > PELAKSANAAN PENGABDIAN */}
+
           <Route path="pelaksanaan-pengabdian">
             <Route path="pengabdian" Component={PengabdianUserPage} />
             <Route
@@ -390,6 +412,27 @@ function App() {
 
           <Route path="kompensasi">
             <Route path="pelanggaran" Component={PelanggaranUserPage} />
+          </Route>
+
+          {/* DATA RIWAYAT > Penunjang */}
+          <Route path="penunjang">
+            <Route path="anggota-profesi" Component={AnggotaProfesiUserPage} />
+            <Route
+              path="detail-anggota-profesi"
+              Component={DetailAnggotaProfesiUserPage}
+            />
+
+            <Route path="penghargaan" Component={PenghargaanUserPage} />
+            <Route
+              path="detail-penghargaan"
+              Component={DetailPenghargaanUserPage}
+            />
+
+            <Route path="penunjang-lain" Component={PenunjangLainUserPage} />
+            <Route
+              path="detail-penunjang-lain"
+              Component={DetailPenunjangLainUserPage}
+            />
           </Route>
 
           {/* DATA RIWAYAT > PELAKSANAAN PENDIDIKAN */}

@@ -6,14 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import DetailPembicara from "@/view/DataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara/DetailPembicara";
-import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+import DetailPenghargaan from "@/components/view/DataRiwayat/Penunjang/Penghargaan/DetailPenghargaan/DetailPenghargaan";
+import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
-const DetailPembicaraUserPage = () => {
+const DetailPenghargaanUserPage = () => {
   return (
-    <SimUserLayout>
+    <SimKepegawaianLayout isNavbarUser={true}>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -31,22 +31,22 @@ const DetailPembicaraUserPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Pelaksanaan Pengabdian</BreadcrumbLink>
+            <BreadcrumbLink href="">Penunjang</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Pembicara</BreadcrumbLink>
+            <BreadcrumbLink href="">Penghargaan</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Detail Pembicara</BreadcrumbPage>
+            <BreadcrumbPage>Detail Penghargaan</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <DetailPembicara />
-    </SimUserLayout>
+      <DetailPenghargaan/>
+    </SimKepegawaianLayout>
   );
 };
 
-export default DetailPembicaraUserPage;
+export default DetailPenghargaanUserPage;

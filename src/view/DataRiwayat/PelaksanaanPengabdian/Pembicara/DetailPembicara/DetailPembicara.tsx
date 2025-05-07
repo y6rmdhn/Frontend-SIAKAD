@@ -14,7 +14,7 @@ import { IoAdd } from "react-icons/io5";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HiMiniTrash } from "react-icons/hi2";
 
-const DetailPengelolaJurnal = () => {
+const DetailPembicara = () => {
   const form = useForm()
   return (
     <div className="mt-10 mb-20">
@@ -24,7 +24,7 @@ const DetailPengelolaJurnal = () => {
   actions={
     <div className="flex justify-end mt-10">
       <div className="flex gap-4">
-        <Link to="/data-riwayat/pelaksanaan-pengabdian/pembicara">
+        <Link to="/data-riwayat/pelaksanaan-pengabdian/pengelola-jurnal">
           <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
             <IoIosArrowBack />
             Kembali ke Daftar
@@ -56,7 +56,58 @@ const DetailPengelolaJurnal = () => {
       </div>
       <Form {...form}>
         <form>
-        <div className="grid grid-rows-8 grid-flow-col gap-x-5 gap-y-5 items-center mt-4">
+        <div className="grid grid-rows-6 grid-flow-col gap-x-5 gap-y-5 items-center mt-4">
+        <FormFieldInput
+          form={form}
+          label="Judul Makalah *"
+          name="judul_makalah"
+          required={true}
+          labelStyle="text-[#3F6FA9]"
+        />
+        <FormFieldSelect
+          form={form}
+          label="Nama Pertemuan Ilmiah *"
+          name="nama_pertemuan_ilmiah"
+          labelStyle="text-[#3F6FA9]"
+          options={[
+            { value: "1", label: "Pertemuan  1" },
+            { value: "2", label: "Pertemuan  2" },
+          ]}
+          required={true}
+          placeholder="-- Pilih Kategori Kegiatan --"
+        />
+       <FormFieldInput
+          form={form}
+          label="Penyelenggara *"
+          name="penyelenggara"
+          type="text"
+          required={true}
+          labelStyle="text-[#3F6FA9]"
+        />
+         <FormFieldSelect
+          form={form}
+          label="Kategori Capaian Luar *"
+          name="kategori_capaian_luar"
+          labelStyle="text-[#3F6FA9]"
+          options={[
+            { value: "1", label: "Capaian 1" },
+            { value: "2", label: "Capaian 2" },
+          ]}
+          required={true}
+          placeholder="-- Pilih Kategori Capaian Luar --"
+        />
+        <FormFieldSelect
+          form={form}
+          label="SK Penugasan "
+          name="sk_penugasan"
+          labelStyle="text-[#3F6FA9]"
+          options={[
+            { value: "1", label: "Penugasan 1" },
+            { value: "2", label: "Penugasan 2" },
+          ]}
+          required={false}
+          placeholder="-- Pilih SK Penugasan --"
+        />
         <FormFieldSelect
           form={form}
           label="Kategori Kegiatan *"
@@ -71,76 +122,57 @@ const DetailPengelolaJurnal = () => {
         />
         <FormFieldSelect
           form={form}
-          label="Media Publikasi *"
-          name="media_publikasi"
+          label="Kategori Pembicara *"
+          name="kategori_pembicara"
           labelStyle="text-[#3F6FA9]"
           options={[
-            { value: "1", label: "Media  1" },
-            { value: "2", label: "Media  2" },
+            { value: "1", label: "Pembicara 1" },
+            { value: "2", label: "Pembicara 2" },
           ]}
           required={true}
-          placeholder="Cari Media Publikasi"
+          placeholder="-- Pilih Kategori Pembicara --"
         />
-       <FormFieldInput
+        {/* Upload file */}
+        <FormFieldSelect
           form={form}
-          label="Peran *"
-          name="peran"
-          type="text"
-          required={true}
+          label="Tingkat Pertemuan "
+          name="tingkat_pertemuan"
           labelStyle="text-[#3F6FA9]"
+          options={[
+            { value: "1", label: "Pertemuan  1" },
+            { value: "2", label: "Pertemuan  2" },
+          ]}
+          required={false}
+          placeholder="-- Pilih Tingkat Pertemuan  --"
         />
-         <FormFieldInput
+        <FormFieldInput
           form={form}
-          label="Terhitung Mulai Tanggal *"
-          name="terhitung_mulai"
+          label="Tanggal Pelaksanaan *"
+          name="tanggal_pelaksanaan"
           type="date"
           required={true}
           labelStyle="text-[#3F6FA9]"
         />
         <FormFieldInput
           form={form}
-          label="Tanggal Selesai"
-          name="tanggal_selesai"
-          type="date"
-          required={false}
+          label="Bahasa"
+          name="bahasa"
+          required={true}
           labelStyle="text-[#3F6FA9]"
+          placeholder="Cari Kelompok Bidang"
         />
-       <div className="flex items-center gap-x-6 mt-4">
-  <label className="text-[#3F6FA9] w-1/4">
-    Status Aktif <span className="text-red-500">*</span>
-  </label>
-  <div className="flex items-center space-x-6">
-    <label className="flex items-center space-x-1">
-      <input
-        type="radio"
-        value="Aktif"
-        {...form.register("status_aktif", { required: true })}
-        defaultChecked
-      />
-      <span>Aktif</span>
-    </label>
-    <label className="flex items-center space-x-1">
-      <input
-        type="radio"
-        value="Tidak Aktif"
-        {...form.register("status_aktif")}
-      />
-      <span>Tidak Aktif</span>
-    </label>
-  </div>
-  </div>
-       <FormFieldSelect
-                 form={form}
-                 label="SK Penugasan "
-                 name="sk_penugasan"
-                 labelStyle="text-[#3F6FA9]"
-                 options={[
-                   { value: "1", label: "Penugasan 1" },
-                   { value: "2", label: "Penugasan 2" },
-                 ]}
-                 required={true}
-                 placeholder="-- Pilih SK Penugasan --"
-               />
+        <FormFieldSelect
+          form={form}
+          label="Litabnas"
+          name="litabnas"
+          labelStyle="text-[#3F6FA9]"
+          options={[
+            { value: "1", label: "Litabnas  1" },
+            { value: "2", label: "Litabnas  2" },
+          ]}
+          required={false}
+          placeholder="-- Pilih Aktivitas Litabnas --"
+        />
         <FormFieldInput
           form={form}
           label="Tanggal Input"
@@ -242,7 +274,7 @@ const DetailPengelolaJurnal = () => {
                           variant="ghost"
                           className="cursor-pointer"
                         >
-                          <HiMiniTrash className="w-5! h-5! text-[#FD1A1E]" />
+                          <HiMiniTrash className="!w-5 !h-5 text-[#FD1A1E]" />
                         </Button>
                       </Link>
                     </div>
@@ -254,4 +286,4 @@ const DetailPengelolaJurnal = () => {
   );
 };
 
-export default DetailPengelolaJurnal;
+export default DetailPembicara;
