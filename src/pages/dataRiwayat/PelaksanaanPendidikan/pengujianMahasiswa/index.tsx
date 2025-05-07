@@ -7,14 +7,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import PengujianMahasiswa from "@/components/view/DataRiwayat/PelaksanaanPendidikan/PengujianMahasiswa";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import PengujianMahasiswa from "@/view/DataRiwayat/PelaksanaanPendidikan/PengujianMahasiswa";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PengujianMahasiswaUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -42,7 +42,7 @@ const PengujianMahasiswaUserPage = () => {
       </Breadcrumb>
 
       <PengujianMahasiswa />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

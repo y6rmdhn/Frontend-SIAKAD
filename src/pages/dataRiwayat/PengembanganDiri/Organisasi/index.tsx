@@ -7,14 +7,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Organisasi from "@/components/view/DataRiwayat/PengembanganDiri/Organisasi";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import Organisasi from "@/view/DataRiwayat/PengembanganDiri/Organisasi";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const OrganisasiUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -42,7 +42,7 @@ const OrganisasiUserPage = () => {
       </Breadcrumb>
 
       <Organisasi />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

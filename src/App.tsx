@@ -185,8 +185,23 @@ import PembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembica
 import DetailPembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara";
 import PengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal";
 import DetailPengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal";
+import { useHydration } from "./hooks/useHydration";
+import LoadingSpinner from "./components/blocks/LoadingSpinner";
+import LoadingText from "./components/blocks/LoadingText";
+import BiodataPageUser from "./pages/biodata";
 
 function App() {
+  const { isHydrate } = useHydration();
+
+  if (!isHydrate) {
+    return (
+      <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
+        <LoadingSpinner />
+        <LoadingText />
+      </div>
+    );
+  }
+
   return (
     <>
       <Toaster position="top-right" />
@@ -197,6 +212,7 @@ function App() {
 
         {/* USER PAGES */}
         <Route path="/dasboard" Component={DasboardPageUser} />
+        <Route path="/biodata" Component={BiodataPageUser} />
 
         {/* KEHADIRAN */}
         <Route path="/kehadiran">
@@ -249,10 +265,7 @@ function App() {
               path="detail-jabatan-struktural"
               Component={DetailJabatanStrukturalUserPage}
             />
-             <Route
-              path="hubungan-kerja"
-              Component={HubunganKerjaUserPage}
-            />
+            <Route path="hubungan-kerja" Component={HubunganKerjaUserPage} />
             <Route
               path="detail-hubungan-kerja"
               Component={DetailHubunganKerjaUserPage}
@@ -343,22 +356,25 @@ function App() {
             />
           </Route>
           <Route path="pelaksanaan-pengabdian">
-            <Route path="pengabdian" 
-            Component={PengabdianUserPage}  />
-            <Route path="detail-pengabdian"
-             Component={DetailPengabdianUserPage}
+            <Route path="pengabdian" Component={PengabdianUserPage} />
+            <Route
+              path="detail-pengabdian"
+              Component={DetailPengabdianUserPage}
             />
-            <Route path="pembicara" 
-            Component={PembicaraUserPage}  />
-            <Route path="detail-pembicara"
-             Component={DetailPembicaraUserPage}
+            <Route path="pembicara" Component={PembicaraUserPage} />
+            <Route
+              path="detail-pembicara"
+              Component={DetailPembicaraUserPage}
             />
-            <Route path="pengelola-jurnal" 
-            Component={PengelolaJurnalUserPage}  />
-            <Route path="detail-pengelola-jurnal"
-             Component={DetailPengelolaJurnalUserPage}
+            <Route
+              path="pengelola-jurnal"
+              Component={PengelolaJurnalUserPage}
             />
-            </Route>
+            <Route
+              path="detail-pengelola-jurnal"
+              Component={DetailPengelolaJurnalUserPage}
+            />
+          </Route>
 
           <Route path="pengembangan-diri">
             <Route

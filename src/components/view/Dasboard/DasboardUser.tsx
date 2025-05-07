@@ -8,6 +8,8 @@ import { ChartLingkaran } from "@/components/commons/Charts/PieChart/ChartLingka
 import { ChartPegawai } from "@/components/commons/Charts/ChartPegawai/ChartPegawai";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const pieData = [
   { browser: "akademik", visitors: 275, fill: "#92F1A8" },
@@ -21,6 +23,23 @@ const pieConfig = {
 const DasboardUser = () => {
   const [clkBtn, setClkBtn] = useState<string | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
+  const userSelector = useSelector((state: RootState) => state.user);
+
+  const getGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    if (hour >= 4 && hour < 12) {
+      return "Selamat Pagi";
+    } else if (hour >= 12 && hour < 15) {
+      return "Selamat Siang";
+    } else if (hour >= 15 && hour < 18) {
+      return "Selamat Sore";
+    } else {
+      return "Selamat Malam";
+    }
+  };
+
   return (
     <div className="mt-1 flex">
       <div className="w-full mr-7">
@@ -28,10 +47,9 @@ const DasboardUser = () => {
           <HiUserGroup />
           <h1 className=" font-semibold">Pegawai</h1>
         </div>
-        <h1 className="ml-4 font-semibold">Selamat Malam</h1>
-        <h1 className="ml-4 text-2xl font-bold">Azka Fadilah Rahman</h1>
+        <h1 className="ml-4 font-semibold">{getGreeting()}</h1>
+        <h1 className="ml-4 text-2xl font-bold">{userSelector.name}</h1>
         <div className="flex mb-7">
-
           <div className="p-2 w-[60%]">
             <ChartLingkaran
               title="Kehadiran"
@@ -59,7 +77,6 @@ const DasboardUser = () => {
               </div>
             </div>
           </div>
-
         </div>
 
         <div>
@@ -70,26 +87,28 @@ const DasboardUser = () => {
         </div>
       </div>
 
-
       <div className="md:w-[40%] w pr-4">
         <div className="flex flex-col gap-5">
-
           {/* Absen Masuk dan Riwayat Absen */}
           <div className="flex grid-cols-2 gap-5">
             <Button
               onClick={() => setClkBtn("absen")}
-              className={clkBtn === "absen"
-                ? "h-10 w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                : "h-10 w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"}
+              className={
+                clkBtn === "absen"
+                  ? "h-10 w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
+                  : "h-10 w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
+              }
             >
               <HiOutlineClipboardDocumentList className="text-lg" />
               Absen Masuk
             </Button>
             <Button
               onClick={() => setClkBtn("riwayat")}
-              className={clkBtn === "riwayat"
-                ? "h-10 w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                : "h-10 w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"}
+              className={
+                clkBtn === "riwayat"
+                  ? "h-10 w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
+                  : "h-10 w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
+              }
             >
               <FaAddressCard className="text-lg" />
               Riwayat Absen
@@ -119,20 +138,25 @@ const DasboardUser = () => {
             <h1 className="text-xl font-bold mb-2">Data Riwayat</h1>
             <div className="flex items-center justify-center text-center border-t-2 gap-2">
               <div className=" gap-1">
-                <p className="text-gray-500 mb-2">Anda Belum Melakukan Pengisian Data Riwayat</p>
-                <p className="text-gray-300 mb-2 text-xs">Segera mengisi data riwayat anda</p>
+                <p className="text-gray-500 mb-2">
+                  Anda Belum Melakukan Pengisian Data Riwayat
+                </p>
+                <p className="text-gray-300 mb-2 text-xs">
+                  Segera mengisi data riwayat anda
+                </p>
               </div>
               <Button
-              onClick={() => setDetail("absen")}
-              className={detail === "absen"
-                ? " bg-[#106D63] cursor-pointer"
-                : " bg-[#106D63] cursor-pointer"}
-            >
-            Lihat Detail
-            </Button>
+                onClick={() => setDetail("absen")}
+                className={
+                  detail === "absen"
+                    ? " bg-[#106D63] cursor-pointer"
+                    : " bg-[#106D63] cursor-pointer"
+                }
+              >
+                Lihat Detail
+              </Button>
             </div>
           </div>
-
 
           {/* Pemberitahuan */}
           <div className="drop-shadow-md bg-white p-4 rounded-lg">
@@ -150,12 +174,9 @@ const DasboardUser = () => {
             <h1 className="text-xl font-bold mb-2">Berita</h1>
             <div className="flex items-center justify-center gap-2 border-t-2">
               <PiWarningCircle className="bg-orange-400 text-white w-4 h-4 rounded-full " />
-              <p className="text-center py-4 text-gray-500">
-                Tidak ada berita
-              </p>
+              <p className="text-center py-4 text-gray-500">Tidak ada berita</p>
             </div>
           </div>
-
         </div>
       </div>
     </div>

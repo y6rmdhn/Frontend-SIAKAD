@@ -6,14 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import Pembicara from "@/components/view/DataRiwayat/PelaksanaanPengabdian/Pembicara";
 import React from "react";
 import { MdGroups } from "react-icons/md";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 
 const PembicaraUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -41,7 +41,7 @@ const PembicaraUserPage = () => {
       </Breadcrumb>
 
       <Pembicara />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

@@ -7,14 +7,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import DetailJabatanFungsional from "@/components/view/DataRiwayat/Kepegawaian/JabatanFungsional/DetailJabatanFungsional/DetailJabatanFungsional";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import DetailJabatanFungsional from "@/view/DataRiwayat/Kepegawaian/JabatanFungsional/DetailJabatanFungsional/DetailJabatanFungsional";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailJabatanFungsionalUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -46,7 +46,7 @@ const DetailJabatanFungsionalUserPage = () => {
       </Breadcrumb>
 
       <DetailJabatanFungsional />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

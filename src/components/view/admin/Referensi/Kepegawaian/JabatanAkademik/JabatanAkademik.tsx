@@ -13,6 +13,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -22,14 +23,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const JabatanAkademik = () => {
+  const { data, isPending } = useQuery({
+    queryKey: ["jabatan-akademik"],
+    queryFn: async () => {
+      const response = await adminServices.getJabatanAkademik();
+      return response.data.data.data;
+    },
+  });
+
   return (
-    <div className="mt-10">
+    <div className="mt-10 mb-20">
       <Title title="Jabatan Akademik" subTitle="Daftar Jabatan Akademik" />
       <CustomCard
         actions={
@@ -66,27 +77,35 @@ const JabatanAkademik = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Link to="">
+          {data?.map((item) => (
+            <TableRow className=" even:bg-gray-100">
+              <TableCell className="text-center">{item.kode}</TableCell>
+              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center">
+                {item.jabatan_akademik}
+              </TableCell>
+              <TableCell className="h-full">
+                <div className="flex justify-center items-center w-full h-full">
+                  <Link to="">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
                   <Button
                     size="icon"
                     variant="ghost"
                     className="cursor-pointer"
                   >
-                    <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                    <FaRegTrashAlt className="text-red-500" />
                   </Button>
-                </Link>
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <FaRegTrashAlt className="text-red-500" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 

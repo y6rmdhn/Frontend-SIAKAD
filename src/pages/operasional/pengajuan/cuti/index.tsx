@@ -7,12 +7,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Cuti from "@/components/view/Operasional/Pengajuan/Cuti";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import Cuti from "@/view/Operasional/Pengajuan/Cuti";
 
 const CutiPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -34,7 +34,7 @@ const CutiPage = () => {
       </Breadcrumb>
 
       <Cuti />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

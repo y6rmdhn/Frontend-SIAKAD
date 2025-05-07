@@ -98,6 +98,15 @@
   }
 }
 
+@keyframes dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
+
 @theme {
   --color-green-uika: #106d63;
   --color-hover-green-uika: #329C59;
@@ -109,6 +118,7 @@
   --font-roboto: 'Roboto', sans-serif;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-dots: loading-dots;
 }
 
 @theme inline {
@@ -165,5 +175,10 @@
   }
   .animate-accordion-up {
     animation: accordion-up 0.2s ease-out;
+  }
+
+  .loading-dots::after {
+    content: '.';
+    animation: dots 1s steps(4, jump-none) infinite;
   }
 }

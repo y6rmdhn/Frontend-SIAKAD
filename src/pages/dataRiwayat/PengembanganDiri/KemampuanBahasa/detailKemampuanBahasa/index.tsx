@@ -7,14 +7,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import DetailKemampuanBahasa from "@/components/view/DataRiwayat/PengembanganDiri/KemampuanBahasa/DetailKemampuanBahasa";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import DetailKemampuanBahasa from "@/view/DataRiwayat/PengembanganDiri/KemampuanBahasa/DetailKemampuanBahasa";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailKemampuanBahasaUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -46,7 +46,7 @@ const DetailKemampuanBahasaUserPage = () => {
       </Breadcrumb>
 
       <DetailKemampuanBahasa />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

@@ -7,14 +7,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Paten from "@/components/view/DataRiwayat/PelaksanaanPenelitian/Paten";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import Paten from "@/view/DataRiwayat/PelaksanaanPenelitian/Paten";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PatenUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -42,7 +42,7 @@ const PatenUserPage = () => {
       </Breadcrumb>
 
       <Paten />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

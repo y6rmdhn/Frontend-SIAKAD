@@ -1,6 +1,4 @@
 import CustomCard from "@/components/blocks/Card";
-import SearchInput from "@/components/blocks/SearchInput";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,16 +18,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import unitKerjaOptions from "@/constant/dummyFilter";
 import React from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { IoIosArrowUp } from "react-icons/io";
-import { IoIosArrowDown } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
+import adminServices from "@/services/admin.services";
+import { FaCheck } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
 
 const StatusKeaktifan = () => {
+  const { data } = useQuery({
+    queryKey: ["status-keaktifan", 1],
+    queryFn: async () => {
+      const statusKeaktifanResponse = await adminServices.getStatusAktif();
+
+      console.log(statusKeaktifanResponse.data.data.data);
+      return statusKeaktifanResponse.data.data.data;
+    },
+  });
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Status Keaktifan" subTitle="Daftar Status Aktif" />
@@ -54,31 +63,41 @@ const StatusKeaktifan = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
-            <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="h-full">
-                <div className="flex justify-center items-center w-full h-full">
-                  <Link to="">
+            {data?.map((item) => (
+              <TableRow className=" even:bg-gray-100">
+                <TableCell className="text-center">{item.kode}</TableCell>
+                <TableCell className="text-center">
+                  {item.nama_status_aktif}
+                </TableCell>
+                <TableCell className="flex text-center justify-center items-center w-full h-full">
+                  {item.status_keluar ? (
+                    <FaCheck className="text-green-500 w-4 h-4 mt-2" />
+                  ) : (
+                    <IoClose className="text-red-500 w-5 h-5 mt-2" />
+                  )}
+                </TableCell>
+                <TableCell className="h-full">
+                  <div className="flex text-center justify-center items-center w-full h-full">
+                    <Link to="">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                      >
+                        <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                      </Button>
+                    </Link>
                     <Button
                       size="icon"
                       variant="ghost"
                       className="cursor-pointer"
                     >
-                      <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                      <FaRegTrashAlt className="text-red-500" />
                     </Button>
-                  </Link>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
-                  >
-                    <FaRegTrashAlt className="text-red-500" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
 

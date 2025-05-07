@@ -21,12 +21,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { FaCheck, FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const HubunganKerja = () => {
+  const { data } = useQuery({
+    queryKey: ["hubungan-kerja"],
+    queryFn: async () => {
+      const response = await adminServices.getHubunganKerja();
+      return response.data.data.data;
+    },
+  });
+
   return (
     <div className="mt-10">
       <Title title="Hubungan Kerja" />
@@ -58,32 +69,52 @@ const HubunganKerja = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
-            <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="h-full">
-                <div className="flex justify-center items-center w-full h-full">
-                  <Link to="">
+            {data?.map((item) => (
+              <TableRow className=" even:bg-gray-100">
+                <TableCell className="text-center">{item.kode}</TableCell>
+                <TableCell className="text-center">
+                  {item.nama_hub_kerja}
+                </TableCell>
+                <TableCell>
+                  <div className="flex justify-center items-center">
+                    {item.status_aktif ? (
+                      <FaCheck className="text-green-500 w-4 h-4" />
+                    ) : (
+                      <IoClose className="text-red-500 w-5 h-5" />
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex justify-center items-center">
+                    {item.pns ? (
+                      <FaCheck className="text-green-500 w-4 h-4" />
+                    ) : (
+                      <IoClose className="text-red-500 w-5 h-5" />
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="h-full">
+                  <div className="flex justify-center items-center w-full h-full">
+                    <Link to="">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                      >
+                        <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                      </Button>
+                    </Link>
                     <Button
                       size="icon"
                       variant="ghost"
                       className="cursor-pointer"
                     >
-                      <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                      <FaRegTrashAlt className="text-red-500" />
                     </Button>
-                  </Link>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
-                  >
-                    <FaRegTrashAlt className="text-red-500" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
 

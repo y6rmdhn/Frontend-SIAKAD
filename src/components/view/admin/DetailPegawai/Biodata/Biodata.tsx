@@ -1,11 +1,15 @@
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
 import biodataDummy from "@/constant/biodataDummy/biodataDummy";
 import biodataMenu from "@/constant/biodataMenu/biodataMenu";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Biodata = () => {
   const [show, setShow] = useState("kepegawaian");
+  const form = useForm();
 
   return (
     <DetailPegawaiLayout title="Biodata Pegawai" subTitile="Data Pegawai">
@@ -78,7 +82,7 @@ const Biodata = () => {
                 </div>
               </div>
             ) : show === "dosen" ? (
-              <h1>bbb</h1>
+              <h1>aaa</h1>
             ) : show === "domisili" ? (
               <h1>ccc</h1>
             ) : show === "kependudukan" ? (

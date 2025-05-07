@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
@@ -17,6 +19,14 @@ import { Link } from "react-router-dom";
 
 const JenisTes = () => {
   const form = useForm();
+
+  const { data, isPending } = useQuery({
+    queryKey: ["jenis-tes"],
+    queryFn: async () => {
+      const response = await adminServices.getJenisTes();
+      return response.data.data.data;
+    },
+  });
 
   return (
     <div className="mt-10 mb-20">
@@ -46,32 +56,40 @@ const JenisTes = () => {
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                      <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                {data?.map((item) => (
+                  <TableRow className=" even:bg-gray-100">
+                    <TableCell className="text-center">{item.kode}</TableCell>
+                    <TableCell className="text-center">
+                      {item.jenis_tes}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.nilai_minimal}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.nilai_maksimal}
+                    </TableCell>
+                    <TableCell className="h-full">
+                      <div className="flex justify-center items-center w-full h-full">
+                        <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="cursor-pointer"
+                          >
+                            <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                          </Button>
+                        </Link>
                         <Button
                           size="icon"
                           variant="ghost"
                           className="cursor-pointer"
                         >
-                          <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                          <FaRegTrashAlt className="text-red-500" />
                         </Button>
-                      </Link>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <FaRegTrashAlt className="text-red-500" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CustomCard>

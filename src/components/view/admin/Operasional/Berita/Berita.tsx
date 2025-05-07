@@ -22,11 +22,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { IoEyeOutline } from "react-icons/io5";
+import { FaCheck, FaRegTrashAlt } from "react-icons/fa";
+import { IoClose, IoEyeOutline } from "react-icons/io5";
+import { parseISO, format } from "date-fns";
 
 const Berita = () => {
+  const { data, isPending } = useQuery({
+    queryKey: ["berita"],
+    queryFn: async () => {
+      const response = await adminServices.getBerita();
+      return response.data.data.data;
+    },
+  });
+
+  const handleDateFormat = (dates) => {
+    const isoDate = dates;
+    const date = parseISO(isoDate);
+
+    return format(date, "d MMM yyyy");
+  };
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Berita" subTitle="Daftar Berita" />
@@ -73,27 +91,51 @@ const Berita = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center">
-              <Checkbox />
-            </TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
+          {data?.map((item) => (
+            <TableRow className=" even:bg-gray-100">
+              <TableCell className="text-center">
+                <Checkbox />
+              </TableCell>
+              <TableCell className="text-center">
+                {item.unit_kerja_id[0]}
+              </TableCell>
+              <TableCell className="text-center">{item.judul}</TableCell>
+              <TableCell className="text-center">
+                {handleDateFormat(item.tgl_posting)}
+              </TableCell>
+              <TableCell className="text-center">
+                {handleDateFormat(item.tgl_expired)}
+              </TableCell>
+              <TableCell className="text-center">
+                <div className="flex justify-center">
+                  {item.prioritas ? (
+                    <FaCheck className="text-green-500 w-4 h-4 mt-2" />
+                  ) : (
+                    <IoClose className="text-red-500 w-5 h-5 mt-2" />
+                  )}
+                </div>
+              </TableCell>
+              <TableCell className="h-full">
+                <div className="flex justify-center items-center w-full h-full">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                  </Button>
 
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <FaRegTrashAlt className="w-4! h-4! text-red-500" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <FaRegTrashAlt className="w-4! h-4! text-red-500" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 

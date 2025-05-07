@@ -7,13 +7,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import DasboardUser from "@/components/view/Dasboard/DasboardUser";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 // import DasboardUser from "@/view/Dasboard/DasboardUser";
 import React from "react";
 
 const DasboardPageUser = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10 pl-4">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -31,7 +31,7 @@ const DasboardPageUser = () => {
       </Breadcrumb>
 
       <DasboardUser />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 
