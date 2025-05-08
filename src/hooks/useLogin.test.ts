@@ -5,7 +5,15 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import useLogin from './useLogin';
 import { ReactNode } from 'react';
+import authServices from '@/services/auth.services';
 
+
+
+vi.mock('@/services/auth.services', () => ({
+  default: {
+    login: vi.fn()
+  }
+}));
 // Mock dependencies
 vi.mock('react-router-dom', () => ({
   useNavigate: vi.fn(() => mockNavigate)
@@ -37,6 +45,7 @@ const loginFormSchema = z.object({
 describe('useLogin hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (authServices.login as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ success: true });
   });
 
   it('Form awal empty', () => {
@@ -48,7 +57,7 @@ describe('useLogin hook', () => {
     });
     expect(result.current.isChecked).toBe(false);
     expect(result.current.form.getValues()).toEqual({
-      nomorIndukPegawai: '',
+      nip: '',
       password: ''
     });
   });
@@ -93,7 +102,7 @@ describe('useLogin hook', () => {
     const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
     
     const validFormData = {
-      nomorIndukPegawai: '12345',
+      nip: '12345',
       password: 'password123'
     };
     
@@ -110,7 +119,7 @@ describe('useLogin hook', () => {
     
     // First set values
     await act(async () => {
-      result.current.form.setValue('nomorIndukPegawai', '12345');
+      result.current.form.setValue('nip', '12345');
       result.current.form.setValue('password', 'password123');
     });
     
