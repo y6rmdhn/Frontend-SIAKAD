@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import MonitoringSisaCuti from "@/components/view/admin/Operasional/cuti/MonitoringSisaCuti";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import MonitoringSisaCuti from "@/view/admin/Operasional/cuti/MonitoringSisaCuti";
+// import MonitoringSisaCuti from "@/view/admin/Operasional/cuti/MonitoringSisaCuti";
 import React from "react";
 
 const MonitoringSisaCutiPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Operasional</BreadcrumbLink>
@@ -28,6 +29,7 @@ const MonitoringSisaCutiPage = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
       <MonitoringSisaCuti />
     </SimKepegawaianLayout>
   );

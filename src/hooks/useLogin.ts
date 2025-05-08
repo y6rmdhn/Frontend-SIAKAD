@@ -1,11 +1,14 @@
 import authServices from "@/services/auth.services";
 import { ILogin } from "@/types/auth";
+import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/store/userSlice";
 
 const loginFormSchema = z.object({
   nip: z
@@ -18,6 +21,7 @@ const loginFormSchema = z.object({
 
 const useLogin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [visiblePassword, setVisiblePassword] = useState({
     password: false,
     passwordConfirmation: false,
@@ -25,24 +29,27 @@ const useLogin = () => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   type LoginFormValues = z.infer<typeof loginFormSchema>;
 
-  const authLogin = (payload: ILogin) => {
-    return authServices.login(payload);
-  };
+  const { isPending, mutate } = useMutation({
+    mutationFn: (data: ILogin) => authServices.login(data),
+    onSuccess: (response) => {
+      const userData = {
+        id: response.data.user.id,
+        name: response.data.user.nama,
+        role: response.data.role,
+        accessToken: response.data.access_token,
+      };
 
-  const handleLogin = async (values: LoginFormValues) => {
-    try {
-      console.log(values);
-      await authLogin(values);
-
-      toast.success("Login berhasil!");
+      localStorage.setItem("user", JSON.stringify(userData));
+      dispatch(setUserData(userData));
+      toast.success("Berhasil Login");
       form.reset();
       navigate("/");
-    } catch (error: any) {
-      const err =
-        error.response?.data.message || "Terjadi kesalahan pada server.";
-      toast.error(err);
-      form.reset();
-    }
+    },
+    onError: () => form.reset(),
+  });
+
+  const handleLogin = async (values: LoginFormValues) => {
+    mutate(values);
   };
 
   const form = useForm<LoginFormValues>({
@@ -67,6 +74,7 @@ const useLogin = () => {
     isChecked,
     setIsChecked,
     visiblePassword,
+    isPending,
   };
 };
 

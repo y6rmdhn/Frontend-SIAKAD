@@ -6,15 +6,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 import { MdGroups } from "react-icons/md";
 import React from "react";
-import DetailDokumenInternal from "@/view/Operasional/DokumenInternal/DetailDokumen";
+import DetailDokumenInternal from "@/components/view/Operasional/DokumenInternal/DetailDokumen";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+// import DetailDokumenInternal from "@/view/Operasional/DokumenInternal/DetailDokumen";
 
 const DetailDokumenInternalUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+    <SimUserLayout>
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
@@ -43,7 +44,7 @@ const DetailDokumenInternalUserPage = () => {
       </Breadcrumb>
 
       <DetailDokumenInternal />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

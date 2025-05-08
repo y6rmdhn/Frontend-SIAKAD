@@ -75,7 +75,7 @@ const MenuGroup = ({ title, items, path }) => {
   return (
     <NavigationMenuItem>
       <NavigationMenuTrigger
-        className={isActive ? "bg-yellow-uika" : "bg-[#eeeeee]"}
+        className={isActive ? "bg-yellow-uika text-white" : "bg-[#eeeeee]"}
       >
         {title}
       </NavigationMenuTrigger>
@@ -103,9 +103,13 @@ const ListItem = React.forwardRef<
     href: string;
     childrenItems?: { title: string; href: string }[];
   }
->(({ className, title, children, href, childrenItems, ...props }, ref) => {
+>(({ className, title, href, childrenItems, ...props }, ref) => {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
+
+  const isActive =
+    location.pathname === href ||
+    childrenItems?.some((child) => location.pathname === child.href);
 
   const handleMouseEnter = () => childrenItems?.length && setOpen(true);
   const handleMouseLeave = () => setOpen(false);
@@ -119,7 +123,7 @@ const ListItem = React.forwardRef<
               to={href}
               className={cn(
                 "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
-                location.pathname === href && "font-bold text-underline",
+                isActive && "font-bold bg-gray-100",
                 className
               )}
             >
@@ -138,7 +142,11 @@ const ListItem = React.forwardRef<
                 <li key={child.title}>
                   <Link
                     to={child.href}
-                    className="block px-2 py-1 text-sm rounded hover:bg-accent"
+                    className={cn(
+                      "block px-2 py-1 text-sm rounded hover:bg-accent",
+                      location.pathname === child.href &&
+                        "bg-gray-100 text-black"
+                    )}
                   >
                     {child.title}
                   </Link>
@@ -151,6 +159,7 @@ const ListItem = React.forwardRef<
     );
   }
 
+  // Jika tidak ada childrenItems
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -158,23 +167,19 @@ const ListItem = React.forwardRef<
           ref={ref}
           to={href}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors ",
-            location.pathname === href && "font-bold text-underline",
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
+            isActive && "font-bold bg-gray-100",
             className
           )}
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          {children && (
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-              {children}
-            </p>
-          )}
         </Link>
       </NavigationMenuLink>
     </li>
   );
 });
+
 ListItem.displayName = "ListItem";
 
 export default Navigation;

@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Datasering from "@/view/DataRiwayat/PelaksanaanPendidikan/Datasering";
+import Datasering from "@/components/view/DataRiwayat/PelaksanaanPendidikan/Datasering";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+// import Datasering from "@/view/DataRiwayat/PelaksanaanPendidikan/Datasering";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DataseringUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -41,7 +42,7 @@ const DataseringUserPage = () => {
       </Breadcrumb>
 
       <Datasering />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

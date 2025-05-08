@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Eleson from "@/components/view/admin/Referensi/Kepegawaian/Eleson";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Eleson from "@/view/admin/Referensi/Kepegawaian/Eleson";
+// import Eleson from "@/view/admin/Referensi/Kepegawaian/Eleson";
 import React from "react";
 
 const ElesonPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Referensi</BreadcrumbLink>

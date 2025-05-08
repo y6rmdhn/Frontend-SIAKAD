@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Sertifikasi from "@/view/DataRiwayat/Kompetensi/Sertifikasi";
+import Sertifikasi from "@/components/view/DataRiwayat/Kompetensi/Sertifikasi";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+// import Sertifikasi from "@/view/DataRiwayat/Kompetensi/Sertifikasi";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const SertifikasiUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -41,7 +42,7 @@ const SertifikasiUserPage = () => {
       </Breadcrumb>
 
       <Sertifikasi />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

@@ -132,10 +132,38 @@ const dataRiwayat: {
   {
     title: "Pelaksanaan Pengabdian",
     href: "",
+    childrenItems: [
+      {
+        title: "Pengabdian",
+        href: "/data-riwayat/pelaksanaan-pengabdian/pengabdian",
+      },
+      {
+        title: "Pembicara",
+        href: "/data-riwayat/pelaksanaan-pengabdian/pembicara",
+      },
+      {
+        title: "Pengelola Jurnal",
+        href: "/data-riwayat/pelaksanaan-pengabdian/pengelola-jurnal",
+      },
+    ],
   },
   {
     title: "Penunjang",
     href: "",
+    childrenItems: [
+      {
+        title: "Anggota Profesi",
+        href: "/data-riwayat/penunjang/anggota-profesi",
+      },
+      {
+        title: "Penghargaan",
+        href: "/data-riwayat/penunjang/penghargaan",
+      },
+      {
+        title: "Penunjang Lain",
+        href: "/data-riwayat/penunjang/penunjang-lain",
+      },
+    ],
   },
   {
     title: "Pengembangan Diri",

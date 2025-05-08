@@ -6,13 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Izin from "@/view/Operasional/Pengajuan/Izin";
+import Izin from "@/components/view/Operasional/Pengajuan/Izin";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+// import Izin from "@/view/Operasional/Pengajuan/Izin";
 
 const IzinPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
-      <Breadcrumb className="mt-10 pl-4">
+    <SimUserLayout>
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>
@@ -33,7 +34,7 @@ const IzinPage = () => {
       </Breadcrumb>
 
       <Izin />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

@@ -100,10 +100,6 @@ const validasiData: {
     ],
   },
   {
-    title: "Kualifikasi",
-    href: "",
-  },
-  {
     title: "Pelaksanaan Pengabdian",
     href: "",
     childrenItems: [

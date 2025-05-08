@@ -6,13 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Homebase from "@/components/view/admin/DetailPegawai/Kepegawaian/Homebase";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Homebase from "@/view/admin/DetailPegawai/Kepegawaian/Homebase";
+// import Homebase from "@/view/admin/DetailPegawai/Kepegawaian/Homebase";
 
 const KepegawaianHomebasePage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>

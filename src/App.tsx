@@ -176,9 +176,43 @@ import KemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/Kemamp
 import DetailKemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa";
 import OrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi";
 import PelanggaranUserPage from "./pages/dataRiwayat/Kompensasi/Pelanggaran";
+import HubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja";
+import DetailHubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja";
+import PengabdianUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian";
+import DetailPengabdianUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian";
 import BeritaPage from "./pages/admin/operasional/berita";
+import PembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara";
+import DetailPembicaraUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara";
+import PengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal";
+import DetailPengelolaJurnalUserPage from "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal";
+import AnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi";
+import DetailAnggotaProfesiUserPage from "./pages/dataRiwayat/Penunjang/AnggotaProfesi/DetailAnggotaProfesi";
+import PenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan";
+import DetailPenghargaanUserPage from "./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan";
+import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
+import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
+import AnakUserPage from "./pages/dataRiwayat/Keluarga/Anak";
+import DetailAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detailAnak";
+import OrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua";
+import DetailOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua";
+
+import { useHydration } from "./hooks/useHydration";
+import LoadingSpinner from "./components/blocks/LoadingSpinner";
+import LoadingText from "./components/blocks/LoadingText";
+import BiodataPageUser from "./pages/biodata";
 
 function App() {
+  const { isHydrate } = useHydration();
+
+  if (!isHydrate) {
+    return (
+      <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
+        <LoadingSpinner />
+        <LoadingText />
+      </div>
+    );
+  }
+
   return (
     <>
       <Toaster position="top-right" />
@@ -189,6 +223,7 @@ function App() {
 
         {/* USER PAGES */}
         <Route path="/dasboard" Component={DasboardPageUser} />
+        <Route path="/biodata" Component={BiodataPageUser} />
 
         {/* KEHADIRAN */}
         <Route path="/kehadiran">
@@ -241,9 +276,22 @@ function App() {
               path="detail-jabatan-struktural"
               Component={DetailJabatanStrukturalUserPage}
             />
+            <Route path="hubungan-kerja" Component={HubunganKerjaUserPage} />
+            <Route
+              path="detail-hubungan-kerja"
+              Component={DetailHubunganKerjaUserPage}
+            />
 
             <Route path="pangkat" Component={PangkatUserPage} />
             <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
+          </Route>
+
+          {/* DATA RIWAYAT > KELUARGA */}
+          <Route path="keluarga">
+            <Route path="anak" Component={AnakUserPage} />
+            <Route path="detail-anak" Component={DetailAnakUserPage} />
+            <Route path="orangtua" Component={OrangtuaUserPage} />
+            <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
           </Route>
 
           {/* DATA RIWAYAT > KUALIFIKASI */}
@@ -327,6 +375,29 @@ function App() {
             />
           </Route>
 
+          {/* DATA RIWAYAT > PELAKSANAAN PENGABDIAN */}
+
+          <Route path="pelaksanaan-pengabdian">
+            <Route path="pengabdian" Component={PengabdianUserPage} />
+            <Route
+              path="detail-pengabdian"
+              Component={DetailPengabdianUserPage}
+            />
+            <Route path="pembicara" Component={PembicaraUserPage} />
+            <Route
+              path="detail-pembicara"
+              Component={DetailPembicaraUserPage}
+            />
+            <Route
+              path="pengelola-jurnal"
+              Component={PengelolaJurnalUserPage}
+            />
+            <Route
+              path="detail-pengelola-jurnal"
+              Component={DetailPengelolaJurnalUserPage}
+            />
+          </Route>
+
           <Route path="pengembangan-diri">
             <Route
               path="kemampuan-bahasa"
@@ -341,6 +412,27 @@ function App() {
 
           <Route path="kompensasi">
             <Route path="pelanggaran" Component={PelanggaranUserPage} />
+          </Route>
+
+          {/* DATA RIWAYAT > Penunjang */}
+          <Route path="penunjang">
+            <Route path="anggota-profesi" Component={AnggotaProfesiUserPage} />
+            <Route
+              path="detail-anggota-profesi"
+              Component={DetailAnggotaProfesiUserPage}
+            />
+
+            <Route path="penghargaan" Component={PenghargaanUserPage} />
+            <Route
+              path="detail-penghargaan"
+              Component={DetailPenghargaanUserPage}
+            />
+
+            <Route path="penunjang-lain" Component={PenunjangLainUserPage} />
+            <Route
+              path="detail-penunjang-lain"
+              Component={DetailPenunjangLainUserPage}
+            />
           </Route>
 
           {/* DATA RIWAYAT > PELAKSANAAN PENDIDIKAN */}

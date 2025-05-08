@@ -1,5 +1,6 @@
+import Dasboard from "@/components/view/admin/Dasboard";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Dasboard from "@/view/admin/Dasboard";
+// import Dasboard from "@/view/admin/Dasboard";
 
 const DasboardPage = () => {
   return (

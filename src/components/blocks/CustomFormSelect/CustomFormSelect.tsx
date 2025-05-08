@@ -20,6 +20,7 @@ type FormFieldSelectProps = {
   placeholder?: string;
   options: { label: string; value: string }[];
   labelStyle: string;
+  disabled?: boolean;
   required: boolean;
 };
 
@@ -29,6 +30,7 @@ export const FormFieldSelect = ({
   label,
   placeholder,
   options,
+  disabled,
   labelStyle,
   required,
 }: FormFieldSelectProps) => {
@@ -42,23 +44,30 @@ export const FormFieldSelect = ({
             {label} {required && <span className="text-red-500">*</span>}
           </FormLabel>
           <Select
-            onValueChange={field.onChange}
+            onValueChange={(value) => {
+              if (!disabled) field.onChange(value);
+            }}
             value={field.value}
             defaultValue={field.value}
+            disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger className="w-full">
+              <SelectTrigger disabled={disabled} className="w-full">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
-              {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
+
+            {!disabled && (
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            )}
           </Select>
+
           <FormMessage />
         </FormItem>
       )}

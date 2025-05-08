@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import VisitingScientist from "@/view/DataRiwayat/PelaksanaanPendidikan/VisitingScientist";
+import VisitingScientist from "@/components/view/DataRiwayat/PelaksanaanPendidikan/VisitingScientist";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+// import VisitingScientist from "@/view/DataRiwayat/PelaksanaanPendidikan/VisitingScientist";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const VisitingScientistUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -41,7 +42,7 @@ const VisitingScientistUserPage = () => {
       </Breadcrumb>
 
       <VisitingScientist />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

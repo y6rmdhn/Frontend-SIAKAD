@@ -6,13 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Biodata from "@/components/view/admin/DetailPegawai/Biodata";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Biodata from "@/view/admin/DetailPegawai/Biodata";
+// import Biodata from "@/view/admin/DetailPegawai/Biodata";
 
 const BiodataPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>

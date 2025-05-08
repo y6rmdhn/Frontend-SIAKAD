@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Pangkat from "@/view/DataRiwayat/Kepegawaian/Pangkat";
+import Pangkat from "@/components/view/DataRiwayat/Kepegawaian/Pangkat";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+// import Pangkat from "@/view/DataRiwayat/Kepegawaian/Pangkat";
 import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PangkatUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -41,7 +42,7 @@ const PangkatUserPage = () => {
       </Breadcrumb>
 
       <Pangkat />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

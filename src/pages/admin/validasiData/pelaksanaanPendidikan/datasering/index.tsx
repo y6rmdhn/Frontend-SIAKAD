@@ -6,14 +6,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Datasering from "@/components/view/admin/ValidasiData/PelaksanaanPendidikan/DataSering";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-import Datasering from "@/view/admin/ValidasiData/PelaksanaanPendidikan/DataSering";
+// import Datasering from "@/view/admin/ValidasiData/PelaksanaanPendidikan/DataSering";
 import React from "react";
 
 const DataseringPage = () => {
   return (
     <SimKepegawaianLayout>
-      <Breadcrumb className="mt-10 pl-4">
+      <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/gate/pegawai">Validasi Data</BreadcrumbLink>
