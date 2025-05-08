@@ -5,15 +5,6 @@ import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Table,
   TableBody,
   TableCell,
@@ -22,25 +13,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
 import { ChevronDownIcon } from "lucide-react";
+import CustomPagination from "@/components/blocks/CustomPagination";
 
 const UnitKerja = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
+  const [searchParam, setSearchParam] = useSearchParams();
 
   const { data } = useQuery({
-    queryKey: ["unit-kerja"],
+    queryKey: ["unit-kerja", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getUnitKerja();
-      return response.data.data.data;
+      const response = await adminServices.getUnitKerja(
+        searchParam.get("page")
+      );
+      return response.data.data;
     },
   });
 
@@ -76,7 +71,7 @@ const UnitKerja = () => {
     return tree;
   }
 
-  const treeData = data ? buildTree(data) : [];
+  const treeData = data?.data ? buildTree(data?.data) : [];
 
   const toggleRow = (kode_unit: string) => {
     setOpenRows((prev) => {
@@ -85,19 +80,43 @@ const UnitKerja = () => {
         [kode_unit]: !prev[kode_unit],
       };
 
-      // Scroll to the row if it's being opened
       if (!prev[kode_unit] && rowRefs.current[kode_unit]) {
         setTimeout(() => {
           rowRefs.current[kode_unit]?.scrollIntoView({
             behavior: "smooth",
             block: "start",
           });
-        }, 100); // delay a bit to wait for DOM to render
+        }, 100);
       }
 
       return newState;
     });
   };
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      searchParam.set("page", 1);
+
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      searchParam.set("page", 1);
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      Number(searchParam.get("page")) > data?.last_page &&
+      data?.last_page > 0
+    ) {
+      searchParam.set("page", data?.last_page);
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, data]);
 
   return (
     <div className="mt-10 mb-20">
@@ -162,7 +181,53 @@ const UnitKerja = () => {
                     {item.nama_unit}
                   </TableCell>
                   <TableCell className="text-center">-</TableCell>
-                  <TableCell className="text-center">Aksi</TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex justify-center items-center w-full h-full">
+                      <Link to="">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoIosArrowUp className="w-6! h-6! text-yellow-uika" />
+                        </Button>
+                      </Link>
+                      <Link to="">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoIosArrowDown className="w-6! h-6! text-yellow-uika" />
+                        </Button>
+                      </Link>
+                      <Link to="">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <FaPlus className="w-5! h-5! text-green-500" />
+                        </Button>
+                      </Link>
+                      <Link to="">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                        </Button>
+                      </Link>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                      >
+                        <FaRegTrashAlt className="text-red-500" />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
 
                 {openRows[item.kode_unit] &&
@@ -196,7 +261,53 @@ const UnitKerja = () => {
                         <TableCell className="text-center">
                           {child.parent_unit_id}
                         </TableCell>
-                        <TableCell className="text-center">Aksi</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center items-center w-full h-full">
+                            <Link to="">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="cursor-pointer"
+                              >
+                                <IoIosArrowUp className="w-6! h-6! text-yellow-uika" />
+                              </Button>
+                            </Link>
+                            <Link to="">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="cursor-pointer"
+                              >
+                                <IoIosArrowDown className="w-6! h-6! text-yellow-uika" />
+                              </Button>
+                            </Link>
+                            <Link to="">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="cursor-pointer"
+                              >
+                                <FaPlus className="w-5! h-5! text-green-500" />
+                              </Button>
+                            </Link>
+                            <Link to="">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="cursor-pointer"
+                              >
+                                <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                              </Button>
+                            </Link>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="cursor-pointer"
+                            >
+                              <FaRegTrashAlt className="text-red-500" />
+                            </Button>
+                          </div>
+                        </TableCell>
                       </TableRow>
 
                       {openRows[child.kode_unit] &&
@@ -218,7 +329,53 @@ const UnitKerja = () => {
                             <TableCell className="text-center">
                               {grand.parent_unit_id}
                             </TableCell>
-                            <TableCell className="text-center">Aksi</TableCell>
+                            <TableCell className="text-center">
+                              <div className="flex justify-center items-center w-full h-full">
+                                <Link to="">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="cursor-pointer"
+                                  >
+                                    <IoIosArrowUp className="w-6! h-6! text-yellow-uika" />
+                                  </Button>
+                                </Link>
+                                <Link to="">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="cursor-pointer"
+                                  >
+                                    <IoIosArrowDown className="w-6! h-6! text-yellow-uika" />
+                                  </Button>
+                                </Link>
+                                <Link to="">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="cursor-pointer"
+                                  >
+                                    <FaPlus className="w-5! h-5! text-green-500" />
+                                  </Button>
+                                </Link>
+                                <Link to="">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="cursor-pointer"
+                                  >
+                                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                                  </Button>
+                                </Link>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="cursor-pointer"
+                                >
+                                  <FaRegTrashAlt className="text-red-500" />
+                                </Button>
+                              </div>
+                            </TableCell>
                           </TableRow>
                         ))}
                     </React.Fragment>
@@ -228,30 +385,17 @@ const UnitKerja = () => {
           </TableBody>
         </Table>
 
-        <Pagination className="mt-8 flex justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CustomPagination
+          currentPage={Number(searchParam.get("page") || 1)}
+          links={data?.links || []}
+          onPageChange={(page) => {
+            searchParam.set("page", page.toString());
+            setSearchParam(searchParam);
+          }}
+          hasNextPage={!!data?.next_page_url}
+          hasPrevPage={!!data?.prev_page_url}
+          totalPages={data?.last_page}
+        />
       </CustomCard>
     </div>
   );

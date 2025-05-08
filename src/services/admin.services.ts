@@ -2,18 +2,61 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 
 const adminServices = {
-  getStatusAktif: () => axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
-  getUnitKerja: () => axiosInstance.get(`${endpoint.ADMIN}/unit-kerja`),
-  getHubunganKerja: () => axiosInstance.get(`${endpoint.ADMIN}/hubungan-kerja`),
-  getJabatanAkademik: () =>
-    axiosInstance.get(`${endpoint.ADMIN}/jabatan-akademik`),
-  getJenisCuti: () => axiosInstance.get(`${endpoint.ADMIN}/daftar-cuti`),
-  getJenisSk: () => axiosInstance.get(`${endpoint.ADMIN}/jenis-sk`),
-  getJenisTes: () => axiosInstance.get(`${endpoint.ADMIN}/jenis-test`),
-  getOutputPenelitian: () =>
-    axiosInstance.get(`${endpoint.ADMIN}/output-penelitian`),
+  getStatusAktif: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/status-aktif`, {
+      params: {
+        page: page,
+      },
+    }),
+  getUnitKerja: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/unit-kerja`, {
+      params: {
+        page: page,
+      },
+    }),
+  getHubunganKerja: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/hubungan-kerja`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJabatanAkademik: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jabatan-akademik`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisCuti: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/daftar-cuti`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisSk: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-sk`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisTes: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-test`, {
+      params: {
+        page: page,
+      },
+    }),
+  getOutputPenelitian: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/output-penelitian`, {
+      params: {
+        page: page,
+      },
+    }),
   getJenisHari: () => axiosInstance.get(`${endpoint.ADMIN}/jenis-hari`),
-  getBerita: () => axiosInstance.get(`${endpoint.ADMIN}/berita`),
+  getBerita: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/berita`, {
+      params: {
+        page: page,
+      },
+    }),
 };
 
 export default adminServices;

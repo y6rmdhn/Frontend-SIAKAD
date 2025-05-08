@@ -2,15 +2,6 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Table,
   TableBody,
   TableCell,
@@ -18,26 +9,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
+import CustomPagination from "@/components/blocks/CustomPagination";
 
 const StatusKeaktifan = () => {
-  const { data } = useQuery({
-    queryKey: ["status-keaktifan", 1],
-    queryFn: async () => {
-      const statusKeaktifanResponse = await adminServices.getStatusAktif();
+  const [searchParam, setSearchParam] = useSearchParams();
 
-      console.log(statusKeaktifanResponse.data.data.data);
-      return statusKeaktifanResponse.data.data.data;
+  const { data } = useQuery({
+    queryKey: ["status-keaktifan", searchParam.get("page")],
+    queryFn: async () => {
+      const statusKeaktifanResponse = await adminServices.getStatusAktif(
+        searchParam.get("page")
+      );
+
+      return statusKeaktifanResponse.data.data;
     },
   });
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      searchParam.set("page", 1);
+
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      searchParam.set("page", 1);
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      Number(searchParam.get("page")) > data?.last_page &&
+      data?.last_page > 0
+    ) {
+      searchParam.set("page", data?.last_page);
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, data]);
 
   return (
     <div className="mt-10 mb-20">
@@ -63,7 +83,7 @@ const StatusKeaktifan = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
-            {data?.map((item) => (
+            {data?.data.map((item) => (
               <TableRow className=" even:bg-gray-100">
                 <TableCell className="text-center">{item.kode}</TableCell>
                 <TableCell className="text-center">
@@ -101,30 +121,17 @@ const StatusKeaktifan = () => {
           </TableBody>
         </Table>
 
-        <Pagination className="mt-8 flex justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CustomPagination
+          currentPage={Number(searchParam.get("page") || 1)}
+          links={data?.links || []}
+          onPageChange={(page) => {
+            searchParam.set("page", page.toString());
+            setSearchParam(searchParam);
+          }}
+          hasNextPage={!!data?.next_page_url}
+          hasPrevPage={!!data?.prev_page_url}
+          totalPages={data?.last_page}
+        />
       </CustomCard>
     </div>
   );
