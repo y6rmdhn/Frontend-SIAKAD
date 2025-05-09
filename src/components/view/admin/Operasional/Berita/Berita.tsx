@@ -22,10 +22,29 @@ import { parseISO, format } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { useSearchParams } from "react-router-dom";
 
+// Define interfaces for data structures
+interface BeritaItem {
+  id: string | number;
+  judul: string;
+  tgl_posting: string;
+  tgl_expired: string;
+  prioritas: boolean;
+  unit_kerja_id: string[] | string;
+  // Add other properties as needed
+}
+
+interface BeritaResponse {
+  data: BeritaItem[];
+  links: any[];
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  last_page: number;
+}
+
 const Berita = () => {
   const [searchParam, setSearchParam] = useSearchParams();
 
-  const { data } = useQuery({
+  const { data } = useQuery<BeritaResponse>({
     queryKey: ["berita", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getBerita(searchParam.get("page"));
@@ -33,37 +52,41 @@ const Berita = () => {
     },
   });
 
-  const handleDateFormat = (dates) => {
-    const isoDate = dates;
-    const date = parseISO(isoDate);
-
-    return format(date, "d MMM yyyy");
+  const handleDateFormat = (dates: string): string => {
+    try {
+      const isoDate = dates;
+      const date = parseISO(isoDate);
+      return format(date, "d MMM yyyy");
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Invalid Date";
+    }
   };
 
   useEffect(() => {
     if (!searchParam.get("page")) {
-      searchParam.set("page", 1);
-
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", 1);
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (
-      Number(searchParam.get("page")) > data?.last_page &&
-      data?.last_page > 0
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
     ) {
-      searchParam.set("page", data?.last_page);
+      searchParam.set("page", data.last_page.toString());
       setSearchParam(searchParam);
     }
-  }, [searchParam, data]);
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
@@ -111,13 +134,15 @@ const Berita = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.map((item) => (
-            <TableRow className=" even:bg-gray-100">
+          {data?.data.map((item, index) => (
+            <TableRow key={index} className="even:bg-gray-100">
               <TableCell className="text-center">
                 <Checkbox />
               </TableCell>
               <TableCell className="text-center">
-                {item.unit_kerja_id[0]}
+                {Array.isArray(item.unit_kerja_id)
+                  ? item.unit_kerja_id[0]
+                  : item.unit_kerja_id}
               </TableCell>
               <TableCell className="text-center">{item.judul}</TableCell>
               <TableCell className="text-center">
