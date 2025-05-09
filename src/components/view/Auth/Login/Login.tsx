@@ -31,6 +31,10 @@ const LoginPage = () => {
     captchaVisible,
   } = useLogin();
 
+  const nip = form.watch("nip");
+  const password = form.watch("password");
+  const isFormFilled = nip && password;
+
   const { data, isLoading } = useQuery({
     queryKey: ["generate-captcha"],
     queryFn: async () => {
@@ -212,6 +216,7 @@ const LoginPage = () => {
               <div className="flex justify-center mb-6">
                 {!captchaVisible ? (
                   <Button
+                    disabled={!isFormFilled}
                     onClick={() => setCaptchaVisible(true)}
                     className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-800 hover:bg-green-800"
                   >
