@@ -198,15 +198,23 @@ export default function SlideCaptcha({
   }, [isDragging]);
 
   // Handle verification
+  // Handle verification
   const verifyCaptcha = () => {
     if (!isActive) return;
 
-    // Check if the slider position is within a valid range
-    const tolerance = 3;
+    // Tambahkan console.log untuk debugging
+    console.log({
+      currentPosition,
+      targetPosition,
+      difference: Math.abs(currentPosition - targetPosition),
+    });
+
+    // Sesuaikan toleransi menjadi lebih besar
+    const tolerance = 10; // Toleransi yang lebih besar (10% alih-alih 3%)
     const isCorrect = Math.abs(currentPosition - targetPosition) <= tolerance;
 
     if (!isCorrect) {
-      setShowFail(true);
+      // setShowFail(true);
       setTimeout(() => {
         refreshCaptcha();
       }, 2000);
@@ -219,6 +227,10 @@ export default function SlideCaptcha({
       sliderPosition: currentPosition,
     };
 
+    // Show success state
+    setIsVerified(true);
+    setShowSuccess(true);
+
     // Try to send message to parent
     if (window.opener) {
       window.opener.postMessage(solutionData, "*");
@@ -226,10 +238,6 @@ export default function SlideCaptcha({
     } else if (window.parent && window.parent !== window) {
       window.parent.postMessage(solutionData, "*");
     }
-
-    // Show success state
-    setIsVerified(true);
-    setShowSuccess(true);
   };
 
   const refreshCaptcha = () => {
