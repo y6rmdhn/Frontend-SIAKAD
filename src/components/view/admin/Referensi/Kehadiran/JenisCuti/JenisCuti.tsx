@@ -1,4 +1,5 @@
 import CustomCard from "@/components/blocks/Card";
+import CustomPagination from "@/components/blocks/CustomPagination";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import {
@@ -11,22 +12,50 @@ import {
 } from "@/components/ui/table";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const JenisCuti = () => {
   const form = useForm();
+  const [searchParam, setSearchParam] = useSearchParams();
 
   const { data, isPending } = useQuery({
-    queryKey: ["daftar-cuti"],
+    queryKey: ["daftar-cuti", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisCuti();
-      return response.data.data.data;
+      const response = await adminServices.getJenisCuti(
+        searchParam.get("page")
+      );
+      return response.data.data;
     },
   });
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      searchParam.set("page", 1);
+
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      searchParam.set("page", 1);
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      Number(searchParam.get("page")) > data?.last_page &&
+      data?.last_page > 0
+    ) {
+      searchParam.set("page", data?.last_page);
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, data]);
 
   return (
     <div className="mt-10 mb-20">
@@ -66,7 +95,7 @@ const JenisCuti = () => {
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                {data?.map((item) => (
+                {data?.data.map((item) => (
                   <TableRow className=" even:bg-gray-100">
                     <TableCell className="text-center">{item.kode}</TableCell>
                     <TableCell className="text-center">
@@ -105,6 +134,18 @@ const JenisCuti = () => {
                 ))}
               </TableBody>
             </Table>
+
+            <CustomPagination
+              currentPage={Number(searchParam.get("page") || 1)}
+              links={data?.links || []}
+              onPageChange={(page) => {
+                searchParam.set("page", page.toString());
+                setSearchParam(searchParam);
+              }}
+              hasNextPage={!!data?.next_page_url}
+              hasPrevPage={!!data?.prev_page_url}
+              totalPages={data?.last_page}
+            />
           </CustomCard>
         </form>
       </Form>

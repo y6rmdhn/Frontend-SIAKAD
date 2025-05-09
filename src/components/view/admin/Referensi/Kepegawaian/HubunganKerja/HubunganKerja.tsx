@@ -1,17 +1,9 @@
 import CustomCard from "@/components/blocks/Card";
+import CustomPagination from "@/components/blocks/CustomPagination";
 import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -23,20 +15,49 @@ import {
 import unitKerjaOptions from "@/constant/dummyFilter";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaCheck, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const HubunganKerja = () => {
+  const [searchParam, setSearchParam] = useSearchParams();
+
   const { data } = useQuery({
-    queryKey: ["hubungan-kerja"],
+    queryKey: ["hubungan-kerja", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getHubunganKerja();
-      return response.data.data.data;
+      const response = await adminServices.getHubunganKerja(
+        searchParam.get("page")
+      );
+      return response.data.data;
     },
   });
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      searchParam.set("page", 1);
+
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      searchParam.set("page", 1);
+      setSearchParam(searchParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      Number(searchParam.get("page")) > data?.last_page &&
+      data?.last_page > 0
+    ) {
+      searchParam.set("page", data?.last_page);
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, data]);
 
   return (
     <div className="mt-10">
@@ -69,7 +90,7 @@ const HubunganKerja = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
-            {data?.map((item) => (
+            {data?.data.map((item) => (
               <TableRow className=" even:bg-gray-100">
                 <TableCell className="text-center">{item.kode}</TableCell>
                 <TableCell className="text-center">
@@ -118,30 +139,17 @@ const HubunganKerja = () => {
           </TableBody>
         </Table>
 
-        <Pagination className="mt-8 flex justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CustomPagination
+          currentPage={Number(searchParam.get("page") || 1)}
+          links={data?.links || []}
+          onPageChange={(page) => {
+            searchParam.set("page", page.toString());
+            setSearchParam(searchParam);
+          }}
+          hasNextPage={!!data?.next_page_url}
+          hasPrevPage={!!data?.prev_page_url}
+          totalPages={data?.last_page}
+        />
       </CustomCard>
     </div>
   );

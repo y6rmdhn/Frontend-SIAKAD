@@ -29,17 +29,27 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      if (error.response?.data?.message === "Unauthorized") {
+    const status = error.response?.status;
+    const message = error.response?.data?.message;
+
+    if (status === 401) {
+      if (message === "Unauthorized") {
         reduxStore.dispatch(clearUserData());
         localStorage.removeItem("user");
-
-        toast.error("Sesi kamu habis. Silahkan login kembali.");
+        toast.error("Sesi kamu habis. Silakan login kembali.");
         window.location.href = "/login";
       } else {
-        toast.error(error.response?.data?.message || "Terjadi kesalahan!");
+        toast.error(message || "Terjadi kesalahan!");
+      }
+    } else {
+      if (message) {
+        toast.error(message);
+      } else {
+        toast.error("Terjadi kesalahan pada server.");
       }
     }
+
+    return Promise.reject(error);
   }
 );
 

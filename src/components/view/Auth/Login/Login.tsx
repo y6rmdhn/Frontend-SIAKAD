@@ -12,16 +12,57 @@ import { FaLock } from "react-icons/fa";
 import { FaLockOpen } from "react-icons/fa";
 import useLogin from "@/hooks/useLogin";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "@/components/blocks/LoadingSpinner";
+import captchaServices from "@/services/captcha.services";
+import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import SlideCaptcha from "@/components/blocks/Captcha";
 
 const LoginPage = () => {
+  const [sliderPosition, setSliderPosition] = useState(0);
+  const [captchaId, setCaptchaId] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
   const {
     form,
     handleLogin,
     handleVisiblePassword,
     visiblePassword,
-    isPending,
+    setCaptchaVisible,
+    captchaVisible,
   } = useLogin();
+
+  const nip = form.watch("nip");
+  const password = form.watch("password");
+  const isFormFilled = nip && password;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["generate-captcha"],
+    queryFn: async () => {
+      try {
+        const response = await captchaServices.generateCaptcha();
+        if (response.data && response.data.data) {
+          setCaptchaId(response.data.data.captcha_id);
+          return response.data.data;
+        }
+        return null;
+      } catch (error) {
+        console.error("Error fetching captcha:", error);
+        return null;
+      }
+    },
+  });
+
+  console.log(data);
+
+  useEffect(() => {
+    if (captchaId) {
+      form.setValue("captcha_id", captchaId);
+    }
+  }, [captchaId, form]);
+
+  useEffect(() => {
+    form.setValue("slider_position", sliderPosition);
+  }, [sliderPosition, form]);
 
   return (
     <div className="min-h-screen font-roboto flex overflow-x-hidden text-black-uika">
@@ -130,6 +171,19 @@ const LoginPage = () => {
                 )}
               />
 
+              {/* Hidden fields for captcha data */}
+              <FormField
+                control={form.control}
+                name="captcha_id"
+                render={({ field }) => <Input type="hidden" {...field} />}
+              />
+
+              <FormField
+                control={form.control}
+                name="slider_position"
+                render={({ field }) => <Input type="hidden" {...field} />}
+              />
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
@@ -137,8 +191,8 @@ const LoginPage = () => {
                     name="remember-me"
                     type="checkbox"
                     className="h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    // checked={rememberMe}
-                    // onChange={(e) => setRememberMe(e.target.checked)}
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                   />
                   <label
                     htmlFor="remember-me"
@@ -158,15 +212,27 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              <div className="pt-4 mt-6 border-gray-200">
-                <Button
-                  disabled={isPending}
-                  data-testid="login-button"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-800 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  {isPending && <LoadingSpinner />}
-                  {isPending ? "Loading" : "Masuk"}
-                </Button>
+              {/* Captcha Component */}
+              <div className="flex justify-center mb-6">
+                {!captchaVisible ? (
+                  <Button
+                    disabled={!isFormFilled}
+                    onClick={() => setCaptchaVisible(true)}
+                    className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-800 hover:bg-green-800"
+                  >
+                    Verifikasi
+                  </Button>
+                ) : (
+                  <div className="absolute top-52 z-50">
+                    <SlideCaptcha
+                      backgroundUrl={data?.background_url}
+                      sliderUrl={data?.slider_url}
+                      sliderY={data?.slider_y}
+                      captchaId={data?.captcha_id}
+                      onChangePosition={setSliderPosition}
+                    />
+                  </div>
+                )}
               </div>
             </form>
           </Form>

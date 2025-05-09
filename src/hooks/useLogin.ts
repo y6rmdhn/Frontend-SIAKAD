@@ -1,6 +1,7 @@
 import authServices from "@/services/auth.services";
+import captchaServices from "@/services/captcha.services";
 import { ILogin } from "@/types/auth";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,16 +18,22 @@ const loginFormSchema = z.object({
     .regex(/^\d+$/, "Nomor Induk Pegawai harus berupa angka")
     .max(20, "Nomor Induk Pegawai tidak boleh lebih dari 20 digit"),
   password: z.string().min(8, "Kata Sandi tidak boleh kurang dari 8 karakter"),
+  captcha_id: z.string().min(1, "Captcha ID wajib diisi"),
+  slider_position: z.number().min(0, "Slider wajib diisi"),
 });
 
 const useLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const [captchaVisible, setCaptchaVisible] = useState(false);
+
   const [visiblePassword, setVisiblePassword] = useState({
     password: false,
     passwordConfirmation: false,
   });
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState(false);
+
   type LoginFormValues = z.infer<typeof loginFormSchema>;
 
   const { isPending, mutate } = useMutation({
@@ -45,10 +52,24 @@ const useLogin = () => {
       form.reset();
       navigate("/");
     },
-    onError: () => form.reset(),
+    onError: (error) => {
+      // On error, refresh the captcha
+      queryClient.invalidateQueries({ queryKey: ["generate-captcha"] });
+      // toast.error("CAPTCHA tidak valid atau sudah kadaluarsa");
+      setCaptchaVisible(false);
+      // Reset form but keep NIP
+      const currentNip = form.getValues("nip");
+      form.reset({
+        nip: currentNip,
+        password: "",
+        captcha_id: "",
+        slider_position: 0,
+      });
+    },
   });
 
   const handleLogin = async (values: LoginFormValues) => {
+    console.log(values);
     mutate(values);
   };
 
@@ -56,6 +77,8 @@ const useLogin = () => {
     defaultValues: {
       nip: "",
       password: "",
+      captcha_id: "",
+      slider_position: 0,
     },
     resolver: zodResolver(loginFormSchema),
   });
@@ -75,6 +98,8 @@ const useLogin = () => {
     setIsChecked,
     visiblePassword,
     isPending,
+    captchaVisible,
+    setCaptchaVisible,
   };
 };
 
