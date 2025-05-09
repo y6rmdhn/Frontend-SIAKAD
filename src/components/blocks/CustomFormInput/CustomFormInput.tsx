@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 type FormFieldInputProps = {
   form: any;
   name: string;
-  label: string;
+  label?: string;
   type?:
     | "text"
     | "date"
@@ -57,16 +57,18 @@ export const FormFieldInput = ({
               : "flex items-center gap-2"
           }`}
         >
-          <FormLabel
-            className={`w-full ${labelStyle} ${
-              type === "checkbox" ? "w-61" : ""
-            }`}
-          >
-            {label}
-            {required && type !== "checkbox" && (
-              <span className="text-red-500">*</span>
-            )}
-          </FormLabel>
+          {label && (
+            <FormLabel
+              className={`w-full ${labelStyle} ${
+                type === "checkbox" ? "w-61" : ""
+              }`}
+            >
+              {label}
+              {required && type !== "checkbox" && (
+                <span className="text-red-500">*</span>
+              )}
+            </FormLabel>
+          )}
 
           <FormControl>
             {type === "file" ? (

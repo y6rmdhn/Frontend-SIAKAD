@@ -57,6 +57,10 @@ const adminServices = {
         page: page,
       },
     }),
+
+  // post
+  postJenisTes: (payload) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-tes`, payload),
 };
 
 export default adminServices;
