@@ -1,0 +1,30 @@
+version: '3'
+services:
+  react-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: react_frontend
+    restart: unless-stopped
+    networks:
+      - frontend_network
+
+  webserver:
+    image: nginx:alpine
+    container_name: frontend_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./build:/usr/share/nginx/html
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - frontend_network
+    depends_on:
+      - react-app
+
+networks:
+  frontend_network:
+    driver: bridge
