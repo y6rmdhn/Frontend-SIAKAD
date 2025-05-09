@@ -4,7 +4,6 @@ import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomForm
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt, FaSave } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import UnitKerja from "@/components/view/admin/Referensi/Kepegawaian/UnitKerja";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import UnitKerja from "@/view/admin/Referensi/Kepegawaian/UnitKerja";
-import React from "react";
 
 const UnitKerjaReferensiPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailTes from "@/components/view/DataRiwayat/Kompetensi/Tes/DetailTes";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailTes from "@/view/DataRiwayat/Kompetensi/Tes/DetailTes";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailTesUserPage = () => {

@@ -12,14 +12,10 @@ import { FaLock } from "react-icons/fa";
 import { FaLockOpen } from "react-icons/fa";
 import useLogin from "@/hooks/useLogin";
 import { Link } from "react-router-dom";
-import captchaServices from "@/services/captcha.services";
-import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SlideCaptcha from "@/components/blocks/Captcha";
 
 const LoginPage = () => {
-  const [sliderPosition, setSliderPosition] = useState(0);
-  const [captchaId, setCaptchaId] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   const {
@@ -29,40 +25,10 @@ const LoginPage = () => {
     visiblePassword,
     setCaptchaVisible,
     captchaVisible,
+    captchaData,
+    isFormFilled,
+    setSliderPosition,
   } = useLogin();
-
-  const nip = form.watch("nip");
-  const password = form.watch("password");
-  const isFormFilled = nip && password;
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["generate-captcha"],
-    queryFn: async () => {
-      try {
-        const response = await captchaServices.generateCaptcha();
-        if (response.data && response.data.data) {
-          setCaptchaId(response.data.data.captcha_id);
-          return response.data.data;
-        }
-        return null;
-      } catch (error) {
-        console.error("Error fetching captcha:", error);
-        return null;
-      }
-    },
-  });
-
-  console.log(data);
-
-  useEffect(() => {
-    if (captchaId) {
-      form.setValue("captcha_id", captchaId);
-    }
-  }, [captchaId, form]);
-
-  useEffect(() => {
-    form.setValue("slider_position", sliderPosition);
-  }, [sliderPosition, form]);
 
   return (
     <div className="min-h-screen font-roboto flex overflow-x-hidden text-black-uika">
@@ -225,10 +191,10 @@ const LoginPage = () => {
                 ) : (
                   <div className="absolute top-52 z-50">
                     <SlideCaptcha
-                      backgroundUrl={data?.background_url}
-                      sliderUrl={data?.slider_url}
-                      sliderY={data?.slider_y}
-                      captchaId={data?.captcha_id}
+                      backgroundUrl={captchaData?.background_url}
+                      sliderUrl={captchaData?.slider_url}
+                      sliderY={captchaData?.slider_y}
+                      captchaId={captchaData?.captcha_id}
                       onChangePosition={setSliderPosition}
                     />
                   </div>

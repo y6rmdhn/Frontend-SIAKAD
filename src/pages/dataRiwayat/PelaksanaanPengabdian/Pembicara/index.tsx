@@ -7,7 +7,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Pembicara from "@/components/view/DataRiwayat/PelaksanaanPengabdian/Pembicara";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 

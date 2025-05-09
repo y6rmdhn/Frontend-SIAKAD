@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Datasering from "@/components/view/admin/ValidasiData/PelaksanaanPendidikan/DataSering";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Datasering from "@/view/admin/ValidasiData/PelaksanaanPendidikan/DataSering";
-import React from "react";
 
 const DataseringPage = () => {
   return (

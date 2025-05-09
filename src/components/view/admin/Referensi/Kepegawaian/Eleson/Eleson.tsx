@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";

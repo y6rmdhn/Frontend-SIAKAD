@@ -2,7 +2,6 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import React from "react";
 import { IoSaveSharp } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useForm } from "react-hook-form";

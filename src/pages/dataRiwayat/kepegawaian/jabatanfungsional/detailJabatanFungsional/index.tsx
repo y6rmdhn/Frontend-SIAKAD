@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailJabatanFungsional from "@/components/view/DataRiwayat/Kepegawaian/JabatanFungsional/DetailJabatanFungsional/DetailJabatanFungsional";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailJabatanFungsional from "@/view/DataRiwayat/Kepegawaian/JabatanFungsional/DetailJabatanFungsional/DetailJabatanFungsional";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailJabatanFungsionalUserPage = () => {

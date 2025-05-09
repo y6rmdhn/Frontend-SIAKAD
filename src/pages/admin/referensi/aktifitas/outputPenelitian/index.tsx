@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import OutputPenelitian from "@/components/view/admin/Referensi/Aktifitas/OutputPenelitian";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import OutputPenelitian from "@/view/admin/Referensi/Aktifitas/OutputPenelitian";
-import React from "react";
 
 const OutputPenelitianReferensiPage = () => {
   return (

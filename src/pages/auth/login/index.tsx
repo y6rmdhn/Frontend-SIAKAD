@@ -1,6 +1,5 @@
 import Login from "@/components/view/Auth/Login";
 import AuthLayout from "@/layouts/AuthLayout";
-// import Login from "@/view/Auth/Login";
 
 const LoginPage = () => {
   return (

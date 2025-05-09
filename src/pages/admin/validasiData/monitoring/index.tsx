@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Monitoring from "@/components/view/admin/ValidasiData/Monitoring";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Monitoring from "@/view/admin/ValidasiData/Monitoring";
-import React from "react";
 
 const MonitoringPage = () => {
   return (

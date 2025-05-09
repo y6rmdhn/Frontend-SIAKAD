@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailSertifikasi from "@/components/view/DataRiwayat/Kompetensi/Sertifikasi/DetailSertifikasi";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailSertifikasi from "@/view/DataRiwayat/Kompetensi/Sertifikasi/DetailSertifikasi";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailSertifikasiUserPage = () => {

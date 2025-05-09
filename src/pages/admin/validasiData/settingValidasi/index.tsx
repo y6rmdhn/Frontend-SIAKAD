@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import SettingValidasi from "@/components/view/admin/ValidasiData/SettingValidasi";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import SettingValidasi from "@/view/admin/ValidasiData/SettingValidasi";
-import React from "react";
 
 const SettingValidasiPage = () => {
   return (

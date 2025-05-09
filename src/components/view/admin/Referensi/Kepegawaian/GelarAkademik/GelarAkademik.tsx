@@ -21,7 +21,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
-import React from "react";
 import { IoMdDownload } from "react-icons/io";
 
 const GelarAkademik = () => {

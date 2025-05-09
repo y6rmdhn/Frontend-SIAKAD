@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Pangkat from "@/components/view/admin/ValidasiData/Kepegawaian/Pangkat";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Pangkat from "@/view/admin/ValidasiData/Kepegawaian/Pangkat";
-import React from "react";
 
 const PangkatPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Pangkat from "@/components/view/DataRiwayat/Kepegawaian/Pangkat";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Pangkat from "@/view/DataRiwayat/Kepegawaian/Pangkat";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PangkatUserPage = () => {

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Kecamatan from "@/components/view/admin/Referensi/Wilayah/Kecamatan";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Kecamatan from "@/view/admin/Referensi/Wilayah/Kecamatan";
-import React from "react";
 
 const KecamatanReferensiPage = () => {
   return (

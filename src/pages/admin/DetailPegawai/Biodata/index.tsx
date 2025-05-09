@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Biodata from "@/components/view/admin/DetailPegawai/Biodata";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Biodata from "@/view/admin/DetailPegawai/Biodata";
 
 const BiodataPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import RiwayatPekerjaan from "@/components/view/DataRiwayat/Kualifikasi/RiwayatPekerjaan/RiwayatPekerjaan";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import RiwayatPekerjaan from "@/view/DataRiwayat/Kualifikasi/RiwayatPekerjaan/RiwayatPekerjaan";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const RiwayatPekerjaanUserPage = () => {

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import InputKehadiran from "@/components/view/admin/Operasional/Kehadiran/InpuKehadiran";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import InputKehadiran from "@/view/admin/Operasional/Kehadiran/InpuKehadiran";
-import React from "react";
 
 const InputKehadiranPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Homebase from "@/components/view/admin/ValidasiData/Kepegawaian/Homebase/Homebase";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Homebase from "@/view/admin/ValidasiData/Kepegawaian/Homebase/Homebase";
-import React from "react";
 
 const HomebasePage = () => {
   return (

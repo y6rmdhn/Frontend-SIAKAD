@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import JabatanStruktural from "@/components/view/admin/Referensi/Kepegawaian/JabatanStruktural";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import JabatanStruktural from "@/view/admin/Referensi/Kepegawaian/JabatanStruktural";
-import React from "react";
 
 const JabatanStrukturalReferensiPage = () => {
   return (

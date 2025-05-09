@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import PeriodeCuti from "@/components/view/admin/Operasional/cuti/PeriodeCuti";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import PeriodeCuti from "@/view/admin/Operasional/cuti/PeriodeCuti";
-import React from "react";
 
 const PeriodeCutiPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailJabatanFungsional from "@/components/view/admin/Referensi/Kepegawaian/JabatanFungsional/DetailJabatanFungsional";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import DetailJabatanFungsional from "@/view/admin/Referensi/Kepegawaian/JabatanFungsional/DetailJabatanFungsional";
-import React from "react";
 
 const DetailJabatanFungsionalReferensiPage = () => {
   return (

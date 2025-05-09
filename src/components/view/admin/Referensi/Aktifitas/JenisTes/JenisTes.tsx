@@ -14,7 +14,7 @@ import {
 import adminServices from "@/services/admin.services";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -22,6 +22,24 @@ import { Link, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { IoSaveOutline } from "react-icons/io5";
 import { RiResetLeftFill } from "react-icons/ri";
+
+// Define a type for an item in the data array
+interface JenisTesItem {
+  kode: string;
+  jenis_tes: string;
+  nilai_minimal: number;
+  nilai_maksimal: number;
+  // Add any other properties that the API returns
+}
+
+// Define a type for the API response
+interface JenisTesResponse {
+  data: JenisTesItem[];
+  links: any[]; // You might want to define a more specific type here
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  last_page: number;
+}
 
 const jenisTesFormSchema = z
   .object({
@@ -49,6 +67,9 @@ const jenisTesFormSchema = z
     path: ["nilai_maksimal"],
   });
 
+// Define the type from the Zod schema
+type JenisTesFormData = z.infer<typeof jenisTesFormSchema>;
+
 const JenisTes = () => {
   const form = useForm<JenisTesFormData>({
     defaultValues: {
@@ -62,9 +83,8 @@ const JenisTes = () => {
 
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
-  type JenisTesFormData = z.infer<typeof jenisTesFormSchema>;
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery<JenisTesResponse>({
     queryKey: ["jenis-tes", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getJenisTes(searchParam.get("page"));
@@ -88,28 +108,28 @@ const JenisTes = () => {
 
   useEffect(() => {
     if (!searchParam.get("page")) {
-      searchParam.set("page", 1);
-
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", 1);
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (
-      Number(searchParam.get("page")) > data?.last_page &&
-      data?.last_page > 0
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
     ) {
-      searchParam.set("page", data?.last_page);
+      searchParam.set("page", data.last_page.toString());
       setSearchParam(searchParam);
     }
-  }, [searchParam, data]);
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
@@ -123,8 +143,7 @@ const JenisTes = () => {
                   <Button
                     onClick={() => {
                       setIsAddData(!isAddData);
-                      searchParam.set("page", 1);
-
+                      searchParam.set("page", "1");
                       setSearchParam(searchParam);
                     }}
                     type="button"
@@ -211,8 +230,8 @@ const JenisTes = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
-                  <TableRow className=" even:bg-gray-100">
+                {data?.data.map((item, index) => (
+                  <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center">{item.kode}</TableCell>
                     <TableCell className="text-center">
                       {item.jenis_tes}

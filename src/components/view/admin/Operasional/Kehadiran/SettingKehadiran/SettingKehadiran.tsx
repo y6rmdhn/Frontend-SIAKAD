@@ -9,14 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { HiMiniXMark } from "react-icons/hi2";
 import { MdEdit } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
-// import data from "../../../../../constant/settingKehadiran/index";
 import data from "../../../../../../constant/settingKehadiran/index";
 
-const StatusItem = ({ label, status }) => {
+interface StatusItemProps {
+  label: string;
+  status: string;
+}
+
+const StatusItem = ({ label, status }: StatusItemProps) => {
   const isCheck = status === "check";
 
   return (

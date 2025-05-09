@@ -11,16 +11,23 @@ import {
 } from "@/components/ui/table";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 
+// Define interface for the data item
+interface JenisHariItem {
+  kode: string;
+  nama_hari: string;
+  jenis_hari: boolean;
+  // Add other properties as needed
+}
+
 const JenisHari = () => {
   const form = useForm();
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery<JenisHariItem[]>({
     queryKey: ["jenis-hari"],
     queryFn: async () => {
       const response = await adminServices.getJenisHari();
@@ -60,8 +67,8 @@ const JenisHari = () => {
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                {data?.map((item) => (
-                  <TableRow className=" even:bg-gray-100">
+                {data?.map((item, index) => (
+                  <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center">{item.kode}</TableCell>
                     <TableCell className="text-center">
                       {item.nama_hari}

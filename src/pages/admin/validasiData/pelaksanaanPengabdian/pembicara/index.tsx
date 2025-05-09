@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Pembicara from "@/components/view/admin/ValidasiData/PelaksanaanPengabdian/Pembicara";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Pembicara from "@/view/admin/ValidasiData/PelaksanaanPengabdian/Pembicara";
-import React from "react";
 
 const PembicaraPage = () => {
   return (

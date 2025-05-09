@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaCheck, FaRegTrashAlt } from "react-icons/fa";
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { parseISO, format } from "date-fns";
@@ -25,7 +25,7 @@ import { useSearchParams } from "react-router-dom";
 const Berita = () => {
   const [searchParam, setSearchParam] = useSearchParams();
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery({
     queryKey: ["berita", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getBerita(searchParam.get("page"));

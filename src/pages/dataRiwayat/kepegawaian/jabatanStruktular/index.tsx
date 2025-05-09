@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import JabatanStruktural from "@/components/view/DataRiwayat/Kepegawaian/JabatanStruktular";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import JabatanStruktural from "@/view/DataRiwayat/Kepegawaian/JabatanStruktular";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const JabatanStrukturalUserPage = () => {

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import OrasiIlmiah from "@/components/view/admin/ValidasiData/PelaksanaanPendidikan/OrasiIlmiah";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import OrasiIlmiah from "@/view/admin/ValidasiData/PelaksanaanPendidikan/OrasiIlmiah";
-import React from "react";
 
 const OrasiIlmiahPage = () => {
   return (

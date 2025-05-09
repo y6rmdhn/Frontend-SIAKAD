@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Datasering from "@/components/view/DataRiwayat/PelaksanaanPendidikan/Datasering";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Datasering from "@/view/DataRiwayat/PelaksanaanPendidikan/Datasering";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DataseringUserPage = () => {

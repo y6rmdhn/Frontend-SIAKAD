@@ -16,15 +16,31 @@ import {
 import unitKerjaOptions from "@/constant/dummyFilter";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { Link, useSearchParams } from "react-router-dom";
 
+// Define interface for the data item
+interface JabatanAkademikItem {
+  kode: string;
+  jabatan_akademik: string;
+  // Add other properties as needed
+}
+
+// Define interface for the API response
+interface JabatanAkademikResponse {
+  data: JabatanAkademikItem[];
+  links: any[]; // You might want to define a more specific type
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  last_page: number;
+}
+
 const JabatanAkademik = () => {
   const [searchParam, setSearchParam] = useSearchParams();
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery<JabatanAkademikResponse>({
     queryKey: ["jabatan-akademik", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getJabatanAkademik(
@@ -36,28 +52,28 @@ const JabatanAkademik = () => {
 
   useEffect(() => {
     if (!searchParam.get("page")) {
-      searchParam.set("page", 1);
-
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", 1);
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (
-      Number(searchParam.get("page")) > data?.last_page &&
-      data?.last_page > 0
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
     ) {
-      searchParam.set("page", data?.last_page);
+      searchParam.set("page", data.last_page.toString());
       setSearchParam(searchParam);
     }
-  }, [searchParam, data]);
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
@@ -97,8 +113,8 @@ const JabatanAkademik = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.map((item) => (
-            <TableRow className=" even:bg-gray-100">
+          {data?.data.map((item, index) => (
+            <TableRow key={index} className=" even:bg-gray-100">
               <TableCell className="text-center">{item.kode}</TableCell>
               <TableCell className="text-center"></TableCell>
               <TableCell className="text-center">

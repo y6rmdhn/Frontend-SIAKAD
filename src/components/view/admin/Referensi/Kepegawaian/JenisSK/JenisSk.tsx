@@ -2,15 +2,6 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Table,
   TableBody,
   TableCell,
@@ -18,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Link, useSearchParams } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
@@ -27,10 +18,26 @@ import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
 import CustomPagination from "@/components/blocks/CustomPagination";
 
+// Define interface for the data item
+interface JenisSKItem {
+  kode: string;
+  jenis_sk: string;
+  // Add other properties as needed
+}
+
+// Define interface for the API response
+interface JenisSKResponse {
+  data: JenisSKItem[];
+  links: any[]; // You might want to define a more specific type
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  last_page: number;
+}
+
 const JenisSk = () => {
   const [searchParam, setSearchParam] = useSearchParams();
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery<JenisSKResponse>({
     queryKey: ["jenis-sk", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getJenisSk(searchParam.get("page"));
@@ -40,28 +47,28 @@ const JenisSk = () => {
 
   useEffect(() => {
     if (!searchParam.get("page")) {
-      searchParam.set("page", 1);
-
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", 1);
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (
-      Number(searchParam.get("page")) > data?.last_page &&
-      data?.last_page > 0
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
     ) {
-      searchParam.set("page", data?.last_page);
+      searchParam.set("page", data.last_page.toString());
       setSearchParam(searchParam);
     }
-  }, [searchParam, data]);
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
@@ -86,8 +93,8 @@ const JenisSk = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
-            {data?.data.map((item) => (
-              <TableRow className=" even:bg-gray-100">
+            {data?.data.map((item, index) => (
+              <TableRow key={index} className=" even:bg-gray-100">
                 <TableCell className="text-center">{item.kode}</TableCell>
                 <TableCell className="text-center">{item.jenis_sk}</TableCell>
                 <TableCell className="h-full">

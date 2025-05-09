@@ -1,30 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 
+interface SlideCaptchaProps {
+  backgroundUrl: string;
+  sliderUrl: string;
+  sliderY: number;
+  captchaId: string;
+  onChangePosition: (position: number) => void;
+  targetPosition?: number; // Adding the missing prop
+}
+
 export default function SlideCaptcha({
   backgroundUrl,
   sliderUrl,
   sliderY,
   captchaId,
   onChangePosition,
-}) {
+  targetPosition = 50, // Default value if not provided
+}: SlideCaptchaProps) {
   // State variables
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [sliderLeft, setSliderLeft] = useState(0);
-  const [currentPosition, setCurrentPosition] = useState(0);
-  const [isVerified, setIsVerified] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showFail, setShowFail] = useState(false);
-
-  console.log(currentPosition);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startX, setStartX] = useState<number>(0);
+  const [sliderLeft, setSliderLeft] = useState<number>(0);
+  const [currentPosition, setCurrentPosition] = useState<number>(0);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [showFail, setShowFail] = useState<boolean>(false);
 
   // Refs for DOM elements
-  const containerRef = useRef(null);
-  const sliderHandleRef = useRef(null);
-  const sliderTrackRef = useRef(null);
-  const sliderPieceRef = useRef(null);
-  const backgroundRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sliderHandleRef = useRef<HTMLDivElement>(null);
+  const sliderTrackRef = useRef<HTMLDivElement>(null);
+  const sliderPieceRef = useRef<HTMLImageElement>(null);
+  const backgroundRef = useRef<HTMLImageElement>(null);
 
   // Layout measurements
   const [dimensions, setDimensions] = useState({
@@ -89,7 +97,7 @@ export default function SlideCaptcha({
   }, [isVerified]);
 
   // Update UI based on slider position
-  const updateSliderUIPosition = (newLeft) => {
+  const updateSliderUIPosition = (newLeft: number) => {
     if (
       sliderHandleRef.current &&
       sliderTrackRef.current &&
@@ -113,7 +121,7 @@ export default function SlideCaptcha({
   };
 
   // Update slider position based on drag
-  const updateSliderPosition = (clientX) => {
+  const updateSliderPosition = (clientX: number) => {
     const dx = clientX - startX;
     let newLeft = sliderLeft + dx;
 
@@ -138,24 +146,27 @@ export default function SlideCaptcha({
   };
 
   // Start drag operation
-  const startDrag = (e) => {
+  const startDrag = (e: React.MouseEvent | React.TouchEvent) => {
     if (isVerified) return;
 
-    const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     setStartX(clientX);
     setSliderLeft(sliderHandleRef.current?.offsetLeft || 0);
     setIsDragging(true);
   };
 
   // Handle drag operation
-  const onDrag = (e) => {
+  const onDrag = (e: MouseEvent | TouchEvent) => {
     if (!isDragging) return;
 
     if (e.type === "touchmove") {
       e.preventDefault();
     }
 
-    const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+    const clientX =
+      e.type === "touchmove"
+        ? (e as TouchEvent).touches[0].clientX
+        : (e as MouseEvent).clientX;
     updateSliderPosition(clientX);
   };
 

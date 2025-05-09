@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailPendidikanFormal from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailPendidikanFormal from "@/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailPendidikanFormalUserPage = () => {
