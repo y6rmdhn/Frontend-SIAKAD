@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Kota from "@/components/view/admin/Referensi/Wilayah/Kota";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Kota from "@/view/admin/Referensi/Wilayah/Kota";
-import React from "react";
 
 const KotaReferensiPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Keluarga from "@/components/view/admin/ValidasiData/Keluarga";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Keluarga from "@/view/admin/ValidasiData/Keluarga";
-import React from "react";
 
 const KeluargaPage = () => {
   return (

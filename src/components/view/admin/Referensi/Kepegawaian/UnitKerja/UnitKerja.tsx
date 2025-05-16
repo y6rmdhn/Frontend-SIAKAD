@@ -3,7 +3,6 @@ import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -24,12 +23,34 @@ import adminServices from "@/services/admin.services";
 import { ChevronDownIcon } from "lucide-react";
 import CustomPagination from "@/components/blocks/CustomPagination";
 
+// Define interface for the data item
+interface UnitKerjaItem {
+  kode_unit: string;
+  nama_unit: string;
+  parent_unit_id: string | null;
+  // Add other properties as needed
+}
+
+// Define interface for the tree node
+interface UnitNode extends UnitKerjaItem {
+  children: UnitNode[];
+}
+
+// Define interface for the API response
+interface UnitKerjaResponse {
+  data: UnitKerjaItem[];
+  links: any[]; // You might want to define a more specific type
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  last_page: number;
+}
+
 const UnitKerja = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
   const [searchParam, setSearchParam] = useSearchParams();
 
-  const { data } = useQuery({
+  const { data } = useQuery<UnitKerjaResponse>({
     queryKey: ["unit-kerja", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getUnitKerja(
@@ -39,12 +60,12 @@ const UnitKerja = () => {
     },
   });
 
-  function buildTree(units) {
-    const tree: any[] = [];
+  function buildTree(units: UnitKerjaItem[]): UnitNode[] {
+    const tree: UnitNode[] = [];
 
     units.forEach((unit) => {
       if (unit.parent_unit_id === null) {
-        const rootNode = { ...unit, children: [] };
+        const rootNode: UnitNode = { ...unit, children: [] };
 
         units.forEach((child) => {
           if (
@@ -52,11 +73,11 @@ const UnitKerja = () => {
             child.parent_unit_id.length > 4 &&
             child.parent_unit_id === unit.kode_unit
           ) {
-            const childNode = { ...child, children: [] };
+            const childNode: UnitNode = { ...child, children: [] };
 
             units.forEach((grandChild) => {
               if (grandChild.parent_unit_id === child.kode_unit) {
-                childNode.children.push(grandChild);
+                childNode.children.push({ ...grandChild, children: [] });
               }
             });
 
@@ -71,7 +92,7 @@ const UnitKerja = () => {
     return tree;
   }
 
-  const treeData = data?.data ? buildTree(data?.data) : [];
+  const treeData = data?.data ? buildTree(data.data) : [];
 
   const toggleRow = (kode_unit: string) => {
     setOpenRows((prev) => {
@@ -95,28 +116,34 @@ const UnitKerja = () => {
 
   useEffect(() => {
     if (!searchParam.get("page")) {
-      searchParam.set("page", 1);
-
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", 1);
+      searchParam.set("page", "1");
       setSearchParam(searchParam);
     }
-  }, []);
+  }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (
-      Number(searchParam.get("page")) > data?.last_page &&
-      data?.last_page > 0
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
     ) {
-      searchParam.set("page", data?.last_page);
+      searchParam.set("page", data.last_page.toString());
       setSearchParam(searchParam);
     }
-  }, [searchParam, data]);
+  }, [searchParam, data, setSearchParam]);
+
+  // Proper type for ref callback
+  const createRefCallback =
+    (kode_unit: string) => (el: HTMLTableRowElement | null) => {
+      rowRefs.current[kode_unit] = el;
+    };
 
   return (
     <div className="mt-10 mb-20">
@@ -157,7 +184,7 @@ const UnitKerja = () => {
               <React.Fragment key={item.kode_unit}>
                 <TableRow
                   className="even:bg-gray-200"
-                  ref={(el) => (rowRefs.current[item.kode_unit] = el)}
+                  ref={createRefCallback(item.kode_unit)}
                 >
                   <TableCell>
                     {item.children.length > 0 && (
@@ -235,7 +262,7 @@ const UnitKerja = () => {
                     <React.Fragment key={child.kode_unit}>
                       <TableRow
                         className="even:bg-gray-100"
-                        ref={(el) => (rowRefs.current[child.kode_unit] = el)}
+                        ref={createRefCallback(child.kode_unit)}
                       >
                         <TableCell>
                           {child.children.length > 0 && (
@@ -315,9 +342,7 @@ const UnitKerja = () => {
                           <TableRow
                             key={grand.kode_unit}
                             className="bg-gray-50"
-                            ref={(el) =>
-                              (rowRefs.current[grand.kode_unit] = el)
-                            }
+                            ref={createRefCallback(grand.kode_unit)}
                           >
                             <TableCell></TableCell>
                             <TableCell className="text-center">
@@ -402,33 +427,3 @@ const UnitKerja = () => {
 };
 
 export default UnitKerja;
-
-{
-  /* <TableCell className="h-full">
-  <div className="flex justify-center items-center w-full h-full">
-    <Link to="">
-      <Button size="icon" variant="ghost" className="cursor-pointer">
-        <IoIosArrowUp className="w-6! h-6! text-yellow-uika" />
-      </Button>
-    </Link>
-    <Link to="">
-      <Button size="icon" variant="ghost" className="cursor-pointer">
-        <IoIosArrowDown className="w-6! h-6! text-yellow-uika" />
-      </Button>
-    </Link>
-    <Link to="">
-      <Button size="icon" variant="ghost" className="cursor-pointer">
-        <FaPlus className="w-5! h-5! text-green-500" />
-      </Button>
-    </Link>
-    <Link to="">
-      <Button size="icon" variant="ghost" className="cursor-pointer">
-        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-      </Button>
-    </Link>
-    <Button size="icon" variant="ghost" className="cursor-pointer">
-      <FaRegTrashAlt className="text-red-500" />
-    </Button>
-  </div>
-</TableCell>; */
-}

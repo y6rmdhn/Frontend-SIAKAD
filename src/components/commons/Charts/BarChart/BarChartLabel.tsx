@@ -53,7 +53,7 @@ export function BarChartWithLabel({
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="name"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
@@ -63,8 +63,9 @@ export function BarChartWithLabel({
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey={dataKey} fill={`var(--color-${dataKey})`} radius={8}>
+            <Bar dataKey={dataKey} fill="#46C764" radius={1}>
               <LabelList
+                  fill="#46C764"
                 position="top"
                 offset={12}
                 className="fill-foreground"

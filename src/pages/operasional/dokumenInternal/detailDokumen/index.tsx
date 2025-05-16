@@ -7,10 +7,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { MdGroups } from "react-icons/md";
-import React from "react";
 import DetailDokumenInternal from "@/components/view/Operasional/DokumenInternal/DetailDokumen";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailDokumenInternal from "@/view/Operasional/DokumenInternal/DetailDokumen";
 
 const DetailDokumenInternalUserPage = () => {
   return (

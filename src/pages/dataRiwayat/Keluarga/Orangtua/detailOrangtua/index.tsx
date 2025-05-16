@@ -7,14 +7,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import DetailOrangtua from "@/components/view/DataRiwayat/Keluarga/Orangtua/DetailOrangtua";
-import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import DetailDiklat from "@/view/DataRiwayat/Kualifikasi/Diklat/DetailDiklat";
-import React from "react";
+import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 import { MdGroups } from "react-icons/md";
 
 const DetailOrangtuaUserPage = () => {
   return (
-    <SimKepegawaianLayout isNavbarUser={true}>
+    <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -46,7 +44,7 @@ const DetailOrangtuaUserPage = () => {
       </Breadcrumb>
 
       <DetailOrangtua />
-    </SimKepegawaianLayout>
+    </SimUserLayout>
   );
 };
 

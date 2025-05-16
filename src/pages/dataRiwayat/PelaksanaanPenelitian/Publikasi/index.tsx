@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Publikasi from "@/components/view/DataRiwayat/PelaksanaanPenelitian/Publikasi";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Publikasi from "@/view/DataRiwayat/PelaksanaanPenelitian/Publikasi";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PublikasiUserPage = () => {

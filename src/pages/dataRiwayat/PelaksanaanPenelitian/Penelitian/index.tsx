@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Penelitian from "@/components/view/DataRiwayat/PelaksanaanPenelitian/Penelitian";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Penelitian from "@/view/DataRiwayat/PelaksanaanPenelitian/Penelitian";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PenelitianUserPage = () => {

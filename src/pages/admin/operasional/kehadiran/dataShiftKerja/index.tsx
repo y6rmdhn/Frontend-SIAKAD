@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DataShiftKerja from "@/components/view/admin/Operasional/Kehadiran/DataShiftKerja";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import DataShiftKerja from "@/view/admin/Operasional/Kehadiran/DataShiftKerja";
-import React from "react";
 
 const DataShiftKerjaPage = () => {
   return (

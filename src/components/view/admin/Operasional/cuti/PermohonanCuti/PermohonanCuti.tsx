@@ -29,7 +29,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { FiSearch } from "react-icons/fi";
 
 const PermohonanCuti = () => {

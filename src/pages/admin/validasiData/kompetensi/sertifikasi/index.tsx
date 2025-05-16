@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Sertifikasi from "@/components/view/admin/ValidasiData/Kompetensi/Sertifikasi";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Sertifikasi from "@/view/admin/ValidasiData/Kompetensi/Sertifikasi";
-import React from "react";
 
 const SertifikasiPage = () => {
   return (

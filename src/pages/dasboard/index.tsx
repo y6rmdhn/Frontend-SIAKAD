@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DasboardUser from "@/components/view/Dasboard/DasboardUser";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DasboardUser from "@/view/Dasboard/DasboardUser";
-import React from "react";
 
 const DasboardPageUser = () => {
   return (

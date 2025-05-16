@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Paten from "@/components/view/DataRiwayat/PelaksanaanPenelitian/Paten";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Paten from "@/view/DataRiwayat/PelaksanaanPenelitian/Paten";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PatenUserPage = () => {

@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailPembicara from "@/view/DataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara/DetailPembicara";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailPembicaraUserPage = () => {

@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import BiodataUser from "@/components/view/Biodata";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-import React from "react";
 
 const BiodataPageUser = () => {
   return (

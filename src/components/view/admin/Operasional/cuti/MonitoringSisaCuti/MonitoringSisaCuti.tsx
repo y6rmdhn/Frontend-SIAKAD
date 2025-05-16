@@ -28,7 +28,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import React from "react";
 import { FaCheck, FaFileImport } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdEdit } from "react-icons/md";

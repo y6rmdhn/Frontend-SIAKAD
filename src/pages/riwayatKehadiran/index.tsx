@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Kehadiran from "@/components/view/RiwayatKehadiran";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Kehadiran from "@/view/RiwayatKehadiran";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const RiwayatKehadiranPage = () => {

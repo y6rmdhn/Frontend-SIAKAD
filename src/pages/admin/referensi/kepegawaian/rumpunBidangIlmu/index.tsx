@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import RumpunBidangIlmu from "@/components/view/admin/Referensi/Kepegawaian/RumpunBidangIlmu";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import RumpunBidangIlmu from "@/view/admin/Referensi/Kepegawaian/RumpunBidangIlmu";
-import React from "react";
 
 const RumpunBidangIlmuReferensiPage = () => {
   return (

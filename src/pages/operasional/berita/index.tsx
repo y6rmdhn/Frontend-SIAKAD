@@ -7,10 +7,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { MdGroups } from "react-icons/md";
-import React from "react";
 import Berita from "@/components/view/Operasional/Berita";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Berita from "@/view/Operasional/Berita";
 
 const BeritaOperasionalUserPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import KemampuanBahasa from "@/components/view/admin/ValidasiData/Pengembangan/kemampuanBahasa";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import KemampuanBahasa from "@/view/admin/ValidasiData/Pengembangan/kemampuanBahasa";
-import React from "react";
 
 const KemampuanBahasaPage = () => {
   return (

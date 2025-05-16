@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Paten from "@/components/view/admin/ValidasiData/PelaksanaanPenelitian/Paten";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Paten from "@/view/admin/ValidasiData/PelaksanaanPenelitian/Paten";
-import React from "react";
 
 const PatenPage = () => {
   return (

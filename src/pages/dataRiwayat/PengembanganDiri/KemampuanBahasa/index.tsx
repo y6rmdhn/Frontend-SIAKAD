@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import KemampuanBahasa from "@/components/view/DataRiwayat/PengembanganDiri/KemampuanBahasa";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import KemampuanBahasa from "@/view/DataRiwayat/PengembanganDiri/KemampuanBahasa";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const KemampuanBahasaUserPage = () => {

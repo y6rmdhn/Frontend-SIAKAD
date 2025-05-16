@@ -39,7 +39,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import React from "react";
 import { FiSearch } from "react-icons/fi";
 
 const RekapKehadiran = () => {

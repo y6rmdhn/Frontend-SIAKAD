@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import HariLibur from "@/components/view/admin/Referensi/Kehadiran/HariLibur";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import HariLibur from "@/view/admin/Referensi/Kehadiran/HariLibur";
-import React from "react";
 
 const HariLiburReferensiPage = () => {
   return (

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Pelanggaran from "@/components/view/DataRiwayat/Kompensasi/Pelanggaran";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Pelanggaran from "@/view/DataRiwayat/Kompensasi/Pelanggaran";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PelanggaranUserPage = () => {

@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Negara from "@/components/view/admin/Referensi/Wilayah/Negara";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Negara from "@/view/admin/Referensi/Wilayah/Negara";
-import React from "react";
 
 const NegaraReferensiPage = () => {
   return (

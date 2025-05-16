@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailDiklat from "@/components/view/DataRiwayat/Kualifikasi/Diklat/DetailDiklat";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailDiklat from "@/view/DataRiwayat/Kualifikasi/Diklat/DetailDiklat";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailDiklatUserPage = () => {

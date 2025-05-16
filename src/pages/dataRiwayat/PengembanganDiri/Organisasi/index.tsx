@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Organisasi from "@/components/view/DataRiwayat/PengembanganDiri/Organisasi";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Organisasi from "@/view/DataRiwayat/PengembanganDiri/Organisasi";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const OrganisasiUserPage = () => {

@@ -28,11 +28,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
-import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdEdit } from "react-icons/md";
-import { FaFileImport } from "react-icons/fa";
+import { FaFileImport, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 
 const InputKehadiran = () => {
   return (

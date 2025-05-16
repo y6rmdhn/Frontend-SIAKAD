@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import JenisTes from "@/components/view/admin/Referensi/Aktifitas/JenisTes";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import JenisTes from "@/view/admin/Referensi/Aktifitas/JenisTes";
-import React from "react";
 
 const JenisTesReferensiPage = () => {
   return (

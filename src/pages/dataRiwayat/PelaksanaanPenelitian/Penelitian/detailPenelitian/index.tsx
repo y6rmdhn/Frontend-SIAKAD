@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailPenelitian from "@/components/view/DataRiwayat/PelaksanaanPenelitian/Penelitian/DetailPenelitian";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailPenelitian from "@/view/DataRiwayat/PelaksanaanPenelitian/Penelitian/DetailPenelitian";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailPenelitianUserPage = () => {

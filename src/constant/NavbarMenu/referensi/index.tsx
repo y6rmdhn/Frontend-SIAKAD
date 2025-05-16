@@ -57,7 +57,7 @@ const referensi: {
     title: "Kepegawaian",
     href: "",
     childrenItems: [
-      { title: "Eleson", href: "/admin/referensi/kepegawaian/eleson" },
+      { title: "Eselon", href: "/admin/referensi/kepegawaian/eleson" },
       {
         title: "Gelar Akademik",
         href: "/admin/referensi/kepegawaian/gelar-akademik",

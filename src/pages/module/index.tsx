@@ -1,7 +1,5 @@
 import PageHead from "@/components/commons/PageHead";
 import Module from "@/components/view/Module";
-// import Module from "@/view/Module";
-import React from "react";
 
 const ModulePage = () => {
   return (

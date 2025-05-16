@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import OrasiIlmiah from "@/components/view/DataRiwayat/PelaksanaanPendidikan/OrasiIlmiah";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import OrasiIlmiah from "@/view/DataRiwayat/PelaksanaanPendidikan/OrasiIlmiah";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const OrasiIlmiahUserPage = () => {

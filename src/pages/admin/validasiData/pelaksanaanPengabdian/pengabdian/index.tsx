@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Pengabdian from "@/components/view/admin/ValidasiData/PelaksanaanPengabdian/Pengabdian";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import Pengabdian from "@/view/admin/ValidasiData/PelaksanaanPengabdian/Pengabdian";
-import React from "react";
 
 const PengabdianPage = () => {
   return (

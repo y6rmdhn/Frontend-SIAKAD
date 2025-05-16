@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import PermohonanIzin from "@/components/view/admin/Operasional/cuti/PermohonanIzin/PermohonanIzin";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import PermohonanIzin from "@/view/admin/Operasional/cuti/PermohonanIzin/PermohonanIzin";
-import React from "react";
 
 const PermohonanIzinPage = () => {
   return (

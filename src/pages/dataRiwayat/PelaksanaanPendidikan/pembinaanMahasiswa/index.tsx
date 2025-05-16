@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import PembinaanMahasiswa from "@/components/view/DataRiwayat/PelaksanaanPendidikan/PembinaanMahasiswa";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import PembinaanMahasiswa from "@/view/DataRiwayat/PelaksanaanPendidikan/PembinaanMahasiswa";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const PembinaanMahasiswaUserPage = () => {

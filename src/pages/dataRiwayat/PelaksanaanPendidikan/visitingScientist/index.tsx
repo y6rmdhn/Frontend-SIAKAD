@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import VisitingScientist from "@/components/view/DataRiwayat/PelaksanaanPendidikan/VisitingScientist";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import VisitingScientist from "@/view/DataRiwayat/PelaksanaanPendidikan/VisitingScientist";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const VisitingScientistUserPage = () => {

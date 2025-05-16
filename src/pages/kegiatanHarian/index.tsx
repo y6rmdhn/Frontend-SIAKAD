@@ -7,8 +7,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { MdGroups } from "react-icons/md";
-// import KegiatanHarian from "@/view/KegiatanHarian";
-import React from "react";
 import KegiatanHarian from "@/components/view/KegiatanHarian";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 

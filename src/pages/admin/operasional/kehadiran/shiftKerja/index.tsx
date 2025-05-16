@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import ShiftKerja from "@/components/view/admin/Operasional/Kehadiran/ShiftKerja";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import ShiftKerja from "@/view/admin/Operasional/Kehadiran/ShiftKerja";
-import React from "react";
 
 const ShiftKerjaPage = () => {
   return (

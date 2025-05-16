@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DokumenInternal from "@/components/view/admin/Operasional/Kompensasi/DokumenInternal";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import DokumenInternal from "@/view/admin/Operasional/Kompensasi/DokumenInternal";
-import React from "react";
 
 const DokumenInternalPage = () => {
   return (

@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Izin from "@/components/view/Operasional/Pengajuan/Izin";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import Izin from "@/view/Operasional/Pengajuan/Izin";
 
 const IzinPage = () => {
   return (

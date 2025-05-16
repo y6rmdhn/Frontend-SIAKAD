@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import DetailPangkat from "@/components/view/DataRiwayat/Kepegawaian/Pangkat/DetailPangkat";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
-// import DetailPangkat from "@/view/DataRiwayat/Kepegawaian/Pangkat/DetailPangkat";
-import React from "react";
 import { MdGroups } from "react-icons/md";
 
 const DetailPangkatUserPage = () => {

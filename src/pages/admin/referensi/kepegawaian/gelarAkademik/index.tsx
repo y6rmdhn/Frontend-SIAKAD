@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import GelarAkademik from "@/components/view/admin/Referensi/Kepegawaian/GelarAkademik";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
-// import GelarAkademik from "@/view/admin/Referensi/Kepegawaian/GelarAkademik";
-import React from "react";
 
 const GelarAkademikPage = () => {
   return (
