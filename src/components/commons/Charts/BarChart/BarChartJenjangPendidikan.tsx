@@ -53,7 +53,7 @@ export function BarChartJenjagPendidikan({
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="name"
               tickLine={false}
               tickMargin={10}
               axisLine={false}

@@ -16,7 +16,7 @@ interface PaginationLinkType {
 
 interface CustomPaginationProps {
   currentPage: number;
-  links: PaginationLinkType[];
+  links?: PaginationLinkType[];
   onPageChange: (page: number) => void;
   hasNextPage?: boolean;
   hasPrevPage?: boolean;
@@ -25,15 +25,36 @@ interface CustomPaginationProps {
 
 const CustomPagination = ({
   currentPage,
-  links,
   onPageChange,
   hasNextPage,
   hasPrevPage,
   totalPages,
 }: CustomPaginationProps) => {
+  const renderPageLinks = () => {
+    const pages: number[] = [];
+
+    if (!totalPages) return [];
+
+    let start = Math.max(1, currentPage - 1);
+    let end = Math.min(totalPages, currentPage + 1);
+
+    if (currentPage === 1) {
+      end = Math.min(3, totalPages);
+    } else if (currentPage === totalPages) {
+      start = Math.max(1, totalPages - 2);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
   return (
     <Pagination className="mt-8 flex justify-end">
       <PaginationContent>
+        {/* Previous Button */}
         <PaginationItem>
           <Button
             onClick={() => onPageChange(currentPage - 1)}
@@ -45,29 +66,42 @@ const CustomPagination = ({
           </Button>
         </PaginationItem>
 
-        {links
-          .filter((link) => /^\d+$/.test(link.label))
-          .map((link, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                href="#"
-                isActive={link.active}
-                onClick={(e) => {
-                  e.preventDefault();
-                  onPageChange(Number(link.label));
-                }}
-              >
-                {link.label}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
+        {/* Ellipsis at start */}
+        {currentPage > 3 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
 
-        {totalPages && totalPages > 3 && <PaginationEllipsis />}
+        {/* Page numbers */}
+        {renderPageLinks().map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              href="#"
+              isActive={page === currentPage}
+              onClick={(e) => {
+                e.preventDefault();
+                onPageChange(page);
+              }}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {/* Ellipsis at end */}
+        {totalPages && currentPage < totalPages - 2 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+
+        {/* Next Button */}
         <PaginationItem>
           <Button
             type="button"
             onClick={() => onPageChange(currentPage + 1)}
-            disabled={!hasNextPage}
+            disabled={!hasNextPage || currentPage === totalPages}
             variant="ghost"
           >
             Next <ChevronRight />

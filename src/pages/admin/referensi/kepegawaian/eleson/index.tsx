@@ -23,7 +23,7 @@ const ElesonPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Eleson</BreadcrumbPage>
+            <BreadcrumbPage>Eselon</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -16,15 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { FiSearch } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
@@ -36,12 +27,59 @@ import { MdEdit } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaSyncAlt } from "react-icons/fa";
 import Status from "@/components/blocks/Status";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
+import { useQuery } from "@tanstack/react-query";
+import adminServices from "@/services/admin.services";
+import { useEffect } from "react";
+import CustomPagination from "@/components/blocks/CustomPagination";
 
 const Pegawai = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const [searchParam, setSearchParam] = useSearchParams();
+
+  const { data } = useQuery({
+    queryKey: ["pegawai", searchParam.get("page")],
+    queryFn: async () => {
+      const response = await adminServices.getPegawaiAdminPage(
+        searchParam.get("page")
+      );
+      console.log(response.data.data);
+
+      return response.data.data;
+    },
+  });
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      searchParam.set("page", "1");
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      searchParam.set("page", "1");
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      searchParam.set("page", data.last_page.toString());
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="w-full mt-10">
@@ -50,7 +88,7 @@ const Pegawai = () => {
         <FilterPegawai />
       </CustomCard>
 
-      <div className="mt-14 flex gap-10">
+      <div className="mt-14 flex gap-10 justify-between">
         <div className="flex gap-5">
           <Select>
             <SelectTrigger className="w-[180px]">
@@ -85,25 +123,7 @@ const Pegawai = () => {
             <FaRegTrashAlt /> Hapus
           </Button>
 
-          <Select>
-            <SelectTrigger className="w-60 pl-9 relative">
-              <SelectValue className="text-white" placeholder="Sister" />
-              <FaSyncAlt className="absolute -translate-y-1/2 top-1/2 left-3" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Semua</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
           <Button className="cursor-pointer min-w-52 bg-green-light-uika flex justify-start items-center hover:bg-[#329C59]">
-            {" "}
             <FaCheck /> Set Status
           </Button>
         </div>
@@ -123,72 +143,63 @@ const Pegawai = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="font-medium">
-              <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-            </TableCell>
-            <TableCell className="text-center">0001016434</TableCell>
-            <TableCell className="text-center">0001016434</TableCell>
-            <TableCell className="text-center">
-              Prof.Dr.Hj. Indupumahayu,Dra.,Ak,MM.,CA.
-            </TableCell>
-            <TableCell className="text-center">Ekonomi Syariah (S3)</TableCell>
-            <TableCell className="text-center">AA</TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center h-full">
-                <FaCheck className="text-green-light-uika" />
-              </div>
-            </TableCell>
-            <TableCell className="text-center w-28">
-              <div className="flex">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-                <Button
-                  onClick={() =>
-                    navigate(
-                      "/admin/detail-pegawai/biodata/" + params.pegawaiID
-                    )
-                  }
-                  size="icon"
-                  variant="ghost"
-                  className="cursor-pointer"
-                >
-                  <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <FaRegTrashAlt className="text-red-500" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+          {data?.data.map((item, index) => (
+            <TableRow key={index} className=" even:bg-gray-100">
+              <TableCell className="font-medium">
+                <Checkbox />
+              </TableCell>
+              <TableCell className="text-center">{item.nip}</TableCell>
+              <TableCell className="text-center">{item.nidn}</TableCell>
+              <TableCell className="text-center">{item.nama_pegawai}</TableCell>
+              <TableCell className="text-center">{item.unit_kerja}</TableCell>
+              <TableCell className="text-center">{item.status}</TableCell>
+              <TableCell className="text-center">
+                {item.terhubung_sister || "-"}
+              </TableCell>
+              <TableCell className="text-center w-28">
+                <div className="flex">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      navigate("/admin/detail-pegawai/biodata/" + item.id)
+                    }
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <FaRegTrashAlt className="text-red-500" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 
-      <Pagination className="mt-8 flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <CustomPagination
+        currentPage={Number(searchParam.get("page") || 1)}
+        links={data?.links || []}
+        onPageChange={(page) => {
+          searchParam.set("page", page.toString());
+          setSearchParam(searchParam);
+        }}
+        hasNextPage={!!data?.next_page_url}
+        hasPrevPage={!!data?.prev_page_url}
+        totalPages={data?.last_page}
+      />
 
       <Status />
     </div>

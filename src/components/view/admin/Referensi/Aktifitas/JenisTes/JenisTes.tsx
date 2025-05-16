@@ -13,18 +13,25 @@ import {
 } from "@/components/ui/table";
 import adminServices from "@/services/admin.services";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { IoSaveOutline } from "react-icons/io5";
 import { RiResetLeftFill } from "react-icons/ri";
+import potsReferensiServices from "@/services/create.admin.referensi";
+import { toast } from "sonner";
+import { IJenisTesPost } from "@/types/create.referensi";
+import putReferensiServices from "@/services/put.admin.referensi";
+import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
+import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 
 // Define a type for an item in the data array
 interface JenisTesItem {
+  id: number;
   kode: string;
   jenis_tes: string;
   nilai_minimal: number;
@@ -43,6 +50,7 @@ interface JenisTesResponse {
 
 const jenisTesFormSchema = z
   .object({
+    id: z.number().optional(),
     kode: z
       .string()
       .min(1, "Kode tidak boleh kosong")
@@ -83,7 +91,11 @@ const JenisTes = () => {
 
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const queryClient = useQueryClient();
 
+  // get data
   const { data } = useQuery<JenisTesResponse>({
     queryKey: ["jenis-tes", searchParam.get("page")],
     queryFn: async () => {
@@ -94,16 +106,82 @@ const JenisTes = () => {
     },
   });
 
+  // tambah
   const { mutate: postJenisTes } = useMutation({
-    mutationFn: (data: JenisTesFormData) => adminServices.postJenisTes(data),
+    mutationFn: (data: IJenisTesPost) => potsReferensiServices.jenisTes(data),
     onSuccess: () => {
       form.reset();
+      toast.success("Data berhasil ditambahkan");
       setIsAddData(false);
     },
   });
 
-  const handleCreateJenisTes = (values: JenisTesFormData) => {
-    postJenisTes(values);
+  // edit
+  const { mutate: putJenisTes } = useMutation({
+    mutationFn: (data: JenisTesFormData) =>
+      putReferensiServices.jenisTes(data.id!, data),
+    onSuccess: () => {
+      form.reset();
+      toast.success("Data berhasil diedit");
+      setIsEditMode(false);
+      setIsAddData(false);
+
+      queryClient.invalidateQueries({ queryKey: ["jenis-tes"] });
+    },
+  });
+
+  // hapus data
+  const {mutate: deleteJenisTest} = useMutation({
+    mutationFn: (id: number) => deleteReferensiServices.deteleJenistest(id),
+    onSuccess: () => {
+      toast.success("Data berhasil dihapus");
+      queryClient.invalidateQueries({ queryKey: ["jenis-tes"] });
+
+      if (editingItemId) {
+        form.reset();
+        setEditingItemId(null);
+        setIsEditMode(false);
+        setIsAddData(false);
+      }
+    }
+  })
+
+  const handleDelete = (id: number) => {
+    deleteJenisTest(id)
+  };
+
+  const handleSubmitJenisTes = (values: JenisTesFormData) => {
+    if (isEditMode && editingItemId) {
+      putJenisTes(values);
+    } else {
+      postJenisTes(values as IJenisTesPost);
+    }
+  };
+
+  const handleEditItem = (item: JenisTesItem) => {
+    form.reset({
+      id: item.id,
+      kode: item.kode,
+      jenis_tes: item.jenis_tes,
+      nilai_minimal: item.nilai_minimal,
+      nilai_maksimal: item.nilai_maksimal,
+    });
+
+    setIsEditMode(true);
+    setEditingItemId(item.id);
+    setIsAddData(true);
+
+    if (Number(searchParam.get("page")) !== 1) {
+      searchParam.set("page", "1");
+      setSearchParam(searchParam);
+    }
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    setIsEditMode(false);
+    setEditingItemId(null);
+    setIsAddData(false);
   };
 
   useEffect(() => {
@@ -135,19 +213,33 @@ const JenisTes = () => {
     <div className="mt-10 mb-20">
       <h1 className="text-2xl font-normal">Daftar Jenis Tes</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleCreateJenisTes)}>
+        <form onSubmit={form.handleSubmit(handleSubmitJenisTes)}>
           <CustomCard
             actions={
               <div className="flex justify-end">
                 <div className="flex gap-4">
                   <Button
                     onClick={() => {
-                      setIsAddData(!isAddData);
-                      searchParam.set("page", "1");
-                      setSearchParam(searchParam);
+                      if (!isEditMode) {
+                        form.reset({
+                          kode: "",
+                          jenis_tes: "",
+                          nilai_minimal: 0,
+                          nilai_maksimal: 0,
+                        });
+
+                        setIsAddData(!isAddData);
+                        searchParam.set("page", "1");
+                        setSearchParam(searchParam);
+                      }
                     }}
                     type="button"
-                    className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+                    className={`cursor-pointer ${
+                      isEditMode
+                        ? "bg-gray-400"
+                        : "bg-green-light-uika hover:bg-[#329C59]"
+                    }`}
+                    disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
                     Tambah
@@ -167,69 +259,70 @@ const JenisTes = () => {
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                {isAddData && Number(searchParam.get("page")) === 1 && (
-                  <TableRow className=" even:bg-gray-100">
-                    <TableCell className="text-center">
-                      <FormFieldInput
-                        inputStyle="w-full"
-                        position={true}
-                        form={form}
-                        name="kode"
-                        required={false}
-                      />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <FormFieldInput
-                        inputStyle="w-full"
-                        position={true}
-                        form={form}
-                        name="jenis_tes"
-                        required={false}
-                      />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <FormFieldInput
-                        inputStyle="w-full"
-                        position={true}
-                        form={form}
-                        type="number"
-                        name="nilai_minimal"
-                        required={false}
-                      />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <FormFieldInput
-                        inputStyle="w-full"
-                        position={true}
-                        form={form}
-                        type="number"
-                        name="nilai_maksimal"
-                        required={false}
-                      />
-                    </TableCell>
-                    <TableCell className="h-full">
-                      <div className="flex justify-center items-center w-full h-full">
-                        <Button
-                          type="submit"
-                          size="icon"
-                          variant="ghost"
-                          className="cursor-pointer"
-                        >
-                          <IoSaveOutline className="w-5! h-5!" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          type="button"
-                          variant="ghost"
-                          className="cursor-pointer"
-                          onClick={() => form.reset()}
-                        >
-                          <RiResetLeftFill className="text-yellow-uika" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
+                {(isAddData || isEditMode) &&
+                  Number(searchParam.get("page")) === 1 && (
+                    <TableRow className="even:bg-gray-100">
+                      <TableCell className="text-center">
+                        <FormFieldInput
+                          inputStyle="w-full"
+                          position={true}
+                          form={form}
+                          name="kode"
+                          required={false}
+                        />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <FormFieldInput
+                          inputStyle="w-full"
+                          position={true}
+                          form={form}
+                          name="jenis_tes"
+                          required={false}
+                        />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <FormFieldInput
+                          inputStyle="w-full"
+                          position={true}
+                          form={form}
+                          type="number"
+                          name="nilai_minimal"
+                          required={false}
+                        />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <FormFieldInput
+                          inputStyle="w-full"
+                          position={true}
+                          form={form}
+                          type="number"
+                          name="nilai_maksimal"
+                          required={false}
+                        />
+                      </TableCell>
+                      <TableCell className="h-full">
+                        <div className="flex justify-center items-center w-full h-full">
+                          <Button
+                            type="submit"
+                            size="icon"
+                            variant="ghost"
+                            className="cursor-pointer"
+                          >
+                            <IoSaveOutline className="w-5! h-5!" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            type="button"
+                            variant="ghost"
+                            className="cursor-pointer"
+                            onClick={handleCancel}
+                          >
+                            <RiResetLeftFill className="text-yellow-uika" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
                 {data?.data.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center">{item.kode}</TableCell>
@@ -244,22 +337,29 @@ const JenisTes = () => {
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">
-                        <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer"
-                          >
-                            <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                          </Button>
-                        </Link>
                         <Button
                           size="icon"
                           variant="ghost"
                           className="cursor-pointer"
+                          onClick={() => handleEditItem(item)}
+                          disabled={isEditMode && editingItemId !== item.id}
                         >
-                          <FaRegTrashAlt className="text-red-500" />
+                          <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                         </Button>
+                        <ConfirmDialog
+                            title="Hapus Data?"
+                            description="Apakah Anda yakin ingin menghapus data ini?"
+                            onConfirm={() => handleDelete(item.id)}
+                        >
+                          <Button
+                              size="icon"
+                              type="button"
+                              variant="ghost"
+                              className="cursor-pointer"
+                          >
+                            <FaRegTrashAlt className="text-red-500"/>
+                          </Button>
+                        </ConfirmDialog>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -271,6 +371,11 @@ const JenisTes = () => {
               currentPage={Number(searchParam.get("page") || 1)}
               links={data?.links || []}
               onPageChange={(page) => {
+                // Jika sedang dalam mode edit, jangan ganti halaman
+                if (isEditMode) {
+                  toast.warning("Selesaikan edit data terlebih dahulu");
+                  return;
+                }
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}

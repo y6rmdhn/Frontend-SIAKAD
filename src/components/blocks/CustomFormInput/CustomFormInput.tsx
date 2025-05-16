@@ -1,13 +1,11 @@
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 type FormFieldInputProps = {
@@ -28,7 +26,7 @@ type FormFieldInputProps = {
   inputStyle?: string;
   position?: boolean;
   infoFile?: boolean;
-  required: boolean;
+  required?: boolean;
   options?: { label: string; value: string }[]; // hanya untuk radio
 };
 
@@ -40,7 +38,6 @@ export const FormFieldInput = ({
   placeholder,
   labelStyle,
   inputStyle,
-  infoFile,
   position,
   required,
   options = [],
@@ -87,7 +84,7 @@ export const FormFieldInput = ({
                 type="checkbox"
                 className={`w-4 h-4 ${inputStyle}`}
                 checked={field.value}
-                onCheckedChange={field.onChange}
+                onChange={(e) => field.onChange(e.target.checked)}
               />
             ) : type === "radio" ? (
               <div className="flex justify-start gap-10 w-full">
