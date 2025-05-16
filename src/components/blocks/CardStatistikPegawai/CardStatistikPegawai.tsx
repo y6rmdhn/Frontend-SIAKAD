@@ -13,13 +13,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BarChartWithLabel } from "@/components/commons/Charts/BarChart/BarChartLabel";
-import { BarChartJenjagPendidikan } from "@/components/commons/Charts/BarChart/BarChartJenjangPendidikan";
-import { BarChartPendidikanNonAkademik } from "@/components/commons/Charts/BarChart/BarChartPendidikanNonAkademik";
-
-const pieData = [
-  { browser: "akademik", visitors: 275, fill: "#92F1A8" },
-  { browser: "non akademik", visitors: 200, fill: "#32A14C" },
-];
 
 const pieConfig = {
   visitors: { label: "Visitors" },
@@ -41,8 +34,50 @@ const chartConfigBar = {
   },
 };
 
-const CardStatistikPegawai = () => {
+const CardStatistikPegawai = ({
+  academicEducation,
+  nonAcademicEducation,
+  staffDistribution,
+  workRelationships,
+}) => {
   const [aktifBtn, setAktifBtn] = useState<string>("Fungsional");
+  const { chart_data: staffData, table_data: tabelStaff } = staffDistribution;
+  const { chart_data: hubunganKerjaData, table_data: tabelHubunganKerja } =
+    workRelationships;
+  const { chart_data: academicChart, table_data: tabelAcademic } =
+    academicEducation;
+  const { chart_data: nonAcademicChart, table_data: tabelNonAcademic } =
+    nonAcademicEducation;
+
+  // pie chart
+  const colors = ["#4F46E5", "#10B981"];
+  const staffChartData = staffData.labels.map((label, index) => ({
+    name: label,
+    values: staffData.datasets[0].data[index],
+    fill: colors[index],
+  }));
+
+  // bar chart hubungan kerja
+  const hubunganKerjaChartData = hubunganKerjaData.labels.map(
+    (label, index) => ({
+      name: label,
+      values: hubunganKerjaData.datasets[0].data[index],
+    })
+  );
+  // bar chart pendidikan
+  const pendidikanChartData = academicChart.labels.map((label, index) => ({
+    name: label,
+    values: academicChart.datasets[0].data[index],
+  }));
+
+  // bar chart non akademik
+  const nonpendidikanChartData = nonAcademicChart.labels.map(
+    (label, index) => ({
+      name: label,
+      values: nonAcademicChart.datasets[0].data[index],
+    })
+  );
+
   return (
     <div>
       <CustomCard
@@ -101,53 +136,56 @@ const CardStatistikPegawai = () => {
           <div className="mt-10">
             <ChartLingkaran
               title="Jabatan Fungsional"
-              data={pieData}
-              dataKey="visitors"
-              nameKey="browser"
+              data={staffChartData}
+              dataKey="values"
+              nameKey="name"
               config={pieConfig}
-              valueLabel="Visitors"
+              valueLabel="Jumlah"
               titleFooter={
                 <div className="flex gap-5 items-center">
-                  <div>
-                    <FaCircle className="w-3 h-3 text-[#92F1A8] inline-block" />{" "}
-                    <span className="text-sm">Akademik</span>
-                  </div>
-                  <div>
-                    <FaCircle className="w-3 h-3 text-[#32A14C] inline-block" />{" "}
-                    <span className="text-sm">Non Akademik</span>
-                  </div>
+                  {staffChartData.map((item, index) => (
+                    <div className="flex gap-2 items-center">
+                      <FaCircle
+                        className={`w-3 h-3 inline-block`}
+                        style={{ color: item.fill }}
+                      />
+                      <span className="text-sm">{item.name}</span>
+                    </div>
+                  ))}
                 </div>
               }
             />
 
-            <Table className="mt-3 table-auto">
+            <Table className="mt-3 table-auto border-b-4 border-b-[#056C7A]">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
-                  <TableHead className="text-center text-white">No</TableHead>
-                  <TableHead className="text-center text-white">
-                    Fungsional
-                  </TableHead>
-                  <TableHead className="text-center text-white">
-                    Jumlah
-                  </TableHead>
+                  {tabelStaff.headers.map((item, index) => (
+                    <TableHead key={index} className="text-center text-white">
+                      {item}
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">1</TableCell>
-                  <TableCell className="text-center">1</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">2</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col"></TableCell>
-                  <TableCell className="text-center">Total</TableCell>
-                  <TableCell className="text-center">475</TableCell>
-                </TableRow>
+                {tabelStaff.rows.map((row, rowIndex) => (
+                  <TableRow key={rowIndex} className="even:bg-gray-100">
+                    {row.map((cell, cellIndex) => (
+                      <TableCell className="text-center" key={cellIndex}>
+                        {cell}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+
+                {tabelStaff.total && (
+                  <TableRow className="border-b-2 border-b-[#056C7A]">
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">Total</TableCell>
+                    <TableCell className="text-center">
+                      {tabelStaff.total}
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
@@ -181,36 +219,32 @@ const CardStatistikPegawai = () => {
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">1</TableCell>
-                  <TableCell className="text-center">1</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">2</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col"></TableCell>
-                  <TableCell className="text-center">Total</TableCell>
-                  <TableCell className="text-center">475</TableCell>
-                </TableRow>
+                {tabelHubunganKerja.rows.map((item, index) => (
+                  <TableRow key={index} className=" even:bg-gray-100">
+                    <TableCell className="text-center flex flex-col">
+                      {item.kode}
+                    </TableCell>
+                    <TableCell className="text-center">{item}</TableCell>
+                    <TableCell className="text-center">Guru Besar</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
         ) : aktifBtn === "Pendidikan" ? (
           <div className="mt-10">
-            <BarChartJenjagPendidikan
+            <BarChartWithLabel
               title="Berdasarkan Jenjang pendidikan"
-              data={chartDataBar}
-              dataKey="desktop"
+              data={pendidikanChartData}
+              dataKey="values"
               config={chartConfigBar}
               footer={
                 <div className="flex gap-5 items-center justify-center">
-                  <div>
-                    <FaCircle className="w-3 h-3 text-[#32A14C] inline-block" />{" "}
-                    <span className="text-sm">Jenjang Pendidikan</span>
+                  <div className="flex gap-2 items-center">
+                    <FaCircle className="w-3 h-3 text-[#32A14C] inline-block" />
+                    <span className="text-sm">
+                      {academicChart.datasets[0].label}
+                    </span>
                   </div>
                 </div>
               }
@@ -219,46 +253,42 @@ const CardStatistikPegawai = () => {
             <Table className="mt-3 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
-                  <TableHead className="text-center text-white">No</TableHead>
-                  <TableHead className="text-center text-white">
-                    Fungsional
-                  </TableHead>
-                  <TableHead className="text-center text-white">
-                    Jumlah
-                  </TableHead>
+                  {tabelAcademic.headers.map((item, index) => (
+                    <TableHead className="text-center text-white">
+                      {item}
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">1</TableCell>
-                  <TableCell className="text-center">1</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">2</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col"></TableCell>
-                  <TableCell className="text-center">Total</TableCell>
-                  <TableCell className="text-center">475</TableCell>
-                </TableRow>
+                {tabelAcademic.rows.map((item, index) => (
+                  <TableRow key={index} className=" even:bg-gray-100">
+                    <TableCell className="text-center flex flex-col">
+                      {item.kode}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.jenjang_pendidikan}
+                    </TableCell>
+                    <TableCell className="text-center">{item.jumlah}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
         ) : (
           <div className="mt-10">
-            <BarChartPendidikanNonAkademik
+            <BarChartWithLabel
               title="Berdasarkan Jenjang pendidikan"
-              data={chartDataBar}
-              dataKey="desktop"
+              data={nonpendidikanChartData}
+              dataKey="values"
               config={chartConfigBar}
               footer={
                 <div className="flex gap-5 items-center justify-center">
                   <div>
                     <FaCircle className="w-3 h-3 text-[#32A14C] inline-block" />{" "}
-                    <span className="text-sm">Jenjang Pendidikan</span>
+                    <span className="text-sm">
+                      {nonAcademicChart.datasets[0].label}
+                    </span>
                   </div>
                 </div>
               }
@@ -267,31 +297,25 @@ const CardStatistikPegawai = () => {
             <Table className="mt-3 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
-                  <TableHead className="text-center text-white">No</TableHead>
-                  <TableHead className="text-center text-white">
-                    Fungsional
-                  </TableHead>
-                  <TableHead className="text-center text-white">
-                    Jumlah
-                  </TableHead>
+                  {tabelNonAcademic.headers.map((item, index) => (
+                    <TableHead key={index} className="text-center text-white">
+                      {item}
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">1</TableCell>
-                  <TableCell className="text-center">1</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col">2</TableCell>
-                  <TableCell className="text-center">2</TableCell>
-                  <TableCell className="text-center">Guru Besar</TableCell>
-                </TableRow>
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center flex flex-col"></TableCell>
-                  <TableCell className="text-center">Total</TableCell>
-                  <TableCell className="text-center">475</TableCell>
-                </TableRow>
+                {tabelNonAcademic.rows.map((item, index) => (
+                  <TableRow className=" even:bg-gray-100">
+                    <TableCell className="text-center flex flex-col">
+                      {item.kode}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.jenjang_pendidikan}
+                    </TableCell>
+                    <TableCell className="text-center">{item.jumlah}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>

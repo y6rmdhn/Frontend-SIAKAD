@@ -499,7 +499,7 @@ function App() {
 
           {/* DETAIL PEGAWAI */}
           <Route path="detail-pegawai">
-            <Route path="biodata/:id" Component={BiodataPage} />
+            <Route path="biodata/:PegawaiId" Component={BiodataPage} />
             <Route path="keluarga/:id" Component={DetailKeluargaPage} />
             <Route path="presensi/:id" Component={KepegawaianPresensiPage} />
 
