@@ -154,7 +154,7 @@ const Pegawai = () => {
               <TableCell className="text-center">{item.unit_kerja}</TableCell>
               <TableCell className="text-center">{item.status}</TableCell>
               <TableCell className="text-center">
-                {item.terhubung_sister}
+                {item.terhubung_sister || "-"}
               </TableCell>
               <TableCell className="text-center w-28">
                 <div className="flex">
