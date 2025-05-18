@@ -109,6 +109,12 @@ const adminServices = {
                 page: page,
             },
         }),
+    getJenisPublikasi: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-publikasi`, {
+            params: {
+                page: page,
+            },
+        }),
 
     getPegawaiDetailAdminPage: (idPegawai) =>
         axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),

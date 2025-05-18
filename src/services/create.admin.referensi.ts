@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
   IJabatanAkademikPost, IJamKerja,
-  IJenisCutiPost, IJenisLuaran, IJenisSertifikasi,
+  IJenisCutiPost, IJenisLuaran, IJenisPublikasi, IJenisSertifikasi,
   IJenisSk,
   IJenisTesPost,
   IOutputPenelitianPost, IPengabdian, IStatusEselon,
@@ -34,6 +34,8 @@ const potsReferensiServices = {
       axiosInstance.post(`${endpoint.ADMIN}/jenis-luaran`, payload),
   jenisPengabdian: (payload: IPengabdian) =>
       axiosInstance.post(`${endpoint.ADMIN}/jenis-pkm`, payload),
+  jenisPublikasi: (payload: IJenisPublikasi) =>
+      axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
 };
 
 export default potsReferensiServices;

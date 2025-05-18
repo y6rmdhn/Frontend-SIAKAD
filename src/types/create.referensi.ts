@@ -71,6 +71,11 @@ interface IPengabdian {
     nama_pkm: string,
 }
 
+interface IJenisPublikasi {
+    kode: string,
+    jenis_publikasi: string,
+}
+
 export type {
     IJenisTesPost,
     IOutputPenelitianPost,
@@ -84,4 +89,5 @@ export type {
     IJenisLuaran,
     IJenisSertifikasi,
     IPengabdian,
+    IJenisPublikasi
 };
