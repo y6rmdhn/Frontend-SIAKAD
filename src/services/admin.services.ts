@@ -97,6 +97,18 @@ const adminServices = {
                 page: page,
             },
         }),
+    getJenisLuaran: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-luaran`, {
+            params: {
+                page: page,
+            },
+        }),
+    getJenisPengabdian: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-pkm`, {
+            params: {
+                page: page,
+            },
+        }),
 
     getPegawaiDetailAdminPage: (idPegawai) =>
         axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),

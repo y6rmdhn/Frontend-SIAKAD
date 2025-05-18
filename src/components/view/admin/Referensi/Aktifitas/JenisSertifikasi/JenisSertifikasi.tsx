@@ -17,7 +17,7 @@ import {useEffect, useState} from "react";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import {IJenisSertifikasi} from "@/types/create.referensi.ts";
+import {IJenisLuaran} from "@/types/create.referensi.ts";
 import potsReferensiServices from "@/services/create.admin.referensi.ts";
 import {toast} from "sonner";
 import {z} from "zod";
@@ -88,7 +88,7 @@ const JenisSertifikasi = () => {
 
     // tambah data
     const {mutate: postJenisSertifikasi} = useMutation({
-        mutationFn: (data: IJenisSertifikasi) => potsReferensiServices.jenisSertifikasi(data),
+        mutationFn: (data: IJenisLuaran) => potsReferensiServices.jenisSertifikasi(data),
         onSuccess: () => {
             form.reset();
             toast.success("Berhasil menambahkan data");

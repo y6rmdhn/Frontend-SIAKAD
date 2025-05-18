@@ -22,8 +22,16 @@ const Navigation = () => {
   const location = useLocation();
 
   const navItems = [
-    { to: "/admin/dasboard", label: "Dasboard" },
-    { to: "/admin/pegawai", label: "Pegawai" },
+    {
+      to: "/admin/dasboard",
+      label: "Dasboard",
+      match: ["/admin/dasboard"],
+    },
+    {
+      to: "/admin/pegawai",
+      label: "Pegawai",
+      match: ["/admin/pegawai", "/admin/detail-pegawai"],
+    },
   ];
 
   return (
@@ -36,11 +44,11 @@ const Navigation = () => {
           <NavigationMenuItem key={item.to}>
             <Link to={item.to}>
               <NavigationMenuLink
-                className={cn(
-                  "bg-[#eeeeee] px-5",
-                  location.pathname === item.to &&
-                    "bg-[#FDA31A] text-white hover:bg-[#FDA31A] hover:text-white"
-                )}
+                  className={cn(
+                      "bg-[#eeeeee] px-5",
+                      item.match.some((path) => location.pathname.startsWith(path)) &&
+                      "bg-[#FDA31A] text-white hover:bg-[#FDA31A] hover:text-white"
+                  )}
               >
                 {item.label}
               </NavigationMenuLink>

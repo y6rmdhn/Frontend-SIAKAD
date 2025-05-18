@@ -56,7 +56,7 @@ const Dasboard = () => {
                         <div
                             className="bg-gradient-to-r from-[#1C8C88] to-[#28BCB7] h-40 rounded-xl text-white flex items-center justify-center relative">
                             <div className="relative w-full h-full flex items-center justify-center">
-                                <h1 className="text-[20px] font-semibold flex flex-col items-center">
+                                <h1 className="text-lg font-semibold flex flex-col items-center">
                                     Jumlah Pegawai Aktif
                                     {data?.staff_summary && (
                                         <p className="text-4xl font-semibold mt-3">
@@ -71,7 +71,7 @@ const Dasboard = () => {
                         <div
                             className="bg-gradient-to-r from-[#5abd1d] to-[#66D820] h-40 rounded-xl text-white flex items-center justify-center relative">
                             <div className="relative w-full h-full flex items-center justify-center">
-                                <h1 className="text-[20px] text-center font-semibold flex flex-col items-center">
+                                <h1 className="text-lg text-center font-semibold flex flex-col items-center">
                                     Jumlah Pegawai Pendidik (Akademik)
                                     {data?.staff_summary && (
                                         <p className="text-4xl font-semibold mt-1">
@@ -86,7 +86,7 @@ const Dasboard = () => {
                         <div
                             className="bg-gradient-to-r from-[#e09808] to-[#FFAC07] h-40 rounded-xl text-white flex items-center justify-center relative">
                             <div className="relative w-full h-full flex items-center justify-center">
-                                <h1 className="text-[20px] text-center font-semibold flex flex-col items-center">
+                                <h1 className="text-lg text-center font-semibold flex flex-col items-center">
                                     Jumlah Pegawai Kependidikan (Non Akademik)
                                     {data?.staff_summary && (
                                         <p className="text-4xl font-semibold mt-1">
@@ -101,7 +101,7 @@ const Dasboard = () => {
                         <div
                             className="bg-gradient-to-r from-[#b92916] to-[#D22D17] h-40 rounded-xl text-white flex items-center justify-center relative">
                             <div className="relative w-full h-full flex items-center justify-center">
-                                <h1 className="text-[20px] text-center font-semibold flex flex-col items-center">
+                                <h1 className="text-lg text-center font-semibold flex flex-col items-center">
                                     Jumlah Pegawai Pensiun
                                     {data?.staff_summary && (
                                         <p className="text-4xl font-semibold mt-1">
@@ -148,7 +148,7 @@ const Dasboard = () => {
                             >
                                 <div className="flex flex-col gap-5">
                                     {data?.news.map((item, index) => (
-                                        <div>
+                                        <div key={index}>
                                             <h1>{item.judul}</h1>
                                             <p className="text-xs text-muted-foreground">
                                                 {item.ringkasan}

@@ -2,10 +2,10 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
   IJabatanAkademikPost, IJamKerja,
-  IJenisCutiPost, IJenisSertifikasi,
+  IJenisCutiPost, IJenisLuaran, IJenisSertifikasi,
   IJenisSk,
   IJenisTesPost,
-  IOutputPenelitianPost, IStatusEselon,
+  IOutputPenelitianPost, IPengabdian, IStatusEselon,
   IStatusKeaktifan, IStatusPangkat,
 } from "@/types/create.referensi";
 
@@ -30,6 +30,10 @@ const potsReferensiServices = {
       axiosInstance.post(`${endpoint.ADMIN}/jam-kerja`, payload),
   jenisSertifikasi: (payload: IJenisSertifikasi) =>
       axiosInstance.post(`${endpoint.ADMIN}/master-jenis-sertifikasi`, payload),
+  jenisLuaran: (payload: IJenisLuaran) =>
+      axiosInstance.post(`${endpoint.ADMIN}/jenis-luaran`, payload),
+  jenisPengabdian: (payload: IPengabdian) =>
+      axiosInstance.post(`${endpoint.ADMIN}/jenis-pkm`, payload),
 };
 
 export default potsReferensiServices;

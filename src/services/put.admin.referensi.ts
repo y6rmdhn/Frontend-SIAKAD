@@ -2,9 +2,9 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
   IJamKerja,
-  IJenisCutiPost, IJenisSertifikasi, IJenisSk,
+  IJenisCutiPost, IJenisLuaran, IJenisSk,
   IJenisTesPost,
-  IOutputPenelitianPost, IStatusEselon, IStatusKeaktifan, IStatusPangkat,
+  IOutputPenelitianPost, IPengabdian, IStatusEselon, IStatusKeaktifan, IStatusPangkat,
 } from "@/types/create.referensi";
 
 const putReferensiServices = {
@@ -24,8 +24,12 @@ const putReferensiServices = {
       axiosInstance.put(`${endpoint.ADMIN}/eselon/${id}`, payload),
   jamKerja: (id: number, payload: IJamKerja) =>
       axiosInstance.put(`${endpoint.ADMIN}/jam-kerja/${id}`, payload),
-  jenisSertifikasi: (id: number, payload: IJenisSertifikasi) =>
+  jenisSertifikasi: (id: number, payload: IJenisLuaran) =>
       axiosInstance.put(`${endpoint.ADMIN}/master-jenis-sertifikasi/${id}`, payload),
+  jenisLuaran: (id: number, payload: IJenisLuaran) =>
+      axiosInstance.put(`${endpoint.ADMIN}/jenis-luaran/${id}`, payload),
+  jenisPengabdian: (id: number, payload: IPengabdian) =>
+      axiosInstance.put(`${endpoint.ADMIN}/jenis-pkm/${id}`, payload),
 };
 
 export default putReferensiServices;
