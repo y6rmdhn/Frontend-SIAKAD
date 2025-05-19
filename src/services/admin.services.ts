@@ -116,6 +116,9 @@ const adminServices = {
             },
         }),
 
+    getStatus: () =>
+        axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
+
     getPegawaiDetailAdminPage: (idPegawai) =>
         axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),
 
