@@ -61,6 +61,21 @@ interface IJenisSertifikasi {
     jenis_sertifikasi: string,
 }
 
+interface IJenisLuaran {
+    kode: string,
+    jenis_luaran: string,
+}
+
+interface IPengabdian {
+    kode: string,
+    nama_pkm: string,
+}
+
+interface IJenisPublikasi {
+    kode: string,
+    jenis_publikasi: string,
+}
+
 export type {
     IJenisTesPost,
     IOutputPenelitianPost,
@@ -71,5 +86,8 @@ export type {
     IStatusPangkat,
     IStatusEselon,
     IJamKerja,
-    IJenisSertifikasi
+    IJenisLuaran,
+    IJenisSertifikasi,
+    IPengabdian,
+    IJenisPublikasi
 };

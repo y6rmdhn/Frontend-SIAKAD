@@ -97,6 +97,27 @@ const adminServices = {
                 page: page,
             },
         }),
+    getJenisLuaran: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-luaran`, {
+            params: {
+                page: page,
+            },
+        }),
+    getJenisPengabdian: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-pkm`, {
+            params: {
+                page: page,
+            },
+        }),
+    getJenisPublikasi: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-publikasi`, {
+            params: {
+                page: page,
+            },
+        }),
+
+    getStatus: () =>
+        axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
 
     getPegawaiDetailAdminPage: (idPegawai) =>
         axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),

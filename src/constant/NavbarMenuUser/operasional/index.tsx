@@ -25,6 +25,10 @@ const operasional: {
       },
     ],
   },
+    {
+    title: "Evaluasi Kerja",
+    href: "/operasional/evaluasi-kerja",
+  },
 ];
 
 export default operasional;

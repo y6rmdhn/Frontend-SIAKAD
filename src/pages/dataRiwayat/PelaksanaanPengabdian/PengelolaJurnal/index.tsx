@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import PengelolaJurnal from "@/view/DataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/PengelolaJurnal";
+import PengelolaJurnal from "@/components/view/DataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/PengelolaJurnal";
 import { MdGroups } from "react-icons/md";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 

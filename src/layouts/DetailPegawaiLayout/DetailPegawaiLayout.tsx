@@ -18,9 +18,7 @@ import { FaPlus } from "react-icons/fa6";
 import { IoIosArrowBack } from "react-icons/io";
 import { Separator } from "@/components/ui/separator";
 import accordionContent from "@/constant/arccodionContent/arccodionContent";
-import { Link, useParams, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { Link, useLocation } from "react-router-dom";
 
 interface PropsType {
   children: ReactNode;
@@ -34,7 +32,6 @@ const DetailPegawaiLayout = (props: PropsType) => {
     undefined
   );
   const form = useForm();
-  const params = useParams();
   const location = useLocation();
   const pegawaiID = localStorage.getItem("pegawaiId");
 
@@ -88,7 +85,10 @@ const DetailPegawaiLayout = (props: PropsType) => {
           >
             <div className="flex flex-row gap-4 mt-14">
               <div className="bg-[#F0F6FA] p-4 flex flex-col items-center justify-center rounded-lg">
-                <IoPersonCircleOutline className="text-8xl text-muted-foreground" />
+                {/*<IoPersonCircleOutline className="text-8xl text-muted-foreground" />*/}
+                <div className="w-44 h-44 overflow-hidden mb-10 rounded-md">
+                <img src="https://i.pinimg.com/736x/eb/76/a4/eb76a46ab920d056b02d203ca95e9a22.jpg" className="object-cover" alt="profil-pegawai" />
+                </div>
                 <div className="flex flex-col w-full gap-1">
                   <Link to={"/admin/detail-pegawai/biodata/" + pegawaiID}>
                     <Button
