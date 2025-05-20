@@ -81,7 +81,6 @@ const JabatanAkademik = () => {
   // tambah data
   // const { mutate: postJabatanAkademik } = useMutation({
   //   mutationFn: async () => {
-
   //   }
   // })
 

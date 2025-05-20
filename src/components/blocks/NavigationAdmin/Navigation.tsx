@@ -36,7 +36,7 @@ const Navigation = () => {
 
   return (
     <NavigationMenu
-      className="bg-[#eeeeee] relative rounded-md mt-10"
+      className="bg-[#eeeeee] relative rounded-md mt-10 hidden md:block"
       viewport={false}
     >
       <NavigationMenuList>
@@ -44,11 +44,13 @@ const Navigation = () => {
           <NavigationMenuItem key={item.to}>
             <Link to={item.to}>
               <NavigationMenuLink
-                  className={cn(
-                      "bg-[#eeeeee] px-5",
-                      item.match.some((path) => location.pathname.startsWith(path)) &&
-                      "bg-[#FDA31A] text-white hover:bg-[#FDA31A] hover:text-white"
-                  )}
+                className={cn(
+                  "bg-[#eeeeee] px-5",
+                  item.match.some((path) =>
+                    location.pathname.startsWith(path)
+                  ) &&
+                    "bg-[#FDA31A] text-white hover:bg-[#FDA31A] hover:text-white"
+                )}
               >
                 {item.label}
               </NavigationMenuLink>
