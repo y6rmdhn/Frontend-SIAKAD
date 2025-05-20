@@ -124,7 +124,6 @@ const DetailPengabdian = () => {
           required={false}
           placeholder="-- Pilih Lingkup Pengabdian --"
         />
-        {/* Upload file */}
         <FormFieldSelect
           form={form}
           label="Sesuai Roadmap "
