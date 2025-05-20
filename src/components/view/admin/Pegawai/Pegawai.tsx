@@ -36,13 +36,14 @@ import {
 import CustomCard from "@/components/blocks/Card";
 import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
 
 const Pegawai = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [searchParam, setSearchParam] = useSearchParams();
+  const [ selectedPegawaiId, setSelectedPegawaiId ] = useState<number[]>([]);
 
   const { data } = useQuery({
     queryKey: ["pegawai", searchParam.get("page")],
@@ -56,7 +57,16 @@ const Pegawai = () => {
     },
   });
 
-  useEffect(() => {
+    const handleSelectedPegawaiId = (pegawaiId: number, checked: boolean) => {
+        if (checked) {
+            setSelectedPegawaiId(prev => [...prev, pegawaiId]);
+        } else {
+            setSelectedPegawaiId(prev => prev.filter(id => id !== pegawaiId));
+        }
+    };
+
+
+    useEffect(() => {
     if (!searchParam.get("page")) {
       searchParam.set("page", "1");
       setSearchParam(searchParam);
@@ -119,9 +129,11 @@ const Pegawai = () => {
             </Button>
           </Link>
 
-          <Button variant="destructive" className="cursor-pointer">
-            <FaRegTrashAlt /> Hapus
-          </Button>
+            {selectedPegawaiId.length > 0 &&
+                <Button variant="destructive" className="cursor-pointer">
+                    <FaRegTrashAlt /> Hapus {selectedPegawaiId.length} Data
+                </Button>
+            }
 
           <Button className="cursor-pointer min-w-52 bg-green-light-uika flex justify-start items-center hover:bg-[#329C59]">
             <FaCheck /> Set Status
@@ -138,7 +150,6 @@ const Pegawai = () => {
             <TableHead className="text-center">Nama Pegawai</TableHead>
             <TableHead className="text-center">Uni Kerja</TableHead>
             <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-center">Terhubung Sister</TableHead>
             <TableHead className="text-center">Aksi</TableHead>
           </TableRow>
         </TableHeader>
@@ -146,16 +157,13 @@ const Pegawai = () => {
           {data?.data.map((item, index) => (
             <TableRow key={index} className=" even:bg-gray-100">
               <TableCell className="font-medium">
-                <Checkbox />
+                <Checkbox checked={selectedPegawaiId.includes(item.id)} onCheckedChange={(checked) => handleSelectedPegawaiId(item.id, checked)} />
               </TableCell>
               <TableCell className="text-center">{item.nip}</TableCell>
               <TableCell className="text-center">{item.nidn}</TableCell>
               <TableCell className="text-center">{item.nama_pegawai}</TableCell>
               <TableCell className="text-center">{item.unit_kerja}</TableCell>
               <TableCell className="text-center">{item.status}</TableCell>
-              <TableCell className="text-center">
-                {item.terhubung_sister || "-"}
-              </TableCell>
               <TableCell className="text-center w-28">
                 <div className="flex">
                   <Button

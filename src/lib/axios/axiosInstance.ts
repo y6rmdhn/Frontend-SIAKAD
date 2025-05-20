@@ -6,9 +6,6 @@ import { toast } from "sonner";
 
 const axiosInstance = axios.create({
   baseURL: environment.API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
   timeout: 60000,
 });
 
