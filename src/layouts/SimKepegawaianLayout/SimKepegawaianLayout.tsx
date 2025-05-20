@@ -28,7 +28,7 @@ const SimKepegawaianLayout = (props: PropsType) => {
     <>
       <PageHead title={title} />
       <Header />
-      <main className="px-20 font-roboto">
+      <main className="px-5 lg:px-20 sm:px-20 md:px-20 xl:px-20 2xl:px-20 font-roboto">
         <Navigation />
         <section>{children}</section>
       </main>
