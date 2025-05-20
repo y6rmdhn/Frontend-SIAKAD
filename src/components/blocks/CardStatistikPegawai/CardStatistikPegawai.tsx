@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BarChartWithLabel } from "@/components/commons/Charts/BarChart/BarChartLabel";
+import { cn } from "@/lib/utils";
 
 const pieConfig = {
   visitors: { label: "Visitors" },
@@ -78,61 +79,10 @@ const CardStatistikPegawai = ({
     })
   );
 
-  return (
-    <div>
-      <CustomCard
-        actions={
-          <h1 className="flex gap-3 items-center">
-            <IoStatsChart />{" "}
-            <span className="text-lg font-semibold">Statistik Kepegawaian</span>
-          </h1>
-        }
-        cardStyle="border-t-[#106D63]"
-      >
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setAktifBtn("Fungsional")}
-            className={
-              aktifBtn === "Fungsional"
-                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
-                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer"
-            }
-          >
-            Fungsional
-          </Button>
-          <Button
-            onClick={() => setAktifBtn("Hubungan Kerja")}
-            className={
-              aktifBtn === "Hubungan Kerja"
-                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
-                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer"
-            }
-          >
-            Hubungan Kerja
-          </Button>
-          <Button
-            onClick={() => setAktifBtn("Pendidikan")}
-            className={
-              aktifBtn === "Pendidikan"
-                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
-                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer"
-            }
-          >
-            Pendidikan
-          </Button>
-          <Button
-            onClick={() => setAktifBtn("Pendidikan Non Akademik")}
-            className={
-              aktifBtn === "Pendidikan Non Akademik"
-                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
-                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer"
-            }
-          >
-            Pendidikan Non Akademik
-          </Button>
-        </div>
-
-        {aktifBtn === "Fungsional" ? (
+  const renderContent = () => {
+    switch (aktifBtn) {
+      case "Fungsional":
+        return (
           <div className="mt-10">
             <ChartLingkaran
               title="Jabatan Fungsional"
@@ -144,7 +94,7 @@ const CardStatistikPegawai = ({
               titleFooter={
                 <div className="flex gap-5 items-center">
                   {staffChartData.map((item, index) => (
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center" key={index}>
                       <FaCircle
                         className={`w-3 h-3 inline-block`}
                         style={{ color: item.fill }}
@@ -155,7 +105,6 @@ const CardStatistikPegawai = ({
                 </div>
               }
             />
-
             <Table className="mt-3 table-auto border-b-4 border-b-[#056C7A]">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
@@ -189,7 +138,9 @@ const CardStatistikPegawai = ({
               </TableBody>
             </Table>
           </div>
-        ) : aktifBtn === "Hubungan Kerja" ? (
+        );
+      case "Hubungan Kerja":
+        return (
           <div className="mt-10">
             <BarChartWithLabel
               title="Berdasarkan Hubungan Kerja"
@@ -205,7 +156,6 @@ const CardStatistikPegawai = ({
                 </div>
               }
             />
-
             <Table className="mt-3 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
@@ -231,7 +181,9 @@ const CardStatistikPegawai = ({
               </TableBody>
             </Table>
           </div>
-        ) : aktifBtn === "Pendidikan" ? (
+        );
+      case "Pendidikan":
+        return (
           <div className="mt-10">
             <BarChartWithLabel
               title="Berdasarkan Jenjang pendidikan"
@@ -249,12 +201,11 @@ const CardStatistikPegawai = ({
                 </div>
               }
             />
-
             <Table className="mt-3 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
                   {tabelAcademic.headers.map((item, index) => (
-                    <TableHead className="text-center text-white">
+                    <TableHead key={index} className="text-center text-white">
                       {item}
                     </TableHead>
                   ))}
@@ -275,7 +226,9 @@ const CardStatistikPegawai = ({
               </TableBody>
             </Table>
           </div>
-        ) : (
+        );
+      case "Pendidikan Non Akademik":
+        return (
           <div className="mt-10">
             <BarChartWithLabel
               title="Berdasarkan Jenjang pendidikan"
@@ -293,7 +246,6 @@ const CardStatistikPegawai = ({
                 </div>
               }
             />
-
             <Table className="mt-3 table-auto">
               <TableHeader>
                 <TableRow className="bg-[#056C7A] hover:bg-[#056C7A]">
@@ -306,7 +258,7 @@ const CardStatistikPegawai = ({
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
                 {tabelNonAcademic.rows.map((item, index) => (
-                  <TableRow className=" even:bg-gray-100">
+                  <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center flex flex-col">
                       {item.kode}
                     </TableCell>
@@ -319,7 +271,71 @@ const CardStatistikPegawai = ({
               </TableBody>
             </Table>
           </div>
-        )}
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div>
+      <CustomCard
+        actions={
+          <h1 className="flex gap-3 items-center">
+            <IoStatsChart />{" "}
+            <span className="text-lg font-semibold">Statistik Kepegawaian</span>
+          </h1>
+        }
+        cardStyle="border-t-[#106D63]"
+      >
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setAktifBtn("Fungsional")}
+            className={cn(
+              aktifBtn === "Fungsional"
+                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
+                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
+              "w-14"
+            )}
+          >
+            Fungsional
+          </Button>
+          <Button
+            onClick={() => setAktifBtn("Hubungan Kerja")}
+            className={cn(
+              aktifBtn === "Hubungan Kerja"
+                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
+                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
+              "w-14"
+            )}
+          >
+            Hubungan Kerja
+          </Button>
+          <Button
+            onClick={() => setAktifBtn("Pendidikan")}
+            className={cn(
+              aktifBtn === "Pendidikan"
+                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
+                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
+              "w-14"
+            )}
+          >
+            Pendidikan
+          </Button>
+          <Button
+            onClick={() => setAktifBtn("Pendidikan Non Akademik")}
+            className={cn(
+              aktifBtn === "Pendidikan Non Akademik"
+                ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
+                : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
+              "w-14"
+            )}
+          >
+            Pendidikan Non Akademik
+          </Button>
+        </div>
+
+        {renderContent()}
       </CustomCard>
     </div>
   );
