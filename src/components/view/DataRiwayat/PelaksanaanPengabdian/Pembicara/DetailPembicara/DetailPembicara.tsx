@@ -132,7 +132,6 @@ const DetailPembicara = () => {
           required={true}
           placeholder="-- Pilih Kategori Pembicara --"
         />
-        {/* Upload file */}
         <FormFieldSelect
           form={form}
           label="Tingkat Pertemuan "
