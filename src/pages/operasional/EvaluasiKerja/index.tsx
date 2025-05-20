@@ -3,14 +3,13 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import DetailPengelolaJurnal from "@/components/view/DataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal/DetailPengelolaJurnal";
 import { MdGroups } from "react-icons/md";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+import EvaluasiKerja from "@/components/view/Operasional/EvaluasiKerja/EvaluasiKerja";
 
-const DetailPengelolaJurnalUserPage = () => {
+const EvaluasiKerjaUserPage = () => {
   return (
     <SimUserLayout>
       <Breadcrumb className="mt-10">
@@ -26,26 +25,18 @@ const DetailPengelolaJurnalUserPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Data Riwayat</BreadcrumbLink>
+            <BreadcrumbLink href="">Operasional</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Pelaksanaan Pengabdian</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="">Pengelola Jurnal</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Detail Pengelola Jurnal</BreadcrumbPage>
+            <BreadcrumbLink href="">Evaluasi Kerja</BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <DetailPengelolaJurnal />
+      <EvaluasiKerja />
     </SimUserLayout>
   );
 };
 
-export default DetailPengelolaJurnalUserPage;
+export default EvaluasiKerjaUserPage;
