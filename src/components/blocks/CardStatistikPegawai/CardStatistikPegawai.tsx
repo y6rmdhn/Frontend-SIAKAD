@@ -288,14 +288,14 @@ const CardStatistikPegawai = ({
         }
         cardStyle="border-t-[#106D63]"
       >
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-1 sm:flex sm:gap-2">
           <Button
             onClick={() => setAktifBtn("Fungsional")}
             className={cn(
               aktifBtn === "Fungsional"
                 ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
                 : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
-              "w-14"
+              "w-25 text-xs sm:w-20 sm:text-xs md:w-25 md:text-sm lg:w-15 lg:text-xs xl:w-25 xl:text-sm"
             )}
           >
             Fungsional
@@ -306,7 +306,7 @@ const CardStatistikPegawai = ({
               aktifBtn === "Hubungan Kerja"
                 ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
                 : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
-              "w-14"
+              "w-28 text-xs sm:w-25 sm:text-xs md:w-32 md:text-sm lg:w-22 lg:text-xs xl:w-28 xl:text-sm"
             )}
           >
             Hubungan Kerja
@@ -317,7 +317,7 @@ const CardStatistikPegawai = ({
               aktifBtn === "Pendidikan"
                 ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
                 : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
-              "w-14"
+              "w-25 text-xs sm:w-20 sm:text-xs md:w-30 md:text-sm lg:w-16 lg:text-xs xl:w-25 xl:text-sm"
             )}
           >
             Pendidikan
@@ -328,7 +328,7 @@ const CardStatistikPegawai = ({
               aktifBtn === "Pendidikan Non Akademik"
                 ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
                 : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
-              "w-14"
+              "w-35 text-xs sm:w-37 sm:text-xs md:w-47 md:text-sm lg:w-35 lg:text-xs xl:w-45 xl:text-sm"
             )}
           >
             Pendidikan Non Akademik
