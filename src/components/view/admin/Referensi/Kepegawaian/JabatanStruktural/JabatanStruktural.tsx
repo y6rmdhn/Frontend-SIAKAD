@@ -68,26 +68,26 @@ const JabatanStruktural = () => {
             <Title title="Jabatan Struktural" subTitle="Daftar Jabatan Struktural"/>
             <CustomCard
                 actions={
-                    <div className="flex">
-                        <Label className="w-32 text-[#FDA31A]">Jabatan Struktural</Label>
-                        <SelectFilter classname="ml-32 w-80" options={unitKerjaOptions}/>
+                    <div className="sm:flex grid grid-rows-1 gap-3">
+                        <Label className="w-32 sm:w-45 md:w-60 text-[#FDA31A]">Jabatan Struktural</Label>
+                        <SelectFilter classname="w-58 md:w-80 lg:w-92" options={unitKerjaOptions}/>
                     </div>
                 }
             />
 
-            <div className="flex justify-between mt-6">
+            <div className="grid grid-rows-2 gap-3 sm:flex justify-between mt-6">
                 <div className="flex gap-4">
-                    <SelectFilter options={unitKerjaOptions}/>
+                    <SelectFilter classname="w-30 sm:w-25" options={unitKerjaOptions}/>
                     <SearchInput/>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex sm:gap-3 gap-4">
                     <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-                        <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika">
+                        <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-30 sm:w-23 md:w-25">
                             <FaPlus/> Tambah
                         </Button>
                     </Link>
-                    <Button variant="destructive" className="cursor-pointe">
+                    <Button variant="destructive" className="cursor-pointe w-30 sm:w-22">
                         <FaRegTrashAlt/> Hapus
                     </Button>
                 </div>
@@ -97,15 +97,15 @@ const JabatanStruktural = () => {
                 <TableHeader>
                     <TableRow className="bg-gray-100">
                         <TableHead className="text-center"></TableHead>
-                        <TableHead className="text-center">Kode</TableHead>
-                        <TableHead className="text-center">
+                        <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                        <TableHead className="text-center text-xs sm:text-sm">
                             Nama Jabatan Struktural
                         </TableHead>
-                        <TableHead className="text-center">
+                        <TableHead className="text-center text-xs sm:text-sm">
                             Parent Jabatan Struktural
                         </TableHead>
-                        <TableHead className="text-center">Unit Kerja</TableHead>
-                        <TableHead className="text-center">Aksi</TableHead>
+                        <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
+                        <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
@@ -115,10 +115,10 @@ const JabatanStruktural = () => {
                                 <ChevronDownIcon
                                     className={`text-muted-foreground size-4 transition-transform duration-200`}
                                 /></TableCell>
-                            <TableCell className="text-center">{item.kode}</TableCell>
-                            <TableCell className="text-center">{item.keterangan}</TableCell>
-                            <TableCell className="text-center">{item.parent?.keterangan || "-"}</TableCell>
-                            <TableCell className="text-center">{item.unit_kerja.nama_unit}</TableCell>
+                            <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                            <TableCell className="text-center text-xs sm:text-sm">{item.keterangan}</TableCell>
+                            <TableCell className="text-center text-xs sm:text-sm">{item.parent?.keterangan || "-"}</TableCell>
+                            <TableCell className="text-center text-xs sm:text-sm">{item.unit_kerja.nama_unit}</TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
                                     <Link to="">

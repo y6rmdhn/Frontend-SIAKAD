@@ -94,10 +94,10 @@ const Berita = () => {
 
       <CustomCard
         actions={
-          <div className="flex">
-            <Label className="w-60 text-yellow-uika">Unit Kerja</Label>
+          <div className="sm:flex grid grid-rows-1 gap-3">
+            <Label className="sm:w-45 md:w-60 text-yellow-uika">Unit Kerja</Label>
             <SelectFilter
-              classname="w-92"
+              classname="w-58 md:w-80 lg:w-92"
               placeholder="04001 - Universitas Ibn Khaldun"
               options={[{ value: "apple", label: "apple" }]}
             />
@@ -105,32 +105,32 @@ const Berita = () => {
         }
       />
 
-      <div className="flex justify-between mt-6">
-        <div className="flex gap-4">
+      <div className="grid grid-rows-2 gap-2 sm:flex justify-between mt-6">
+        <div className="grid grid-rows-2 sm:flex gap-2 lg:gap-4">
           <SelectFilter
-            classname="w-32"
+            classname="w-60 sm:w-32"
             placeholder="--Semua--"
             options={[{ value: "apple", label: "apple" }]}
           />
 
-          <SearchInput />
+          <SearchInput className=""/>
         </div>
 
-        <Button className="bg-green-light-uika hover:bg-hover-green-uika">
+        <Button className="bg-green-light-uika hover:bg-hover-green-uika w-18 md:w-23">
           Batalkan
         </Button>
       </div>
 
-      <Table className="mt-10 table-auto">
+      <Table className="mt-3 sm:mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center">Unit Kerja</TableHead>
-            <TableHead className="text-center">Judul</TableHead>
-            <TableHead className="text-center">Tgl Posting</TableHead>
-            <TableHead className="text-center">Tgl Expired</TableHead>
-            <TableHead className="text-center">Prioritas</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Judul</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Tgl Posting</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Tgl Expired</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Prioritas</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
@@ -139,16 +139,16 @@ const Berita = () => {
               <TableCell className="text-center">
                 <Checkbox />
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className="text-center text-xs sm:text-sm">
                 {Array.isArray(item.unit_kerja_id)
                   ? item.unit_kerja_id[0]
                   : item.unit_kerja_id}
               </TableCell>
-              <TableCell className="text-center">{item.judul}</TableCell>
-              <TableCell className="text-center">
+              <TableCell className="text-center text-xs sm:text-sm">{item.judul}</TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
                 {handleDateFormat(item.tgl_posting)}
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className="text-center text-xs sm:text-sm">
                 {handleDateFormat(item.tgl_expired)}
               </TableCell>
               <TableCell className="text-center">

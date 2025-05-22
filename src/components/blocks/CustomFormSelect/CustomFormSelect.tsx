@@ -52,7 +52,7 @@ export const FormFieldSelect = ({
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger disabled={disabled} className="w-full">
+              <SelectTrigger disabled={disabled} className="w-full md:w-35 lg:w-full">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
