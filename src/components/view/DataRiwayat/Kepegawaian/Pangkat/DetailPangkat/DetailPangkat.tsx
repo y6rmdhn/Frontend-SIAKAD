@@ -19,17 +19,17 @@ const DetailPangkat = () => {
 
       <CustomCard
   actions={
-    <div className="flex justify-end mt-10">
-      <div className="flex gap-4">
+    <div className=" flex justify-start md:justify-end mt-10">
+      <div className="flex flex-col  gap-4">
         <Link to="/data-riwayat/kepegawaian/pangkat">
-          <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
-            <IoIosArrowBack />
+          <Button size="sm" className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer flex items-center gap-2 text-xs md:text-sm">
+            <IoIosArrowBack className="w-3! h-3! md:w-4! h-4!" />
             Kembali ke Daftar
           </Button>
         </Link>
 
-        <Button className="bg-[#FDA31A] hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
-          <MdOutlineFileDownload />
+        <Button size="sm" className="bg-[#FDA31A] hover:bg-[#329C59] cursor-pointer flex items-center gap-2 text-xs md:text-sm">
+          <MdOutlineFileDownload  className="w-3! h-3! md:w-4! h-4!"/>
           Simpan
         </Button>
       </div>
@@ -53,12 +53,12 @@ const DetailPangkat = () => {
       </div>
       <Form {...form}>
         <form>
-        <div className="grid grid-rows-6 grid-flow-col gap-x-5 items-center mt-4">
+        <div className="grid grid-cols-1  gap-5 items-center mt-4">
         <FormFieldSelect
           form={form}
           label="Jenis SK *"
           name="jenis_sk"
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
           options={[
             { value: "1", label: "Surat Keputusan 1" },
             { value: "2", label: "Surat Keputusan 2" },
@@ -70,7 +70,7 @@ const DetailPangkat = () => {
           form={form}
           label="Jenis Kenaikan Pangkat"
           name="jenis_kenaikan_pangkat"
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
           options={[
             { value: "1", label: "Kenaikan 1" },
             { value: "2", label: "Kenaikan 2" },
@@ -82,7 +82,7 @@ const DetailPangkat = () => {
           form={form}
           label="Nama Pangkat"
           name="nama_pangkat"
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
           options={[
             { value: "1", label: "Juru Muda (I/a)" },
             { value: "2", label: "Juru Muda Tingkat I (I/b)" },
@@ -96,23 +96,23 @@ const DetailPangkat = () => {
           name="tmt_pangkat"
           type="date"
           required={true}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInput
           form={form}
           label="No. SK"
           name="no_sk"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInputFile
-                               form={form}
-                               label="File Perangkat"
-                               name="file_perangkat"
-                               classname="border-none shadow-none"
-                               labelStyle="text-[#3F6FA9]"
-                               required={false}
-                             />
+           form={form}
+            label="File Perangkat"
+            name="file_perangkat"
+            classname="border-none shadow-none"
+            labelStyle="text-[#3F6FA9] text-xs md:text-sm"
+            required={false}
+            />
 
 
       
@@ -122,21 +122,21 @@ const DetailPangkat = () => {
           name="tgl_sk"
           type="date"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInput
           form={form}
           label="Pejabat Penetap"
           name="pejabat_penetap"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInput
           form={form}
           label="Masa Kerja (Tahun)"
           name="masa_kerja_tahun"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInput
           form={form}
@@ -144,21 +144,21 @@ const DetailPangkat = () => {
           name="masa_kerja_bulan"
           type="date"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInput
           form={form}
           label="Acuan Masa Kerja"
           name="acuan_masa_kerja"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
         />
         <FormFieldInput
           form={form}
           label="Tanggal Input"
           name="tanggal_input"
           required={false}
-          labelStyle="text-[#3F6FA9]"
+          labelStyle="text-[#3F6FA9] text-xs md:text-sm"
           placeholder="22 April 2025"
         />
       </div>

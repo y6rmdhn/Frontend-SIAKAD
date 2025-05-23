@@ -42,8 +42,8 @@ const Homebase = () => {
         actions={
           <div className="flex justify-end ">
             {" "}
-            <Button className="bg-[#FDA31A]">
-              <FaPlus /> Tambah Baru{" "}
+            <Button className="bg-[#FDA31A] text-xs md:text-sm">
+              <FaPlus className="w-3! h-3! md:w-4! md:h-4! " /> Tambah Baru{" "}
             </Button>{" "}
           </div>
         }
@@ -64,7 +64,7 @@ const Homebase = () => {
       </div>
       <div className="gap-5 flex mt-5">
         <Select>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-16 md:w-32">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -81,10 +81,10 @@ const Homebase = () => {
 
         <div className="relative">
           <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-          <Input placeholder="Search" className="w-80 pr-8" />
+          <Input placeholder="Search" className="w-40 md:w-80 pr-8" />
         </div>
       </div>
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs md:text-sm">
         <TableHeader>
           <TableRow className="bg-gray-300 ">
             <TableHead className="text-center text-black">TMT Tugas</TableHead>
