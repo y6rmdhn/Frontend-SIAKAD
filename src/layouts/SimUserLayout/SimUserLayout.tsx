@@ -24,7 +24,7 @@ const SimUserLayout = (props: PropsType) => {
     <>
       <PageHead title={title} />
       <Header />
-      <main className="px-20 font-roboto">
+      <main className="md:px-20 px-5 font-roboto overflow-hidden">
         <NavigationUser />
         <section>{children}</section>
       </main>

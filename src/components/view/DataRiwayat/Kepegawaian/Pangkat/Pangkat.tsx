@@ -20,8 +20,8 @@ const Pangkat = () => {
         actions={
           <div className="flex justify-end ">
            <Link to="/data-riwayat/kepegawaian/detail-pangkat">
-              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika">
-                <FaPlus /> Tambah Baru
+              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika text-xs md:text-sm">
+                <FaPlus className="w-3! h-3! md:w-4! h-4!" /> Tambah Baru
               </Button>
             </Link>
           </div>
@@ -43,7 +43,7 @@ const Pangkat = () => {
       </div>
       <div className="gap-5 flex mt-5">
         <Select>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-16 md:w-32">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -60,10 +60,10 @@ const Pangkat = () => {
 
         <div className="relative">
           <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-          <Input placeholder="Search" className="w-80 pr-8" />
+          <Input placeholder="Search" className="w-40 md:w-80 pr-8 " />
         </div>
       </div>
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs md:text-base">
         <TableHeader>
           <TableRow className="bg-gray-300 ">
             <TableHead className="text-center text-black">TMT Pangkas</TableHead>

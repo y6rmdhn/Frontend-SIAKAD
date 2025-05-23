@@ -28,7 +28,7 @@ const NavigationUser = () => {
 
   return (
     <NavigationMenu
-      className="bg-[#eeeeee] relative rounded-md mt-10"
+      className="bg-[#eeeeee] relative rounded-md mt-10 hidden md:block"
       viewport={false}
     >
       <NavigationMenuList>

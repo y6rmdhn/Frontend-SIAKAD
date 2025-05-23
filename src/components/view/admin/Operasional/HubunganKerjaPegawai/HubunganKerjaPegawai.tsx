@@ -35,9 +35,9 @@ import { MdEdit } from "react-icons/md";
 const HubunganKerjaPegawai = () => {
   return (
     <div className="mt-10 mb-10">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Monitoring{" "}
-        <span className="text-muted-foreground text-[16px] font-normal">
+        <span className="text-muted-foreground text-[12px] sm:text-[16px] font-normal">
           hubungan kerja
         </span>
       </h1>
@@ -46,9 +46,9 @@ const HubunganKerjaPegawai = () => {
         <MonitoringInput />
       </CustomCard>
 
-      <div className="flex gap-4 w-full mt-5">
+      <div className="grid grid-rows-2 sm:flex gap-4 w-full mt-5">
         <Select>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-70 sm:w-32">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -63,37 +63,40 @@ const HubunganKerjaPegawai = () => {
           </SelectContent>
         </Select>
 
-        <div className="relative">
-          <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-          <Input placeholder="Search" className="w-80 pr-8" />
+        <div className="relative w-70 sm:w-80">
+          <Input
+            placeholder="Search"
+            className="w-full pr-10"
+          />
+          <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
         </div>
       </div>
 
       <Table className="mt-3 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
-            <TableHead className="text-center">Pegawai</TableHead>
-            <TableHead className="text-center">Hubungan Kerja</TableHead>
-            <TableHead className="text-center">Fungsional</TableHead>
-            <TableHead className="text-center">Usia Pensiun</TableHead>
-            <TableHead className="text-center">Tgl Lahir</TableHead>
-            <TableHead className="text-center">Tgl Efektif</TableHead>
-            <TableHead className="text-center">Tgl Berakhir</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Pegawai</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Hubungan Kerja</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Fungsional</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Usia Pensiun</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Tgl Lahir</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Tgl Efektif</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Tgl Berakhir</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center flex flex-col">
+            <TableCell className="text-center flex flex-col text-xs sm:text-sm">
               <span className="text-green-light-uika">0006027004</span>
               Dr. KURMATI, S.pd., M.Si.Pendidikan Matematika
             </TableCell>
-            <TableCell className="text-center">PNS/DPK</TableCell>
-            <TableCell className="text-center">Guru Besar</TableCell>
-            <TableCell className="text-center">70</TableCell>
-            <TableCell className="text-center">2 Jun 1969</TableCell>
-            <TableCell className="text-center">1 Feb 2023</TableCell>
-            <TableCell className="text-center">-</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">PNS/DPK</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">Guru Besar</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">70</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">2 Jun 1969</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">1 Feb 2023</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Button size="icon" variant="ghost" className="cursor-pointer">
@@ -107,12 +110,12 @@ const HubunganKerjaPegawai = () => {
               <span className="text-green-light-uika">0006027004</span>
               Dr. KURMATI, S.pd., M.Si.Pendidikan Matematika
             </TableCell>
-            <TableCell className="text-center">PNS/DPK</TableCell>
-            <TableCell className="text-center">Guru Besar</TableCell>
-            <TableCell className="text-center">70</TableCell>
-            <TableCell className="text-center">2 Jun 1969</TableCell>
-            <TableCell className="text-center">1 Feb 2023</TableCell>
-            <TableCell className="text-center">-</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">PNS/DPK</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">Guru Besar</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">70</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">2 Jun 1969</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">1 Feb 2023</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Button size="icon" variant="ghost" className="cursor-pointer">

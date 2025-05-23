@@ -29,14 +29,14 @@ const MediaPubikasi = () => {
       <Title title="Media Publikasi" subTitle="Daftar Media Publikasi" />
       <CustomCard
         actions={
-          <div className="flex justify-between mt-6">
-            <div className="flex gap-4">
-              <SelectFilter options={unitKerjaOptions} />
+          <div className="grid grid-rows-2 gap-3 md:flex justify-between mt-6">
+            <div className="grid grid-rows-2 sm:flex gap-4">
+              <SelectFilter classname="sm:w-41 md:w-32" options={unitKerjaOptions} />
               <SearchInput />
             </div>
 
             <div className="flex gap-3">
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika">
+              <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-auto md:w-35 lg:w-auto md:text-xs lg:text-base">
                 <IoMdDownload /> Unduh dari SISTER
               </Button>
             </div>
@@ -46,12 +46,12 @@ const MediaPubikasi = () => {
         <Table className="mt-10 table-auto">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="text-center">Nama</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Nama</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
             <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             </TableRow>
           </TableBody>
         </Table>

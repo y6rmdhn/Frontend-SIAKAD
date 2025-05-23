@@ -18,7 +18,7 @@ const JabatanAkademikUserPage = () => {
           <BreadcrumbItem>
             <BreadcrumbLink
               href="/dasboard"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 text-xs md:text-sm"
             >
               <MdGroups className="w-6 h-6" />
               Pegawai
@@ -26,15 +26,15 @@ const JabatanAkademikUserPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Data Riwayat</BreadcrumbLink>
+            <BreadcrumbLink href="" className="text-xs md:text-sm">Data Riwayat</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="">Kepegawaian</BreadcrumbLink>
+            <BreadcrumbLink href="" className="text-xs md:text-sm">Kepegawaian</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Jabatan Akademik</BreadcrumbPage>
+            <BreadcrumbPage className="text-xs md:text-sm">Jabatan Akademik</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

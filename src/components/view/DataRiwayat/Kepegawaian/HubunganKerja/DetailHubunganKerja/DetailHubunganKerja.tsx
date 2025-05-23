@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
+import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 
 const DetailHubunganKerja = () => {
   const form = useForm()
@@ -74,24 +75,14 @@ const DetailHubunganKerja = () => {
                 required={false}
                 labelStyle="text-[#3F6FA9]"
               />
-             <div className="flex items-center gap-4">
-  <label className="text-[#3F6FA9] text-sm font-medium min-w-[180px]">
-    File Hubungan Kerja
-  </label>
-
-  <div className="flex flex-col">
-    <input
-      type="file"
-      accept=".jpg,.jpeg,.pdf"
-      className="block h-[42px] text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                 file:rounded file:border-0 file:text-sm file:font-semibold
-                 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-    />
-    <span className="text-blue-600 text-xs mt-1">
-      jpg.jpeg pdf (maxsize 2.007152 MB)
-    </span>
-  </div>
-</div> 
+   <FormFieldInputFile
+                        form={form}
+                        label="File Hubungan Kerja"
+                        name="file_hubungan_kerja"
+                        classname="border-none shadow-none"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
 
             <FormFieldInput
          form={form}

@@ -196,9 +196,9 @@ const JenisCuti = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <h1 className="text-2xl font-normal">
+            <h1 className="text-lg sm:text-2xl font-normal">
                 Jenis Cuti{" "}
-                <span className="text-muted-foreground font-normal text-[16px]">
+                <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Daftar Jenis Cuti
         </span>
             </h1>
@@ -242,23 +242,23 @@ const JenisCuti = () => {
                         <Table className="mt-5 table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Kode</TableHead>
-                                    <TableHead className="text-center">Nama Jenis Cuti</TableHead>
-                                    <TableHead className="text-center">
+                                    <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Nama Jenis Cuti</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">
                                         Standar Cuti (Hari)
                                     </TableHead>
-                                    <TableHead className="text-center">
+                                    <TableHead className="text-center text-xs sm:text-sm">
                                         Format Nomor Surat
                                     </TableHead>
-                                    <TableHead className="text-center">Keterangan</TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Keterangan</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) &&
                                     Number(searchParam.get("page")) === 1 && (
                                         <TableRow className=" even:bg-gray-100">
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center text-xs sm:text-sm">
                                                 <FormFieldInput
                                                     inputStyle="w-full"
                                                     position={true}
@@ -267,7 +267,7 @@ const JenisCuti = () => {
                                                     required={false}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center text-xs sm:text-sm">
                                                 <FormFieldInput
                                                     inputStyle="w-full"
                                                     position={true}
@@ -276,7 +276,7 @@ const JenisCuti = () => {
                                                     required={false}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center text-xs sm:text-sm">
                                                 <FormFieldInput
                                                     inputStyle="w-full"
                                                     position={true}
@@ -286,7 +286,7 @@ const JenisCuti = () => {
                                                     required={false}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center text-xs sm:text-sm">
                                                 <FormFieldInput
                                                     inputStyle="w-full"
                                                     position={true}
@@ -295,7 +295,7 @@ const JenisCuti = () => {
                                                     required={false}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center text-xs sm:text-sm">
                                                 <FormFieldInput
                                                     inputStyle="w-full"
                                                     position={true}
@@ -329,17 +329,17 @@ const JenisCuti = () => {
                                     )}
                                 {data?.data.map((item, index) => (
                                     <TableRow key={index} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.kode}</TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             {item.nama_jenis_cuti}
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             {item.standar_cuti}
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             {item.format_nomor_surat}
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             {item.keterangan}
                                         </TableCell>
                                         <TableCell className="h-full">

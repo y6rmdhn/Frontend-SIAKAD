@@ -211,7 +211,7 @@ const JenisTes = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">Daftar Jenis Tes</h1>
+      <h1 className="text-lg sm:text-2xl font-normal">Daftar Jenis Tes</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitJenisTes)}>
           <CustomCard
@@ -251,18 +251,18 @@ const JenisTes = () => {
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center">Kode</TableHead>
-                  <TableHead className="text-center">Jenis Tes</TableHead>
-                  <TableHead className="text-center">Nilai Minimal</TableHead>
-                  <TableHead className="text-center">Nilai Maksimal</TableHead>
-                  <TableHead className="text-center">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Jenis Tes</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Nilai Minimal</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Nilai Maksimal</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
                 {(isAddData || isEditMode) &&
                   Number(searchParam.get("page")) === 1 && (
                     <TableRow className="even:bg-gray-100">
-                      <TableCell className="text-center">
+                      <TableCell className="text-center text-xs sm:text-sm">
                         <FormFieldInput
                           inputStyle="w-full"
                           position={true}
@@ -271,7 +271,7 @@ const JenisTes = () => {
                           required={false}
                         />
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="text-center text-xs sm:text-sm">
                         <FormFieldInput
                           inputStyle="w-full"
                           position={true}
@@ -280,7 +280,7 @@ const JenisTes = () => {
                           required={false}
                         />
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="text-center text-xs sm:text-sm">
                         <FormFieldInput
                           inputStyle="w-full"
                           position={true}
@@ -290,7 +290,7 @@ const JenisTes = () => {
                           required={false}
                         />
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="text-center text-xs sm:text-sm">
                         <FormFieldInput
                           inputStyle="w-full"
                           position={true}
@@ -325,14 +325,14 @@ const JenisTes = () => {
                   )}
                 {data?.data.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
-                    <TableCell className="text-center">{item.kode}</TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
                       {item.jenis_tes}
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center text-xs sm:text-sm">
                       {item.nilai_minimal}
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center text-xs sm:text-sm">
                       {item.nilai_maksimal}
                     </TableCell>
                     <TableCell className="h-full">

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MdPerson } from "react-icons/md";
-import { IoIosHelpCircleOutline } from "react-icons/io";
+import { IoIosHelpCircleOutline, IoMdArrowDropdown } from "react-icons/io";
 import { FaBell } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -12,18 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { useState } from "react";
-import { BsGrid3X2GapFill } from "react-icons/bs";
-import { BsPersonFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import { BsGrid3X2GapFill, BsPersonFill } from "react-icons/bs";
 import { IoLogOutOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import authServices from "@/services/auth.services";
 import { ILogout } from "@/types/auth";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { clearUserData } from "@/store/userSlice";
+import { motion } from "framer-motion";
+import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
   const userSelector = useSelector((state: RootState) => state.user);
@@ -31,6 +31,7 @@ const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [initials, setInitials] = useState<string>("");
 
   const { mutate } = useMutation({
     mutationFn: (data: ILogout) => authServices.logout(data),
@@ -51,20 +52,34 @@ const Header = () => {
     mutate({ accessToken });
   };
 
+  useEffect(() => {
+    if (userSelector.name) {
+      const initials = userSelector.name
+        .split(" ")
+        .map((word) => word.charAt(0))
+        .join("");
+      setInitials(initials);
+    }
+  }, [userSelector.name]);
+
   return (
-    <header className="h-20 font-roboto grid grid-cols-[2fr_1fr] gap-4 justify-between items-center ">
+    <header className="h-16 md:h-20 font-roboto grid grid-cols-[2fr_1fr] gap-4 justify-between items-center ">
       <div className="bg-green-uika h-full flex pl-3 items-center rounded-tr-[40px]">
-        <div className="flex gap-5">
+        <div className="flex gap-2 md:gap-5 items-center">
           <img
-            className="w-14 h-14"
+            className="w-14 h-14 hidden md:block"
             src="/images/logo/uika-logo-2.png"
             alt="logo-uika"
           />
 
+          <HamburgerButton />
+
           <div className="flex flex-col justify-center">
-            <p className="text-white font-light text-sm">SIM KEPEGAWAIAN</p>
-            <h1 className="font-semibold text-white">
-              UNIVERSITAS IBN KHALDUN{" "}
+            <p className="text-white/30 md:text-white font-light md:text-sm text-[10px]">
+              SIM Kepegawaian
+            </p>
+            <h1 className="font-semibold text-white md:text-sm text-[10px]">
+              Universitas Ibn Khaldun
             </h1>
           </div>
         </div>
@@ -76,7 +91,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-[#fd801a] cursor-pointer"
+              className="hover:bg-[#fd801a] cursor-pointer hidden md:block"
             >
               <p className="text-white">ID</p>
             </Button>
@@ -84,7 +99,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-[#fd801a] cursor-pointer"
+              className="hover:bg-[#fd801a] cursor-pointer hidden md:block"
             >
               <FaBell className="h-4! w-4! text-white" />
             </Button>
@@ -92,7 +107,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-[#fd801a] cursor-pointer"
+              className="hover:bg-[#fd801a] cursor-pointer hidden md:block"
             >
               <IoIosHelpCircleOutline className="h-5! w-5! text-white" />
             </Button>
@@ -102,7 +117,7 @@ const Header = () => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className={`flex gap-6 py-7 ring-0 focus-visible:ring-0 focus:outline-none cursor-pointer ${
+                className={`gap-6 py-7 ring-0 focus-visible:ring-0 focus:outline-none cursor-pointer hidden md:flex ${
                   open ? "bg-hover-yellow-uika" : "hover:bg-hover-yellow-uika"
                 }`}
               >
@@ -156,6 +171,18 @@ const Header = () => {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <div className="flex md:hidden">
+            <Button variant="ghost" size="icon">
+              <Avatar>
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </div>
         </div>
       </div>
     </header>

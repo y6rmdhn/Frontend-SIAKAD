@@ -238,16 +238,16 @@ const Eleson = () => {
                         <Table className="mt-5 table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Kode</TableHead>
-                                    <TableHead className="text-center">Nama Eleson</TableHead>
-                                    <TableHead className="text-center">Aktif</TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Nama Eleson</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aktif</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) && currentPage === 1 && (
                                     <TableRow className=" even:bg-gray-100">
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -256,7 +256,7 @@ const Eleson = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -300,8 +300,8 @@ const Eleson = () => {
                                 )}
                                 {data?.data.map((item, index) => (
                                     <TableRow key={index} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.kode}</TableCell>
-                                        <TableCell className="text-center">{item.nama_eselon}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.nama_eselon}</TableCell>
                                         <TableCell
                                             className="flex text-center justify-center items-center w-full h-full">{item.status ? (
                                             <FaCheck className="text-green-500 w-4 h-4 mt-2"/>

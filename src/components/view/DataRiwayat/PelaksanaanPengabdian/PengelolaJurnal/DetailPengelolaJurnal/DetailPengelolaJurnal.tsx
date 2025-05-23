@@ -58,6 +58,7 @@ const DetailPengelolaJurnal = () => {
         <form>
         <div className="grid grid-rows-8 grid-flow-col gap-x-5 gap-y-5 items-center mt-4">
         <FormFieldSelect
+        classname="w-50"
           form={form}
           label="Kategori Kegiatan *"
           name="kategori_kegiatan"
@@ -82,6 +83,7 @@ const DetailPengelolaJurnal = () => {
           placeholder="Cari Media Publikasi"
         />
        <FormFieldInput
+
           form={form}
           label="Peran *"
           name="peran"
@@ -97,7 +99,8 @@ const DetailPengelolaJurnal = () => {
           required={true}
           labelStyle="text-[#3F6FA9]"
         />
-        <FormFieldInput
+        <FormFieldInput 
+        inputStyle="w-50"
           form={form}
           label="Tanggal Selesai"
           name="tanggal_selesai"

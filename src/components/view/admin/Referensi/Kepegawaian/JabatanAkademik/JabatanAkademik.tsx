@@ -81,7 +81,6 @@ const JabatanAkademik = () => {
   // tambah data
   // const { mutate: postJabatanAkademik } = useMutation({
   //   mutationFn: async () => {
-
   //   }
   // })
 
@@ -147,18 +146,18 @@ const JabatanAkademik = () => {
           <Table className="mt-10 table-auto">
             <TableHeader>
               <TableRow className="bg-gray-100">
-                <TableHead className="text-center">Kode</TableHead>
-                <TableHead className="text-center">
+                <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">
                   Nama Hubungan Kerja
                 </TableHead>
-                <TableHead className="text-center">Jenis Jabatan</TableHead>
-                <TableHead className="text-center">Aksi</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Jenis Jabatan</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-gray-200">
               {isAddData && Number(searchParam.get("page")) === 1 && (
                 <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center">
+                  <TableCell className="text-center text-xs sm:text-sm">
                     <FormFieldInput
                       inputStyle="w-full"
                       position={true}
@@ -167,7 +166,7 @@ const JabatanAkademik = () => {
                       required={false}
                     />
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center text-xs sm:text-sm">
                     <FormFieldInput
                       inputStyle="w-full"
                       position={true}
@@ -176,7 +175,7 @@ const JabatanAkademik = () => {
                       required={false}
                     />
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center text-xs sm:text-sm">
                     <SelectFilter
                       form={form}
                       name="jabatan_akademik"
@@ -210,9 +209,9 @@ const JabatanAkademik = () => {
               )}
               {data?.data.map((item, index) => (
                 <TableRow key={index} className=" even:bg-gray-100">
-                  <TableCell className="text-center">{item.kode}</TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm">
                     {item.jabatan_akademik}
                   </TableCell>
                   <TableCell className="h-full">
