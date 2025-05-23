@@ -1,7 +1,8 @@
 import CustomCard from "@/components/blocks/Card";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Pagination,
@@ -13,15 +14,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -29,7 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdPlayArrow } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -37,125 +28,87 @@ import { Link } from "react-router-dom";
 const Keluarga = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-xl lg:text-2xl font-medium">
         Keluarga{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal text-xs lg:text-[16px]">
           Detail Data Keluarga
         </span>
       </h1>
 
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 grid-flow-col gap-6">
-            <div className="flex">
+          <div className="grid lg:grid-rows-2 lg:grid-flow-col gap-6">
+            <div className="flex flex-col lg:flex-row gap-4">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectFilter
+                placeholder="--Pilih--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
-            <div className="flex">
-              <Label className="w-full text-[#FDA31A]">Hubungan Kerja</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="--Semua Jabatan Fungsional--" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col lg:flex-row gap-4">
+              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
+              <SelectFilter
+                placeholder="--Pilih--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
-            <div className="flex">
-              <Label className="w-full text-[#FDA31A]">Hubungan Keluarga</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pasangan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col lg:flex-row gap-4">
+              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
+              <SelectFilter
+                placeholder="--Pilih--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
-            <div className="flex">
-              <Label className="w-full text-[#FDA31A]">Status</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Disetujui" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col lg:flex-row gap-4">
+              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
+              <SelectFilter
+                placeholder="--Pilih--"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
           </div>
         }
       />
 
-      <div className="flex justify-between mt-10">
-        <div className="flex gap-6">
-          <Select>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="--Semua--" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Unit Kerja</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+      <div className="flex flex-col lg:flex-row lg:justify-between mt-10">
+        <div className="flex flex-col lg:flex-row gap-2 lg:gap-6">
+          <SelectFilter
+            placeholder="--Semua--"
+            options={[
+              { label: "Admin", value: "admin" },
+              { label: "User", value: "user" },
+              { label: "Guest", value: "guest" },
+            ]}
+          />
 
-          <div className="relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-80 pr-8" />
-          </div>
+          <SearchInput />
         </div>
 
-        <div className="flex gap-4">
-          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+        <div className="flex gap-4 w-full">
+          <Button className="cursor-pointer w-full lg:w-auto mt-2 lg:mt-0 bg-green-light-uika hover:bg-[#329C59]">
             <MdPlayArrow className="w-5! h-5! text-white" />
             Set Draft
           </Button>
         </div>
       </div>
 
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>

@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsGrid3X2GapFill, BsPersonFill } from "react-icons/bs";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useMutation } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { clearUserData } from "@/store/userSlice";
 import { motion } from "framer-motion";
 import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
   const userSelector = useSelector((state: RootState) => state.user);
@@ -30,6 +31,7 @@ const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [initials, setInitials] = useState<string>("");
 
   const { mutate } = useMutation({
     mutationFn: (data: ILogout) => authServices.logout(data),
@@ -49,6 +51,16 @@ const Header = () => {
 
     mutate({ accessToken });
   };
+
+  useEffect(() => {
+    if (userSelector.name) {
+      const initials = userSelector.name
+        .split(" ")
+        .map((word) => word.charAt(0))
+        .join("");
+      setInitials(initials);
+    }
+  }, [userSelector.name]);
 
   return (
     <header className="h-16 md:h-20 font-roboto grid grid-cols-[2fr_1fr] gap-4 justify-between items-center ">
@@ -159,6 +171,18 @@ const Header = () => {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <div className="flex md:hidden">
+            <Button variant="ghost" size="icon">
+              <Avatar>
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </div>
         </div>
       </div>
     </header>

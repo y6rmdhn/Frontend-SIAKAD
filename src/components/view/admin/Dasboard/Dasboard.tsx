@@ -23,7 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingStateDasbordAdmin from "@/components/blocks/LoadingStateDasboradAdmin/LoadingStateDasbordAdmin.tsx";
 
 const Dasboard = () => {
-  const {  data  } = useQuery({
+  const { data } = useQuery({
     queryKey: ["dasboard-admin"],
     queryFn: async () => {
       const response = await adminServices.getDasboardAdmin();
@@ -36,14 +36,14 @@ const Dasboard = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Dasboard"  />
+      <Title title="Dasboard" />
       <CustomCard
         actions={
           <div className="h-0 flex gap-5 lg:gap-30 md:gap-10 sm:gap-5 sm:h-0 items-center">
             <Label className="text-[#FFAC07] sm:text-sm">Unit Kerja</Label>
             <SelectFilter
               options={unitKerjaOptions}
-              classname="w-40 sm:w-80 md:w-80 lg:w-80 xl:w-80 2xl:w-80 hidden md:flex" 
+              classname="w-40 sm:w-80 md:w-80 lg:w-80 xl:w-80 2xl:w-80 hidden md:flex"
               placeholder="041001 - Universitas Ibn Khaldun"
             />
           </div>
@@ -63,7 +63,7 @@ const Dasboard = () => {
                     </p>
                   )}
                 </h1>
-                <IoPersonOutline className="xl:w-14 xl:h-14 2xl:w-14 2xl:h-14 lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7 md:w-8 md:h-8"  />
+                <IoPersonOutline className="xl:w-14 xl:h-14 2xl:w-14 2xl:h-14 lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7 md:w-8 md:h-8" />
               </div>
             </div>
 
@@ -77,12 +77,12 @@ const Dasboard = () => {
                     </p>
                   )}
                 </h1>
-                <FaGraduationCap className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7"  />
+                <FaGraduationCap className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7" />
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-[#e09808] to-[#FFAC07] h-20 xl:h-40 2xl:h-40 lg:h-40 rounded-xl text-white flex items-center justify-center relative sm:h-30 md:h-35">
-              <div className="relative w-full h-full flex items-center justify-center sm:flex sm:items-center sm:justify-center sm:relative"> 
+              <div className="relative w-full h-full flex items-center justify-center sm:flex sm:items-center sm:justify-center sm:relative">
                 <h1 className="text-xs lg:text-lg text-center font-semibold flex flex-col items-center sm:text-xs sm:items-center sm:flex sm:flex-col md:text-sm xl:text-lg 2xl:text-lg">
                   Jumlah Pegawai Kependidikan (Non Akademik)
                   {data?.staff_summary && (
@@ -91,7 +91,7 @@ const Dasboard = () => {
                     </p>
                   )}
                 </h1>
-                <FaUserGroup className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7"  />
+                <FaUserGroup className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7" />
               </div>
             </div>
 
@@ -105,7 +105,7 @@ const Dasboard = () => {
                     </p>
                   )}
                 </h1>
-                <MdOutlinePersonRemove className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7"  />
+                <MdOutlinePersonRemove className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7" />
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ const Dasboard = () => {
               <CustomCard
                 actions={
                   <h1 className="flex gap-3 items-center text-[#DA2A21]">
-                    <RiErrorWarningLine className="w-5! h-5!"  />{" "}
+                    <RiErrorWarningLine className="w-5! h-5!" />{" "}
                     <span className="text-lg font-semibold">Pemberitahuan</span>
                   </h1>
                 }
@@ -141,10 +141,10 @@ const Dasboard = () => {
               <CustomCard
                 actions={
                   <h1 className="flex gap-3 items-center">
-                    <HiSpeakerphone  />{" "}
+                    <HiSpeakerphone />{" "}
                     <span className="text-lg font-semibold text-[#106D63]">
-                                            Berita
-                                        </span>
+                      Berita
+                    </span>
                   </h1>
                 }
                 cardStyle="border-t-[#106D63] border-t-2"
@@ -165,10 +165,10 @@ const Dasboard = () => {
               <CustomCard
                 actions={
                   <h1 className="flex gap-3 items-center">
-                    <FaBirthdayCake  />{" "}
+                    <FaBirthdayCake />{" "}
                     <span className="text-lg font-semibold text-black">
-                                            Daftar Ulang Tahun
-                                        </span>
+                      Daftar Ulang Tahun
+                    </span>
                   </h1>
                 }
                 cardStyle="border-t-[#FFF3A7] border-t-2"
@@ -208,7 +208,7 @@ const Dasboard = () => {
           </div>
         </>
       ) : (
-        <LoadingStateDasbordAdmin  />
+        <LoadingStateDasbordAdmin />
       )}
     </div>
   );

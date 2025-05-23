@@ -16,9 +16,9 @@ import {
 type FormFieldSelectProps = {
   form: any;
   name: string;
-  label: string;
+  label?: string;
   placeholder?: string;
-  options: { label: string; value: string }[];
+  options: { label: string; value: string | number }[];
   labelStyle: string;
   disabled?: boolean;
   required: boolean;
@@ -39,20 +39,31 @@ export const FormFieldSelect = ({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex">
+        <FormItem className="flex flex-col lg:flex-row">
           <FormLabel className={`w-full ${labelStyle}`}>
             {label} {required && <span className="text-red-500">*</span>}
           </FormLabel>
           <Select
             onValueChange={(value) => {
-              if (!disabled) field.onChange(value);
+              if (!disabled) {
+                // Cek apakah value di option-nya adalah number
+                const matchedOption = options.find(
+                  (opt) => opt.value.toString() === value
+                );
+                const parsedValue =
+                  typeof matchedOption?.value === "number"
+                    ? Number(value)
+                    : value;
+
+                field.onChange(parsedValue);
+              }
             }}
-            value={field.value}
-            defaultValue={field.value}
+            value={field.value?.toString()}
+            defaultValue={field.value?.toString()}
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger disabled={disabled} className="w-full">
+              <SelectTrigger disabled={disabled} className="w-full text-xs">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

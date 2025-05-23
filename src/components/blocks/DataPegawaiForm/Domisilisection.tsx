@@ -2,7 +2,7 @@ import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 
 const DomisiliSection = ({ form }) => (
-  <div className="grid grid-rows-6 grid-flow-col gap-x-5 mt-10 items-center">
+  <div className="grid lg:grid-rows-6 lg:grid-flow-col gap-y-4 lg:gap-y-0 gap-x-5 mt-10 items-center">
     <FormFieldInput
       form={form}
       label="No.KTP"
