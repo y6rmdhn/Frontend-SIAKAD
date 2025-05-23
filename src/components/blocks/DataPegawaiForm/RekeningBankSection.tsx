@@ -2,7 +2,7 @@ import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 
 const RekeningBankSection = ({ form }) => (
-  <div className="grid grid-rows-2 grid-flow-col gap-4 mt-10">
+  <div className="grid lg:grid-rows-2 lg:grid-flow-col gap-4 mt-10">
     <FormFieldSelect
       form={form}
       label="Nama BANK"

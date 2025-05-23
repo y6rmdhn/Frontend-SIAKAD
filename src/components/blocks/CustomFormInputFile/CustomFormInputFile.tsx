@@ -36,8 +36,8 @@ export const FormFieldInputFile = ({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="w-full flex">
-          <FormLabel className={`w-full ${labelStyle}`}>
+        <FormItem className="w-full flex flex-col lg:flex-row">
+          <FormLabel className={`w-full text-xs sm:text-sm ${labelStyle}`}>
             {label}
             {required && <span className="text-red-500">*</span>}
           </FormLabel>
@@ -46,13 +46,14 @@ export const FormFieldInputFile = ({
               <div className="flex w-full items-center gap-3">
                 <Button
                   type="button"
-                  className="bg-zinc-300 hover:bg-zinc-200 text-black cursor-pointer"
+                  size="sm"
+                  className="bg-zinc-300 text-xs lg:text-sm hover:bg-zinc-200 text-black cursor-pointer"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   Choose File
                 </Button>
                 <span
-                  className="text-sm text-muted-foreground truncate max-w-[200px]"
+                  className="text-xs lg:text-sm text-muted-foreground truncate max-w-[200px]"
                   title={field.value?.name}
                 >
                   {field.value?.name
@@ -65,6 +66,7 @@ export const FormFieldInputFile = ({
                   ref={fileInputRef}
                   type="file"
                   className="hidden"
+                  accept=".jpg,.jpeg,.pdf"
                   onChange={(e) => field.onChange(e.target.files?.[0])}
                 />
               </div>

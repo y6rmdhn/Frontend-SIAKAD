@@ -238,18 +238,18 @@ const StatusKeaktifan = () => {
                         <Table className="table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Kode</TableHead>
-                                    <TableHead className="text-center">
+                                    <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">
                                         Nama Status Aktif
                                     </TableHead>
-                                    <TableHead className="text-center">Status Keluar</TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Status Keluar</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) && currentPage === 1 && (
                                     <TableRow className=" even:bg-gray-100">
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -258,7 +258,7 @@ const StatusKeaktifan = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -267,7 +267,7 @@ const StatusKeaktifan = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -302,8 +302,8 @@ const StatusKeaktifan = () => {
                                 )}
                                 {data?.data.map((item, index) => (
                                     <TableRow key={index} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.kode}</TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             {item.nama_status_aktif}
                                         </TableCell>
                                         <TableCell

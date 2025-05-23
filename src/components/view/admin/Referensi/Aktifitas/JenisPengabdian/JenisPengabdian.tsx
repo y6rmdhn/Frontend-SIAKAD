@@ -194,7 +194,7 @@ const JenisPengabdian = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <h1 className="text-2xl font-normal">Jenis Pengabdian</h1>
+            <h1 className="text-lg sm:text-2xl font-normal">Jenis Pengabdian</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmitJenisPengabdian)}>
                     <CustomCard
@@ -228,15 +228,15 @@ const JenisPengabdian = () => {
                         <Table className="mt-5 table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Kode</TableHead>
-                                    <TableHead className="text-center">Nama PKM</TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Nama PKM</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) && currentPage === 1 && (
                                     <TableRow className=" even:bg-gray-100">
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -245,7 +245,7 @@ const JenisPengabdian = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -279,8 +279,8 @@ const JenisPengabdian = () => {
                                 )}
                                 {data?.data.map(item => (
                                     <TableRow key={item.id} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.kode}</TableCell>
-                                        <TableCell className="text-center">{item.nama_pkm}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.nama_pkm}</TableCell>
                                         <TableCell className="h-full">
                                             <div className="flex justify-center items-center w-full h-full">
                                                 <Button

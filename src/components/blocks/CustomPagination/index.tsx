@@ -52,8 +52,8 @@ const CustomPagination = ({
   };
 
   return (
-    <Pagination className="mt-8 flex justify-end">
-      <PaginationContent>
+    <Pagination className="mt-8 flex justify-center sm:justify-end">
+      <PaginationContent className="flex flex-wrap gap-2">
         {/* Previous Button */}
         <PaginationItem>
           <Button
@@ -61,14 +61,16 @@ const CustomPagination = ({
             disabled={!hasPrevPage || currentPage === 1}
             variant="ghost"
             type="button"
+            className="text-sm px-2 sm:px-4"
           >
-            <ChevronLeft /> Previous
+            <ChevronLeft className="h-4 w-4" />
+            <span className="hidden sm:inline ml-1">Previous</span>
           </Button>
         </PaginationItem>
 
         {/* Ellipsis at start */}
         {currentPage > 3 && (
-          <PaginationItem>
+          <PaginationItem className="hidden sm:block">
             <PaginationEllipsis />
           </PaginationItem>
         )}
@@ -83,6 +85,7 @@ const CustomPagination = ({
                 e.preventDefault();
                 onPageChange(page);
               }}
+              className="text-sm px-3"
             >
               {page}
             </PaginationLink>
@@ -91,7 +94,7 @@ const CustomPagination = ({
 
         {/* Ellipsis at end */}
         {totalPages && currentPage < totalPages - 2 && (
-          <PaginationItem>
+          <PaginationItem className="hidden sm:block">
             <PaginationEllipsis />
           </PaginationItem>
         )}
@@ -103,8 +106,10 @@ const CustomPagination = ({
             onClick={() => onPageChange(currentPage + 1)}
             disabled={!hasNextPage || currentPage === totalPages}
             variant="ghost"
+            className="text-sm px-2 sm:px-4"
           >
-            Next <ChevronRight />
+            <span className="hidden sm:inline mr-1">Next</span>
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </PaginationItem>
       </PaginationContent>

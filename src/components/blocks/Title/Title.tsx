@@ -10,9 +10,9 @@ interface IPropsTitle {
 const Title = (props: IPropsTitle) => {
   const { title, subTitle, classname, titleStyle } = props;
   return (
-    <h1 className={`${titleStyle ? titleStyle : "md:text-2xl text-lg"} font-normal`}>
+    <h1 className={`${titleStyle ? titleStyle : "md:text-lg sm:text-2xl text-lg"} font-normal`}>
       {title}{" "}
-      <span className={`${classname ? classname : "w-3! h-3! md:w-4! h-4!"} font-normal text-muted-foreground`}>
+      <span className="text-[16px] font-normal text-muted-foreground">
         {subTitle}
       </span>
     </h1>

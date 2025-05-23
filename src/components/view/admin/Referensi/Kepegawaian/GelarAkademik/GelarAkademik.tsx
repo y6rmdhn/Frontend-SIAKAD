@@ -30,8 +30,8 @@ const GelarAkademik = () => {
 
       <CustomCard
         actions={
-          <div className="flex justify-between mt-6">
-            <div className="flex gap-4">
+          <div className="grid grid-rows-2 md:grid md:grid-rows-2 lg:flex gap-4 sm:flex justify-between mt-6">
+            <div className="grid grid-rows-2 md:flex gap-4">
               <SelectFilter options={unitKerjaOptions} />
               <SearchInput />
             </div>

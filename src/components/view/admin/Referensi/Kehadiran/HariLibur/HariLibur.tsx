@@ -29,7 +29,7 @@ const HariLibur = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-xs sm:text-sm font-normal">
         Hari Libur{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Hari Libur
@@ -39,49 +39,52 @@ const HariLibur = () => {
         <form>
           <CustomCard
             actions={
-              <div className="flex">
-                <Label className="w-60 text-[#FDA31A]">Unit Kerja</Label>
-                <Select>
-                  <SelectTrigger className="w-80">
-                    <SelectValue placeholder="2025" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Unit Kerja</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-rows-2 sm:flex justify-between gap-3">
+                <div className="grid grid-rows-2 sm:flex">
+                  <Label className="w-60 sm:w-40 md:w-60 text-[#FDA31A]">Unit Kerja</Label>
+                  <Select>
+                    <SelectTrigger className="w-58 sm:w-40 md:w-50">
+                      <SelectValue placeholder="2025" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Unit Kerja</SelectLabel>
+                        <SelectItem value="apple">Apple</SelectItem>
+                        <SelectItem value="banana">Banana</SelectItem>
+                        <SelectItem value="blueberry">Blueberry</SelectItem>
+                        <SelectItem value="grapes">Grapes</SelectItem>
+                        <SelectItem value="pineapple">Pineapple</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-4">
+                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+                    <FaPlus className="w-4! h-4! text-white" />
+                    Tambah
+                  </Button>
+                </div>
               </div>
             }
           >
-            <div className="flex justify-end gap-4">
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                <FaPlus className="w-4! h-4! text-white" />
-                Tambah
-              </Button>
-            </div>
+
 
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center">Nama Hari Libur</TableHead>
-                  <TableHead className="text-center">Tanggal Mulai</TableHead>
-                  <TableHead className="text-center">Tanggal Selesai</TableHead>
-                  <TableHead className="text-center">Keterangan</TableHead>
-                  <TableHead className="text-center">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Nama Hari Libur</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Tanggal Mulai</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Tanggal Selesai</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Keterangan</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
                 <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">

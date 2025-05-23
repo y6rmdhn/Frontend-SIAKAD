@@ -1,95 +1,68 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 
-const FilterPegawai = () => {
+const FilterPegawai = ({ form }) => {
   return (
-    <div className="w-full flex gap-6">
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Unit Kerja" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Unit Kerja</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Homebase" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Homebase</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Hubungan Kerja" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Hubungan Kerja</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Status Pegawai" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Status Pegawai</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Jabatan Fungsional" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Jabatan Fungsional</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+    <div className="w-full flex flex-col lg:flex-row gap-3">
+      <FormFieldSelect
+        form={form}
+        name="a"
+        labelStyle="text-[#3F6FA9]"
+        options={[
+          { label: "Admin", value: "admin" },
+          { label: "User", value: "user" },
+          { label: "Guest", value: "guest" },
+        ]}
+        placeholder="Unit kerja"
+        required={false}
+      />
+      <FormFieldSelect
+        form={form}
+        name="b"
+        labelStyle="text-[#3F6FA9]"
+        options={[
+          { label: "Admin", value: "admin" },
+          { label: "User", value: "user" },
+          { label: "Guest", value: "guest" },
+        ]}
+        placeholder="Homebase"
+        required={false}
+      />
+      <FormFieldSelect
+        form={form}
+        name="c"
+        labelStyle="text-[#3F6FA9]"
+        options={[
+          { label: "Admin", value: "admin" },
+          { label: "User", value: "user" },
+          { label: "Guest", value: "guest" },
+        ]}
+        placeholder="Hubungan Kerja"
+        required={false}
+      />
+      <FormFieldSelect
+        form={form}
+        name="d"
+        labelStyle="text-[#3F6FA9]"
+        options={[
+          { label: "Admin", value: "admin" },
+          { label: "User", value: "user" },
+          { label: "Guest", value: "guest" },
+        ]}
+        placeholder="Status Pegawai"
+        required={false}
+      />
+      <FormFieldSelect
+        form={form}
+        name="e"
+        labelStyle="text-[#3F6FA9]"
+        options={[
+          { label: "Admin", value: "admin" },
+          { label: "User", value: "user" },
+          { label: "Guest", value: "guest" },
+        ]}
+        placeholder="Jabatan Fungsional"
+        required={false}
+      />
     </div>
   );
 };

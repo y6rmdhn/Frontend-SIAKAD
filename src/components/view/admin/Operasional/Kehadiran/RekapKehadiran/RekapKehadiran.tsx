@@ -35,7 +35,7 @@ import { IoEyeOutline } from "react-icons/io5";
 const RekapKehadiran = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Rekapitulasi{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Presensi Bulanan Pegawai
@@ -43,14 +43,14 @@ const RekapKehadiran = () => {
       </h1>
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 grid-flow-col gap-5">
-            <div className="flex items-center">
+          <div className="grid grid-rows-3 md:grid-rows-2 grid-flow-col gap-5">
+            <div className="grid grid-rows-2 sm:flex items-center">
               <Label className="w-full text-[#FDA31A]">
                 Status Presensi Pegawai
               </Label>
               <Input type="date" />
             </div>
-            <div className="flex items-center">
+            <div className="grid grid-rows-2 sm:flex items-center">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
               <Select>
                 <SelectTrigger className="w-full">
@@ -68,7 +68,7 @@ const RekapKehadiran = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center">
+            <div className="grid grid-rows-2 sm:flex items-center">
               <Label className="w-full text-[#FDA31A]">Tanggal Akhir</Label>
               <Input type="date" />
             </div>
@@ -93,9 +93,12 @@ const RekapKehadiran = () => {
           </SelectContent>
         </Select>
 
-        <div className="relative">
-          <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-          <Input placeholder="Search" className="w-80 pr-8" />
+        <div className="relative w-70 sm:w-80">
+          <Input
+            placeholder="Search"
+            className="w-full pr-10"
+          />
+          <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
         </div>
       </div>
 
@@ -103,18 +106,18 @@ const RekapKehadiran = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center">NIP</TableHead>
-            <TableHead className="text-center">Nama Pegawai</TableHead>
-            <TableHead className="text-center">Unit Kerja</TableHead>
-            <TableHead className="text-center">Hari Kerja</TableHead>
-            <TableHead className="text-center">Hadir</TableHead>
-            <TableHead className="text-center">Terlambat</TableHead>
-            <TableHead className="text-center">Pulang Awal</TableHead>
-            <TableHead className="text-center">Sakit</TableHead>
-            <TableHead className="text-center">Izin</TableHead>
-            <TableHead className="text-center">Alpha</TableHead>
-            <TableHead className="text-center">Cuti</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Hari Kerja</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Hadir</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Terlambat</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Pulang Awal</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Sakit</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Izin</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Alpha</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Cuti</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
@@ -122,19 +125,19 @@ const RekapKehadiran = () => {
             <TableCell className="text-center">
               <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
             </TableCell>
-            <TableCell className="text-center">0306077701</TableCell>
-            <TableCell className="text-center">A HERI ISWANTO</TableCell>
-            <TableCell className="text-center">
+            <TableCell className="text-center text-xs sm:text-sm">0306077701</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">A HERI ISWANTO</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">
               Universitas Ibn Khaldun
             </TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
-            <TableCell className="text-center">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
             <TableCell className="text-center">
               <Button size="icon" variant="ghost" className="cursor-pointer">
                 <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />

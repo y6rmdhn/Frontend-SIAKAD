@@ -20,21 +20,21 @@ const DetailJabatanStruktural = () => {
         <form>
           <CustomCard
             actions={
-              <div className="flex justify-between gap-4 ">
+              <div className="grid grid-rows-2 sm:flex justify-between gap-4 ">
                 <SearchInput />
 
                 <div className="flex gap-2">
-                  <Link to="/admin/referensi/kepegawaian/jabatan-fungsional">
+                  <Link to="/admin/referensi/kepegawaian/jabatan-struktural">
                     <Button
                       type="button"
-                      className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+                      className="w-35 text-xs sm:text-sm sm:w-autocursor-pointer bg-green-light-uika hover:bg-[#329C59]"
                     >
                       <IoIosArrowBack /> Kembali Ke Daftar
                     </Button>
                   </Link>
                   <Button
                     type="submit"
-                    className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+                    className="text-xs sm:text-sm cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
                   >
                     <IoSaveSharp /> Simpan
                   </Button>
@@ -42,7 +42,7 @@ const DetailJabatanStruktural = () => {
               </div>
             }
           >
-            <div className="grid grid-rows-7 grid-flow-col items-center gap-x-4">
+            <div className="grid grid-rows-7 md:grid-flow-col items-center gap-3 gap-x-4">
               <FormFieldInput
                 form={form}
                 label="Kode"

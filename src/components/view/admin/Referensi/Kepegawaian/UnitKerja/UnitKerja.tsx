@@ -150,15 +150,15 @@ const UnitKerja = () => {
       <Title title="Unit Kerja" subTitle="Daftar Unit Kerja" />
       <CustomCard
         actions={
-          <div className="flex justify-between mt-6">
-            <div className="flex gap-4">
+          <div className="grid grid-rows-2 gap-4 lg:flex justify-between mt-6">
+            <div className="grid grid-rows-2 sm:flex gap-4">
               <SelectFilter options={unitKerjaOptions} />
               <SearchInput />
             </div>
 
-            <div className="flex gap-3">
+            <div className="gap-3 flex sm:gap-4">
               <Link to="/admin/referensi/kepegawaian/unit-kerja/detail-unit-kerja">
-                <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika">
+                <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-27 lg:w-auto">
                   <FaPlus /> Tambah
                 </Button>
               </Link>
@@ -173,10 +173,10 @@ const UnitKerja = () => {
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead className="text-center w-10"></TableHead>
-              <TableHead className="text-center">Kode</TableHead>
-              <TableHead className="text-center">Unit Kerja</TableHead>
-              <TableHead className="text-center">Parent Unit Kerja</TableHead>
-              <TableHead className="text-center">Aksi</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Parent Unit Kerja</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
@@ -201,13 +201,13 @@ const UnitKerja = () => {
                       </Button>
                     )}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center text-xs sm:text-sm">
                     {item.kode_unit}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center text-xs sm:text-sm">
                     {item.nama_unit}
                   </TableCell>
-                  <TableCell className="text-center">-</TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
                   <TableCell className="text-center">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link to="">

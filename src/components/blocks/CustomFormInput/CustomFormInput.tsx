@@ -51,12 +51,12 @@ export const FormFieldInput = ({
           className={`${
             position
               ? "flex flex-col justify-center gap-2"
-              : "flex items-center gap-2"
+              : "flex items-center gap-2 flex-col lg:flex-row"
           }`}
         >
           {label && (
             <FormLabel
-              className={`w-full ${labelStyle} ${
+              className={`w-full text-xs sm:text-sm ${labelStyle} ${
                 type === "checkbox" ? "w-61" : ""
               }`}
             >
@@ -70,32 +70,33 @@ export const FormFieldInput = ({
           <FormControl>
             {type === "file" ? (
               <Input
+                className="text-xs sm:text-sm"
                 type="file"
                 onChange={(e) => field.onChange(e.target.files?.[0])}
               />
             ) : type === "textarea" ? (
               <Textarea
-                className={inputStyle}
+                className={`${inputStyle} text-xs sm:text-sm`}
                 placeholder={placeholder}
                 {...field}
               />
             ) : type === "checkbox" ? (
               <Input
                 type="checkbox"
-                className={`w-4 h-4 ${inputStyle}`}
+                className={`w-4 h-4 text-xs sm:text-sm ${inputStyle}`}
                 checked={field.value}
                 onChange={(e) => field.onChange(e.target.checked)}
               />
             ) : type === "radio" ? (
               <div className="flex justify-start gap-10 w-full">
                 {options.map((option) => (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
                     <Input
                       type="radio"
                       value={option.value}
                       checked={field.value === option.value}
                       onChange={() => field.onChange(option.value)}
-                      className="w-4 h-4"
+                      className="w-4 h-4 text-xs sm:text-sm"
                     />
                     <span className="text-sm">{option.label}</span>
                   </div>
@@ -103,7 +104,7 @@ export const FormFieldInput = ({
               </div>
             ) : (
               <Input
-                className={inputStyle}
+                className={`${inputStyle} text-xs sm:text-sm`}
                 {...field}
                 type={type}
                 placeholder={placeholder}

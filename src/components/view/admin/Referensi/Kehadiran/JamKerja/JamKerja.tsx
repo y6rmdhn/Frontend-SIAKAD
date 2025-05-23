@@ -204,9 +204,9 @@ const JamKerja = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <h1 className="text-2xl font-normal">
+            <h1 className="text-lg sm:text-2xl font-normal">
                 Jam Kerja{" "}
-                <span className="text-muted-foreground font-normal text-[16px]">
+                <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Daftar Jam Kerja
         </span>
             </h1>
@@ -247,17 +247,17 @@ const JamKerja = () => {
                         <Table className="mt-5 table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Jenis Jam Kerja</TableHead>
-                                    <TableHead className="text-center">Jam Normal</TableHead>
-                                    <TableHead className="text-center">Jam Datang</TableHead>
-                                    <TableHead className="text-center">Jam Pulang</TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Jenis Jam Kerja</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Jam Normal</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Jam Datang</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Jam Pulang</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) && currentPage === 1 && (
                                     <TableRow className=" even:bg-gray-100">
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -266,7 +266,7 @@ const JamKerja = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -276,7 +276,7 @@ const JamKerja = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -285,7 +285,7 @@ const JamKerja = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -319,15 +319,15 @@ const JamKerja = () => {
                                 )}
                                 {data?.data.map((item, index) => (
                                     <TableRow key={index} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.jenis_jam_kerja}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.jenis_jam_kerja}</TableCell>
                                         <TableCell
                                             className="flex text-center justify-center items-center w-full h-full">{item.jam_normal ? (
                                             <FaCheck className="text-green-500 w-4 h-4 mt-2"/>
                                         ) : (
                                             <IoClose className="text-red-500 w-5 h-5 mt-2"/>
                                         )}</TableCell>
-                                        <TableCell className="text-center">{item.jam_datang}</TableCell>
-                                        <TableCell className="text-center">{item.jam_pulang}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.jam_datang}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.jam_pulang}</TableCell>
                                         <TableCell className="h-full">
                                             <div className="flex justify-center items-center w-full h-full">
                                                 <Button

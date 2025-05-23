@@ -2,16 +2,16 @@ import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 
 const KepegawaianSection = ({ form }) => (
-  <div className="grid grid-rows-4 grid-flow-col gap-4 mt-10">
+  <div className="grid lg:grid-rows-4 lg:grid-flow-col gap-4 mt-10">
     <FormFieldSelect
       form={form}
       label="Unit Kerja"
-      name="unit_kerja"
+      name="unit_kerja_id"
       labelStyle="text-[#3F6FA9]"
       options={[
-        { label: "Admin", value: "admin" },
-        { label: "User", value: "user" },
-        { label: "Guest", value: "guest" },
+        { label: "Admin", value: "1" },
+        { label: "User", value: "2" },
+        { label: "Guest", value: "3" },
       ]}
       placeholder="Universitas Ibn Khaldun"
       required={true}
@@ -19,12 +19,12 @@ const KepegawaianSection = ({ form }) => (
     <FormFieldSelect
       form={form}
       label="Status Aktif"
-      name="status_aktif"
+      name="status_aktif_id"
       labelStyle="text-[#3F6FA9]"
       options={[
-        { label: "Admin", value: "admin" },
-        { label: "User", value: "user" },
-        { label: "Guest", value: "guest" },
+        { label: "Admin", value: "1" },
+        { label: "User", value: "2" },
+        { label: "Guest", value: "3" },
       ]}
       placeholder="--Pilih Status Aktif--"
       required={true}
