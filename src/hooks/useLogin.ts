@@ -64,6 +64,7 @@ const useLogin = () => {
   const nip = form.watch("nip");
   const password = form.watch("password");
   const isFormFilled = nip && password;
+  const { errors } = form.formState;
 
   // Captcha data query
   const { data: captchaData } = useQuery({
@@ -82,6 +83,12 @@ const useLogin = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      setCaptchaVisible(false);
+    }
+  }, [errors]);
 
   // Update form values when captchaId changes
   useEffect(() => {

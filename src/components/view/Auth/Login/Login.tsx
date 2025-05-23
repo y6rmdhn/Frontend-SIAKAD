@@ -8,8 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FaLock } from "react-icons/fa";
-import { FaLockOpen } from "react-icons/fa";
+import { FaLockOpen, FaLock } from "react-icons/fa";
 import useLogin from "@/hooks/useLogin";
 import { Link } from "react-router-dom";
 import { useState } from "react";
