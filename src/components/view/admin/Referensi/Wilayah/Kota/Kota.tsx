@@ -36,7 +36,7 @@ const Kota = () => {
           <div className="flex">
             <Label className="w-32 text-[#FDA31A]">Provinsi</Label>
             <SelectFilter
-              classname="ml-32 w-80"
+              classname="w-auto sm:ml-32"
               placeholder="Aceh"
               options={unitKerjaOptions}
             />
@@ -44,34 +44,33 @@ const Kota = () => {
         }
       />
 
-      <div className="flex justify-between mt-6">
-        <div className="flex gap-4">
+      <div className="grid grid-rows-2 gap-4 md:flex justify-between mt-6">
+        <div className="grid grid-rows-2 sm:flex gap-4">
           <SelectFilter options={unitKerjaOptions} />
           <SearchInput />
         </div>
 
         <div className="flex gap-3">
           <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-27 lg:w-auto">
               <FaPlus /> Tambah
             </Button>
           </Link>
-          s
         </div>
       </div>
 
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
-            <TableHead className="text-center">Kode</TableHead>
-            <TableHead className="text-center">Nama Kabupaten/Kota</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Nama Kabupaten/Kota</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Link to="">

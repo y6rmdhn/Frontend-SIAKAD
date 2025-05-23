@@ -19,7 +19,7 @@ const JenisIzin = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Jenis Izin{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Jenis Izin
@@ -42,21 +42,21 @@ const JenisIzin = () => {
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center">Kode</TableHead>
-                  <TableHead className="text-center">Jenis Izin</TableHead>
-                  <TableHead className="text-center">Status Prestasi</TableHead>
-                  <TableHead className="text-center">Maksimal (Hari)</TableHead>
-                  <TableHead className="text-center">Potong Cuti</TableHead>
-                  <TableHead className="text-center">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Jenis Izin</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Status Prestasi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Maksimal (Hari)</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Potong Cuti</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
                 <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
-                  <TableCell className="text-center"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                  <TableCell className="text-center text-xs sm:text-sm"></TableCell>
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">

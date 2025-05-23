@@ -33,15 +33,15 @@ const JabatanFungsional = () => {
       <Title title="Jabatan Fungsional" subTitle="Daftar Jabatan Fungsional" />
       <CustomCard
         actions={
-          <div className="flex">
+          <div className="grid grid-rows-2 sm:flex">
             <Label className="w-32 text-[#FDA31A]">Jabatan Fungsional</Label>
-            <SelectFilter classname="ml-32 w-80" options={unitKerjaOptions} />
+            <SelectFilter classname="sm:ml-32 w-50" options={unitKerjaOptions} />
           </div>
         }
       />
 
-      <div className="flex justify-between mt-6">
-        <div className="flex gap-4">
+      <div className="grid grid-rows-2 gap-4 sm:flex justify-between mt-6">
+        <div className="grid grid-rows-2 sm:flex gap-4">
           <SelectFilter options={unitKerjaOptions} />
           <SearchInput />
         </div>
@@ -59,13 +59,13 @@ const JabatanFungsional = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center">Kode</TableHead>
-            <TableHead className="text-center">Jabatan Fungsional</TableHead>
-            <TableHead className="text-center">Golongan/Pangkat</TableHead>
-            <TableHead className="text-center">Angka Kredit</TableHead>
-            <TableHead className="text-center">Usia Pensiun</TableHead>
-            <TableHead className="text-center">Referensi Sister</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Jabatan Fungsional</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Golongan/Pangkat</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Angka Kredit</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Usia Pensiun</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Referensi Sister</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
@@ -73,12 +73,12 @@ const JabatanFungsional = () => {
             <TableCell className="text-center">
               <Checkbox />
             </TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Link to="">

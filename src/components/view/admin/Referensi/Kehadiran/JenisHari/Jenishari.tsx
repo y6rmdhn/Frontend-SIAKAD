@@ -37,7 +37,7 @@ const JenisHari = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Setting Hari{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Daftar Setting Hari
@@ -60,20 +60,20 @@ const JenisHari = () => {
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center">Kode</TableHead>
-                  <TableHead className="text-center">Nama hari</TableHead>
-                  <TableHead className="text-center">Jenis Hari</TableHead>
-                  <TableHead className="text-center">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Nama hari</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Jenis Hari</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
                 {data?.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
-                    <TableCell className="text-center">{item.kode}</TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
                       {item.nama_hari}
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center text-xs sm:text-sm">
                       {item.jenis_hari ? "Efektif" : "Non Efektif"}
                     </TableCell>
                     <TableCell className="h-full">

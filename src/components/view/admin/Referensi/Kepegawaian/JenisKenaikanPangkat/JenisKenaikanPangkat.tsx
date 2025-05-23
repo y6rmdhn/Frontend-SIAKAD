@@ -41,15 +41,15 @@ const JenisKenaikanPangkat = () => {
         <Table className="mt-10 table-auto">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="text-center">Kode</TableHead>
-              <TableHead className="text-center">Jenis Pangkat</TableHead>
-              <TableHead className="text-center">Aksi</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Jenis Pangkat</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
             <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full gap-2">
                   <Link to="">

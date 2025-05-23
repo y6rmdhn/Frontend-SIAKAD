@@ -203,9 +203,11 @@ const Pangkat = () => {
                 <form onSubmit={form.handleSubmit(handlePangkatSubmit)}>
                     <CustomCard
                         actions={
-                            <div className="flex justify-between mt-6">
-                                <div className="flex gap-4">
-                                    <SelectFilter options={unitKerjaOptions}/>
+                            <div className="grid grid-rows-2 gap-3 sm:flex justify-between mt-6">
+                                <div className="grid grid-rows-2 sm:flex gap-4">
+                                    <SelectFilter 
+                                    classname="w-60 sm:w-32"
+                                    options={unitKerjaOptions}/>
                                     <SearchInput/>
                                 </div>
 
@@ -241,15 +243,15 @@ const Pangkat = () => {
                         <Table className="mt-10 table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Pangkat</TableHead>
-                                    <TableHead className="text-center">Golongan</TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Pangkat</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Golongan</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) && currentPage === 1 && (
                                     <TableRow className=" even:bg-gray-100">
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -258,7 +260,7 @@ const Pangkat = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -292,8 +294,8 @@ const Pangkat = () => {
                                 )}
                                 {data?.data.map((item, index) => (
                                     <TableRow key={index} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.pangkat}</TableCell>
-                                        <TableCell className="text-center">{item.nama_golongan}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.pangkat}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.nama_golongan}</TableCell>
                                         <TableCell className="h-full">
                                             <div className="flex justify-center items-center w-full h-full">
                                                 <Button

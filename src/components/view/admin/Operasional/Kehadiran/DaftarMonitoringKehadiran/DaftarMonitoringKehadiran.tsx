@@ -38,12 +38,12 @@ const DaftarMonitoringKehadiran = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">Daftar Monitoring Kehadiran</h1>
+      <h1 className="text-lg sm:text-2xl font-normal">Daftar Monitoring Kehadiran</h1>
       <Form {...form}>
         <form>
           <CustomCard
             actions={
-              <div className="mt-10 grid-rows-2 grid-flow-col grid gap-5">
+              <div className="mt-10 grid grid-rows-3 md:grid-rows-2 grid-flow-col grid gap-5">
                 <FormFieldSelect
                   form={form}
                   label="Unit Kerja"
@@ -82,9 +82,9 @@ const DaftarMonitoringKehadiran = () => {
             }
           />
 
-          <div className="mt-10 gap-5 flex">
+          <div className="mt-10 grid grid-rows-2 sm:flex gap-4">
             <Select>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-70 sm:w-32">
                 <SelectValue placeholder="--Semua--" />
               </SelectTrigger>
               <SelectContent>
@@ -99,32 +99,36 @@ const DaftarMonitoringKehadiran = () => {
               </SelectContent>
             </Select>
 
-            <div className="relative">
-              <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-              <Input placeholder="Search" className="w-80 pr-8" />
+            <div className="relative w-70 sm:w-80">
+              <Input
+                placeholder="Search"
+                className="w-full pr-10"
+              />
+              <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
             </div>
+
           </div>
           <Table className="mt-10 table-auto">
             <TableHeader>
               <TableRow className="bg-gray-100">
-                <TableHead className="text-center">NIP</TableHead>
-                <TableHead className="text-center">Nama Pegawai</TableHead>
-                <TableHead className="text-center">Unit Kerja</TableHead>
-                <TableHead className="text-center">Jam Kerja</TableHead>
-                <TableHead className="text-center">Kehadiran</TableHead>
-                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Jam Kerja</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Kehadiran</TableHead>
+                <TableHead className="text-center text-xs sm:text-sm">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-gray-200">
               <TableRow className=" even:bg-gray-100">
-                <TableCell className="text-center">0306077701</TableCell>
-                <TableCell className="text-center">A HERI ISWANTO</TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center text-xs sm:text-sm">0306077701</TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">A HERI ISWANTO</TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
                   Universitas Ibn Khaldun
                 </TableCell>
-                <TableCell className="text-center">-</TableCell>
-                <TableCell className="text-center">-</TableCell>
-                <TableCell className="text-center">Alpha</TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">Alpha</TableCell>
               </TableRow>
             </TableBody>
           </Table>

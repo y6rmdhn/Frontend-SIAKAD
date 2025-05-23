@@ -203,7 +203,7 @@ const JenisSertifikasi = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <h1 className="text-2xl font-normal">Jenis Sertifikasi</h1>
+            <h1 className="text-lg sm:text-2xl font-normal">Jenis Sertifikasi</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmitJenisSertifikasi)}>
                     <CustomCard
@@ -240,20 +240,20 @@ const JenisSertifikasi = () => {
                         <Table className="mt-5 table-auto">
                             <TableHeader>
                                 <TableRow className="bg-gray-100">
-                                    <TableHead className="text-center">Kode</TableHead>
-                                    <TableHead className="text-center">
+                                    <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">
                                         Nama Sertifikasi
                                     </TableHead>
-                                    <TableHead className="text-center">
+                                    <TableHead className="text-center text-xs sm:text-sm">
                                         Jenis Sertifikasi
                                     </TableHead>
-                                    <TableHead className="text-center">Aksi</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-200">
                                 {(isAddData || isEditMode) && currentPage === 1 && (
                                     <TableRow className=" even:bg-gray-100">
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -262,7 +262,7 @@ const JenisSertifikasi = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -271,7 +271,7 @@ const JenisSertifikasi = () => {
                                                 required={false}
                                             />
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-xs sm:text-sm">
                                             <FormFieldInput
                                                 inputStyle="w-full"
                                                 position={true}
@@ -305,9 +305,9 @@ const JenisSertifikasi = () => {
                                 )}
                                 {data?.data.map((item, index) => (
                                     <TableRow key={index} className=" even:bg-gray-100">
-                                        <TableCell className="text-center">{item.kode}</TableCell>
-                                        <TableCell className="text-center">{item.nama_sertifikasi}</TableCell>
-                                        <TableCell className="text-center">{item.jenis_sertifikasi}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.nama_sertifikasi}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm">{item.jenis_sertifikasi}</TableCell>
                                         <TableCell className="h-full">
                                             <div className="flex justify-center items-center w-full h-full">
                                                 <Button

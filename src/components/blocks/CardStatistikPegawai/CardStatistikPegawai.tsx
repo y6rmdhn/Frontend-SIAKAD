@@ -288,7 +288,7 @@ const CardStatistikPegawai = ({
         }
         cardStyle="border-t-[#106D63]"
       >
-        <div className="grid grid-cols-2 lg:grid-cols-3 lg:grid-flow-row gap-2">
+        <div className="grid grid-cols-2 gap-1 sm:grid grid-cols-2 lg:grid-cols-3 lg:grid-flow-row sm:gap-2">
           <Button
             onClick={() => setAktifBtn("Fungsional")}
             className={cn(
