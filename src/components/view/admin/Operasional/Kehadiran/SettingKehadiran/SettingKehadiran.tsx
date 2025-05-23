@@ -24,7 +24,7 @@ const StatusItem = ({ label, status }: StatusItemProps) => {
 
   return (
     <div className="flex justify-between items-center bg-white p-2 rounded-md shadow">
-      <Label className="text-sm">{label}</Label>
+      <Label className="text-xs sm:text-sm">{label}</Label>
       <div
         className={`${
           isCheck ? "bg-green-100" : "bg-red-100"
@@ -71,25 +71,25 @@ const SettingKehadiran = () => {
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
-            <TableHead className="text-center">Nama Gedung</TableHead>
-            <TableHead className="text-center">Latitude</TableHead>
-            <TableHead className="text-center">Langtitude</TableHead>
-            <TableHead className="text-center">
+            <TableHead className="text-center text-xs sm:text-sm">Nama Gedung</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Latitude</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Langtitude</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
               Radius Presensi(Meter)
             </TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center">Kampus Uika</TableCell>
-            <TableCell className="text-center">
+            <TableCell className="text-center text-xs sm:text-sm">Kampus Uika</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">
               -6.5598900000000000000000
             </TableCell>
-            <TableCell className="text-center">
+            <TableCell className="text-center text-xs sm:text-sm">
               106.7929600000000000000000
             </TableCell>
-            <TableCell className="text-center">200.000</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">200.000</TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Button size="icon" variant="ghost" className="cursor-pointer">

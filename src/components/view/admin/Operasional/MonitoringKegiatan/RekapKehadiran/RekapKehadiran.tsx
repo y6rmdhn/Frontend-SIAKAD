@@ -44,11 +44,11 @@ import { FiSearch } from "react-icons/fi";
 const RekapKehadiran = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">Monitoring Kegiatan</h1>
+      <h1 className="text-lg sm:text-2xl font-normal">Monitoring Kegiatan</h1>
       <CustomCard
         actions={
-          <div className="grid grid-cols-2 grid-flow-col gap-10">
-            <div className="flex gap-5">
+          <div className="grid grid-rows-2 lg:grid-cols-2 grid-flow-col gap-10">
+            <div className="grid grid-rows-2 sm:flex gap-5">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
               <Select>
                 <SelectTrigger className="w-full">
@@ -66,7 +66,7 @@ const RekapKehadiran = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex gap-5">
+            <div className="grid grid-rows-2 sm:flex gap-5">
               <Label className="w-full text-[#FDA31A]">Tanggal Akhir</Label>
               <Input type="date" />
             </div>
@@ -74,10 +74,10 @@ const RekapKehadiran = () => {
         }
       />
 
-      <div className="flex justify-between mt-6">
-        <div className="w-full flex gap-3">
+      <div className="grid grid-rows-2 sm:flex justify-between mt-6">
+        <div className="w-full grid grid-rows-2 sm:flex gap-3">
           <Select>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-70 sm:w-32">
               <SelectValue placeholder="--Semua--" />
             </SelectTrigger>
             <SelectContent>
@@ -92,9 +92,12 @@ const RekapKehadiran = () => {
             </SelectContent>
           </Select>
 
-          <div className="relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-80 pr-8" />
+          <div className="relative w-70 sm:w-80">
+            <Input
+              placeholder="Search"
+              className="w-full pr-10"
+            />
+            <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
           </div>
         </div>
       </div>
@@ -102,42 +105,42 @@ const RekapKehadiran = () => {
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
-            <TableHead className="text-center">NIP</TableHead>
-            <TableHead className="text-center">Nama Pegawai</TableHead>
-            <TableHead className="text-center">Jam Masuk</TableHead>
-            <TableHead className="text-center">Jam Keluar</TableHead>
-            <TableHead className="text-center max-w-40">
+            <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Jam Masuk</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Jam Keluar</TableHead>
+            <TableHead className="text-center max-w-40 text-xs sm:text-sm">
               Rencana Pekerjaan
             </TableHead>
-            <TableHead className="text-center max-w-40">
+            <TableHead className="text-center max-w-40 text-xs sm:text-sm">
               Realisasi Pekerjaan
             </TableHead>
-            <TableHead className="text-center">File</TableHead>
-            <TableHead className="text-center">Foto Masuk</TableHead>
-            <TableHead className="text-center">Foto Keluar</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-center">Valid?</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">File</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Foto Masuk</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Foto Keluar</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Status</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Valid?</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center align-top">0306077701</TableCell>
-            <TableCell className="text-center align-top">
+            <TableCell className="text-center align-top text-xs sm:text-sm">0306077701</TableCell>
+            <TableCell className="text-center align-top text-xs sm:text-sm">
               A HERI ISWANTO
             </TableCell>
-            <TableCell className="whitespace-normal break-words max-w-20 align-top">
+            <TableCell className="whitespace-normal break-words max-w-20 align-top text-xs sm:text-sm">
               06:47 Anda Berada di [Area Kampus UIKA]
             </TableCell>
-            <TableCell className="whitespace-normal break-words max-w-20 align-top">
+            <TableCell className="whitespace-normal break-words max-w-20 align-top text-xs sm:text-sm">
               16:00:17 Anda Berada di [Area Kampus UIKA]
             </TableCell>
-            <TableCell className="whitespace-normal break-words max-w-40 align-top">
+            <TableCell className="whitespace-normal break-words max-w-40 align-top text-xs sm:text-sm">
               Membersihkan lobi membersihkan lorong lantai 1 Membersihkan ruang
               kantor Membersihkan ruang dosen Membersihkan kamar kecil dosen dan
               mahasiswa
             </TableCell>
-            <TableCell className="whitespace-normal break-words max-w-40 align-top">
+            <TableCell className="whitespace-normal break-words max-w-40 align-top text-xs sm:text-sm">
               Membersihkan lobi membersihkan lorong lantai 1 Membersihkan ruang
               kantor Membersihkan ruang dosen Membersihkan kamar kecil dosen dan
               mahasiswa

@@ -75,19 +75,19 @@ const JabatanStruktural = () => {
                 }
             />
 
-            <div className="grid grid-rows-2 gap-3 sm:flex justify-between mt-6">
-                <div className="flex gap-4">
-                    <SelectFilter classname="w-30 sm:w-25" options={unitKerjaOptions}/>
-                    <SearchInput/>
+            <div className="grid grid-rows-2 gap-3 md:flex justify-between mt-6">
+                <div className="grid grid-rows-2 sm:flex gap-4">
+                    <SelectFilter classname="w-60 sm:w-25" options={unitKerjaOptions}/>
+                    <SearchInput />
                 </div>
 
-                <div className="flex sm:gap-3 gap-4">
+                <div className="flex sm:gap-4 gap-4 md:gap-3">
                     <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-                        <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-30 sm:w-23 md:w-25">
+                        <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-23 sm:w-25">
                             <FaPlus/> Tambah
                         </Button>
                     </Link>
-                    <Button variant="destructive" className="cursor-pointe w-30 sm:w-22">
+                    <Button variant="destructive" className="cursor-pointer w-22">
                         <FaRegTrashAlt/> Hapus
                     </Button>
                 </div>

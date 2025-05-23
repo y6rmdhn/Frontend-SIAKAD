@@ -83,8 +83,8 @@ const HubunganKerja = () => {
 
       <CustomCard
         actions={
-          <div className="flex justify-between mt-6">
-            <div className="flex gap-4">
+          <div className="grid grid-rows-2 gap-4 sm:flex justify-between mt-6">
+            <div className="grid grid-rows-2 sm:flex gap-4">
               <SelectFilter options={unitKerjaOptions} />
               <SearchInput />
             </div>
@@ -100,18 +100,18 @@ const HubunganKerja = () => {
         <Table className="mt-10 table-auto">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="text-center">Kode</TableHead>
-              <TableHead className="text-center">Nama Hubungan Kerja</TableHead>
-              <TableHead className="text-center">Status Aktif</TableHead>
-              <TableHead className="text-center">PNS</TableHead>
-              <TableHead className="text-center">Aksi</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Nama Hubungan Kerja</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Status Aktif</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">PNS</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
             {data?.data.map((item, index) => (
               <TableRow key={index} className=" even:bg-gray-100">
-                <TableCell className="text-center">{item.kode}</TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
                   {item.nama_hub_kerja}
                 </TableCell>
                 <TableCell>

@@ -25,7 +25,7 @@ const DetailUnitKerja = () => {
               <div className="flex justify-between gap-4 ">
                 <SearchInput />
 
-                <div className="flex gap-2">
+                <div className="flex sm:grid sm:grid-rows-2 md:flex gap-2">
                   <Link to="/admin/referensi/kepegawaian/unit-kerja">
                     <Button
                       type="button"

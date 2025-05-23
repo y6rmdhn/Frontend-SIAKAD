@@ -12,8 +12,8 @@ import { Label } from "@/components/ui/label";
 
 const MonitoringInput = () => {
   return (
-    <div className="w-full grid grid-rows-2 grid-flow-col gap-6">
-      <div className="flex">
+    <div className="w-full grid lg:grid-rows-2 grid-rows-3 grid-flow-col gap-4 sm:gap-6">
+      <div className="grid grid-rows-2 sm:flex">
         <Label className="w-full">Unit Kerja</Label>
         <Select>
           <SelectTrigger className="w-full">
@@ -31,7 +31,7 @@ const MonitoringInput = () => {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex">
+      <div className="grid grid-rows-2 sm:flex">
         <Label className="w-full">Status Masa Kerja</Label>
         <Select>
           <SelectTrigger className="w-full">
@@ -49,7 +49,7 @@ const MonitoringInput = () => {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex">
+      <div className="grid grid-rows-2 sm:flex">
         <Label className="w-full">Hubungan Kerja</Label>
         <Select>
           <SelectTrigger className="w-full">
