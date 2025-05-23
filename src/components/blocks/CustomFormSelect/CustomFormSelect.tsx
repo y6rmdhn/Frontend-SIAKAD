@@ -22,6 +22,7 @@ type FormFieldSelectProps = {
   labelStyle: string;
   disabled?: boolean;
   required: boolean;
+  classname?: string;
 };
 
 export const FormFieldSelect = ({
@@ -33,6 +34,7 @@ export const FormFieldSelect = ({
   disabled,
   labelStyle,
   required,
+  classname
 }: FormFieldSelectProps) => {
   return (
     <FormField
@@ -52,7 +54,7 @@ export const FormFieldSelect = ({
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger disabled={disabled} className="w-full">
+              <SelectTrigger disabled={disabled} className={`${classname && classname} w-full`}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
