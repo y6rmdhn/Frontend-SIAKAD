@@ -150,21 +150,29 @@ const UnitKerja = () => {
       <Title title="Unit Kerja" subTitle="Daftar Unit Kerja" />
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 gap-4 lg:flex justify-between mt-6">
-            <div className="grid grid-rows-2 sm:flex gap-4">
-              <SelectFilter options={unitKerjaOptions} />
-              <SearchInput />
-            </div>
+          <div className="w-full md:w-auto flex flex-col md:flex-row justify-between mt-6 gap-4">
+                <div className="w-full md:w-auto flex flex-col md:flex-row gap-4 lg:flex lg:w-full">
+                    <div className="w-full  md:w-32">
+                        <SelectFilter classname="w-full md:w-32 text-xs sm:text-sm" options={unitKerjaOptions} />
+                    </div>
+                    <div className="w-full relative md:w-80">
+                        <SearchInput className="w-full md:w-80"/>
+                    </div>
+                </div>
 
-            <div className="gap-3 flex sm:gap-4">
+            <div className="w-full flex flex-col md:w-auto lg:flex-row gap-4 lg:mt-0 lg:w-auto">
+                    <div className="w-full md:w-auto">
               <Link to="/admin/referensi/kepegawaian/unit-kerja/detail-unit-kerja">
-                <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-27 lg:w-auto">
+                <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto text-xs sm:text-sm">
                   <FaPlus /> Tambah
                 </Button>
               </Link>
-              <Button variant="destructive" className="cursor-pointer">
+              </div>
+              <div className="w-full md:w-auto">
+              <Button variant="destructive" className="cursor-pointer w-full md:w-25 lg:w-auto text-xs sm:text-sm">
                 <FaRegTrashAlt /> Hapus
               </Button>
+              </div>
             </div>
           </div>
         }
