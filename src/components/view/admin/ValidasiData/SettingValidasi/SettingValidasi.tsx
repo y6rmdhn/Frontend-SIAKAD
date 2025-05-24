@@ -1,6 +1,8 @@
 import CustomCard from "@/components/blocks/Card";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -11,15 +13,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -27,42 +20,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiSearch } from "react-icons/fi";
+import unitKerjaOptions from "@/constant/dummyFilter";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 const SettingValidasi = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">Jenis Validasi</h1>
+      <Title title="Jenis Validasi" />
 
       <CustomCard
         actions={
-          <div className="flex gap-6">
-            <Select>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="--Semua--" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Unit Kerja</SelectLabel>
-                  <SelectItem value="apple">Apple</SelectItem>
-                  <SelectItem value="banana">Banana</SelectItem>
-                  <SelectItem value="blueberry">Blueberry</SelectItem>
-                  <SelectItem value="grapes">Grapes</SelectItem>
-                  <SelectItem value="pineapple">Pineapple</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <div className="relative">
-              <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-              <Input placeholder="Search" className="w-80 pr-8" />
+          <div className="flex gap-6 w-full">
+            <div className="lg:gap-5 gap-2 w-full flex flex-col md:flex-row mt-5">
+              <SelectFilter classname="md:w-32" options={unitKerjaOptions} />
+              <SearchInput />
             </div>
           </div>
         }
       >
-        <Table className="mt-10 table-auto">
+        <Table className="mt-10 table-auto text-xs md:text-sm">
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead className="text-center">Kode</TableHead>

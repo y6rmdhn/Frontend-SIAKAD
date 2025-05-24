@@ -1,7 +1,9 @@
 import CustomCard from "@/components/blocks/Card";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Pagination,
@@ -13,15 +15,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -29,84 +22,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiSearch } from "react-icons/fi";
+import unitKerjaOptions from "@/constant/dummyFilter";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 const Monitoring = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">Monitoring</h1>
+      <Title title="Monitoring" />
 
       <CustomCard
         actions={
-          <div className="grid grid-flow-col gap-6">
-            <div className="flex">
-              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+          <div className="grid md:grid-flow-col grid-flow-row gap-6">
+            <div className="flex flex-col md:flex-row gap-2">
+              <Label className="w-full text-[#FDA31A] text-xs md:text-sm">
+                Unit Kerja
+              </Label>
+              <SelectFilter placeholder="" options={unitKerjaOptions} />
             </div>
-            <div className="flex">
-              <Label className="w-full text-[#FDA31A]">Hubungan Kerja</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="--Semua Pegawai--" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Pegawai</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col md:flex-row gap-2">
+              <Label className="w-full text-[#FDA31A] text-xs md:text-sm">
+                Hubungan Kerja
+              </Label>
+              <SelectFilter placeholder="" options={unitKerjaOptions} />
             </div>
           </div>
         }
       />
 
-      <div className="flex justify-between mt-10">
-        <div className="flex gap-4">
-          <Select>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="--Semua--" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Unit Kerja</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
-          <div className="relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-80 pr-8" />
-          </div>
+      <div className="flex justify-between md:mt-10 mt-5">
+        <div className="lg:gap-5 gap-2 w-full flex flex-col md:flex-row mt-5">
+          <SelectFilter classname="md:w-32" options={unitKerjaOptions} />
+          <SearchInput />
         </div>
       </div>
 
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs md:text-sm">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center" colSpan={2} rowSpan={2}>

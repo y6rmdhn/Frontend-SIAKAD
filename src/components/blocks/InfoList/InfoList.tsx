@@ -11,7 +11,7 @@ const InfoList: React.FC<InfoListProps> = ({ items }) => {
   const rightItems = items.slice(half);
 
   return (
-    <div className="w-full grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4">
+    <div className="w-full text-xs lg:text-sm flex gap-5 flex-row justify-between mt-10 bg-[#D6E8F9] py-4 px-4 lg:px-16">
       <ul className="flex flex-col gap-2 text-[#2572BE]">
         {leftItems.map((item, index) => (
           <li key={index}>{item}</li>
