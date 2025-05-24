@@ -2,7 +2,7 @@ import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 
 const DetailKendaraanSection = ({ form }) => (
-  <div className="grid grid-rows-3 grid-flow-col gap-4 mt-10 items-center">
+  <div className="grid lg:grid-rows-3 lg:grid-flow-col gap-4 mt-10 items-center">
     <FormFieldInput
       form={form}
       label="Nomor Polisi"

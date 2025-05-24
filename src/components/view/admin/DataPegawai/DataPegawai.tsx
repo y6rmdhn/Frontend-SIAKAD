@@ -5,9 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { FiSearch } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +24,8 @@ import RekeningBankSection from "@/components/blocks/DataPegawaiForm/RekeningBan
 import DokumenSection from "@/components/blocks/DataPegawaiForm/DokumenSection";
 import DetailKendaraanSection from "@/components/blocks/DataPegawaiForm/DetailKendaraanSection";
 import { zodResolver } from "@hookform/resolvers/zod";
+import SearchInput from "@/components/blocks/SearchInput";
+import Title from "@/components/blocks/Title";
 
 const dataPegawaiShcema = z.object({
   nip: z
@@ -419,20 +419,17 @@ const DataPegawai = () => {
 
   return (
     <div className="mt-10 mb-10">
-      <h1 className="text-2xl font-normal text-sm md:text-lg">Data Pegawai</h1>
+      <Title title="Data Pegawai" />
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitDataPegawai)}>
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardHeader>
-              <div className="flex flex-col md:flex-row items-center justify-between">
-                <div className="relative w-full lg:w-2xs md:w-2xs">
-                  <Input
-                    className="pr-8 text-xs sm:text-sm"
-                    placeholder="Search"
-                  />
-                  <FiSearch className="absolute -translate-y-1/2 top-1/2 right-2" />
+              <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-4">
+                <div className="w-full md:w-auto lg:w-2xs">
+                  <SearchInput />
                 </div>
-                <div className="flex flex-col items-center justify-center md:flex-row md:w-auto gap-2 w-full mt-5 md:mt-0">
+                <div className="flex flex-col items-center justify-center md:flex-row gap-2 w-full md:w-auto mt-5 md:mt-0">
                   <Button
                     type="button"
                     onClick={() => navigate("/admin/pegawai")}

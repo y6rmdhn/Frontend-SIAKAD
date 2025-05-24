@@ -6,6 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { FiSearch } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
@@ -16,42 +17,426 @@ import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormIn
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import pegawaiDetailMenu from "@/constant/PegawaiDetailMenu";
 import { useEffect, useRef, useState } from "react";
-import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
-import Title from "@/components/blocks/Title";
+import { z } from "zod";
+import { toast } from "sonner";
+import postPegawaiServices from "@/services/create.pegawai.ts";
+import KepegawaianSection from "@/components/blocks/DataPegawaiForm/PegawaiSection";
+import DomisiliSection from "@/components/blocks/DataPegawaiForm/Domisilisection";
+import RekeningBankSection from "@/components/blocks/DataPegawaiForm/RekeningBankSection";
+import DokumenSection from "@/components/blocks/DataPegawaiForm/DokumenSection";
+import DetailKendaraanSection from "@/components/blocks/DataPegawaiForm/DetailKendaraanSection";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const dataPegawaiShcema = z.object({
+  nip: z
+    .string()
+    .min(18, "nip kurang dari 18 digit")
+    .max(18, "nip lebih dari 18 digit"),
+  nama: z
+    .string()
+    .min(3, "nama lengkap kurang dari 3 karakter")
+    .max(50, "nama lengkap lebih dari 50 karakter"),
+  gelar_depan: z
+    .string()
+    .max(50, "gelar depan lebih dari 50 karakter")
+    .optional(),
+  gelar_belakang: z
+    .string()
+    .max(50, "gelar belakang lebih dari 50 karakter")
+    .optional(),
+  jenis_kelamin: z
+    .enum(["lk", "pr"], {
+      errorMap: () => ({ message: "Jenis kelamin wajib dipilih" }),
+    })
+    .optional(),
+  agama: z
+    .string()
+    .min(3, "agama kurang dari 3 karakter")
+    .max(50, "agama lebih dari 50 karakter"),
+  tempat_lahir: z
+    .string()
+    .max(50, "tempat lahir lebih dari 50 karakter")
+    .optional(),
+  tanggal_lahir: z
+    .string()
+    .min(3, "tanggal lahir kurang dari 3 karakter")
+    .max(50, "tanggal lahir lebih dari 50 karakter"),
+  kode_status_pernikahan: z.number().optional(),
+  golongan_darah: z.string().optional(),
+
+  // kepegawaian
+  unit_kerja_id: z
+    .string()
+    .max(50, "unit kerja lebih dari 50 karakter")
+    .optional(),
+  status_aktif_id: z
+    .string()
+    .max(50, "status aktif lebih dari 50 karakter")
+    .optional(),
+  hubungan_kerja: z
+    .string()
+    .max(50, "hubungan kerja lebih dari 50 karakter")
+    .optional(),
+  email_pegawai: z.string().email().optional(),
+  email_pribadi: z.string().email().optional(),
+  golongan: z.string().optional(),
+  jabatan_fungsional: z.string().optional(),
+
+  // domisili
+  np_ktp: z.string().max(16, "no.ktp lebih dari 16 digit").optional(),
+  no_kk: z.string().max(16, "no.kk lebih dari 16 digit").optional(),
+  warga_negara: z
+    .string()
+    .min(1, "warga negara wajib diisi")
+    .max(50, "warga negara lebih dari 50 karakter"),
+  provinsi: z.string().max(50, "provinsi lebih dari 50 karakter").optional(),
+  kota: z.string().max(50, "kota lebih dari 50 karakter").optional(),
+  alamat_domisili: z
+    .string()
+    .max(50, "alamat lebih dari 50 karakter")
+    .optional(),
+  kecamatan: z.string().max(50, "kecamatan lebih dari 50 karakter").optional(),
+  kode_pos: z.string().max(5, "kode pos lebih dari 5 digit").optional(),
+  suku: z.string().max(50, "suku lebih dari 50 karakter").optional(),
+  jarak_rumah_domisili: z
+    .string()
+    .max(50, "jarak rumah lebih dari 50 karakter")
+    .optional(),
+  no_telepon_domisili_kontak: z
+    .string()
+    .max(10, "no.whatsapp lebih dari 10 digit")
+    .optional(),
+  no_handphone: z
+    .string()
+    .max(10, "no.telpon utama lebih dari 10 digit")
+    .optional(),
+
+  // rekening bank
+  nama_bank: z.string().max(50, "nama bank lebih dari 50 karakter").optional(),
+  cabang_bank: z
+    .string()
+    .max(50, "cabang bank lebih dari 50 karakter")
+    .optional(),
+  nama_rekening: z
+    .string()
+    .max(50, "nama rekening lebih dari 50 karakter")
+    .optional(),
+  no_rekening: z.string().max(16, "no.rekening lebih dari 16 digit").optional(),
+
+  // dokumen
+  kapreg: z.string().max(50, "kapreg lebih dari 50 karakter").optional(),
+  file_kapreg: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  npwp: z.string().max(15, "npwp lebih dari 15 digit").optional(),
+  file_npwp: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  file_rekening: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  file_kk: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  file_ktp: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  file_sertifikasi_dosen: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  no_bpjs: z.string().max(20, "no.bpjs lebih dari 15 digit").optional(),
+  no_bpjs_ketenagakerjaan: z
+    .string()
+    .max(20, "no.bpjs lebih dari 15 digit")
+    .optional(),
+  no_bpjs_pensiun: z.string().max(20, "no.bpjs lebih dari 15 digit").optional(),
+  file_bpjs: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  file_bpjs_ketenagakerjaan: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+  file_tanda_tangan: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, {
+      message: "File tidak valid",
+    })
+    .refine((file) => !file || file.size <= 2 * 1024 * 1024, {
+      message: "Ukuran file maksimal 2MB",
+    })
+    .refine(
+      (file) =>
+        !file ||
+        ["application/pdf", "image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Format file harus PDF, JPG, atau PNG",
+      }
+    ),
+
+  // kendaraan
+  nomor_polisi: z
+    .string()
+    .max(10, "nomor polisi lebih dari 10 digit")
+    .optional(),
+  jenis_kendaraan: z
+    .string()
+    .max(1, "jenis kendaraan lebih dari 1 digit")
+    .optional(),
+  berat_badan: z.number().max(1000, "berat badan lebih dari 1000").optional(),
+  tinggi_badan: z.number().max(200, "tinggi badan lebih dari 200").optional(),
+});
 
 const BiodataUser = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState<string>("kepegawaian");
-  const form = useForm();
+  const form = useForm({
+    defaultValues: {
+      nip: "",
+      nama: "",
+      gelar_depan: "",
+      gelar_belakang: "",
+      jenis_kelamin: "lk",
+      agama: "",
+      tempat_lahir: "",
+      tanggal_lahir: "",
+      kode_status_pernikahan: 0,
+      golongan_darah: "",
+
+      // kepegawaian
+      unit_kerja_id: undefined,
+      status_aktif_id: undefined,
+      hubungan_kerja: "",
+      email_pegawai: "",
+      email_pribadi: "",
+      golongan: "",
+      jabatan_fungsional: "",
+
+      // domisili
+      np_ktp: "",
+      no_kk: "",
+      warga_negara: "",
+      provinsi: "",
+      kota: "",
+      alamat_domisili: "",
+      kecamatan: "",
+      kode_pos: "",
+      suku: "",
+      jarak_rumah_domisili: "",
+      no_telepon_domisili_kontak: "",
+      no_handphone: "",
+
+      // rekening bank
+      nama_bank: "",
+      cabang_bank: "",
+      nama_rekening: "",
+      no_rekening: "",
+
+      // dokumen
+      kapreg: "",
+      file_kapreg: null,
+      npwp: "",
+      file_npwp: null,
+      file_rekening: null,
+      file_kk: null,
+      file_ktp: null,
+      file_sertifikasi_dosen: null,
+    },
+    resolver: zodResolver(dataPegawaiShcema),
+  });
+
+  // tambah
+  const { mutate: postDataPegawai } = useMutation({
+    mutationFn: (data: FormData) => postPegawaiServices.dataPegawai(data),
+    onSuccess: () => {
+      form.reset();
+      toast.success("Data berhasil ditambahkan");
+    },
+  });
+
+  const handleSubmitDataPegawai = (values) => {
+    const formData = new FormData();
+
+    Object.keys(values).forEach((key) => {
+      const value = values[key];
+
+      if (value !== null && value !== undefined) {
+        // Untuk file
+        if (key.startsWith("file_") && value instanceof File) {
+          formData.append(key, value);
+        }
+        // Untuk key tertentu yang harus number
+        else if (["unit_kerja_id", "jabatan_id", "role_id"].includes(key)) {
+          formData.append(key, Number(value).toString());
+        }
+        // Untuk lainnya
+        else {
+          formData.append(key, value);
+        }
+      }
+    });
+
+    postDataPegawai(formData);
+  };
 
   const cardFooterRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (cardFooterRef.current) {
-      cardFooterRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+  const FormDataPegawai = ({ show, form }) => {
+    switch (show) {
+      case "kepegawaian":
+        return <KepegawaianSection form={form} />;
+      case "domisili":
+        return <DomisiliSection form={form} />;
+      case "rekening-bank":
+        return <RekeningBankSection form={form} />;
+      case "dokumen":
+        return <DokumenSection form={form} />;
+      default:
+        return <DetailKendaraanSection form={form} />;
     }
-  }, [show]);
+  };
+
+  // useEffect(() => {
+  //   if (cardFooterRef.current) {
+  //     cardFooterRef.current.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "end",
+  //     });
+  //   }
+  // }, [show]);
 
   return (
     <div className="mt-10 mb-10">
-      <Title title="Data Pegawai" />
+      <h1 className="text-2xl font-normal text-sm md:text-lg">Data Pegawai</h1>
       <Form {...form}>
-        <form>
-          <Card className="mt-5  border-t-yellow-uika border-t-3">
+        <form onSubmit={form.handleSubmit(handleSubmitDataPegawai)}>
+          <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardHeader>
-              <div className="flex justify-between">
-                <div className="relative">
-                  <Input className="w-2xs pr-8" placeholder="Search" />
+              <div className="flex flex-col md:flex-row items-center justify-between">
+                <div className="relative w-full lg:w-2xs md:w-2xs">
+                  <Input
+                    className="pr-8 text-xs sm:text-sm"
+                    placeholder="Search"
+                  />
                   <FiSearch className="absolute -translate-y-1/2 top-1/2 right-2" />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col items-center justify-center md:flex-row md:w-auto gap-2 w-full mt-5 md:mt-0">
                   <Button
                     type="button"
                     onClick={() => navigate("/admin/pegawai")}
-                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
+                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
                   >
                     <IoIosArrowBack />
                     Kembali ke Daftar
@@ -59,7 +444,7 @@ const BiodataUser = () => {
 
                   <Button
                     type="submit"
-                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
+                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
                   >
                     <FaSave />
                     Simpan
@@ -67,7 +452,7 @@ const BiodataUser = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="mt-10 grid grid-rows-5 grid-flow-col gap-5">
+            <CardContent className="mt-10 flex flex-col md:grid md:grid-rows-5 md:grid-flow-col gap-5">
               <FormFieldInput
                 form={form}
                 label="NIP"
@@ -78,7 +463,7 @@ const BiodataUser = () => {
               <FormFieldInput
                 form={form}
                 label="Nama Lengkap"
-                name="nama_lengkap"
+                name="nama"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
@@ -91,7 +476,7 @@ const BiodataUser = () => {
               />
               <FormFieldInput
                 form={form}
-                label="Gelar_Belakang"
+                label="Gelar Belakang"
                 name="gelar_belakang"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
@@ -103,8 +488,8 @@ const BiodataUser = () => {
                 required={false}
                 type="radio"
                 options={[
-                  { label: "Laki-laki", value: "lk" },
-                  { label: "Perempuan", value: "pr" },
+                  { label: "Lk", value: "lk" },
+                  { label: "Pr", value: "pr" },
                 ]}
                 labelStyle="text-[#3F6FA9]"
               />
@@ -125,40 +510,39 @@ const BiodataUser = () => {
               <FormFieldInput
                 form={form}
                 label="Tgl Lahir"
-                name="tgl_lahir"
+                name="tanggal_lahir"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
               <FormFieldInput
                 form={form}
                 label="Status Nikah"
-                name="status_nikah"
+                name="kode_status_pernikahan"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
               />
               <FormFieldSelect
                 form={form}
                 label="Golongan Darah"
-                disabled={true}
-                name="unit_kerja"
-                labelStyle="text-[#3F6FA9]"
+                name="golongan_darah"
+                placeholder="--Pilih--"
                 options={[
                   { label: "Admin", value: "admin" },
                   { label: "User", value: "user" },
                   { label: "Guest", value: "guest" },
                 ]}
-                placeholder="--Pilih Golongan Darah--"
+                labelStyle="text-[#3F6FA9]"
                 required={false}
               />
             </CardContent>
             <CardFooter className="flex flex-col gap-2 w-full">
-              <div className="w-full flex gap-2 mt-10">
+              <div className="w-full grid grid-cols-2 grid-flow-row  lg:flex gap-2 mt-10">
                 {pegawaiDetailMenu.map((item, index) => (
                   <Button
                     key={index}
                     type="button"
                     onClick={() => setShow(item.show)}
-                    className={`flex-1 cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white rounded-t-2xl rounded-b-none transition-all duration-300 ${
+                    className={`flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
                       show === item.show ? "bg-[#106D63] text-white" : ""
                     }`}
                   >
@@ -167,414 +551,7 @@ const BiodataUser = () => {
                 ))}
               </div>
               <div ref={cardFooterRef} className="w-full pb-10">
-                {show === "kepegawaian" ? (
-                  <div className="grid grid-rows-4 grid-flow-col gap-4 mt-10">
-                    <FormFieldSelect
-                      form={form}
-                      label="Unit Kerja"
-                      disabled={true}
-                      name="unit_kerja"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="Fakultas Teknik dan Sains"
-                      required={true}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      disabled={true}
-                      label="Status Aktif"
-                      name="status_aktif"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="Aktif"
-                      required={true}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      disabled={true}
-                      label="Hubungan Kerja"
-                      name="hubungan_kerja"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="Kontak"
-                      required={true}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      disabled={true}
-                      label="Jabatan Fungsional"
-                      name="jabatan_fungsional"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="Dosen"
-                      required={false}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      disabled={true}
-                      label="Golongan"
-                      name="golongan"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="IV E"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Email Pegawai"
-                      name="email_pegawai"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Email Pribadi"
-                      name="email_pribadi"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                  </div>
-                ) : show === "domisili" ? (
-                  <div className="grid grid-rows-6 grid-flow-col gap-x-5 mt-10 items-center">
-                    <FormFieldInput
-                      form={form}
-                      label="No.KTP"
-                      name="np_ktp"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No KK"
-                      name="no_kk"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      label="Warga Negara"
-                      name="warga_negara"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih Warga Negara--"
-                      required={true}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      label="Provinsi"
-                      name="provinsi"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih Provinsi--"
-                      required={false}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      label="Kota"
-                      name="kota"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih Kota--"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Alamat / Jalan"
-                      name="alamat"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="textarea"
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      label="Kecamatan"
-                      name="kecamatan"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih Kecamatan--"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Kode Pos"
-                      name="alamat"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      label="Suku"
-                      name="suku"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih Suku--"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Jarak Rumah (KM)"
-                      name="jarak_rumah"
-                      labelStyle="text-[#3F6FA9]"
-                      placeholder="Tuliskan Jarak dalam KM"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No. Whatsapp"
-                      name="no_whatsapp"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No.Telpon Utama"
-                      name="no_telpon_utama"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                  </div>
-                ) : show === "rekening-bank" ? (
-                  <div className="grid grid-rows-2 grid-flow-col gap-4 mt-10">
-                    <FormFieldSelect
-                      form={form}
-                      label="Nama BANK"
-                      name="nama_bank"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih BANK--"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Cabang BANK"
-                      name="cabang_bank"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Atas Nama Rekening"
-                      name="nama_rekening"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No Rekening"
-                      name="no_rekening"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                  </div>
-                ) : show === "dokumen" ? (
-                  <div className="grid grid-rows-8 grid-flow-col gap-4 mt-10 items-center">
-                    <FormFieldInput
-                      form={form}
-                      label="KAPREG"
-                      name="kapreg"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File KAPREG"
-                      name="file_kapreg"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="NPWP"
-                      name="npwp"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File NPWP"
-                      name="file_npwp"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File Rekening"
-                      name="file_rekening"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File KK"
-                      name="file_kk"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File KTP"
-                      name="file_ktp"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File Sertifikasi Dosen"
-                      name="file_sertifikasi_dosen"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No BPJS"
-                      placeholder="Masukan Nomor"
-                      name="no_bpjs"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No BPJS Ketenagakerjaan"
-                      placeholder="Masukan Nomor"
-                      name="no_bpjs_ketenagaKerjaan"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="No BPJS Pensiun"
-                      placeholder="Masukan Nomor"
-                      name="no_bpjs_pensiun"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File BPJS"
-                      name="file_bpjs"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File BPJS Ketenagakerjaan"
-                      classname="border-none shadow-none"
-                      name="file_bpjs_ketenagakerjaan"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                    <FormFieldInputFile
-                      form={form}
-                      label="File Tanda Tangan"
-                      name="file_tanda_tangan"
-                      classname="border-none shadow-none"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                      type="file"
-                    />
-                  </div>
-                ) : (
-                  <div className="grid grid-rows-3 grid-flow-col gap-4 mt-10 items-center">
-                    <FormFieldInput
-                      form={form}
-                      label="Nomor Polisi"
-                      name="nomor_polisi"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldSelect
-                      form={form}
-                      label="Jenis Kendaraan"
-                      name="jenis_kendaraan"
-                      labelStyle="text-[#3F6FA9]"
-                      options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
-                        { label: "Guest", value: "guest" },
-                      ]}
-                      placeholder="--Pilih Jenis Kendaraan--"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Merk Kendaraan"
-                      name="merk_kendaraan"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Berat Badan (kg)"
-                      name="file_berat_badan"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                    <FormFieldInput
-                      form={form}
-                      label="Tinggi Badan (cm)"
-                      name="file_tinggi_badan"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                    />
-                  </div>
-                )}
+                <FormDataPegawai show={show} form={form} />
               </div>
             </CardFooter>
           </Card>
