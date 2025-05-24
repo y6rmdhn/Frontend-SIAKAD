@@ -43,7 +43,7 @@ const StatusItem = ({ label, status }: StatusItemProps) => {
 const SettingKehadiran = () => {
   return (
     <div className="mt-10 mb-10">
-      <h1 className="text-2xl font-normal">Setting Kehadiran</h1>
+      <h1 className="text-xs sm:text-sm font-normal">Setting Kehadiran</h1>
       <CustomCard
         actions={
           <div className="w-full flex justify-end">
@@ -53,7 +53,7 @@ const SettingKehadiran = () => {
           </div>
         }
       >
-        <div className="flex gap-2 w-full">
+        <div className="sm:flex gap-2 w-full">
           <div className="flex flex-col w-full gap-2">
             {data.leftColumnItems.map((item, index) => (
               <StatusItem key={index} label={item.label} status={item.status} />

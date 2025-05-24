@@ -43,7 +43,7 @@ const DaftarMonitoringKehadiran = () => {
         <form>
           <CustomCard
             actions={
-              <div className="mt-10 grid grid-rows-3 md:grid-rows-2 grid-flow-col grid gap-5">
+              <div className="mt-5 grid-rows-3 md:grid-rows-2 grid-flow-col grid gap-6">
                 <FormFieldSelect
                   form={form}
                   label="Unit Kerja"
@@ -84,7 +84,7 @@ const DaftarMonitoringKehadiran = () => {
 
           <div className="mt-10 grid grid-rows-2 sm:flex gap-4">
             <Select>
-              <SelectTrigger className="w-70 sm:w-32">
+              <SelectTrigger className="w-full sm:w-32">
                 <SelectValue placeholder="--Semua--" />
               </SelectTrigger>
               <SelectContent>
@@ -99,7 +99,7 @@ const DaftarMonitoringKehadiran = () => {
               </SelectContent>
             </Select>
 
-            <div className="relative w-70 sm:w-80">
+            <div className="relative w-full md:w-80">
               <Input
                 placeholder="Search"
                 className="w-full pr-10"

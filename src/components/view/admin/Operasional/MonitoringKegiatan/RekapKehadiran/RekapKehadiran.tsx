@@ -47,11 +47,11 @@ const RekapKehadiran = () => {
       <h1 className="text-lg sm:text-2xl font-normal">Monitoring Kegiatan</h1>
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 lg:grid-cols-2 grid-flow-col gap-10">
-            <div className="grid grid-rows-2 sm:flex gap-5">
-              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
+          <div className="grid grid-rows-2 lg:grid-cols-2 grid-flow-col gap-5">
+            <div className="grid grid-rows-2 sm:flex">
+              <Label className="w-full text-[#FDA31A] text-xs sm:text-sm">Unit Kerja</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full text-xs sm:text-sm">
                   <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
                 </SelectTrigger>
                 <SelectContent>
@@ -66,39 +66,37 @@ const RekapKehadiran = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-rows-2 sm:flex gap-5">
-              <Label className="w-full text-[#FDA31A]">Tanggal Akhir</Label>
+            <div className="grid grid-rows-2 sm:flex">
+              <Label className="w-full text-[#FDA31A] text-xs sm:text-sm">Tanggal Akhir</Label>
               <Input type="date" />
             </div>
           </div>
         }
       />
 
-      <div className="grid grid-rows-2 sm:flex justify-between mt-6">
-        <div className="w-full grid grid-rows-2 sm:flex gap-3">
-          <Select>
-            <SelectTrigger className="w-70 sm:w-32">
-              <SelectValue placeholder="--Semua--" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Unit Kerja</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+      <div className="grid grid-rows-2 sm:flex gap-4 w-full mt-5 mb-10">
+        <Select>
+          <SelectTrigger className="w-full sm:w-32 text-xs sm:text-sm">
+            <SelectValue placeholder="--Semua--" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Unit Kerja</SelectLabel>
+              <SelectItem value="apple">Apple</SelectItem>
+              <SelectItem value="banana">Banana</SelectItem>
+              <SelectItem value="blueberry">Blueberry</SelectItem>
+              <SelectItem value="grapes">Grapes</SelectItem>
+              <SelectItem value="pineapple">Pineapple</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
-          <div className="relative w-70 sm:w-80">
-            <Input
-              placeholder="Search"
-              className="w-full pr-10"
-            />
-            <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
-          </div>
+        <div className="relative w-full md:w-80">
+          <Input
+            placeholder="Search"
+            className="w-full pr-10 text-xs sm:text-sm"
+          />
+          <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
         </div>
       </div>
 
