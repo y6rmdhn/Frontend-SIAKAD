@@ -26,6 +26,8 @@ import RekeningBankSection from "@/components/blocks/DataPegawaiForm/RekeningBan
 import DokumenSection from "@/components/blocks/DataPegawaiForm/DokumenSection";
 import DetailKendaraanSection from "@/components/blocks/DataPegawaiForm/DetailKendaraanSection";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Title from "@/components/blocks/Title";
+import SearchInput from "@/components/blocks/SearchInput";
 
 const dataPegawaiShcema = z.object({
   nip: z
@@ -419,36 +421,35 @@ const BiodataUser = () => {
 
   return (
     <div className="mt-10 mb-10">
-      <h1 className="text-2xl font-normal text-sm md:text-lg">Data Pegawai</h1>
+      <Title title="Data Pegawai" />
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitDataPegawai)}>
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardHeader>
-              <div className="flex flex-col md:flex-row items-center justify-between">
-                <div className="relative w-full lg:w-2xs md:w-2xs">
-                  <Input
-                    className="pr-8 text-xs sm:text-sm"
-                    placeholder="Search"
-                  />
-                  <FiSearch className="absolute -translate-y-1/2 top-1/2 right-2" />
+              <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+                <div className="flex w-full lg:w-2xs md:w-2xs order-2 md:order-1">
+                  <SearchInput className="w-full md:w-80" />
                 </div>
-                <div className="flex flex-col items-center justify-center md:flex-row md:w-auto gap-2 w-full mt-5 md:mt-0">
-                  <Button
-                    type="button"
-                    onClick={() => navigate("/admin/pegawai")}
-                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
-                  >
-                    <IoIosArrowBack />
-                    Kembali ke Daftar
-                  </Button>
+                <div className="flex flex-col items-center justify-center md:flex-row md:w-auto gap-2 w-full mt-5 md:mt-0 order-1 md:order-2">
+                  <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto">
+                    <Button
+                      type="button"
+                      onClick={() => navigate("/admin/pegawai")}
+                      className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
+                    >
+                      <IoIosArrowBack />
+                      Kembali ke Daftar
+                    </Button>
 
-                  <Button
-                    type="submit"
-                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
-                  >
-                    <FaSave />
-                    Simpan
-                  </Button>
+                    <Button
+                      type="submit"
+                      className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
+                    >
+                      <FaSave />
+                      Simpan
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardHeader>

@@ -1,7 +1,5 @@
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import {
   Select,
@@ -20,39 +18,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiSearch } from "react-icons/fi";
 import { IoAdd } from "react-icons/io5";
 import { HiMiniTrash } from "react-icons/hi2";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { MdOutlineFileDownload } from "react-icons/md";
-import React, { useRef, useState } from "react";
+import { Form } from "@/components/ui/form";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { useForm } from "react-hook-form";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
+import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
+import SearchInput from "@/components/blocks/SearchInput";
 
 const DetailDokumenInternal = () => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string>("No file chosen");
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Ukuran file maksimal 2 MB!");
-        event.target.value = ""; // reset input
-        setFileName("No file chosen");
-      } else {
-        setFileName(file.name);
-      }
-    } else {
-      setFileName("No file chosen");
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
+  const form = useForm({
+    defaultValues: {
+      nip: "",
+      namaDokumen: "",
+      uraianSingkat: "",
+      urlDokumen: "",
+      tanggalDokumen: "",
+      jenisDokumen: "",
+      menuReferensi: "",
+      file: null,
+      statusDokumen: "",
+      tingkat: "",
+      namaPejabatPenetap: "",
+      namaValidator: "",
+    },
+  });
 
   return (
     <div className="mt-10">
-      <h1 className="text-xl  font-bold">
+      <h1 className="text-xl  font-medium">
         Dokumen Internal{" "}
         <span className="text-[13px] text-muted-foreground font-normal">
           Detail Dokumen Internal
@@ -61,197 +58,173 @@ const DetailDokumenInternal = () => {
       <CustomCard
         actions={
           <div className="">
-            <div className="flex justify-between mb-5">
-              <div className="flex gap-6">
-                <div className="relative">
-                  <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                  <Input
-                    placeholder="Cari Nama Dokumen Internal"
-                    className="w-80 pr-8"
-                  />
-                </div>
+            <div className="flex justify-between mb-5 min-[813px]:flex-row flex-col gap-4">
+              <div className="flex w-full gap-6 order-2 md:order-1">
+                <SearchInput
+                  className="w-full md:w-auto"
+                  placeholder="Cari nama dokumen"
+                />
               </div>
 
-              <div className="flex gap-2">
-                <Link to="/operasional/dokumen-internal">
-                  <Button className="bg-green-light-uika hover:bg-hover-green-uika">
+              <div className="flex w-full md:w-auto gap-2 order-1 md:order-2 md:flex-row flex-col">
+                <Link
+                  className="w-full md:w-auto"
+                  to="/operasional/dokumen-internal"
+                >
+                  <Button className="bg-green-light-uika w-full md:w-auto hover:bg-hover-green-uika">
                     <IoChevronBackOutline /> Kembali ke Daftar
                   </Button>
                 </Link>
-                <Link to="">
-                  <Button className="bg-[#FDA31A] text-white cursor-pointer">
-                    <MdOutlineFileDownload />
-                    Simpan
-                  </Button>
-                </Link>
+                <Button className="bg-[#FDA31A] w-full md:w-auto text-white cursor-pointer">
+                  <MdOutlineFileDownload />
+                  Simpan
+                </Button>
               </div>
             </div>
 
             {/* Data Dokumen Section */}
-            <div className="space-y-4">
-              <div className="border-b-1 border-[#FDA31A]">
-                <h1 className="text-sm font-normal text-[#FDA31A]">
-                  Data Dokumen
-                </h1>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {/* Kolom Kiri */}
-                <div className="space-y-7">
-                  <div className="flex gap-20">
-                    <Label className="w-40 text-[#002E5A]">
-                      No. Dokumen<span className="text-red-500">*</span>
-                    </Label>
-                    <Input />
+            <Form {...form}>
+              <form>
+                <div className="space-y-4">
+                  <div className="border-b-1 border-[#FDA31A]">
+                    <h1 className="text-sm font-normal text-[#FDA31A]">
+                      Data Dokumen
+                    </h1>
                   </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* Kolom Kiri */}
+                    <div className="space-y-7">
+                      <FormFieldInput
+                        form={form}
+                        label="No. Dokumen"
+                        name="no_dokumen"
+                        labelStyle="text-[#3F6FA9]"
+                        required={true}
+                      />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Nama Dokumen<span className="text-red-500">*</span>
-                    </Label>
-                    <Input />
-                  </div>
+                      <FormFieldInput
+                        form={form}
+                        label="Nama Dokumen"
+                        name="nama_dokumen"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Uraian Singkat
-                    </Label>
-                    <Input />
-                  </div>
+                      <FormFieldInput
+                        form={form}
+                        label="Uraian Singkat"
+                        name="uraian_singkat"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">URL Dokumen</Label>
-                    <Input />
-                  </div>
+                      <FormFieldInput
+                        form={form}
+                        label="URL Dokumen"
+                        name="url_dokumen"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Tanggal Dokumen<span className="text-red-500">*</span>
-                    </Label>
-                    <Input type="date" placeholder="dd - mm - yyyy" />
-                  </div>
+                      <FormFieldInput
+                        form={form}
+                        label="Tanggal Dokumen"
+                        name="tanggal_dokumen"
+                        type="date"
+                        labelStyle="text-[#3F6FA9]"
+                        required={true}
+                      />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Jenis Dokumen<span className="text-red-500">*</span>
-                    </Label>
-                    <Input
-                      className="text-center"
-                      placeholder="Surat Keputusan"
-                    />
-                  </div>
-                </div>
-
-                {/* Kolom Kanan */}
-                <div className="space-y-7">
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Menu referensi
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pengajaran" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sk">Surat Keputusan</SelectItem>
-                        <SelectItem value="sk">Pengajaran</SelectItem>
-                        <SelectItem value="lain">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex">
-                    <Label className="w-50 text-[#002E5A]">File</Label>
-                    <div>
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          onClick={triggerFileInput}
-                          className="h-5 bg-gray-200 rounded border text-black border-gray-400 hover:bg-gray-300"
-                        >
-                          Choose File
-                        </Button>
-                        <span className="text-sm italic text-gray-600">{fileName}</span>
-                        <Input
-                          ref={fileInputRef}
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg"
-                          className="hidden"
-                          onChange={handleFileChange}
-                        />
-                      </div>
-                      <span className="text-blue-600 text-xs">
-                        jpg.jpeg pdf (maxsize 2 MB)
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Status Dokumen
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Baru" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="br">Baru</SelectItem>
-                        <SelectItem value="lm">Lama</SelectItem>
-                        <SelectItem value="lain">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#002E5A]">
-                      Tingkat<span className="text-red-500">*</span>
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="--Pilih Tingkat--" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="t1">tingkat 1</SelectItem>
-                        <SelectItem value="t2">tingkat 2</SelectItem>
-                        <SelectItem value="lain">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex gap-5">
-                    <Label className="w-80 text-[#002E5A]">
-                      Nama Pejabat Penetap
-                    </Label>
-                    <div className="relative w-full">
-                      <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                      <Input
-                        placeholder="Cari Pejabat Penetap"
-                        className="w-93 pr-8"
+                      <FormFieldInput
+                        form={form}
+                        label="Jenis Dokumen"
+                        name="jenis_dokumen"
+                        placeholder="Surat Keputusan"
+                        labelStyle="text-[#3F6FA9]"
+                        required={true}
                       />
                     </div>
-                  </div>
 
-                  <div className="flex gap-5">
-                    <Label className="w-50 text-[#002E5A]">
-                      Nama Validator
-                    </Label>
-                    <div className="relative">
-                      <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                      <Input
-                        placeholder="Cari Nama Validator"
-                        className="w-93 pr-8"
+                    {/* Kolom Kanan */}
+                    <div className="space-y-7 md:mt-0.5 lg:mt-0">
+                      <FormFieldSelect
+                        form={form}
+                        label="Menu Referensi"
+                        name="menu_referensi"
+                        placeholder="Pengajaran"
+                        options={[
+                          { label: "Admin", value: "admin" },
+                          { label: "User", value: "user" },
+                          { label: "Guest", value: "guest" },
+                        ]}
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
+
+                      <FormFieldInputFile
+                        form={form}
+                        label="File"
+                        name="file"
+                        classname="border-none shadow-none"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
+
+                      <FormFieldSelect
+                        form={form}
+                        label="Status Dokumen"
+                        name="status_dokumen"
+                        placeholder="Baru"
+                        options={[
+                          { label: "Admin", value: "admin" },
+                          { label: "User", value: "user" },
+                          { label: "Guest", value: "guest" },
+                        ]}
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
+
+                      <FormFieldSelect
+                        form={form}
+                        label="Tingkat"
+                        name="tingkat"
+                        placeholder="--Pilih Tingkat--"
+                        options={[
+                          { label: "Admin", value: "admin" },
+                          { label: "User", value: "user" },
+                          { label: "Guest", value: "guest" },
+                        ]}
+                        labelStyle="text-[#3F6FA9]"
+                        required={true}
+                      />
+
+                      <FormFieldInput
+                        form={form}
+                        label="Nama Pejabat Penetap"
+                        name="nama_pejabat_penetap"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
+                      />
+
+                      <FormFieldInput
+                        form={form}
+                        label="Nama Validator"
+                        name="nama_validator"
+                        labelStyle="text-[#3F6FA9]"
+                        required={false}
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </form>
+            </Form>
 
             <div className="border-b-1 border-[#FDA31A] mb-5 mt-10">
               <h1 className="text-sm font-normal text-[#FDA31A]">
                 Data Dokumen
               </h1>
             </div>
-            <Table className=" table-auto">
+            <Table className="table-auto text-xs lg:text-sm">
               <TableHeader>
                 <TableRow className="bg-[#002E5A] ">
                   <TableHead className="text-center text-white border-1">

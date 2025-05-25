@@ -28,6 +28,7 @@ const KegiatanHarian = () => {
   return (
     <div className="mt-10 mb-20">
       <h1 className="text-2xl font-normal ">Kegiatan Harian</h1>
+
       <CustomCard
         actions={
           <div className="grid md:grid-rows-1 md:grid-flow-col grid-rows-2 gap-6">
