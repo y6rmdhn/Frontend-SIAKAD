@@ -175,6 +175,7 @@ import DetailPublikasiUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/P
 import KemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa";
 import DetailKemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa";
 import OrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi";
+import DetailOrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi/detailOrganisasi";
 import PelanggaranUserPage from "./pages/dataRiwayat/Kompensasi/Pelanggaran";
 import HubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja";
 import DetailHubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja";
@@ -358,7 +359,14 @@ function App() {
               path="detail-kemampuan-bahasa"
               Component={DetailKemampuanBahasaUserPage}
             />
-            <Route path="organisasi" Component={OrganisasiUserPage} />
+            <Route 
+              path="organisasi" 
+              Component={OrganisasiUserPage} 
+            />
+            <Route 
+              path="detail-organisasi" 
+              Component={DetailOrganisasiUserPage} 
+            />
           </Route>
 
           <Route path="kompensasi">
