@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Title from "@/components/blocks/Title";
+import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -29,12 +30,24 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { FiSearch } from "react-icons/fi";
+import { FaPlus } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { FiRefreshCw } from "react-icons/fi";
 const Organisasi = () => {
     return (
         <div className="mt-10 mb-20">
             <Title title="Organisasi" subTitle="Daftar Organisasi" />
+            <CustomCard
+                actions={
+                    <div className="flex justify-end">
+                        <Link to="/data-riwayat/pengembangan-diri/detail-organisasi">
+                            <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:w-auto">
+                                <FaPlus /> Tambah Baru
+                            </Button>
+                        </Link>
+                    </div>
+                }
+            />
             <div className="w-full border-l-2 border-[#6AAEF1] flex flex-col gap-2 sm:grid sm:grid-cols-2 mt-10 bg-[#D6E8F9] p-4 ">
                 <div className="flex flex-col gap-2 text-[#2572BE]">
                     <p className="text-sm sm:text-base">NIP</p>
