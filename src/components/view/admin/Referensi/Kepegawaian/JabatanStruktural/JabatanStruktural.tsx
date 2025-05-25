@@ -2,8 +2,8 @@ import CustomCard from "@/components/blocks/Card";
 import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
-import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
     Table,
     TableBody,
@@ -13,21 +13,21 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
-import {FaRegTrashAlt} from "react-icons/fa";
-import {Link, useSearchParams} from "react-router-dom";
-import {IoIosArrowUp} from "react-icons/io";
-import {IoIosArrowDown} from "react-icons/io";
-import {IoEyeOutline} from "react-icons/io5";
-import {FaPlus} from "react-icons/fa6";
-import {useQuery} from "@tanstack/react-query";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { Link, useSearchParams } from "react-router-dom";
+import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoEyeOutline } from "react-icons/io5";
+import { FaPlus } from "react-icons/fa6";
+import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import {ChevronDownIcon} from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 
 const JabatanStruktural = () => {
     const [searchParam, setSearchParam] = useSearchParams();
-    const {data} = useQuery({
+    const { data } = useQuery({
         queryKey: ["jabatan-struktural", searchParam.get("page")],
         queryFn: async () => {
             const statusKeaktifanResponse = await adminServices.getJabatanStrukturalReferensi(
@@ -65,31 +65,39 @@ const JabatanStruktural = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <Title title="Jabatan Struktural" subTitle="Daftar Jabatan Struktural"/>
+            <Title title="Jabatan Struktural" subTitle="Daftar Jabatan Struktural" />
             <CustomCard
                 actions={
-                    <div className="sm:flex grid grid-rows-1 gap-3">
+                    <div className="w-full flex flex-col sm:flex-row gap-3">
                         <Label className="w-32 sm:w-45 md:w-60 text-[#FDA31A]">Jabatan Struktural</Label>
-                        <SelectFilter classname="w-58 md:w-80 lg:w-92" options={unitKerjaOptions}/>
+                        <SelectFilter classname="w-58 md:w-80 lg:w-92" options={unitKerjaOptions} />
                     </div>
                 }
             />
 
-            <div className="grid grid-rows-2 gap-3 md:flex justify-between mt-6">
-                <div className="grid grid-rows-2 sm:flex gap-4">
-                    <SelectFilter classname="w-60 sm:w-25" options={unitKerjaOptions}/>
-                    <SearchInput />
+            <div className="w-full md:w-auto flex flex-col md:flex-row justify-between mt-6 gap-4">
+                <div className="w-full md:w-auto flex flex-col md:flex-row gap-4 lg:flex lg:w-full">
+                    <div className="w-full  md:w-32">
+                        <SelectFilter classname="w-full md:w-32 text-xs sm:text-sm" options={unitKerjaOptions} />
+                    </div>
+                    <div className="w-full relative md:w-80">
+                        <SearchInput className="w-full md:w-80"/>
+                    </div>
                 </div>
 
-                <div className="flex sm:gap-4 gap-4 md:gap-3">
-                    <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-                        <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-23 sm:w-25">
-                            <FaPlus/> Tambah
+                <div className="w-full flex flex-col md:w-auto lg:flex-row gap-4 lg:mt-0 lg:w-auto">
+                    <div className="w-full md:w-auto">
+                        <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
+                            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto text-xs sm:text-sm">
+                                <FaPlus /> Tambah
+                            </Button>
+                        </Link>
+                    </div>
+                    <div className="w-full md:w-auto">
+                        <Button variant="destructive" className="cursor-pointer w-full md:w-25 lg:w-auto text-xs sm:text-sm">
+                            <FaRegTrashAlt /> Hapus
                         </Button>
-                    </Link>
-                    <Button variant="destructive" className="cursor-pointer w-22">
-                        <FaRegTrashAlt/> Hapus
-                    </Button>
+                    </div>
                 </div>
             </div>
 
@@ -127,7 +135,7 @@ const JabatanStruktural = () => {
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
-                                            <IoIosArrowUp className="w-6! h-6! text-yellow-uika"/>
+                                            <IoIosArrowUp className="w-6! h-6! text-yellow-uika" />
                                         </Button>
                                     </Link>
                                     <Link to="">
@@ -136,7 +144,7 @@ const JabatanStruktural = () => {
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
-                                            <IoIosArrowDown className="w-6! h-6! text-yellow-uika"/>
+                                            <IoIosArrowDown className="w-6! h-6! text-yellow-uika" />
                                         </Button>
                                     </Link>
                                     <Link to="">
@@ -145,7 +153,7 @@ const JabatanStruktural = () => {
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
-                                            <FaPlus className="w-5! h-5! text-green-500"/>
+                                            <FaPlus className="w-5! h-5! text-green-500" />
                                         </Button>
                                     </Link>
                                     <Link to="">
@@ -154,11 +162,11 @@ const JabatanStruktural = () => {
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
-                                            <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
+                                            <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                                         </Button>
                                     </Link>
                                     <Button size="icon" variant="ghost" className="cursor-pointer">
-                                        <FaRegTrashAlt className="text-red-500"/>
+                                        <FaRegTrashAlt className="text-red-500" />
                                     </Button>
                                 </div>
                             </TableCell>

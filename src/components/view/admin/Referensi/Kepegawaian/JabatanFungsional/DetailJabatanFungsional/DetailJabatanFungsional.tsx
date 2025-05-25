@@ -19,25 +19,25 @@ const DetailJabatanFungsional = () => {
         <form>
           <CustomCard
             actions={
-              <div className="flex justify-end gap-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-4">
                 <Link to="/admin/referensi/kepegawaian/jabatan-fungsional">
                   <Button
                     type="button"
-                    className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+                    className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] text-xs sm:text-sm w-full sm:w-auto"
                   >
                     <IoIosArrowBack /> Kembali
                   </Button>
                 </Link>
                 <Button
                   type="submit"
-                  className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+                  className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] text-xs sm:text-sm w-full sm:w-auto"
                 >
                   <IoSaveSharp /> Simpan
                 </Button>
               </div>
             }
           >
-            <div className="grid grid-rows-5 grid-flow-col items-center gap-x-4">
+            <div className="flex flex-col sm:grid sm:grid-rows-5 gap-5 sm:gap-y-0 sm:gap-x-4 grid-flow-col sm:items-center gap-x-4">
               <FormFieldInput
                 form={form}
                 label="Kode Jabatan"

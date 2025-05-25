@@ -35,20 +35,20 @@ const JabatanFungsional = () => {
         actions={
           <div className="grid grid-rows-2 sm:flex">
             <Label className="w-32 text-[#FDA31A]">Jabatan Fungsional</Label>
-            <SelectFilter classname="sm:ml-32 w-50" options={unitKerjaOptions} />
+            <SelectFilter classname="sm:ml-32 w-full sm:w-45" options={unitKerjaOptions} />
           </div>
         }
       />
 
-      <div className="grid grid-rows-2 gap-4 sm:flex justify-between mt-6">
-        <div className="grid grid-rows-2 sm:flex gap-4">
-          <SelectFilter options={unitKerjaOptions} />
-          <SearchInput />
+      <div className="w-full flex flex-col sm:flex-row gap-4 justify-between mt-6">
+        <div className="w-full flex flex-col sm:flex-row gap-4">
+          <SelectFilter options={unitKerjaOptions} classname="w-full md:w-32" />
+          <SearchInput className="w-full md:w-80"/>
         </div>
 
         <div className="flex gap-3">
           <Link to="/admin/referensi/kepegawaian/jabatan-fungsional/detail-jabatan-fungsional">
-            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto">
               <FaPlus /> Tambah
             </Button>
           </Link>

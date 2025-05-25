@@ -203,15 +203,15 @@ const Pangkat = () => {
                 <form onSubmit={form.handleSubmit(handlePangkatSubmit)}>
                     <CustomCard
                         actions={
-                            <div className="grid grid-rows-2 gap-3 sm:flex justify-between mt-6">
-                                <div className="grid grid-rows-2 sm:flex gap-4">
+                            <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4 justify-between mt-6">
+                                <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4">
                                     <SelectFilter 
-                                    classname="w-60 sm:w-32"
+                                    classname="w-full md:w-32"
                                     options={unitKerjaOptions}/>
                                     <SearchInput/>
                                 </div>
 
-                                <div className="flex gap-3">
+                                <div className="w-full flex gap-3 justify-end">
                                     <Button type="button"
                                             onClick={() => {
                                                 if (!isEditMode) {
@@ -228,7 +228,7 @@ const Pangkat = () => {
                                                 }
 
                                             }}
-                                            className={`cursor-pointer ${
+                                            className={`cursor-pointer w-full md:w-auto text-xs sm:text-sm ${
                                                 isEditMode
                                                     ? "bg-gray-400"
                                                     : "bg-green-light-uika hover:bg-[#329C59]"

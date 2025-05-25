@@ -44,16 +44,16 @@ const RekapKehadiran = () => {
       <CustomCard
         actions={
           <div className="grid grid-rows-3 md:grid-rows-2 grid-flow-col gap-5">
-            <div className="grid grid-rows-2 sm:flex items-center">
-              <Label className="w-full text-[#FDA31A]">
+            <div className="flex md:flex-col flex-col lg:flex-row items-center">
+              <Label className="w-full text-[#FDA31A] text-xs sm:text-sm">
                 Status Presensi Pegawai
               </Label>
-              <Input type="date" />
+              <Input type="date" className="text-xs sm:text-sm" />
             </div>
-            <div className="grid grid-rows-2 sm:flex items-center">
+            <div className="flex md:flex-col flex-col lg:flex-row items-center">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full text-xs sm:text-sm">
                   <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
                 </SelectTrigger>
                 <SelectContent>
@@ -68,17 +68,17 @@ const RekapKehadiran = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-rows-2 sm:flex items-center">
-              <Label className="w-full text-[#FDA31A]">Tanggal Akhir</Label>
-              <Input type="date" />
+            <div className="flex md:flex-col flex-col lg:flex-row items-center">
+              <Label className="w-full text-[#FDA31A] text-xs sm:text-sm">Tanggal Akhir</Label>
+              <Input type="date" className="text-xs sm:text-sm"/>
             </div>
           </div>
         }
       />
 
-      <div className="mt-10 gap-5 flex">
+      <div className="mt-10 gap-5 flex flex-col sm:flex-row">
         <Select>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-full sm:w-32">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -93,7 +93,7 @@ const RekapKehadiran = () => {
           </SelectContent>
         </Select>
 
-        <div className="relative w-70 sm:w-80">
+        <div className="relative w-full md:w-80">
           <Input
             placeholder="Search"
             className="w-full pr-10"

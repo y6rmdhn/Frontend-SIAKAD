@@ -29,9 +29,9 @@ const HariLibur = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-xs sm:text-sm font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Hari Libur{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal  text-[12px] sm:text-[16px]">
           Daftar Hari Libur
         </span>
       </h1>
@@ -39,11 +39,11 @@ const HariLibur = () => {
         <form>
           <CustomCard
             actions={
-              <div className="grid grid-rows-2 sm:flex justify-between gap-3">
-                <div className="grid grid-rows-2 sm:flex">
-                  <Label className="w-60 sm:w-40 md:w-60 text-[#FDA31A]">Unit Kerja</Label>
+              <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
+                <div className="w-full grid grid-rows-2 sm:flex">
+                  <Label className="w-60 sm:w-40 md:w-60 text-[#FDA31A] text-xs sm:text-sm">Unit Kerja</Label>
                   <Select>
-                    <SelectTrigger className="w-58 sm:w-40 md:w-50">
+                    <SelectTrigger className="w-full sm:w-40 md:w-50 text-xs sm:text-sm">
                       <SelectValue placeholder="2025" />
                     </SelectTrigger>
                     <SelectContent>
@@ -59,7 +59,7 @@ const HariLibur = () => {
                   </Select>
                 </div>
                 <div className="flex gap-4">
-                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full sm:w-auto text-xs sm:text-sm">
                     <FaPlus className="w-4! h-4! text-white" />
                     Tambah
                   </Button>

@@ -29,15 +29,15 @@ const MediaPubikasi = () => {
       <Title title="Media Publikasi" subTitle="Daftar Media Publikasi" />
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 gap-3 md:flex justify-between mt-6">
-            <div className="grid grid-rows-2 sm:flex gap-4">
-              <SelectFilter classname="sm:w-41 md:w-32" options={unitKerjaOptions} />
-              <SearchInput />
+          <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4 justify-between mt-6">
+            <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4">
+              <SelectFilter options={unitKerjaOptions} />
+              <SearchInput className="w-full"/>
             </div>
 
-            <div className="flex gap-3">
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-auto md:w-35 lg:w-auto md:text-xs lg:text-base">
-                <IoMdDownload /> Unduh dari SISTER
+            <div className="w-full flex gap-3 justify-end">
+              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-35 lg:w-auto text-xs sm:text-sm">
+                <IoMdDownload /> Unduh dari Sister
               </Button>
             </div>
           </div>

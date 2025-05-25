@@ -33,7 +33,7 @@ const Kota = () => {
       <Title title="Kota" />
       <CustomCard
         actions={
-          <div className="flex">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Label className="w-32 text-[#FDA31A]">Provinsi</Label>
             <SelectFilter
               classname="w-auto sm:ml-32"
@@ -44,15 +44,15 @@ const Kota = () => {
         }
       />
 
-      <div className="grid grid-rows-2 gap-4 md:flex justify-between mt-6">
-        <div className="grid grid-rows-2 sm:flex gap-4">
-          <SelectFilter options={unitKerjaOptions} />
-          <SearchInput />
+      <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4 justify-between mt-6">
+        <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4">
+          <SelectFilter options={unitKerjaOptions} classname="lg:w-32" />
+          <SearchInput className="w-full lg:w-80" />
         </div>
 
-        <div className="flex gap-3">
+        <div className="w-full flex gap-3 justify-end">
           <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-27 lg:w-auto">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto text-xs sm:text-sm">
               <FaPlus /> Tambah
             </Button>
           </Link>

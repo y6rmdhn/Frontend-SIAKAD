@@ -95,9 +95,9 @@ const Berita = () => {
       <CustomCard
         actions={
           <div className="sm:flex grid grid-rows-1 gap-3">
-            <Label className="sm:w-45 md:w-60 text-yellow-uika">Unit Kerja</Label>
+            <Label className="sm:w-45 md:w-60 text-yellow-uika text-xs sm:text-sm">Unit Kerja</Label>
             <SelectFilter
-              classname="w-58 md:w-80 lg:w-92"
+              classname="w-full md:w-80 lg:w-92 text-xs sm:text-sm"
               placeholder="04001 - Universitas Ibn Khaldun"
               options={[{ value: "apple", label: "apple" }]}
             />
@@ -105,10 +105,10 @@ const Berita = () => {
         }
       />
 
-      <div className="grid grid-rows-2 gap-2 sm:flex justify-between mt-6">
-        <div className="grid grid-rows-2 sm:flex gap-2 lg:gap-4">
+      <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
+        <div className="flex flex-col md:flex-row gap-2 lg:gap-4">
           <SelectFilter
-            classname="w-60 sm:w-32"
+            classname="w-full md:w-32"
             placeholder="--Semua--"
             options={[{ value: "apple", label: "apple" }]}
           />
@@ -116,12 +116,12 @@ const Berita = () => {
           <SearchInput className=""/>
         </div>
 
-        <Button className="bg-green-light-uika hover:bg-hover-green-uika w-18 md:w-23">
+        <Button className="bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto mt-2 md:mt-0">
           Batalkan
         </Button>
       </div>
 
-      <Table className="mt-3 sm:mt-10 table-auto">
+      <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>

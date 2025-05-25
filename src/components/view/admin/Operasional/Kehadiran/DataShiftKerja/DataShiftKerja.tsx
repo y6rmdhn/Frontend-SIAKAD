@@ -21,9 +21,9 @@ const DataShiftKerja = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-lg sm:text-2xl font-semibold">
         Shift Kerja{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Daftar Shift Kerja
         </span>
       </h1>
@@ -31,28 +31,32 @@ const DataShiftKerja = () => {
         <form>
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardHeader>
-              <div className="flex justify-between">
-                <div className="relative">
-                  <Input className="w-2xs pr-8" placeholder="Search" />
-                  <FiSearch className="absolute -translate-y-1/2 top-1/2 right-2" />
+              <div className="flex flex-col gap-4 md:flex-row justify-between">
+                <div className="w-full md:w-70 lg:w-90 relative">
+                  <Input className="w-full md:w-70 lg:w-90 pr-8" placeholder="Search" />
+                  <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => navigate("/admin/pegawai")}
-                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer"
-                  >
-                    <IoIosArrowBack />
-                    Kembali ke Daftar
-                  </Button>
+                <div className="w-full flex flex-col sm:flex-row md:justify-end gap-2">
+                  <div className="w-full md:w-auto">
+                    <Button
+                      onClick={() => navigate("/admin/pegawai")}
+                      className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer text-xs sm:text-sm md:w-auto w-full"
+                    >
+                      <IoIosArrowBack />
+                      Kembali ke Daftar
+                    </Button>
+                  </div>
 
-                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer">
-                    <FaSave />
-                    Simpan
-                  </Button>
+                  <div className="w-full md:w-auto">
+                    <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer text-xs sm:text-sm md:w-auto w-full">
+                      <FaSave />
+                      Simpan
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="mt-10 grid-rows-4 grid-flow-col grid gap-5">
+            <CardContent className="mt-10 flex flex-col sm:flex-row sm:grid-rows-4 grid-flow-col sm:grid gap-5">
               <FormFieldInput
                 form={form}
                 label="Nama Shift"
@@ -155,7 +159,7 @@ const DataShiftKerja = () => {
             </CardContent>
             <CardFooter>
               <div className="bg-[#F6E9E9] w-full p-4 border-l-4 border-l-[#E3CBCB]">
-                <h1>
+                <h1 className="text-justify">
                   <span className="text-red-500">Keterangan :</span>Jika jam
                   pada hari shift dikosongi maka dianggap sebagai hari libur
                 </h1>

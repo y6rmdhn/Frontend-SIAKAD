@@ -34,20 +34,20 @@ import { FiSearch } from "react-icons/fi";
 const PermohonanCuti = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Permohonan Cuti{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Daftar Permohonan Cuti
         </span>
       </h1>
 
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 grid-flow-col gap-10">
-            <div className="flex">
+          <div className="grid grid-rows-3 lg:grid-rows-2 grid-flow-col gap-5 lg:gap-10">
+            <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="text-xs sm:text-sm w-full">
                   <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
                 </SelectTrigger>
                 <SelectContent>
@@ -62,10 +62,10 @@ const PermohonanCuti = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Status</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="text-xs sm:text-sm w-full">
                   <SelectValue placeholder="Diajukan" />
                 </SelectTrigger>
                 <SelectContent>
@@ -80,10 +80,10 @@ const PermohonanCuti = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Periode Cuti</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="text-xs sm:text-sm w-full">
                   <SelectValue placeholder="Cuti Tahunan" />
                 </SelectTrigger>
                 <SelectContent>
@@ -102,10 +102,10 @@ const PermohonanCuti = () => {
         }
       />
 
-      <div className="flex justify-between mt-6">
-        <div className="w-full flex gap-3">
+      <div className="flex flex-col gap-4 md:flex-row justify-between mt-6">
+        <div className="w-full flex flex-col sm:flex-row gap-3">
           <Select>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="text-xs sm:text-sm sm:w-32 w-full">
               <SelectValue placeholder="--Semua--" />
             </SelectTrigger>
             <SelectContent>
@@ -120,9 +120,9 @@ const PermohonanCuti = () => {
             </SelectContent>
           </Select>
 
-          <div className="relative">
+          <div className="w-full md:w-90 relative">
             <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-80 pr-8" />
+            <Input placeholder="Search" className="w-full md:w-90 pr-8 text-xs sm:text-sm" />
           </div>
         </div>
 
@@ -135,13 +135,13 @@ const PermohonanCuti = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center">NIP</TableHead>
-            <TableHead className="text-center">Nama Pegawai</TableHead>
-            <TableHead className="text-center">Unit Kerja</TableHead>
-            <TableHead className="text-center">Sisa Cuti</TableHead>
-            <TableHead className="text-center">Cuti Dipakai</TableHead>
-            <TableHead className="text-center">Jumlah Cuti</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Sisa Cuti</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Cuti Dipakai</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Jumlah Cuti</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
@@ -149,12 +149,12 @@ const PermohonanCuti = () => {
             <TableCell className="text-center">
               <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
             </TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               {/* <div className="flex justify-center items-center w-full h-full">
                 <Button size="icon" variant="ghost" className="cursor-pointer">

@@ -49,38 +49,44 @@ const ShiftKerja = () => {
         <form>
           <CustomCard
             actions={
-              <div className="gap-4 grid grid-rows-2 md:flex justify-between">
-                <div className="grid grid-rows-2 sm:flex gap-4 lg:gap-6">
-                  <Select>
-                    <SelectTrigger className="w-full sm:w-28 lg:w-32">
-                      <SelectValue placeholder="--Semua--" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Unit Kerja</SelectLabel>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+              <div className="w-full flex flex-col lg:flex-row justify-between mt-6">
+                <div className="w-full grid sm:grid-cols-2 gap-4 lg:flex lg:w-full">
+                  <div className="w-full lg:w-32">
+                    <Select>
+                      <SelectTrigger className="w-full lg:w-32 text-xs sm:text-sm">
+                        <SelectValue placeholder="--Semua--" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Unit Kerja</SelectLabel>
+                          <SelectItem value="apple">Apple</SelectItem>
+                          <SelectItem value="banana">Banana</SelectItem>
+                          <SelectItem value="blueberry">Blueberry</SelectItem>
+                          <SelectItem value="grapes">Grapes</SelectItem>
+                          <SelectItem value="pineapple">Pineapple</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                  <div className="relative">
+                  <div className="w-full relative lg:w-90">
                     <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                    <Input placeholder="Search" className="w-60 sm:w-70 lg:w-80 pr-8" />
+                    <Input placeholder="Search" className="w-full pr-8 lg:w-90 text-xs sm:text-sm" />
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] sm:w-28 md:w-auto md:text-xs lg:text-sm">
-                    <FaPlus /> Tambah
-                  </Button>
+                <div className="w-full grid sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:flex lg:w-auto">
+                  <div className="w-full lg:w-auto">
+                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                      <FaPlus /> Tambah
+                    </Button>
+                  </div>
 
-                  <Button variant="destructive" className="cursor-pointer md:text-xs lg:text-sm">
-                    <FaRegTrashAlt /> Hapus
-                  </Button>
+                  <div className="w-full lg:w-auto">
+                    <Button variant="destructive" className="cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
+                      <FaRegTrashAlt /> Hapus
+                    </Button>
+                  </div>
                 </div>
               </div>
             }

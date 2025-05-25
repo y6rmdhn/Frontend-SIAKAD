@@ -14,9 +14,9 @@ const DetailRiwayatPelanggaran = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Pelanggaran{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Detail Riwayat Pelanggaran
         </span>
       </h1>
