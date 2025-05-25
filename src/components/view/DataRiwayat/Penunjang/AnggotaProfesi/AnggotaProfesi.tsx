@@ -2,10 +2,10 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import InfoList from "@/components/blocks/InfoList";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
@@ -26,20 +26,18 @@ const AnggotaProfesi = () => {
           </div>
         }
       />
-      <div className="w-full border-l-2 border-[#6AAEF1] flex flex-col gap-2 sm:grid sm:grid-cols-2 mt-10 bg-[#D6E8F9] p-4 ">
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p className="text-sm sm:text-base">NIP</p>
-          <p className="text-sm sm:text-base">Nama</p>
-          <p className="text-sm sm:text-base">Unit Kerja</p>
-          <p className="text-sm sm:text-base">Status</p>
-        </div>
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p className="text-sm sm:text-base">Jab. Akademik</p>
-          <p className="text-sm sm:text-base">Jab. Fungsional</p>
-          <p className="text-sm sm:text-base">Jab. Struktural</p>
-          <p className="text-sm sm:text-base">Pendidikan</p>
-        </div>
-      </div>
+      <InfoList
+        items={[
+          "NIP",
+          "Nama",
+          "Unit Kerja",
+          "Status",
+          "Jab. Akademik",
+          "Jab. Fungsional",
+          "Jab. Struktural",
+          "Pendidikan",
+        ]}
+      />
       <div className="gap-5 w-full flex flex-col sm:flex-row mt-5">
         <Select>
           <SelectTrigger className="w-full sm:w-32">
