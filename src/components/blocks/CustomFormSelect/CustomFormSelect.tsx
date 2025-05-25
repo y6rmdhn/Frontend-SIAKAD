@@ -76,7 +76,10 @@ export const FormFieldSelect = ({
             {!disabled && (
               <SelectContent>
                 {options.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem
+                    key={option.value}
+                    value={option.value.toString()}
+                  >
                     {option.label}
                   </SelectItem>
                 ))}

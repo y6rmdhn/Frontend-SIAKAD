@@ -74,6 +74,7 @@ const DetailDatasering = () => {
                 "Pendidikan",
               ]}
             />
+
             <div className="mt-10 grid md:grid-rows-5 md:grid-flow-col md:items-center gap-6 w-full">
               <FormFieldSelect
                 label="Kategori Kegiatan"
