@@ -35,23 +35,23 @@ const Organisasi = () => {
     return (
         <div className="mt-10 mb-20">
             <Title title="Organisasi" subTitle="Daftar Organisasi" />
-            <div className="w-full border-l-2 border-[#6AAEF1] grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
+            <div className="w-full border-l-2 border-[#6AAEF1] flex flex-col gap-2 sm:grid sm:grid-cols-2 mt-10 bg-[#D6E8F9] p-4 ">
                 <div className="flex flex-col gap-2 text-[#2572BE]">
-                    <p>NIP</p>
-                    <p>Nama</p>
-                    <p>Unit Kerja</p>
-                    <p>Status</p>
+                    <p className="text-sm sm:text-base">NIP</p>
+                    <p className="text-sm sm:text-base">Nama</p>
+                    <p className="text-sm sm:text-base">Unit Kerja</p>
+                    <p className="text-sm sm:text-base">Status</p>
                 </div>
                 <div className="flex flex-col gap-2 text-[#2572BE]">
-                    <p>Jab. Akademik</p>
-                    <p>Jab. Fungsional</p>
-                    <p>Jab. Struktural</p>
-                    <p>Pendidikan</p>
+                    <p className="text-sm sm:text-base">Jab. Akademik</p>
+                    <p className="text-sm sm:text-base">Jab. Fungsional</p>
+                    <p className="text-sm sm:text-base">Jab. Struktural</p>
+                    <p className="text-sm sm:text-base">Pendidikan</p>
                 </div>
             </div>
-            <div className="gap-5 flex mt-5">
+            <div className="gap-5 w-full flex flex-col sm:flex-row mt-5">
                 <Select>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                         <SelectValue placeholder="--Semua--" />
                     </SelectTrigger>
                     <SelectContent>
@@ -66,32 +66,32 @@ const Organisasi = () => {
                     </SelectContent>
                 </Select>
 
-                <div className="relative">
+                <div className="w-full sm:w-90 relative">
                     <FiSearch className="absolute top-1/2 -translate-y-1/2 right-9" />
                     <FiRefreshCw className="absolute top-1/2 -translate-y-1/2 right-3" />
-                    <Input placeholder="Search" className="w-80 pr-8" />
+                    <Input placeholder="Search" className="w-full sm:w-90 pr-8" />
                 </div>
             </div>
             <Table className="mt-10 table-auto">
                 <TableHeader>
                     <TableRow className="bg-[#E7ECF2] ">
-                        <TableHead className="text-center text-black">Tgl Mulai</TableHead>
-                        <TableHead className="text-center text-black">Tgl Selesai</TableHead>
-                        <TableHead className="text-center text-black">Nama Organisasi</TableHead>
-                        <TableHead className="text-center text-black">Jabatan</TableHead>
-                        <TableHead className="text-center text-black">Lingkup</TableHead>
-                        <TableHead className="text-center text-black">Status Pengajuan</TableHead>
-                        <TableHead className="text-center text-black">Aksi</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Tgl Mulai</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Tgl Selesai</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Nama Organisasi</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Jabatan</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Lingkup</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Status Pengajuan</TableHead>
+                        <TableHead className="text-center text-black text-xs sm:text-sm">Aksi</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
                     <TableRow className=" even:bg-[#E7ECF2]">
-                        <TableCell className="text-center"></TableCell>
-                        <TableCell className="text-center"></TableCell>
-                        <TableCell className="text-center"></TableCell>
-                        <TableCell className="text-center"></TableCell>
-                        <TableCell className="text-center"></TableCell>
-                        <TableCell className="text-center"></TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
                         <TableCell className="h-full">
                             <div className="flex justify-center items-center w-full h-full">
                                 <Link to="">
