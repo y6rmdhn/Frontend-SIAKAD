@@ -202,6 +202,7 @@ import LoadingSpinner from "./components/blocks/LoadingSpinner";
 import LoadingText from "./components/blocks/LoadingText";
 import BiodataPageUser from "./pages/biodata";
 import EvaluasiKerjaUserPage from "./pages/operasional/EvaluasiKerja";
+import DetailEvaluasiKerjaUserPage from "./pages/operasional/EvaluasiKerja/detailEvaluasiKerja";
 
 function App() {
   const { isHydrate } = useHydration();
@@ -250,6 +251,10 @@ function App() {
            <Route
             path="evaluasi-kerja"
             Component={EvaluasiKerjaUserPage}
+          />
+          <Route
+            path="detail-evaluasi-kerja"
+            Component={DetailEvaluasiKerjaUserPage}
           />
         </Route>
 

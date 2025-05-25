@@ -1,5 +1,6 @@
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
+import CustomCard from "@/components/blocks/Card";
 import {
   Table,
   TableBody,
@@ -17,18 +18,26 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import React from "react";
+import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { IoEyeOutline } from "react-icons/io5";
-import { IoIosArrowBack } from "react-icons/io";
-import { MdOutlineFileDownload } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import InfoList from "@/components/blocks/InfoList";
 
 const EvaluasiKerja = () => {
   return (
     <div className="mt-10 mb-20">
-      <Title title="Evaluasi Kerja" subTitle="Form Evaluasi Kerja" />
-
+      <Title title="Evaluasi Kerja" subTitle="Data Evaluasi Kerja" />
+      <CustomCard
+        actions={
+          <div className="flex justify-end">
+            <Link to="/operasional/detail-evaluasi-kerja">
+              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:w-auto">
+                <FaPlus /> Tambah Baru
+              </Button>
+            </Link>
+          </div>
+        }
+      />
       <InfoList
         items={[
           "NIP",
@@ -42,56 +51,36 @@ const EvaluasiKerja = () => {
         ]}
       />
 
-      <div className="flex justify-end mt-10">
-        <div className="flex flex-col md:flex-row w-full md:w-auto gap-4">
-          <Link
-            className="w-full md:w-auto"
-            to="/data-riwayat/pelaksanaan-pengabdian/pembicara"
-          >
-            <Button className="bg-green-light-uika w-full md:w-auto hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
-              <IoIosArrowBack />
-              Kembali ke Daftar
-            </Button>
-          </Link>
-
-          <Button className="bg-[#FDA31A] hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
-            <MdOutlineFileDownload />
-            Simpan
-          </Button>
-        </div>
-      </div>
-
-      <Table className="mt-10 table-auto text-xs lg:text-sm">
+      <Table className="mt-10 table-auto text-xs lg:text-sm border-1">
         <TableHeader>
-          <TableRow className="bg-[#2572BE] text-white">
-            <TableHead className="text-center text-white">NIP</TableHead>
-            <TableHead className="text-center text-white">
+          <TableRow className="bg-[#004680] text-white">
+            <TableHead className="text-center text-white border text-xs sm:text-sm">NIP</TableHead>
+            <TableHead className="text-center text-white border text-xs sm:text-sm">
               Nama Pegawai
             </TableHead>
-            <TableHead className="text-center text-white">
+            <TableHead className="text-center text-white border text-xs sm:text-sm">
               Hubungan Kerja
             </TableHead>
-            <TableHead className="text-center text-white">Fungsional</TableHead>
-            <TableHead className="text-center text-white">Aksi</TableHead>
+            <TableHead className="text-center text-white border text-xs sm:text-sm">Fungsional</TableHead>
+            <TableHead className="text-center text-white border text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
-                  >
-                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                  </Button>
-                </Link>
+                <Button
+                  size="icon"
+                  type="button"
+                  variant="ghost"
+                  className="cursor-pointer"
+                >
+                  <MdEdit className="w-6! h-6! bg-[#FDA31A] text-white rounded-sm" />
+                </Button>
               </div>
             </TableCell>
           </TableRow>
