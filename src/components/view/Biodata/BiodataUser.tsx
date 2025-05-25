@@ -5,9 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { FiSearch } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +14,7 @@ import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import pegawaiDetailMenu from "@/constant/PegawaiDetailMenu";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import postPegawaiServices from "@/services/create.pegawai.ts";
@@ -409,15 +407,6 @@ const BiodataUser = () => {
         return <DetailKendaraanSection form={form} />;
     }
   };
-
-  // useEffect(() => {
-  //   if (cardFooterRef.current) {
-  //     cardFooterRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //   }
-  // }, [show]);
 
   return (
     <div className="mt-10 mb-10">

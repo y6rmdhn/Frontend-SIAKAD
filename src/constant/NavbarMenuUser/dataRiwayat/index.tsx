@@ -4,6 +4,20 @@ const dataRiwayat: {
   childrenItems?: { title: string; href: string }[];
 }[] = [
   {
+    title: "Keluarga",
+    href: "",
+    childrenItems: [
+      {
+        title: "Orangtua",
+        href: "/data-riwayat/keluarga/orangtua",
+      },
+      {
+        title: "Anak",
+        href: "/data-riwayat/keluarga/anak",
+      },
+    ],
+  },
+  {
     title: "Kepegawaian",
     href: "",
     childrenItems: [
