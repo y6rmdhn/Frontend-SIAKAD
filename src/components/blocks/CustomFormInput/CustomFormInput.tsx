@@ -104,7 +104,7 @@ export const FormFieldInput = ({
               </div>
             ) : (
               <Input
-                className={`${inputStyle} text-xs sm:text-sm`}
+                className={`${inputStyle} text-xs md:text-sm`}
                 {...field}
                 type={type}
                 placeholder={placeholder}

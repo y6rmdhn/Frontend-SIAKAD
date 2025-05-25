@@ -1,5 +1,3 @@
-import React from "react";
-
 interface IPropsTitle {
   title: string;
   subTitle?: string;
@@ -14,7 +12,7 @@ const Title = (props: IPropsTitle) => {
       className={`
         ${
           titleStyle ??
-          "text-lg md:text-2xl flex flex-row gap-2 items-center font-normal"
+          "text-lg md:text-2xl flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center font-normal"
         }
         ${className ?? ""}
       `}

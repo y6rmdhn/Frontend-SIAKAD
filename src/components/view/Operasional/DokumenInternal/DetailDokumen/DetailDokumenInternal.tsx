@@ -91,6 +91,7 @@ const DetailDokumenInternal = () => {
                       Data Dokumen
                     </h1>
                   </div>
+
                   <div className="grid md:grid-cols-2 gap-4">
                     {/* Kolom Kiri */}
                     <div className="space-y-7">

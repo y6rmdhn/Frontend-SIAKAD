@@ -23,7 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
@@ -41,18 +40,21 @@ const DetailVisitingScientist = () => {
         <form>
           <CustomCard
             actions={
-              <div className="flex justify-end gap-2">
-                <Link to="/data-riwayat/pelaksanaan-pendidikan/visiting-scientist">
+              <div className="flex justify-end gap-2 flex-col md:flex-row">
+                <Link
+                  className="w-full md:w-auto"
+                  to="/data-riwayat/pelaksanaan-pendidikan/visiting-scientist"
+                >
                   <Button
                     type="button"
-                    className="bg-green-light-uika hover:bg-hover-green-uika"
+                    className="bg-green-light-uika w-full md:w-auto hover:bg-hover-green-uika"
                   >
                     <IoIosArrowBack /> Kembali ke Daftar
                   </Button>
                 </Link>
                 <Button
                   type="submit"
-                  className="bg-yellow-uika hover:bg-hover-yellow-uika"
+                  className="bg-yellow-uika w-full md:w-auto hover:bg-hover-yellow-uika"
                 >
                   <IoMdDownload /> Simpan
                 </Button>
@@ -71,7 +73,7 @@ const DetailVisitingScientist = () => {
                 "Pendidikan",
               ]}
             />
-            <div className="mt-10 grid grid-rows-5 grid-flow-col items-center gap-4 w-full">
+            <div className="mt-10 grid md:grid-rows-5 md:grid-flow-col md:items-center gap-6 w-full">
               <FormFieldSelect
                 label="Aktivitas Libmas"
                 name="kategoriKegiatan"
@@ -167,19 +169,19 @@ const DetailVisitingScientist = () => {
               />
             </div>
 
-            <h1 className="mt-10 text-green-light-uika font-semibold text-xl">
+            <h1 className="mt-10 text-green-light-uika font-semibold text-base md:text-xl">
               Dokumen Pendukung
             </h1>
 
             <Separator className="w-full" />
 
             <div className="flex justify-end mt-10">
-              <Button className="bg-green-light-uika hover:bg-hover-green-uika">
+              <Button className="bg-green-light-uika text-xs md:text-sm hover:bg-hover-green-uika">
                 <FaPlus /> Tambah
               </Button>
             </div>
 
-            <Table className="mt-3 table-auto border-separate border-spacing-x-[1px]">
+            <Table className="mt-3 table-auto text-xs lg:text-sm border-separate border-spacing-x-[1px]">
               <TableHeader>
                 <TableRow className="bg-[#002E5A]">
                   <TableHead className="text-center text-white rounded-tl-lg">

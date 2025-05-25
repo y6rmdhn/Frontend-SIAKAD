@@ -17,7 +17,7 @@ type FormFieldInputProps = {
   type?: "file";
   placeholder?: string;
   labelStyle?: string;
-  classname: string;
+  classname?: string;
   required: boolean;
 };
 

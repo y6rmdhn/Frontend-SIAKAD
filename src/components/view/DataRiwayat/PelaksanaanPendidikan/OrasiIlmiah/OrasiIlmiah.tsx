@@ -22,7 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
-import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -31,11 +30,12 @@ const OrasiIlmiah = () => {
   return (
     <div className="mt-10 mb-20">
       <Title title="Orasi Ilmiah" subTitle="Daftar Orasi Ilmiah" />
+
       <CustomCard
         actions={
           <div className="flex justify-end ">
             <Link to="/data-riwayat/pelaksanaan-pendidikan/detail-orasi-ilmiah">
-              <Button className="bg-[#FDA31A]">
+              <Button className="bg-[#FDA31A] text-xs md:text-sm hover:bg-[#F9A31A]">
                 <FaPlus /> Tambah Baru
               </Button>
             </Link>
@@ -56,12 +56,16 @@ const OrasiIlmiah = () => {
         ]}
       />
 
-      <div className="gap-5 flex mt-5">
-        <SelectFilter options={unitKerjaOptions} placeholder="--Semua--" />
+      <div className="gap-5 flex flex-col md:flex-row mt-5">
+        <SelectFilter
+          classname="w-full md:w-32 "
+          options={unitKerjaOptions}
+          placeholder="--Semua--"
+        />
         <SearchInput />
       </div>
 
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center">Judul Makalah</TableHead>
