@@ -24,10 +24,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useForm } from "react-hook-form";
-import { FaPlus } from "react-icons/fa";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoMdDownload } from "react-icons/io";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { IoIosArrowBack, IoMdDownload } from "react-icons/io";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 import { Link } from "react-router-dom";
 
