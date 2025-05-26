@@ -1,7 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -12,15 +11,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,12 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { FaPlus } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
-import { FiRefreshCw } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import InfoList from "@/components/blocks/InfoList";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import unitKerjaOptions from "@/constant/dummyFilter";
+import SearchInput from "@/components/blocks/SearchInput";
 
 const Diklat = () => {
   return (
@@ -51,52 +42,47 @@ const Diklat = () => {
           </div>
         }
       />
-      <div className="w-full border-l-2 border-[#6AAEF1] grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>NIP</p>
-          <p>Nama</p>
-          <p>Unit Kerja</p>
-          <p>Status</p>
-        </div>
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>Jab. Akademik</p>
-          <p>Jab. Fungsional</p>
-          <p>Jab. Struktural</p>
-          <p>Pendidikan</p>
-        </div>
-      </div>
-      <div className="gap-5 flex mt-5">
-        <Select>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="--Semua--" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Unit Kerja</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <InfoList
+        items={[
+          "NIP",
+          "Nama",
+          "Unit Kerja",
+          "Status",
+          "Jab. Akademik",
+          "Jab. Fungsional",
+          "Jab. Struktural",
+          "Pendidikan",
+        ]}
+      />
 
-        <div className="relative">
-          <FiSearch className="absolute top-1/2 -translate-y-1/2 right-9" />
-          <FiRefreshCw className="absolute top-1/2 -translate-y-1/2 right-3" />
-          <Input placeholder="Search" className="w-80 pr-8" />
-        </div>
+      <div className="gap-5 flex flex-col md:flex-row mt-5">
+        <SelectFilter
+          classname="w-full md:w-32 "
+          options={unitKerjaOptions}
+          placeholder="--Semua--"
+        />
+        <SearchInput />
       </div>
-      <Table className="mt-10 table-auto">
+
+      <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-[#E7ECF2] ">
-            <TableHead className="text-center text-black">Nama Diklat</TableHead>
-            <TableHead className="text-center text-black">Jenis Diklat</TableHead>
-            <TableHead className="text-center text-black">Penyelenggara</TableHead>
+            <TableHead className="text-center text-black">
+              Nama Diklat
+            </TableHead>
+            <TableHead className="text-center text-black">
+              Jenis Diklat
+            </TableHead>
+            <TableHead className="text-center text-black">
+              Penyelenggara
+            </TableHead>
             <TableHead className="text-center text-black">Tahun</TableHead>
-            <TableHead className="text-center text-black">Tgl Diajukan</TableHead>
-            <TableHead className="text-center text-black">Status Pengajuan</TableHead>
+            <TableHead className="text-center text-black">
+              Tgl Diajukan
+            </TableHead>
+            <TableHead className="text-center text-black">
+              Status Pengajuan
+            </TableHead>
             <TableHead className="text-center text-black">Aksi</TableHead>
           </TableRow>
         </TableHeader>

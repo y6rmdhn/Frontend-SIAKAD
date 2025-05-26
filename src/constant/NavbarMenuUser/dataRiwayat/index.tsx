@@ -195,7 +195,7 @@ const dataRiwayat: {
   },
   {
     title: "Kompensasi",
-    href: "",
+    href: "/data-riwayat/kompensasi/pelanggaran",
   },
 ];
 
