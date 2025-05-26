@@ -20,6 +20,7 @@ import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/d
 import DasboardPageUser from "./pages/dasboard";
 import RiwayatKehadiranPage from "./pages/riwayatKehadiran";
 import ModulePage from "./pages/module";
+import ProfilPage from "./pages/profil";
 import RiwayatPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan";
 import DetailPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan";
 import DokumenInternalPage from "./pages/admin/operasional/kompensasi/dokumenInternal";
@@ -223,6 +224,7 @@ function App() {
         <Route path="/" Component={ModulePage} />
         <Route path="/login" Component={LoginPage} />
         <Route path="/forget-password" Component={ForgetPasswordPage} />
+        <Route path="/profil" Component={ProfilPage} />
 
         {/* USER PAGES */}
         <Route path="/dasboard" Component={DasboardPageUser} />
