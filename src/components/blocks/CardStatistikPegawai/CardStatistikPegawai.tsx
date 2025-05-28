@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomCard from "../Card/CustomCard";
 import { IoStatsChart } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
@@ -288,7 +288,7 @@ const CardStatistikPegawai = ({
         }
         cardStyle="border-t-[#106D63]"
       >
-        <div className="grid grid-cols-2 gap-1 sm:grid grid-cols-2 lg:grid-cols-3 lg:grid-flow-row sm:gap-2">
+        <div className="grid grid-cols-2 gap-1 sm:grid lg:grid-cols-3 lg:grid-flow-row sm:gap-2">
           <Button
             onClick={() => setAktifBtn("Fungsional")}
             className={cn(
@@ -317,7 +317,7 @@ const CardStatistikPegawai = ({
               aktifBtn === "Pendidikan"
                 ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
                 : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
-              "w-full lg:w-auto"
+              "w-full lg:w-auto col-span-2 min-[506px]:col-span-1"
             )}
           >
             Pendidikan
@@ -328,7 +328,7 @@ const CardStatistikPegawai = ({
               aktifBtn === "Pendidikan Non Akademik"
                 ? "bg-[#FFAC07] hover:bg-[#FFAC07] cursor-pointer"
                 : "bg-[#CDCDCD] hover:bg-[#CDCDCD] cursor-pointer",
-              "w-full lg:w-auto"
+              "w-full lg:w-auto col-span-2 min-[506px]:col-span-1"
             )}
           >
             Pendidikan Non Akademik

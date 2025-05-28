@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import { CiGrid41 } from "react-icons/ci";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoExit } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AvatarMobile = ({ initials, user, logout }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -31,9 +31,9 @@ const AvatarMobile = ({ initials, user, logout }) => {
 
       <AnimatePresence>
         {isOpen && (
-          <div className="relative">
+          <div className="relative w-full">
             <motion.div
-              className="absolute -top-10 right-58 z-50"
+              className="relative z-50 w-full"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -43,6 +43,7 @@ const AvatarMobile = ({ initials, user, logout }) => {
                 onClick={() => setIsOpen(false)}
                 variant="ghost"
                 size="icon"
+                className="absolute -top-8 -left-0 z-50"
               >
                 <X className="w-5! h-5!" />
               </Button>
@@ -82,16 +83,18 @@ const AvatarMobile = ({ initials, user, logout }) => {
                   </Button>
 
                   <div className="flex ml-2 items-center w-full justify-between">
-                    <div className="flex flex-col">
-                      <h1 className="font-semibold text-black text-sm text-wrap">
-                        {user}
-                      </h1>
+                    <Link to="/profil">
+                      <div className="flex flex-col">
+                        <h1 className="font-semibold text-black text-sm text-wrap">
+                          {user}
+                        </h1>
 
-                      <span className="flex items-center gap-1 text-xs text-gray-500">
-                        Lihat Profil
-                        <FaArrowRightLong />
-                      </span>
-                    </div>
+                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                          Lihat Profil
+                          <FaArrowRightLong />
+                        </span>
+                      </div>
+                    </Link>
                     <Button
                       onClick={() => navigate("/")}
                       className="w-8 h-8 bg-white shadow-md flex justify-center items-center rounded-full"

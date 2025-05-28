@@ -52,7 +52,7 @@ const Dasboard = () => {
 
       {data ? (
         <>
-          <div className="grid grid-rows-4 sm:grid-rows-1 md:grid-rows-1 gap-4 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-2 md:gap-5 lg:gap-10 mt-6 sm:gap-3 xl:gap-10 2xl:gap-10">
+          <div className="grid grid-rows-4 sm:grid-rows-1 md:grid-rows-1 gap-4 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-2 lg:gap-10 mt-6 sm:gap-3 xl:gap-10 2xl:gap-10">
             <div className="bg-gradient-to-r from-[#1C8C88] to-[#28BCB7] h-20 xl:h-40 2xl:h-40 lg:h-40 rounded-xl text-white flex items-center justify-center relative sm:h-30 md:h-35">
               <div className="relative w-full h-full flex items-center justify-center">
                 <h1 className="text-xs lg:text-lg font-semibold text-center flex flex-col items-center sm:text-xs md:text-sm md:mx-1 xl:text-lg 2xl:text-lg">
@@ -151,8 +151,8 @@ const Dasboard = () => {
               >
                 <div className="flex flex-col gap-5 overflow-hidden">
                   {/* Tambahkan overflow-hidden */}
-                  {data?.news.map((item, index) => (
-                    <div key={index} className="min-w-0">
+                  {data?.news.map((item) => (
+                    <div key={item.id} className="min-w-0">
                       {/* Tambahkan min-w-0 di setiap item */}
                       <h1 className="truncate">{item.judul}</h1>
                       <p className="text-xs text-muted-foreground truncate">

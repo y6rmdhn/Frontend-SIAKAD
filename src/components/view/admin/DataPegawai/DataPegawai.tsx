@@ -539,7 +539,11 @@ const DataPegawai = () => {
                     key={index}
                     type="button"
                     onClick={() => setShow(item.show)}
-                    className={`flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
+                    className={`${
+                      item.title === "Alamat Domisili & Kontak"
+                        ? "col-span-2 min-[506px]:col-span-1"
+                        : ""
+                    }flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
                       show === item.show ? "bg-[#106D63] text-white" : ""
                     }`}
                   >

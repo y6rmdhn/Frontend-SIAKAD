@@ -7,19 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaCheck } from "react-icons/fa6";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa6";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MdEdit } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
@@ -38,6 +28,8 @@ import CustomPagination from "@/components/blocks/CustomPagination";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import unitKerjaOptions from "@/constant/dummyFilter";
 
 const Pegawai = () => {
   const params = useParams();
@@ -100,28 +92,18 @@ const Pegawai = () => {
             <FilterPegawai form={form} />
           </CustomCard>
 
-          <div className="mt-14 flex flex-col lg:flex-row gap-10 justify-between">
-            <div className="flex flex-col lg:flex-row gap-5">
-              <Select>
-                <SelectTrigger className="w-full lg:w-[180px]">
-                  <SelectValue placeholder="-- Semua --" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Semua</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+          <div className="mt-14 flex flex-col min-[1137px]:flex-row gap-4 justify-between">
+            <div className="flex flex-col md:flex-row gap-5">
+              <SelectFilter
+                classname="w-full md:w-32 "
+                options={unitKerjaOptions}
+                placeholder="--Semua--"
+              />
 
               <SearchInput />
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <Link to="/admin/pegawai/data-pegawai">
                 <Button className="cursor-pointer w-full  bg-green-light-uika hover:bg-[#329C59]">
                   <FaPlus /> Tambah
