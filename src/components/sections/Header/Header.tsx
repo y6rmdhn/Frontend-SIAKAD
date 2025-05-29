@@ -21,9 +21,8 @@ import { ILogout } from "@/types/auth";
 import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 import { clearUserData } from "@/store/userSlice";
-import { motion } from "framer-motion";
 import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AvatarMobile from "@/components/blocks/AvatarMobile/AvatarMobile";
 
 const Header = () => {
   const userSelector = useSelector((state: RootState) => state.user);
@@ -173,15 +172,11 @@ const Header = () => {
           </DropdownMenu>
 
           <div className="flex md:hidden">
-            <Button variant="ghost" size="icon">
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>{initials}</AvatarFallback>
-              </Avatar>
-            </Button>
+            <AvatarMobile
+              logout={handleLogout}
+              user={userSelector.name}
+              initials={initials}
+            />
           </div>
         </div>
       </div>

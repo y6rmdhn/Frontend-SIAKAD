@@ -3,6 +3,7 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import InfoList from "@/components/blocks/InfoList";
 import {
   Pagination,
   PaginationContent,
@@ -41,30 +42,28 @@ const KemampuanBahasa = () => {
         actions={
           <div className="flex justify-end">
             <Link to="/data-riwayat/pengembangan-diri/detail-kemampuan-bahasa">
-              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika">
+              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:w-auto">
                 <FaPlus /> Tambah Baru
               </Button>
             </Link>
           </div>
         }
       />
-      <div className="w-full border-l-2 border-[#6AAEF1] grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>NIP</p>
-          <p>Nama</p>
-          <p>Unit Kerja</p>
-          <p>Status</p>
-        </div>
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>Jab. Akademik</p>
-          <p>Jab. Fungsional</p>
-          <p>Jab. Struktural</p>
-          <p>Pendidikan</p>
-        </div>
-      </div>
-      <div className="gap-5 flex mt-5">
+      <InfoList
+        items={[
+          "NIP",
+          "Nama",
+          "Unit Kerja",
+          "Status",
+          "Jab. Akademik",
+          "Jab. Fungsional",
+          "Jab. Struktural",
+          "Pendidikan",
+        ]}
+      />
+      <div className="w-full flex flex-col sm:flex-row gap-5  mt-5">
         <Select>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-full sm:w-32">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -79,40 +78,40 @@ const KemampuanBahasa = () => {
           </SelectContent>
         </Select>
 
-        <div className="relative">
+        <div className="w-full sm:w-90 relative">
           <FiSearch className="absolute top-1/2 -translate-y-1/2 right-9" />
           <FiRefreshCw className="absolute top-1/2 -translate-y-1/2 right-3" />
-          <Input placeholder="Search" className="w-80 pr-8" />
+          <Input placeholder="Search" className="w-full sm:w-90 pr-8" />
         </div>
       </div>
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-[#E7ECF2] ">
-            <TableHead className="text-center text-black">Tahun</TableHead>
-            <TableHead className="text-center text-black">Bahasa</TableHead>
-            <TableHead className="text-center text-black">
+            <TableHead className="text-center text-black text-xs sm:text-sm">Tahun</TableHead>
+            <TableHead className="text-center text-black text-xs sm:text-sm">Bahasa</TableHead>
+            <TableHead className="text-center text-black text-xs sm:text-sm">
               Nilai Mendengar
             </TableHead>
-            <TableHead className="text-center text-black">
+            <TableHead className="text-center text-black text-xs sm:text-sm">
               Nilai Bicara
             </TableHead>
-            <TableHead className="text-center text-black">
+            <TableHead className="text-center text-black text-xs sm:text-sm">
               Nilai Menulis
             </TableHead>
-            <TableHead className="text-center text-black">
+            <TableHead className="text-center text-black text-xs sm:text-sm">
               Status Pengajuan
             </TableHead>
-            <TableHead className="text-center text-black">Aksi</TableHead>
+            <TableHead className="text-center text-black text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
           <TableRow className=" even:bg-[#E7ECF2]">
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Link to="">

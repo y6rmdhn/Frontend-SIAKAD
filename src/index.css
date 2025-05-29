@@ -119,6 +119,7 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-dots: loading-dots;
+  --breakpoint-laptop-mid: 1258px;
 }
 
 @theme inline {

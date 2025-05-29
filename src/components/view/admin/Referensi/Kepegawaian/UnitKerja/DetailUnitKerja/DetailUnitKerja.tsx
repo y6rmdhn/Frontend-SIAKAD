@@ -2,7 +2,6 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import React from "react";
 import { IoSaveSharp } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useForm } from "react-hook-form";
@@ -10,41 +9,50 @@ import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormIn
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Link } from "react-router-dom";
 import SearchInput from "@/components/blocks/SearchInput";
-import { Input } from "@/components/ui/input";
+// import { useMutation } from "@tanstack/react-query";
 
 const DetailUnitKerja = () => {
   const form = useForm();
+
+  // const {  } = useMutation({
+  //   mutationFn: async () =>
+  // })
+
+  const handleSubmitDetailUnitKerja = (values) => {
+    console.log(values);
+  };
 
   return (
     <div className="mt-10 mb-20">
       <Title title="Unit Kerja" subTitle="Detail Unit kerja" />
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(handleSubmitDetailUnitKerja)}>
           <CustomCard
             actions={
-              <div className="flex justify-between gap-4 ">
+              <div className="flex flex-col sm:flex-row justify-between gap-4 ">
                 <SearchInput />
 
-                <div className="flex sm:grid sm:grid-rows-2 md:flex gap-2">
-                  <Link to="/admin/referensi/kepegawaian/unit-kerja">
-                    <Button
-                      type="button"
-                      className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
-                    >
-                      <IoIosArrowBack /> Kembali Ke Daftar
+                <div className="w-full sm:w-auto flex gap-2">
+                  <div className="w-full sm:w-auto">
+                    <Link to="/admin/referensi/kepegawaian/unit-kerja">
+                      <Button
+                        type="button"
+                        className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
+                      >
+                        <IoIosArrowBack /> Kembali Ke Daftar
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto">
+                      <IoSaveSharp /> Simpan
                     </Button>
-                  </Link>
-                  <Button
-                    type="submit"
-                    className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
-                  >
-                    <IoSaveSharp /> Simpan
-                  </Button>
+                  </div>
                 </div>
               </div>
             }
           >
-            <div className="grid grid-rows-10 grid-flow-col items-center gap-x-4">
+            <div className="grid grid-rows-10 md:grid-flow-col items-center gap-x-4 gap-y-4 md:gap-y-0">
               <FormFieldInput
                 form={form}
                 label="Kode Unit"

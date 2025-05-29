@@ -46,9 +46,9 @@ const HubunganKerjaPegawai = () => {
         <MonitoringInput />
       </CustomCard>
 
-      <div className="grid grid-rows-2 sm:flex gap-4 w-full mt-5">
+      <div className="grid grid-rows-2 sm:flex gap-4 w-full mt-5 mb-10">
         <Select>
-          <SelectTrigger className="w-70 sm:w-32">
+          <SelectTrigger className="w-full sm:w-32 text-xs sm:text-sm">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -63,10 +63,10 @@ const HubunganKerjaPegawai = () => {
           </SelectContent>
         </Select>
 
-        <div className="relative w-70 sm:w-80">
+        <div className="relative w-full md:w-80">
           <Input
             placeholder="Search"
-            className="w-full pr-10"
+            className="w-full pr-10 text-xs sm:text-sm"
           />
           <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
         </div>

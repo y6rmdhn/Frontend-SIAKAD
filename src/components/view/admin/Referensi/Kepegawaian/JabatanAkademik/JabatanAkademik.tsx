@@ -121,7 +121,7 @@ const JabatanAkademik = () => {
         }
       />
 
-      <div className="flex justify-between mt-6">
+      <div className="flex flex-col gap-4 sm:flex-row justify-between mt-6">
         <div className="flex gap-4">
           {/* <SelectFilter
             form={form}
@@ -134,7 +134,7 @@ const JabatanAkademik = () => {
         <div className="flex gap-3">
           <Button
             onClick={() => setIsAddData(true)}
-            className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+            className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] text-xs sm:text-sm"
           >
             <FaPlus /> Tambah
           </Button>

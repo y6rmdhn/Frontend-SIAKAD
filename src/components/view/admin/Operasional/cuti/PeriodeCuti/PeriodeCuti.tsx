@@ -34,14 +34,14 @@ import { MdEdit } from "react-icons/md";
 const PeriodeCuti = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">Periode Cuti</h1>
+      <h1 className="text-lg sm:text-2xl font-normal">Periode Cuti</h1>
 
       <CustomCard
         actions={
-          <div className="flex justify-between mt-6">
-            <div className="w-full flex gap-3">
+          <div className="flex flex-col lg:flex gap-4 lg:flex-row justify-between mt-6">
+            <div className="w-full flex flex-col sm:flex-row gap-3">
               <Select>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-full sm:w-40 lg:w-32 text-xs sm:text-sm">
                   <SelectValue placeholder="--Semua--" />
                 </SelectTrigger>
                 <SelectContent>
@@ -56,13 +56,13 @@ const PeriodeCuti = () => {
                 </SelectContent>
               </Select>
 
-              <div className="relative">
+              <div className="w-full lg:w-90 relative">
                 <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                <Input placeholder="Search" className="w-80 pr-8" />
+                <Input placeholder="Search" className="lg:w-90 pr-8 text-xs sm:text-sm w-full" />
               </div>
             </div>
 
-            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] text-xs sm:text-sm">
               <FaPlus /> Tambah
             </Button>
           </div>
@@ -71,19 +71,19 @@ const PeriodeCuti = () => {
         <Table className="mt-10 table-auto">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="text-center">NIP</TableHead>
-              <TableHead className="text-center">Nama Periode</TableHead>
-              <TableHead className="text-center">Tgl Mulai</TableHead>
-              <TableHead className="text-center">Tgl Selesai</TableHead>
-              <TableHead className="text-center">Aksi</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Nama Periode</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Tgl Mulai</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Tgl Selesai</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
             <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center">01</TableCell>
-              <TableCell className="text-center">Cuti Tahunan</TableCell>
-              <TableCell className="text-center">1 Jan 2024</TableCell>
-              <TableCell className="text-center">31 Des 2024</TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">01</TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">Cuti Tahunan</TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">1 Jan 2024</TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">31 Des 2024</TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
                   <Button

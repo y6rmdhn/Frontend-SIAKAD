@@ -33,19 +33,19 @@ const Kecamatan = () => {
       <Title title="Kecamatan" subTitle="Daftar Kecamatan" />
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 md:grid-rows-1 md:grid-flow-col gap-4 gap-x-4">
-            <div className="flex justify-between">
-              <Label className="w-full sm:w-60 md:w-full text-[#FDA31A]">Provinsi</Label>
+          <div className="w-full flex flex-col md:flex-row sm:grid-flow-col gap-4 gap-x-20">
+            <div className="w-full flex flex-col sm:flex-row justify-between gap-2">
+              <Label className="w-full text-[#FDA31A]">Provinsi</Label>
               <SelectFilter
-                classname="w-40 sm:w-47 md:w-full"
+                classname="w-full md:w-auto"
                 placeholder="Aceh"
                 options={unitKerjaOptions}
               />
             </div>
-            <div className="flex">
-              <Label className="w-full md:w-30 lg:w-full text-[#FDA31A]">Kota</Label>
+            <div className="w-full flex flex-col sm:flex-row justify-between gap-2">
+              <Label className="w-full text-[#FDA31A]">Kota</Label>
               <SelectFilter
-                classname="lg:ml-32 w-31 md:w-30 lg:w-full"
+                classname="w-full md:w-auto"
                 placeholder="Kabupatan Aceh Barat"
                 options={unitKerjaOptions}
               />
@@ -54,15 +54,15 @@ const Kecamatan = () => {
         }
       />
 
-      <div className="grid grid-rows-2 gap-4 md:flex justify-between mt-6">
-        <div className="grid grid-rows-2 sm:flex gap-4">
-          <SelectFilter options={unitKerjaOptions} />
-          <SearchInput />
+      <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4 justify-between mt-6">
+        <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4">
+          <SelectFilter options={unitKerjaOptions} classname="lg:w-32" />
+          <SearchInput className="w-full lg:w-80" />
         </div>
 
-        <div className="flex gap-3">
+        <div className="w-full flex gap-3 justify-end">
           <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika sm:w-27 lg:w-auto">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto text-xs sm:text-sm">
               <FaPlus /> Tambah
             </Button>
           </Link>

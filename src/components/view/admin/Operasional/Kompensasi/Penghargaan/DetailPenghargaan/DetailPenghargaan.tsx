@@ -15,9 +15,9 @@ const DetailPenghargaan = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Penghargaan{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Detail Penghargaan
         </span>
       </h1>
@@ -26,32 +26,34 @@ const DetailPenghargaan = () => {
         <form>
           <CustomCard
             actions={
-              <div className="flex justify-between mt-10">
-                <div className="flex gap-6">
-                  <div className="relative">
-                    <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                    <Input placeholder="Search" className="w-96 pr-8" />
-                  </div>
+              <div className="w-full flex flex-col gap-4 lg:flex-row justify-between mt-10">
+                <div className="w-full lg:w-96 relative">
+                  <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
+                  <Input placeholder="Search" className="lg:w-96 w-full pr-8 text-xs sm:text-sm" />
                 </div>
 
-                <div className="flex gap-4">
-                  <Link
-                    type="button"
-                    to="/admin/operasional/kompensasi/penghargaan"
-                  >
-                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                      <IoIosArrowBack /> Kembali ke Daftar
-                    </Button>
-                  </Link>
+                <div className="w-full flex flex-col lg:justify-end sm:flex-row gap-4">
+                  <div className="w-full lg:w-auto">
+                    <Link
+                      type="button"
+                      to="/admin/operasional/kompensasi/penghargaan"
+                    >
+                      <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                        <IoIosArrowBack /> Kembali ke Daftar
+                      </Button>
+                    </Link>
+                  </div>
 
-                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                    <IoSaveSharp /> Simpan
-                  </Button>
+                  <div className="w-full lg:w-auto">
+                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                      <IoSaveSharp /> Simpan
+                    </Button>
+                  </div>
                 </div>
               </div>
             }
           >
-            <div className="grid grid-rows-4 grid-flow-col gap-x-5 items-center">
+            <div className="flex flex-col sm:gap-y-0 gap-4 sm:grid sm:grid-rows-4 grid-flow-col gap-x-5 sm:items-center">
               <FormFieldInput
                 form={form}
                 label="Pegawai"

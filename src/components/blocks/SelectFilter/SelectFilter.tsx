@@ -26,7 +26,7 @@ function SelectFilter({
 }: SelectFilterProps) {
   return (
     <Select>
-      <SelectTrigger className={`w-full ${classname}`}>
+      <SelectTrigger className={`w-full text-xs lg:text-sm ${classname}`}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

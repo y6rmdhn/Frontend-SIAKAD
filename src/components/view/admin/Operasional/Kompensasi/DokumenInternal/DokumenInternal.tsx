@@ -37,7 +37,7 @@ import { Link } from "react-router-dom";
 const DokumenInternal = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Dokumen Internal Detail{" "}
         <span className="text-muted-foreground font-normal text-[16px]">
           Dokumen Internal
@@ -46,11 +46,11 @@ const DokumenInternal = () => {
 
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 grid-flow-col gap-10">
-            <div className="flex">
+          <div className="grid grid-rows-3 lg:grid-rows-2 grid-flow-col gap-5 lg:gap-10">
+            <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="text-xs sm:text-sm w-full">
                   <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
                 </SelectTrigger>
                 <SelectContent>
@@ -65,10 +65,10 @@ const DokumenInternal = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Jenis Pelanggaran</Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="text-xs sm:text-sm w-full">
                   <SelectValue placeholder="--Semua Jenis Pelanggaran--" />
                 </SelectTrigger>
                 <SelectContent>
@@ -83,12 +83,12 @@ const DokumenInternal = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">
                 Jabatan Fungsional
               </Label>
               <Select>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="text-xs sm:text-sm w-full">
                   <SelectValue placeholder="--Semua Jabatan Fungsional--" />
                 </SelectTrigger>
                 <SelectContent>
@@ -107,10 +107,11 @@ const DokumenInternal = () => {
         }
       />
 
-      <div className="flex justify-between mt-10">
-        <div className="flex gap-6">
+      <div className="w-full flex flex-col md:flex-row gap-5 md:flex justify-between mt-10">
+        <div className="grid grid-rows-2 sm:flex gap-4">
+          <div>
           <Select>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-full sm:w-32">
               <SelectValue placeholder="--Semua--" />
             </SelectTrigger>
             <SelectContent>
@@ -124,15 +125,19 @@ const DokumenInternal = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
+          </div>
 
-          <div className="relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-80 pr-8" />
+          <div className="relative w-full md:w-90">
+            <Input
+              placeholder="Search"
+              className="w-full pr-10"
+            />
+            <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
           </div>
         </div>
 
         <div className="flex gap-4">
-          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto">
             Batalkan
           </Button>
         </div>
@@ -142,13 +147,13 @@ const DokumenInternal = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center">Di Unggah Oleh</TableHead>
-            <TableHead className="text-center">No.Dokumen</TableHead>
-            <TableHead className="text-center">Nama Dokumen</TableHead>
-            <TableHead className="text-center">Jenis Dokumen</TableHead>
-            <TableHead className="text-center">Menu Referensi</TableHead>
-            <TableHead className="text-center">Status Dokumen</TableHead>
-            <TableHead className="text-center">File</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Di Unggah Oleh</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">No.Dokumen</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Nama Dokumen</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Jenis Dokumen</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Menu Referensi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Status Dokumen</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">File</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
@@ -156,12 +161,12 @@ const DokumenInternal = () => {
             <TableCell className="text-center">
               <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
             </TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
-            <TableCell className="text-center"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
                 <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">

@@ -38,7 +38,7 @@ const BimbinganMahasiswa = () => {
         actions={
           <div className="flex justify-end ">
             {" "}
-            <Button className="bg-[#FDA31A]">
+            <Button className="bg-[#FDA31A] text-xs md:text-sm hover:bg-[#F9A31A]">
               <FaPlus /> Tambah Baru{" "}
             </Button>{" "}
           </div>
@@ -58,12 +58,16 @@ const BimbinganMahasiswa = () => {
         ]}
       />
 
-      <div className="gap-5 flex mt-5">
-        <SelectFilter options={unitKerjaOptions} placeholder="--Semua--" />
+      <div className="gap-5 flex flex-col md:flex-row mt-5">
+        <SelectFilter
+          classname="w-full md:w-32 "
+          options={unitKerjaOptions}
+          placeholder="--Semua--"
+        />
         <SearchInput />
       </div>
 
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center">Periode Akademik</TableHead>

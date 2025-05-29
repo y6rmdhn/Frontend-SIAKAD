@@ -34,7 +34,7 @@ export const FormFieldSelect = ({
   disabled,
   labelStyle,
   required,
-  classname
+  classname,
 }: FormFieldSelectProps) => {
   return (
     <FormField
@@ -42,7 +42,7 @@ export const FormFieldSelect = ({
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col lg:flex-row">
-          <FormLabel className={`w-full ${labelStyle}`}>
+          <FormLabel className={`w-full text-xs md:text-sm ${labelStyle}`}>
             {label} {required && <span className="text-red-500">*</span>}
           </FormLabel>
           <Select
@@ -65,7 +65,10 @@ export const FormFieldSelect = ({
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger disabled={disabled} className={`${classname && classname} w-full text-xs`}>
+              <SelectTrigger
+                disabled={disabled}
+                className={`${classname && classname} w-full text-xs`}
+              >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
@@ -73,7 +76,10 @@ export const FormFieldSelect = ({
             {!disabled && (
               <SelectContent>
                 {options.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem
+                    key={option.value}
+                    value={option.value.toString()}
+                  >
                     {option.label}
                   </SelectItem>
                 ))}

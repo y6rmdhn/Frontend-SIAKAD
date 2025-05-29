@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdPerson } from "react-icons/md";
 import { IoExit } from "react-icons/io5";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { clearUserData } from "@/store/userSlice";
@@ -75,9 +75,11 @@ const Module = () => {
               </div>
 
               <div className="flex gap-3 items-center md:flex-col md:items-end lg:flex-row lg:items-center">
-                <Button className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer">
-                  <MdPerson className="text-2xl text-white" /> Halaman Profil
-                </Button>
+                <Link to="/profil">
+                  <Button className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer">
+                    <MdPerson className="text-2xl text-white" /> Halaman Profil
+                  </Button>
+                </Link>
                 <Button
                   onClick={handleLogout}
                   className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer"

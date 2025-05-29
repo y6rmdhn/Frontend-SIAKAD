@@ -3,11 +3,11 @@ import { Input } from "@/components/ui/input";
 
 function SearchInput({ placeholder = "Search", className = "" }) {
   return (
-    <div className={`relative  ${className}`}>
+    <div className={`relative ${className}`}>
       <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
       <Input
         placeholder={placeholder}
-        className="w-full lg:w-80 pr-8 text-xs lg:text-sm"
+        className="w-full md:w-80 pr-8 text-xs md:text-sm"
       />
     </div>
   );

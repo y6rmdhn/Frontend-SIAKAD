@@ -7,7 +7,7 @@ import { PiWarningCircle } from "react-icons/pi";
 import { ChartLingkaran } from "@/components/commons/Charts/PieChart/ChartLingkaran";
 import { ChartPegawai } from "@/components/commons/Charts/ChartPegawai/ChartPegawai";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
@@ -41,16 +41,16 @@ const DasboardUser = () => {
   };
 
   return (
-    <div className="mt-1 flex">
-      <div className="w-full mr-7">
-        <div className="ml-4 mb-10 flex gap-2 items-center ">
+    <div className="flex flex-col md:flex-row gap-4 mb-20 mt-10">
+      <div className="w-full ">
+        <div className="text-sm md:text-base mb-10 flex gap-2 items-center ">
           <HiUserGroup />
-          <h1 className=" font-semibold">Pegawai</h1>
+          <h1 className="font-medium">Pegawai</h1>
         </div>
-        <h1 className="ml-4 font-semibold">{getGreeting()}</h1>
-        <h1 className="ml-4 text-2xl font-bold">{userSelector.name}</h1>
-        <div className="flex mb-7">
-          <div className="p-2 w-[60%]">
+        <h1 className="text-sm md:text-base font-medium">{getGreeting()}</h1>
+        <h1 className="text-2xl font-semibold">{userSelector.name}</h1>
+        <div className="flex flex-col gap-5 lg:flex-row mb-7">
+          <div className="lg:w-[60%]">
             <ChartLingkaran
               title="Kehadiran"
               data={pieData}
@@ -62,41 +62,43 @@ const DasboardUser = () => {
           </div>
 
           {/* Gaji */}
-          <div className="w-[40%] mt-2 pr-4">
-            <div className="bg-gradient-to-b from-[#00AF9C] to-[#106D63] h-45 w-full rounded-md text-white p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-medium">Gaji</h1>
-                <BsArrowUpRightCircle className="w-6 h-6" />
-              </div>
-              <div className="flex items-center justify-center gap-4">
-                <FaMoneyBills className="w-14 h-14" />
-                <div className="text-center">
-                  <p className="text-lg">Total Gaji per bulan</p>
-                  <p className="text-2xl font-bold mt-1">Rp 2.000.000</p>
-                </div>
+          <div className="bg-gradient-to-b lg:w-[40%] from-[#00AF9C] to-[#106D63] h-45 rounded-md text-white p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-2xl font-medium max-[1193px]:text-lg">
+                Gaji
+              </h1>
+              <BsArrowUpRightCircle className="w-6 h-6" />
+            </div>
+            <div className="flex items-center justify-center gap-4">
+              <FaMoneyBills className="w-14 h-14" />
+              <div className="text-center">
+                <p className="text-lg max-[1193px]:text-base">
+                  Total Gaji per bulan
+                </p>
+                <p className="text-2xl font-bold mt-1 max-[1193px]:text-base">
+                  Rp 2.000.000
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <div>
-          <h1 className="ml-8 text-xl font-bold">Evaluasi Kerja</h1>
-          <div>
-            <ChartPegawai />
-          </div>
+        <div className="w-auto">
+          <h1 className="text-xl font-bold">Evaluasi Kerja</h1>
+          <ChartPegawai />
         </div>
       </div>
 
-      <div className="md:w-[40%] w pr-4">
+      <div>
         <div className="flex flex-col gap-5">
           {/* Absen Masuk dan Riwayat Absen */}
-          <div className="flex grid-cols-2 gap-5">
+          <div className="flex flex-col lg:flex-row w-full gap-5 md:gap-2">
             <Button
               onClick={() => setClkBtn("absen")}
               className={
                 clkBtn === "absen"
-                  ? "h-10 w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                  : "h-10 w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
+                  ? "h-10 w-full lg:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
+                  : "h-10 w-full lg:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
               }
             >
               <HiOutlineClipboardDocumentList className="text-lg" />
@@ -106,8 +108,8 @@ const DasboardUser = () => {
               onClick={() => setClkBtn("riwayat")}
               className={
                 clkBtn === "riwayat"
-                  ? "h-10 w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                  : "h-10 w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
+                  ? "h-10 w-full lg:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
+                  : "h-10 w-full lg:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
               }
             >
               <FaAddressCard className="text-lg" />

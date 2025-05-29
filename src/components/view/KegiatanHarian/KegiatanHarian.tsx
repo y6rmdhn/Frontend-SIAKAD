@@ -1,7 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Pagination,
@@ -13,15 +12,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -29,84 +19,60 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
-import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import { IoIosDocument } from "react-icons/io";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import SearchInput from "@/components/blocks/SearchInput";
 
 const KegiatanHarian = () => {
   return (
-    <div className="mt-9">
+    <div className="mt-10 mb-20">
       <h1 className="text-2xl font-normal ">Kegiatan Harian</h1>
+
       <CustomCard
         actions={
-          <div className="grid grid-rows-1 grid-flow-col gap-6">
-            <div className="flex">
+          <div className="grid md:grid-rows-1 md:grid-flow-col grid-rows-2 gap-6">
+            <div className="flex flex-col md:flex-row gap-4">
               <Label className="w-full text-[#FDA31A]">Bulan</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Maret" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectFilter
+                placeholder="Maret"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
-            <div className="flex">
+            <div className="flex flex-col md:flex-row gap-4">
               <Label className="w-full text-[#FDA31A]">Tahun</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="2025" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectFilter
+                placeholder="2025"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
           </div>
         }
       />
-      <div className="flex justify-between mt-10">
-        <div className="flex gap-6">
-          <Select>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="--Semua--" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Unit Kerja</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
 
-          <div className="relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-80 pr-8" />
-          </div>
-        </div>
+      <div className="flex flex-col sm:flex-row gap-4 mt-10 w-full">
+        <SelectFilter
+          placeholder="--Semua--"
+          classname="w-full sm:w-32"
+          options={[
+            { label: "Admin", value: "admin" },
+            { label: "User", value: "user" },
+            { label: "Guest", value: "guest" },
+          ]}
+        />
+
+        <SearchInput />
       </div>
 
-      <Table className="mt-10 table-auto">
+      <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-[#002E5A] ">
             <TableHead className="text-center text-white"></TableHead>

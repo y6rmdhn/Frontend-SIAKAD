@@ -1,20 +1,7 @@
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa6";
-
-import React from "react";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { FiSearch } from "react-icons/fi";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,123 +23,100 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import InfoList from "@/components/blocks/InfoList";
+import Title from "@/components/blocks/Title";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import SearchInput from "@/components/blocks/SearchInput";
 
 const Cuti = () => {
   return (
-    <div className=" mt-10">
-      <h1 className="text-2xl font-normal ">
-        Cuti{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
-          Daftar Permohonan Cuti
-        </span>
-      </h1>
+    <div className="mt-10 mb-20">
+      <Title title="Cuti" subTitle="Daftar Pengajuan Cuti" />
       <CustomCard
         actions={
           <div className="flex justify-end ">
-            {" "}
-            <Button className="bg-[#FDA31A]">
-              <FaPlus /> Tambah Baru{" "}
-            </Button>{" "}
+            <Button className="bg-[#FDA31A] text-xs md:text-sm">
+              <FaPlus /> Tambah Baru
+            </Button>
           </div>
         }
       />
-      <div className="w-full grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>NIP</p>
-          <p>Nama</p>
-          <p>Unit Kerja</p>
-          <p>Status</p>
-        </div>
-        <div className="flex flex-col gap-2 text-[#2572BE]">
-          <p>Jab. Akademik</p>
-          <p>Jab. Fungsional</p>
-          <p>Jab. Struktural</p>
-          <p>Pendidikan</p>
-        </div>
-      </div>
+      <InfoList
+        items={[
+          "NIP",
+          "Nama",
+          "Unit Kerja",
+          "Status",
+          "Jab. Akademik",
+          "Jab. Fungsional",
+          "Jab. Struktural",
+          "Pendidikan",
+        ]}
+      />
       <CustomCard
         actions={
-          <div className=" grid grid-rows-2 grid-flow-col gap-4">
-            <div className="flex">
-              <Label className=" text-[#FDA31A] w-full">Unit Kerja</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="2025" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex gap-4 min-[864px]:flex-row flex-col">
+              <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">
+                Unit Kerja
+              </Label>
+              <SelectFilter
+                classname="w-full"
+                placeholder="2025"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
-            <div className="flex">
-              <Label className=" text-[#FDA31A] w-full">Status</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="2025" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-4 min-[864px]:flex-row flex-col">
+              <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">
+                Status
+              </Label>
+              <SelectFilter
+                classname="w-full"
+                placeholder="2025"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
-            <div className="flex">
-              <Label className=" text-[#FDA31A] w-full">Jenis Izin</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="2025" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-4 min-[864px]:flex-row flex-col">
+              <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">
+                Jenis Izin
+              </Label>
+              <SelectFilter
+                classname="w-full"
+                placeholder="2025"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
           </div>
         }
       />
-      <div className="gap-5 flex mt-5">
-        <Select>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="--Semua--" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Unit Kerja</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
 
-        <div className="relative">
-          <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-          <Input placeholder="Cari Pengajuan Cuti" className="w-80 pr-8" />
+      <div className="flex mt-4 flex-col min-[864px]:flex-row justify-between gap-5 mb-5">
+        <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto order-2 md:order-1">
+          <SelectFilter
+            classname="w-full md:w-30"
+            options={[
+              { label: "Admin", value: "admin" },
+              { label: "User", value: "user" },
+              { label: "Guest", value: "guest" },
+            ]}
+          />
+          <SearchInput placeholder="Cari Pengajuan Cuti" />
         </div>
       </div>
-      <Table className="mt-10 table-auto">
+
+      <Table className="mt-6 table-auto text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-[#002E5A] ">
             <TableHead className="text-center text-white"></TableHead>

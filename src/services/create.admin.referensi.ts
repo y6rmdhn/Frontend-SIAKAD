@@ -1,12 +1,19 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
-  IJabatanAkademikPost, IJamKerja,
-  IJenisCutiPost, IJenisLuaran, IJenisPublikasi, IJenisSertifikasi,
+  IJabatanAkademikPost,
+  IJamKerja,
+  IJenisCutiPost,
+  IJenisLuaran,
+  IJenisPublikasi,
+  IJenisSertifikasi,
   IJenisSk,
   IJenisTesPost,
-  IOutputPenelitianPost, IPengabdian, IStatusEselon,
-  IStatusKeaktifan, IStatusPangkat,
+  IOutputPenelitianPost,
+  IPengabdian,
+  IStatusEselon,
+  IStatusKeaktifan,
+  IStatusPangkat,
 } from "@/types/create.referensi";
 
 const potsReferensiServices = {
@@ -23,19 +30,21 @@ const potsReferensiServices = {
   statusKeaktifan: (payload: IStatusKeaktifan) =>
     axiosInstance.post(`${endpoint.ADMIN}/status-aktif`, payload),
   pangkat: (payload: IStatusPangkat) =>
-      axiosInstance.post(`${endpoint.ADMIN}/master-pangkat`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/master-pangkat`, payload),
   eselon: (payload: IStatusEselon) =>
-      axiosInstance.post(`${endpoint.ADMIN}/eselon`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/eselon`, payload),
   jamKerja: (payload: IJamKerja) =>
-      axiosInstance.post(`${endpoint.ADMIN}/jam-kerja`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/jam-kerja`, payload),
   jenisSertifikasi: (payload: IJenisSertifikasi) =>
-      axiosInstance.post(`${endpoint.ADMIN}/master-jenis-sertifikasi`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/master-jenis-sertifikasi`, payload),
   jenisLuaran: (payload: IJenisLuaran) =>
-      axiosInstance.post(`${endpoint.ADMIN}/jenis-luaran`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-luaran`, payload),
   jenisPengabdian: (payload: IPengabdian) =>
-      axiosInstance.post(`${endpoint.ADMIN}/jenis-pkm`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-pkm`, payload),
   jenisPublikasi: (payload: IJenisPublikasi) =>
-      axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
+  // jenisPublikasi: (payload: IJenisPublikasi) =>
+  //     axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
 };
 
 export default potsReferensiServices;

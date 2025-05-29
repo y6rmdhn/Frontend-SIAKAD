@@ -2,172 +2,168 @@ import { Link } from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdOutlineFileDownload } from "react-icons/md";
+import InfoList from "@/components/blocks/InfoList";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 const DetailPaten = () => {
+  const form = useForm();
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Paten" subTitle="Detail Paten" />
       <CustomCard
         actions={
           <div>
-            <div className="flex justify-end gap-2">
-              <Link to="/data-riwayat/pelaksanaan-penelitian/paten">
-                <Button className="bg-green-light-uika hover:bg-hover-green-uika">
+            <div className="flex justify-end gap-2 flex-col md:flex-row">
+              <Link
+                className="w-full md:w-auto"
+                to="/data-riwayat/pelaksanaan-penelitian/paten"
+              >
+                <Button className="bg-green-light-uika w-full md:w-auto hover:bg-hover-green-uika">
                   <IoIosArrowBack /> Kembali ke Daftar
                 </Button>
               </Link>
               <Link to="">
-                <Button className="bg-[#FDA31A] text-white cursor-pointer">
+                <Button className="bg-[#FDA31A] w-full md:w-auto text-white cursor-pointer">
                   <MdOutlineFileDownload />
                   Simpan
                 </Button>
               </Link>
             </div>
 
-            <div className="w-full border-l-2 border-[#6AAEF1] grid grid-cols-2 gap-96 mt-10 bg-[#D6E8F9] p-4 ">
-              <div className="flex flex-col gap-2 text-[#2572BE]">
-                <p>NIP</p>
-                <p>Nama</p>
-                <p>Unit Kerja</p>
-                <p>Status</p>
-              </div>
-              <div className="flex flex-col gap-2 text-[#2572BE]">
-                <p>Jab. Akademik</p>
-                <p>Jab. Fungsional</p>
-                <p>Jab. Struktural</p>
-                <p>Pendidikan</p>
-              </div>
-            </div>
+            <InfoList
+              items={[
+                "NIP",
+                "Nama",
+                "Unit Kerja",
+                "Status",
+                "Jab. Akademik",
+                "Jab. Fungsional",
+                "Jab. Struktural",
+                "Pendidikan",
+              ]}
+            />
 
-            <div className="space-y-4 mt-20">
-              <div className="grid grid-cols-2 gap-4">
-                {/* Kolom Kiri */}
-                <div className="space-y-6">
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Jenis Paten<span className="text-red-500">*</span>
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="- - Pilih Jenis Paten - -" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sk">Jenis 1</SelectItem>
-                        <SelectItem value="sk">Jenis 2</SelectItem>
-                        <SelectItem value="lain">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <Form {...form}>
+              <form>
+                <div className="mt-10 grid md:grid-rows-7 md:grid-flow-col md:items-center gap-6 w-full">
+                  <FormFieldSelect
+                    label="Jenis Paten"
+                    name="jenis_paten"
+                    placeholder="--Pilih Jenis Paten--"
+                    form={form}
+                    labelStyle="text-[#3F6FA9]"
+                    required={true}
+                    options={[
+                      { value: "1", label: "Kenaikan 1" },
+                      { value: "2", label: "Kenaikan 2" },
+                    ]}
+                  />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Aktivitas Litabmas
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="- - Pilih Aktivitas Litabmas - -" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sk">Kategori 1</SelectItem>
-                        <SelectItem value="sk">Kategori 2</SelectItem>
-                        <SelectItem value="lain">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <FormFieldSelect
+                    label="Aktivitas Litabmas"
+                    name="aktivitas_litabmas"
+                    placeholder="--Pilih Aktivitas Litabmas--"
+                    form={form}
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    options={[
+                      { value: "1", label: "Kenaikan 1" },
+                      { value: "2", label: "Kenaikan 2" },
+                    ]}
+                  />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Judul Karya<span className="text-red-500">*</span>
-                    </Label>
-                    <Input />
-                  </div>
+                  <FormFieldInput
+                    label="Judul Karya"
+                    name="judul_karya"
+                    form={form}
+                    required={true}
+                    labelStyle="text-[#3F6FA9]"
+                  />
 
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Tanggal Terbit<span className="text-red-500">*</span>
-                    </Label>
-                    <Input type="date" placeholder="dd - mm - yyyy" />
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">Penerbit</Label>
-                    <Input />
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Jumlah Halaman
-                    </Label>
-                    <Input />
-                  </div>
-
-                  <div className="flex gap-7">
-                    <Label className="w-60 text-[#2572BE]">
-                      Keterangan / Petunjuk Akses
-                    </Label>
-                    <Input />
-                  </div>
+                  <FormFieldInput
+                    label="Tanggal Terbit"
+                    name="tanggal_terbit"
+                    form={form}
+                    type="date"
+                    required={true}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="Penerbit"
+                    name="penerbit"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="Jumlah Halaman"
+                    name="jumlah_halaman"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="Keterangan/Petunjuk Akses"
+                    name="keterangan_petunjuk_akses"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldSelect
+                    label="Kategori Capaian"
+                    name="kategori_capaian"
+                    placeholder="--Pilih Kategori Capaian--"
+                    form={form}
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                    options={[
+                      { value: "1", label: "Kenaikan 1" },
+                      { value: "2", label: "Kenaikan 2" },
+                    ]}
+                  />
+                  <FormFieldInput
+                    label="Nomor Paten"
+                    name="nomor_paten"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="Lembaga Pemberi Paten"
+                    name="lembaga_pemberi_paten"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="ISBN"
+                    name="isbn"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="Tautan External"
+                    name="tautan_external"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
+                  <FormFieldInput
+                    label="Tanggal Input"
+                    name="tanggal_input"
+                    form={form}
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                  />
                 </div>
-
-                {/* Kolom Kanan */}
-                <div className="space-y-6">
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Kategori Capaian
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="- - Pilih Kategori Capaian - -" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="br">sk 1</SelectItem>
-                        <SelectItem value="lm">sk 2</SelectItem>
-                        <SelectItem value="lain">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">Nomor Paten</Label>
-                    <Input />
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Lembaga Pemberi Paten
-                    </Label>
-                    <Input />
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">ISBN</Label>
-                    <Input />
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">
-                      Tautan Eksternal
-                    </Label>
-                    <Input />
-                  </div>
-
-                  <div className="flex gap-14">
-                    <Label className="w-50 text-[#2572BE]">Tanggal Input</Label>
-                    <Input placeholder="22 April 2025" />
-                  </div>
-                </div>
-              </div>
-            </div>
+              </form>
+            </Form>
           </div>
         }
       />

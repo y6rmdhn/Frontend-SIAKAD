@@ -20,6 +20,7 @@ import DetailRiwayatPelanggaranPage from "./pages/admin/operasional/kompensasi/d
 import DasboardPageUser from "./pages/dasboard";
 import RiwayatKehadiranPage from "./pages/riwayatKehadiran";
 import ModulePage from "./pages/module";
+import ProfilPage from "./pages/profil";
 import RiwayatPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan";
 import DetailPenghargaanPage from "./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan";
 import DokumenInternalPage from "./pages/admin/operasional/kompensasi/dokumenInternal";
@@ -175,6 +176,7 @@ import DetailPublikasiUserPage from "./pages/dataRiwayat/PelaksanaanPenelitian/P
 import KemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa";
 import DetailKemampuanBahasaUserPage from "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa";
 import OrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi";
+import DetailOrganisasiUserPage from "./pages/dataRiwayat/PengembanganDiri/Organisasi/detailOrganisasi";
 import PelanggaranUserPage from "./pages/dataRiwayat/Kompensasi/Pelanggaran";
 import HubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja";
 import DetailHubunganKerjaUserPage from "./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja";
@@ -201,6 +203,9 @@ import LoadingSpinner from "./components/blocks/LoadingSpinner";
 import LoadingText from "./components/blocks/LoadingText";
 import BiodataPageUser from "./pages/biodata";
 import EvaluasiKerjaUserPage from "./pages/operasional/EvaluasiKerja";
+import DetailEvaluasiKerjaUserPage from "./pages/operasional/EvaluasiKerja/detailEvaluasiKerja";
+import DetailEvaluasiKerjaPegawaiUserPage from "./pages/operasional/EvaluasiKerja/detailEvaluasiKerjaPegawai";
+import TahapanDataRiwayatPageUser from "./pages/tahapandatariwayat";
 
 function App() {
   const { isHydrate } = useHydration();
@@ -221,10 +226,12 @@ function App() {
         <Route path="/" Component={ModulePage} />
         <Route path="/login" Component={LoginPage} />
         <Route path="/forget-password" Component={ForgetPasswordPage} />
+        <Route path="/profil" Component={ProfilPage} />
 
         {/* USER PAGES */}
         <Route path="/dasboard" Component={DasboardPageUser} />
         <Route path="/biodata" Component={BiodataPageUser} />
+        <Route path="/tahapan-data-riwayat" Component={TahapanDataRiwayatPageUser} />
 
         {/* KEHADIRAN */}
         <Route path="/kehadiran">
@@ -246,10 +253,14 @@ function App() {
             <Route path="cuti" Component={CutiPage} />
             <Route path="izin" Component={IzinPage} />
           </Route>
-           <Route
+          <Route
             path="evaluasi-kerja"
             Component={EvaluasiKerjaUserPage}
           />
+          <Route path="evaluasi-kerja">
+            <Route path="form-evaluasi-kerja-dosen" Component={DetailEvaluasiKerjaUserPage} />
+            <Route path="form-evaluasi-kerja-pegawai" Component={DetailEvaluasiKerjaPegawaiUserPage} />
+          </Route>
         </Route>
 
         {/* DATA RIWAYAT */}
@@ -358,7 +369,14 @@ function App() {
               path="detail-kemampuan-bahasa"
               Component={DetailKemampuanBahasaUserPage}
             />
-            <Route path="organisasi" Component={OrganisasiUserPage} />
+            <Route
+              path="organisasi"
+              Component={OrganisasiUserPage}
+            />
+            <Route
+              path="detail-organisasi"
+              Component={DetailOrganisasiUserPage}
+            />
           </Route>
 
           <Route path="kompensasi">

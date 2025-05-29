@@ -14,9 +14,9 @@ const DetailDokumenInternal = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-2xl font-normal">
+      <h1 className="text-lg sm:text-2xl font-normal">
         Dokumen Internal{" "}
-        <span className="text-muted-foreground font-normal text-[16px]">
+        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Detail Dokumen Internal
         </span>
       </h1>
@@ -25,22 +25,26 @@ const DetailDokumenInternal = () => {
         <form>
           <CustomCard
             actions={
-              <div className="flex justify-between mt-10">
-                <div className="relative">
+              <div className="w-full flex flex-col gap-4 lg:flex-row justify-between mt-6">
+                <div className="w-full lg:w-96 relative">
                   <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                  <Input placeholder="Search" className="w-80 pr-8" />
+                  <Input placeholder="Search" className="lg:w-96 w-full pr-8 text-xs sm:text-sm" />
                 </div>
 
-                <div className="flex gap-4">
-                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer">
+                <div className="w-full flex flex-col lg:justify-end sm:flex-row gap-4">
+                  <div className="w-full lg:w-auto">
+                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
                     <IoIosArrowBack />
                     Kembali ke Daftar
                   </Button>
-
-                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer">
+                  </div>
+                  
+                  <div className="w-full lg:w-auto">
+                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
                     <FaSave />
                     Simpan
                   </Button>
+                  </div>
                 </div>
               </div>
             }
@@ -51,7 +55,7 @@ const DetailDokumenInternal = () => {
               </h1>
             </div>
 
-            <div className="grid grid-rows-6 grid-flow-col gap-x-5 items-center mt-4">
+            <div className="flex flex-col sm:gap-y-0 gap-4 sm:grid sm:grid-rows-6 grid-flow-col gap-x-5 sm:items-center mt-5">
               <FormFieldInput
                 form={form}
                 label="No Dokumen"
@@ -210,9 +214,9 @@ const DetailDokumenInternal = () => {
             </div>
 
             <div className="flex flex-col mt-4">
-              <div className="bg-[#E7ECF2] w-full p-3 flex justify-between items-center">
+              <div className="bg-[#E7ECF2] w-full p-1 sm:p-3 flex justify-between items-center">
                 <div />
-                <h1 className="text-lg font-normal">Pegawai</h1>
+                <h1 className="text-sm sm:text-lg font-normal">Pegawai</h1>
                 <Button
                   size="icon"
                   className="bg-green-light-uika hover:bg-[#329C59]"

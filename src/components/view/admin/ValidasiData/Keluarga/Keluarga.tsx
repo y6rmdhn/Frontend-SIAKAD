@@ -86,8 +86,8 @@ const Keluarga = () => {
         }
       />
 
-      <div className="flex flex-col lg:flex-row lg:justify-between mt-10">
-        <div className="flex flex-col lg:flex-row gap-2 lg:gap-6">
+      <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
+        <div className="flex flex-col md:flex-row gap-2 lg:gap-4">
           <SelectFilter
             placeholder="--Semua--"
             options={[
@@ -99,13 +99,10 @@ const Keluarga = () => {
 
           <SearchInput />
         </div>
-
-        <div className="flex gap-4 w-full">
-          <Button className="cursor-pointer w-full lg:w-auto mt-2 lg:mt-0 bg-green-light-uika hover:bg-[#329C59]">
-            <MdPlayArrow className="w-5! h-5! text-white" />
-            Set Draft
-          </Button>
-        </div>
+        <Button className="cursor-pointer w-full md:w-auto mt-2 md:mt-0 bg-green-light-uika hover:bg-[#329C59]">
+          <MdPlayArrow className="w-5! h-5! text-white" />
+          Set Draft
+        </Button>
       </div>
 
       <Table className="mt-10 table-auto text-xs lg:text-sm">

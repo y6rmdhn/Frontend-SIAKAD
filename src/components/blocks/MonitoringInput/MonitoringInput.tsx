@@ -16,7 +16,7 @@ const MonitoringInput = () => {
       <div className="grid grid-rows-2 sm:flex">
         <Label className="w-full">Unit Kerja</Label>
         <Select>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full text-xs sm:text-sm">
             <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
           </SelectTrigger>
           <SelectContent>
@@ -34,7 +34,7 @@ const MonitoringInput = () => {
       <div className="grid grid-rows-2 sm:flex">
         <Label className="w-full">Status Masa Kerja</Label>
         <Select>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full text-xs sm:text-sm">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>
@@ -52,7 +52,7 @@ const MonitoringInput = () => {
       <div className="grid grid-rows-2 sm:flex">
         <Label className="w-full">Hubungan Kerja</Label>
         <Select>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full text-xs sm:text-sm">
             <SelectValue placeholder="--Semua--" />
           </SelectTrigger>
           <SelectContent>

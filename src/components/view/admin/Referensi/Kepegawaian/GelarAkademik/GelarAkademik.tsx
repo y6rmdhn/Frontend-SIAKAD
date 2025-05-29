@@ -30,14 +30,14 @@ const GelarAkademik = () => {
 
       <CustomCard
         actions={
-          <div className="grid grid-rows-2 md:grid md:grid-rows-2 lg:flex gap-4 sm:flex justify-between mt-6">
-            <div className="grid grid-rows-2 md:flex gap-4">
+          <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4 justify-between mt-6">
+            <div className="w-full flex flex-col md:flex-row md:gap-2 gap-4 lg:gap-4">
               <SelectFilter options={unitKerjaOptions} />
-              <SearchInput />
+              <SearchInput className="w-full"/>
             </div>
 
-            <div className="flex gap-3">
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+            <div className="w-full flex gap-3 justify-end">
+              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-35 lg:w-auto text-xs sm:text-sm">
                 <IoMdDownload /> Unduh dari Sister
               </Button>
             </div>
@@ -47,14 +47,14 @@ const GelarAkademik = () => {
         <Table className="mt-10 table-auto">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="text-center">Gelar</TableHead>
-              <TableHead className="text-center">Nama Gelar</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Gelar</TableHead>
+              <TableHead className="text-center text-xs sm:text-sm">Nama Gelar</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-200">
             <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             </TableRow>
           </TableBody>
         </Table>
