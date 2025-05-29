@@ -1,6 +1,5 @@
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import CustomCard from "@/components/blocks/Card";
 import {
   Table,
   TableBody,
@@ -18,7 +17,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import InfoList from "@/components/blocks/InfoList";
@@ -27,17 +25,6 @@ const EvaluasiKerja = () => {
   return (
     <div className="mt-10 mb-20">
       <Title title="Evaluasi Kerja" subTitle="Data Evaluasi Kerja" />
-      <CustomCard
-        actions={
-          <div className="flex justify-end">
-            <Link to="/operasional/detail-evaluasi-kerja">
-              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:w-auto">
-                <FaPlus /> Tambah Baru
-              </Button>
-            </Link>
-          </div>
-        }
-      />
       <InfoList
         items={[
           "NIP",
@@ -73,14 +60,16 @@ const EvaluasiKerja = () => {
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Button
-                  size="icon"
-                  type="button"
-                  variant="ghost"
-                  className="cursor-pointer"
-                >
-                  <MdEdit className="w-6! h-6! bg-[#FDA31A] text-white rounded-sm" />
-                </Button>
+                <Link to="/operasional/evaluasi-kerja/form-evaluasi-kerja-dosen">
+                  <Button
+                    size="icon"
+                    type="button"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <MdEdit className="w-6! h-6! bg-[#FDA31A] text-white rounded-sm" />
+                  </Button>
+                </Link>
               </div>
             </TableCell>
           </TableRow>

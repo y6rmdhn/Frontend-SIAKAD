@@ -7,10 +7,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { MdGroups } from "react-icons/md";
-import DetailEvaluasiKerja from "@/components/view/Operasional/EvaluasiKerja/DetailEvaluasiKerja";
+import DetailEvaluasiKerjaPegawai from "@/components/view/Operasional/EvaluasiKerja/DetailEvaluasiKerjaPegawai";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
 
-const DetailEvaluasiKerjaUserPage = () => {
+const DetailEvaluasiKerjaPegawaiUserPage = () => {
   return (
     <SimUserLayout>
       <Breadcrumb className="mt-10">
@@ -41,9 +41,9 @@ const DetailEvaluasiKerjaUserPage = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <DetailEvaluasiKerja />
+      <DetailEvaluasiKerjaPegawai />
     </SimUserLayout>
   );
 };
 
-export default DetailEvaluasiKerjaUserPage;
+export default DetailEvaluasiKerjaPegawaiUserPage;

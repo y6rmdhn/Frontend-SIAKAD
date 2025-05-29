@@ -49,8 +49,8 @@ const DasboardUser = () => {
         </div>
         <h1 className="text-sm md:text-base font-medium">{getGreeting()}</h1>
         <h1 className="text-2xl font-semibold">{userSelector.name}</h1>
-        <div className="flex flex-col gap-5 md:flex-row mb-7">
-          <div className="md:w-[60%]">
+        <div className="flex flex-col gap-5 lg:flex-row mb-7">
+          <div className="lg:w-[60%]">
             <ChartLingkaran
               title="Kehadiran"
               data={pieData}
@@ -62,7 +62,7 @@ const DasboardUser = () => {
           </div>
 
           {/* Gaji */}
-          <div className="bg-gradient-to-b md:w-[40%] from-[#00AF9C] to-[#106D63] h-45 rounded-md text-white p-4">
+          <div className="bg-gradient-to-b lg:w-[40%] from-[#00AF9C] to-[#106D63] h-45 rounded-md text-white p-4">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-2xl font-medium max-[1193px]:text-lg">
                 Gaji
@@ -92,13 +92,13 @@ const DasboardUser = () => {
       <div>
         <div className="flex flex-col gap-5">
           {/* Absen Masuk dan Riwayat Absen */}
-          <div className="grid md:grid-cols-2 w-full gap-5">
+          <div className="flex flex-col lg:flex-row w-full gap-5 md:gap-2">
             <Button
               onClick={() => setClkBtn("absen")}
               className={
                 clkBtn === "absen"
-                  ? "h-10 w-full md:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                  : "h-10 w-full md:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
+                  ? "h-10 w-full lg:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
+                  : "h-10 w-full lg:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
               }
             >
               <HiOutlineClipboardDocumentList className="text-lg" />
@@ -108,8 +108,8 @@ const DasboardUser = () => {
               onClick={() => setClkBtn("riwayat")}
               className={
                 clkBtn === "riwayat"
-                  ? "h-10 w-full md:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                  : "h-10 w-full md:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
+                  ? "h-10 w-full lg:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
+                  : "h-10 w-full lg:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
               }
             >
               <FaAddressCard className="text-lg" />
