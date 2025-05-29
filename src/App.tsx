@@ -195,8 +195,13 @@ import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
 import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
 import AnakUserPage from "./pages/dataRiwayat/Keluarga/Anak";
 import DetailAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detailAnak";
+import DetailDataAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detaildataAnak";
 import OrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua";
 import DetailOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua";
+import DetailDataOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detaildataOrangtua";
+import PasanganUserPage from "./pages/dataRiwayat/Keluarga/Pasangan";
+import DetailPasanganUserPage from "./pages/dataRiwayat/Keluarga/Pasangan/detailPasangan";
+import DetailDataPasanganUserPage from "./pages/dataRiwayat/Keluarga/Pasangan/detaildataPasangan";
 
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
@@ -204,6 +209,8 @@ import LoadingText from "./components/blocks/LoadingText";
 import BiodataPageUser from "./pages/biodata";
 import EvaluasiKerjaUserPage from "./pages/operasional/EvaluasiKerja";
 import DetailEvaluasiKerjaUserPage from "./pages/operasional/EvaluasiKerja/detailEvaluasiKerja";
+import DetailEvaluasiKerjaPegawaiUserPage from "./pages/operasional/EvaluasiKerja/detailEvaluasiKerjaPegawai";
+import TahapanDataRiwayatPageUser from "./pages/tahapandatariwayat";
 
 function App() {
   const { isHydrate } = useHydration();
@@ -229,6 +236,7 @@ function App() {
         {/* USER PAGES */}
         <Route path="/dasboard" Component={DasboardPageUser} />
         <Route path="/biodata" Component={BiodataPageUser} />
+        <Route path="/tahapan-data-riwayat" Component={TahapanDataRiwayatPageUser} />
 
         {/* KEHADIRAN */}
         <Route path="/kehadiran">
@@ -250,14 +258,14 @@ function App() {
             <Route path="cuti" Component={CutiPage} />
             <Route path="izin" Component={IzinPage} />
           </Route>
-           <Route
+          <Route
             path="evaluasi-kerja"
             Component={EvaluasiKerjaUserPage}
           />
-          <Route
-            path="detail-evaluasi-kerja"
-            Component={DetailEvaluasiKerjaUserPage}
-          />
+          <Route path="evaluasi-kerja">
+            <Route path="form-evaluasi-kerja-dosen" Component={DetailEvaluasiKerjaUserPage} />
+            <Route path="form-evaluasi-kerja-pegawai" Component={DetailEvaluasiKerjaPegawaiUserPage} />
+          </Route>
         </Route>
 
         {/* DATA RIWAYAT */}
@@ -303,8 +311,15 @@ function App() {
           <Route path="keluarga">
             <Route path="anak" Component={AnakUserPage} />
             <Route path="detail-anak" Component={DetailAnakUserPage} />
+            <Route path="detail-data-anak" Component={DetailDataAnakUserPage} 
+            />
             <Route path="orangtua" Component={OrangtuaUserPage} />
             <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
+            <Route path="detail-data-orangtua" Component={DetailDataOrangtuaUserPage} 
+            />
+            <Route path="pasangan" Component={PasanganUserPage} />
+            <Route path="detail-pasangan" Component={DetailPasanganUserPage} />
+            <Route path="detail-data-pasangan" Component={DetailDataPasanganUserPage} />
           </Route>
 
           {/* DATA RIWAYAT > KUALIFIKASI */}
@@ -366,13 +381,13 @@ function App() {
               path="detail-kemampuan-bahasa"
               Component={DetailKemampuanBahasaUserPage}
             />
-            <Route 
-              path="organisasi" 
-              Component={OrganisasiUserPage} 
+            <Route
+              path="organisasi"
+              Component={OrganisasiUserPage}
             />
-            <Route 
-              path="detail-organisasi" 
-              Component={DetailOrganisasiUserPage} 
+            <Route
+              path="detail-organisasi"
+              Component={DetailOrganisasiUserPage}
             />
           </Route>
 

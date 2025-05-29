@@ -6,18 +6,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { MdGroups } from "react-icons/md";
-import DetailEvaluasiKerja from "@/components/view/Operasional/EvaluasiKerja/DetailEvaluasiKerja";
+import Pasangan from "@/components/view/DataRiwayat/Keluarga/Pasangan";
 import SimUserLayout from "@/layouts/SimUserLayout/SimUserLayout";
+import { MdGroups } from "react-icons/md";
 
-const DetailEvaluasiKerjaUserPage = () => {
+const PasanganUserPage = () => {
   return (
     <SimUserLayout>
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              href="/gate/pegawai"
+              href="/dasboard"
               className="flex items-center gap-2"
             >
               <MdGroups className="w-6 h-6" />
@@ -26,24 +26,22 @@ const DetailEvaluasiKerjaUserPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Operasional</BreadcrumbLink>
+            <BreadcrumbLink href="">Data Riwayat</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">
-              Evaluasi Kerja
-            </BreadcrumbLink>
+            <BreadcrumbLink href="">Keluarga</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Form Evaluasi Kerja</BreadcrumbPage>
+            <BreadcrumbPage>Pasangan</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <DetailEvaluasiKerja />
+      <Pasangan />
     </SimUserLayout>
   );
 };
 
-export default DetailEvaluasiKerjaUserPage;
+export default PasanganUserPage;

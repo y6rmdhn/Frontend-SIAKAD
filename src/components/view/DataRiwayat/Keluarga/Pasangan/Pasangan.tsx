@@ -28,15 +28,15 @@ import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import InfoList from "@/components/blocks/InfoList";
 
-const Orangtua = () => {
+const Pasangan = () => {
   return (
     <div className="mt-10 mb-20">
-      <Title title="Orang Tua" subTitle="Daftar Orang Tua" />
+      <Title title="Pasangan" subTitle="Daftar Pasangan" />
 
       <CustomCard
         actions={
           <div className="h-0 flex justify-end">
-            <Link to="/data-riwayat/keluarga/detail-orangtua">
+            <Link to="/data-riwayat/keluarga/detail-pasangan">
               <Button className="bg-yellow-uika text-xs md:text-auto hover:bg-hover-yellow-uika">
                 <FaPlus /> Tambah Baru
               </Button>
@@ -99,10 +99,10 @@ const Orangtua = () => {
               Nama Orang Tua
             </TableHead>
             <TableHead className="text-center text-white border">
-              Jenis Orang Tua
+              Tgl Lahir
             </TableHead>
             <TableHead className="text-center text-white border">
-              Tgl Lahir
+              Kartu Nikah
             </TableHead>
             <TableHead className="text-center text-white border">
               Status Pengajuan
@@ -121,7 +121,7 @@ const Orangtua = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/data-riwayat/keluarga/detail-data-orangtua">
+                <Link to="/data-riwayat/keluarga/detail-data-pasangan">
                   <Button
                     size="icon"
                     variant="ghost"
@@ -173,4 +173,4 @@ const Orangtua = () => {
   );
 };
 
-export default Orangtua;
+export default Pasangan;
