@@ -121,7 +121,7 @@ const Orangtua = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="">
+                <Link to="/data-riwayat/keluarga/detail-data-orangtua">
                   <Button
                     size="icon"
                     variant="ghost"

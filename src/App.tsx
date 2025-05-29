@@ -195,8 +195,10 @@ import PenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain";
 import DetailPenunjangLainUserPage from "./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain";
 import AnakUserPage from "./pages/dataRiwayat/Keluarga/Anak";
 import DetailAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detailAnak";
+import DetailDataAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detaildataAnak";
 import OrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua";
 import DetailOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua";
+import DetailDataOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detaildataOrangtua";
 
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
@@ -306,8 +308,10 @@ function App() {
           <Route path="keluarga">
             <Route path="anak" Component={AnakUserPage} />
             <Route path="detail-anak" Component={DetailAnakUserPage} />
+            <Route path="detail-data-anak" Component={DetailDataAnakUserPage} />
             <Route path="orangtua" Component={OrangtuaUserPage} />
             <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
+            <Route path="detail-data-orangtua" Component={DetailDataOrangtuaUserPage} />
           </Route>
 
           {/* DATA RIWAYAT > KUALIFIKASI */}
