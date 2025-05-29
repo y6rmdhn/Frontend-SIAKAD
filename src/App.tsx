@@ -199,6 +199,9 @@ import DetailDataAnakUserPage from "./pages/dataRiwayat/Keluarga/Anak/detaildata
 import OrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua";
 import DetailOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua";
 import DetailDataOrangtuaUserPage from "./pages/dataRiwayat/Keluarga/Orangtua/detaildataOrangtua";
+import PasanganUserPage from "./pages/dataRiwayat/Keluarga/Pasangan";
+import DetailPasanganUserPage from "./pages/dataRiwayat/Keluarga/Pasangan/detailPasangan";
+import DetailDataPasanganUserPage from "./pages/dataRiwayat/Keluarga/Pasangan/detaildataPasangan";
 
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
@@ -308,10 +311,15 @@ function App() {
           <Route path="keluarga">
             <Route path="anak" Component={AnakUserPage} />
             <Route path="detail-anak" Component={DetailAnakUserPage} />
-            <Route path="detail-data-anak" Component={DetailDataAnakUserPage} />
+            <Route path="detail-data-anak" Component={DetailDataAnakUserPage} 
+            />
             <Route path="orangtua" Component={OrangtuaUserPage} />
             <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
-            <Route path="detail-data-orangtua" Component={DetailDataOrangtuaUserPage} />
+            <Route path="detail-data-orangtua" Component={DetailDataOrangtuaUserPage} 
+            />
+            <Route path="pasangan" Component={PasanganUserPage} />
+            <Route path="detail-pasangan" Component={DetailPasanganUserPage} />
+            <Route path="detail-data-pasangan" Component={DetailDataPasanganUserPage} />
           </Route>
 
           {/* DATA RIWAYAT > KUALIFIKASI */}
