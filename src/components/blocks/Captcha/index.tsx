@@ -268,6 +268,7 @@ export default function SlideCaptcha({
           </h3>
           <div className="flex gap-2.5">
             <button
+                type="button"
               onClick={refreshCaptcha}
               className="bg-transparent border-none cursor-pointer text-base text-gray-500 w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-200"
               title="Refresh"
@@ -275,6 +276,7 @@ export default function SlideCaptcha({
               ⟳
             </button>
             <button
+                type="button"
               className="bg-transparent border-none cursor-pointer text-base text-gray-500 w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-200"
               title="Info"
             >
@@ -346,6 +348,7 @@ export default function SlideCaptcha({
             )}
           </div>
           <button
+              type="submit"
             onClick={verifyCaptcha}
             className={`bg-green-500 border-none text-white py-1.5 px-3 rounded text-sm cursor-pointer
               ${
