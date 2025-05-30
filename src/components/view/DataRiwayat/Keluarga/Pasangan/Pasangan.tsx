@@ -1,8 +1,7 @@
+import {Link, useSearchParams} from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
-import InfoList from "@/components/blocks/InfoList";
-import SearchInput from "@/components/blocks/SearchInput";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
+import {Label} from "@/components/ui/label";
 import {Button} from "@/components/ui/button";
 import {
     Table,
@@ -12,33 +11,31 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import unitKerjaOptions from "@/constant/dummyFilter";
 import {FaPlus} from "react-icons/fa";
+import {FaSquareFull} from "react-icons/fa";
+import {HiMiniTrash} from "react-icons/hi2";
 import {IoEyeOutline} from "react-icons/io5";
-import {Link, useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import InfoList from "@/components/blocks/InfoList";
 import {useQuery} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
-import CustomPagination from "@/components/blocks/CustomPagination";
+import {useEffect} from "react";
 import {parseISO, format} from "date-fns";
+import CustomPagination from "@/components/blocks/CustomPagination";
 
-const JabatanStruktural = () => {
+const Pasangan = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState<number>(
-        Number(searchParam.get("page") || 1)
-    );
 
     // get data
     const {data} = useQuery({
-        queryKey: ["jabatan-struktural-dosen", searchParam.get("page")],
+        queryKey: ["orangtua-dosen", searchParam.get("page")],
         queryFn: async () => {
-            const response = await dosenServices.getJabatanStruktural(searchParam.get("page"));
-            console.log(response.data)
+            const response = await dosenServices.getDataPasangan(searchParam.get("page"));
             return response.data;
         },
     });
-
 
     useEffect(() => {
         if (!searchParam.get("page")) {
@@ -67,12 +64,13 @@ const JabatanStruktural = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <Title title="Jabatan Struktural" subTitle="Daftar Jabatan Struktural"/>
+            <Title title="Pasangan" subTitle="Daftar Pasangan"/>
+
             <CustomCard
                 actions={
-                    <div className="flex justify-end">
-                        <Link to="/data-riwayat/kepegawaian/detail-jabatan-struktural">
-                            <Button className="bg-[#FDA31A] text-xs md:text-sm hover:bg-[#F9A31A]">
+                    <div className="h-0 flex justify-end">
+                        <Link to="/data-riwayat/keluarga/detail-pasangan">
+                            <Button className="bg-yellow-uika text-xs md:text-auto hover:bg-hover-yellow-uika">
                                 <FaPlus/> Tambah Baru
                             </Button>
                         </Link>
@@ -93,20 +91,45 @@ const JabatanStruktural = () => {
                 ]}
             />
 
-            <div className="gap-5 flex flex-col md:flex-row mt-5">
+            <CustomCard
+                actions={
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <Label className="text-[#FDA31A] md:pr-20">Status Pengajuan</Label>
+                        <SelectFilter
+                            classname="w-full md:w-64"
+                            placeholder="--Semua Pengajuan--"
+                            options={[
+                                {label: "Admin", value: "admin"},
+                                {label: "User", value: "user"},
+                                {label: "Guest", value: "guest"},
+                            ]}
+                        />
+                    </div>
+                }
+            />
+
+            <div className="md:gap-5 gap-2 flex mt-5 flex-col sm:flex-row ">
                 <SelectFilter
-                    classname="w-full md:w-32 "
-                    options={unitKerjaOptions}
                     placeholder="--Semua--"
+                    classname="w-full sm:w-32"
+                    options={[
+                        {label: "Admin", value: "admin"},
+                        {label: "User", value: "user"},
+                        {label: "Guest", value: "guest"},
+                    ]}
                 />
+
                 <SearchInput/>
             </div>
 
             <Table className="mt-10 table-auto text-xs lg:text-sm">
                 <TableHeader>
-                    <TableRow className="bg-gray-300 ">
+                    <TableRow className="bg-[#002E5A] ">
+                        <TableHead className="text-center text-white border">
+                            <FaSquareFull className="w-3 h-3"/>
+                        </TableHead>
                         {data?.table_columns.map((item) => (
-                            <TableHead className="text-center text-black">
+                            <TableHead className="text-center text-white border">
                                 {item.label}
                             </TableHead>
                         ))}
@@ -115,21 +138,19 @@ const JabatanStruktural = () => {
                 <TableBody className="divide-y divide-gray-200">
                     {data?.data.data.map((item) => (
                         <TableRow className=" even:bg-gray-100">
-                            <TableCell className="text-center">{item.no_sk}</TableCell>
+                            <TableCell className="text-center">{item.id}</TableCell>
+                            <TableCell className="text-center">{item.nama_pasangan}</TableCell>
+                            <TableCell className="text-center">{item.tempat_lahir}</TableCell>
                             <TableCell className="text-center">
-                                {item.tgl_sk ? format(parseISO(item.tgl_sk), "dd MMMM yyyy")
+                                {item.tgl_lahir ? format(parseISO(item.tgl_lahir), "dd MMMM yyyy")
                                     : "-"}
                             </TableCell>
                             <TableCell className="text-center">
-                                {item.tgl_mulai ? format(parseISO(item.tgl_mulai), "dd MMMM yyyy")
-                                    : "-"}
+                                {item.jenis_pekerjaan ? item.jenis_pekerjaan : "-"}
                             </TableCell>
                             <TableCell className="text-center">
-                                {item.tgl_selesai ? format(parseISO(item.tgl_selesai), "dd MMMM yyyy")
-                                    : "-"}
+                                {item.status_kepegawaian ? item.status_kepegawaian : "-"}
                             </TableCell>
-                            <TableCell className="text-center">{item.jenis_jabatan_struktural}</TableCell>
-                            <TableCell className="text-center">{item.pejabat_penetap}</TableCell>
                             <TableCell className="text-center">
                                 <Button
                                     size="sm"
@@ -152,13 +173,22 @@ const JabatanStruktural = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                                    <Link to={"/data-riwayat/keluarga/detail-data-pasangan/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
                                             <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
+                                        </Button>
+                                    </Link>
+                                    <Link to="">
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="cursor-pointer"
+                                        >
+                                            <HiMiniTrash className="w-5! h-5! text-[#FDA31A]"/>
                                         </Button>
                                     </Link>
                                 </div>
@@ -183,4 +213,4 @@ const JabatanStruktural = () => {
     );
 };
 
-export default JabatanStruktural;
+export default Pasangan;
