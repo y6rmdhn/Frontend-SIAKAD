@@ -9,18 +9,26 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataAnakDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
+
     getDataOrangtua: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
             params: {
                 page: page,
             },
         }),
+    getDataOrangtuaDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/orangtua/` + id),
+
     getDataPasangan: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/pasangan`, {
             params: {
                 page: page,
             },
         }),
+    getDataPasanganDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/pasangan/` + id),
 
     // kepegawaian
     getPangkat: (page) =>

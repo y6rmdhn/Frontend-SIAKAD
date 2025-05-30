@@ -88,11 +88,15 @@ const HamburgerButton = () => {
                             transition={{duration: 0.5}}
                         >
                             <div className="flex flex-col gap-2">
-                                <Button className="w-full justify-start pl-0 py-0 text-xs"
-                                        variant="ghost">Dasboard</Button>
+                                <Link to="/dasboard">
+                                    <Button className="w-full justify-start pl-0 py-0 text-xs"
+                                            variant="ghost">Dasboard</Button>
+                                </Link>
                                 <Separator className="w-full h-1"/>
-                                <Button className="w-full justify-start pl-0 py-0 text-xs"
-                                        variant="ghost">Pegawai</Button>
+                                <Link to="/biodata">
+                                    <Button className="w-full justify-start pl-0 py-0 text-xs"
+                                            variant="ghost">Biodata</Button>
+                                </Link>
                                 <Separator className="w-full h-1"/>
                             </div>
 

@@ -311,15 +311,15 @@ function App() {
           <Route path="keluarga">
             <Route path="anak" Component={AnakUserPage} />
             <Route path="detail-anak" Component={DetailAnakUserPage} />
-            <Route path="detail-data-anak" Component={DetailDataAnakUserPage} 
+            <Route path="detail-data-anak/:id" Component={DetailDataAnakUserPage}
             />
             <Route path="orangtua" Component={OrangtuaUserPage} />
             <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
-            <Route path="detail-data-orangtua" Component={DetailDataOrangtuaUserPage} 
+            <Route path="detail-data-orangtua/:id" Component={DetailDataOrangtuaUserPage}
             />
             <Route path="pasangan" Component={PasanganUserPage} />
             <Route path="detail-pasangan" Component={DetailPasanganUserPage} />
-            <Route path="detail-data-pasangan" Component={DetailDataPasanganUserPage} />
+            <Route path="detail-data-pasangan/:id" Component={DetailDataPasanganUserPage} />
           </Route>
 
           {/* DATA RIWAYAT > KUALIFIKASI */}

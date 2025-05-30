@@ -22,6 +22,7 @@ import dosenServices from "@/services/dosen.services.ts";
 import {useEffect} from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
 
+
 const Anak = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
@@ -160,7 +161,7 @@ const Anak = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/keluarga/detail-data-anak">
+                                    <Link to={"/data-riwayat/keluarga/detail-data-anak/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"
