@@ -8,12 +8,16 @@ const dataRiwayat: {
     href: "",
     childrenItems: [
       {
+        title: "Anak",
+        href: "/data-riwayat/keluarga/anak",
+      },
+      {
         title: "Orangtua",
         href: "/data-riwayat/keluarga/orangtua",
       },
       {
-        title: "Anak",
-        href: "/data-riwayat/keluarga/anak",
+        title: "Pasangan",
+        href: "/data-riwayat/keluarga/pasangan",
       },
     ],
   },

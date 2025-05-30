@@ -15,6 +15,12 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataPasangan: (page) =>
+        axiosInstance.get(`${endpoint.DOSEN}/pasangan`, {
+            params: {
+                page: page,
+            },
+        }),
 
     // kepegawaian
     getPangkat: (page) =>
