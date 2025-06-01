@@ -30,14 +30,21 @@ import {
 } from "@/components/ui/table";
 import biodataDummy from "@/constant/biodataDummy/biodataDummy";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
-import React from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import DetailPegawaiSidebar from "../../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
+import accordionContent from "../../../../../../constant/arccodionContent/arccodionContent";
 
 const Diklat = () => {
+
+  const params = useParams()
+
   return (
     <DetailPegawaiLayout title="Diklat" subTitile="Daftar Diklat">
+      {/*Sidebar*/}
+      <DetailPegawaiSidebar currentPegawaiId={params.id} accordionData={accordionContent} />
+
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
           <div className="flex w-full bg-[#F6FBFF] border-l-4 border-l-[#92D3FF]">

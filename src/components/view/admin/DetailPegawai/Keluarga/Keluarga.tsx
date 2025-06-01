@@ -1,4 +1,5 @@
 import CustomCard from "@/components/blocks/Card";
+import DetailPegawai from "@/components/blocks/BiodataDetailPegawai/DetailPegawai";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -29,42 +30,69 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import biodataDummy from "@/constant/biodataDummy/biodataDummy";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
-import React from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import accordionContent from "../../../../../constant/arccodionContent/arccodionContent";
+import DetailPegawaiSidebar from "../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
+
+// --- Dummy Data ---
+const dummyLeftColumn = [
+  { name: "Nama Lengkap" },
+  { name: "NIP" },
+  { name: "Tempat Lahir" },
+  { name: "Tanggal Lahir" },
+  { name: "Jenis Kelamin" },
+  { name: "Agama" },
+];
+
+const dummyDatasLeft: (string | number)[] = [
+  "Ahmad Subagja",
+  "199001012020011001",
+  "Bandung",
+  "01 Januari 1990",
+  "Laki-laki",
+  "Islam",
+];
+
+const dummyRightColumn = [
+  { name: "Jabatan" },
+  { name: "Unit Kerja" },
+  { name: "Status Pegawai" },
+  { name: "Tanggal Pengangkatan" },
+  { name: "Email Kantor" },
+  { name: "Nomor Telepon" },
+];
+
+const dummyDatasRight: (string | number)[] = [
+  "Staf Analis Data",
+  "Divisi Teknologi Informasi",
+  "Pegawai Tetap",
+  "15 Maret 2020",
+  "ahmad.s@kantor.go.id",
+  "081234567890",
+];
 
 const Keluarga = () => {
+
+  const params = useParams();
+
+
   return (
     <DetailPegawaiLayout title="Keluarga Pegawai" subTitile="Daftar Keluarga">
+      {/*Sidebar*/}
+      <DetailPegawaiSidebar currentPegawaiId={params.id} accordionData={accordionContent} />
+
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex w-full bg-[#F6FBFF] border-l-4 border-l-[#92D3FF]">
-            <div className="flex flex-col w-full">
-              {biodataDummy.leftColumn.map((item, index) => (
-                <div
-                  key={index}
-                  className="border-b flex justify-between items-center py-2 pl-2"
-                >
-                  <h1 className="text-[#3F6FA9] font-semibold">{item.label}</h1>
-                  <h1>{item.value}</h1>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col w-full">
-              {biodataDummy.rightColumn.map((item, index) => (
-                <div
-                  key={index}
-                  className="border-b flex justify-between items-center py-2 pl-5 pr-2"
-                >
-                  <h1 className="text-[#3F6FA9] font-semibold">{item.label}</h1>
-                  <h1>{item.value}</h1>
-                </div>
-              ))}
-            </div>
-          </div>
+          <DetailPegawai
+              leftColumn={dummyLeftColumn}
+              rightColumn={dummyRightColumn}
+              datasLeft={dummyDatasLeft}
+              datasRight={dummyDatasRight}
+              classname="bg-[#F6FBFF] border-l-4 border-l-[#92D3FF]"
+          />
 
           <CustomCard
             actions={

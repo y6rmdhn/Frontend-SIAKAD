@@ -4,9 +4,11 @@ import biodataMenu from "@/constant/biodataMenu/biodataMenu";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import menuDetail from "@/constant/detailPegawaiMenu/index";
+import DetailPegawaiSidebar from "../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
+import accordionContent from "../../../../../constant/arccodionContent/arccodionContent";
 
 const Biodata = () => {
   const [show, setShow] = useState("kepegawaian");
@@ -16,8 +18,9 @@ const Biodata = () => {
     queryKey: ["detail-pegawai"],
     queryFn: async () => {
       const response = await adminServices.getPegawaiDetailAdminPage(
-        params.PegawaiId
+        params.id
       );
+
       return response.data.data;
     },
   });
@@ -25,6 +28,8 @@ const Biodata = () => {
   const { data: getSuku } = useQuery({
     queryKey: ["suku"],
     queryFn: async () => {
+      if (!data?.suku_id) return;
+
       const response = await adminServices.getSuku(data?.suku_id);
 
       return response.data.data;
@@ -233,6 +238,8 @@ const Biodata = () => {
 
   return (
     <DetailPegawaiLayout title="Biodata Pegawai" subTitile="Data Pegawai">
+      {/*sidebar*/}
+      <DetailPegawaiSidebar currentPegawaiId={params.id} accordionData={accordionContent} />
       <div className="flex flex-col gap-20 w-full">
         <DetailPegawai
           datasLeft={datasLeft}

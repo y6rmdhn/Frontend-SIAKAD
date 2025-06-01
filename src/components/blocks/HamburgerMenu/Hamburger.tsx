@@ -41,7 +41,7 @@ const HamburgerButton = () => {
     return (
         <div className="md:hidden">
             <button
-                className="relative z-50 w-10 h-10 focus:outline-none mt-1 scale-90"
+                className="relative z-70 w-10 h-10 focus:outline-none mt-1 scale-90"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
             >
@@ -58,7 +58,7 @@ const HamburgerButton = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        className="fixed inset-0 bg-white z-40 pt-20 px-4 overflow-hidden flex flex-col min-h-screen"
+                        className="fixed inset-0 bg-white z-65 pt-20 px-4 overflow-hidden flex flex-col min-h-screen"
                         initial={{height: 0, opacity: 0}}
                         animate={{height: "100vh", opacity: 1}}
                         exit={{height: 0, opacity: 0}}

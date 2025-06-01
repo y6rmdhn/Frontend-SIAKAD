@@ -49,7 +49,7 @@ const AvatarMobile = ({ initials, user, logout }) => {
                     <>
                         {/* Close Button (fixed position) */}
                         <motion.div
-                            className="fixed left-4 top-4 z-50"
+                            className="fixed left-4 top-4 z-80"
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
@@ -67,7 +67,7 @@ const AvatarMobile = ({ initials, user, logout }) => {
 
                         {/* Menu Overlay */}
                         <motion.div
-                            className="fixed inset-0 bg-white z-40 pt-20 px-4"
+                            className="fixed inset-0 bg-white z-65 pt-20 px-4"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
