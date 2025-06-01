@@ -17,9 +17,7 @@ const Biodata = () => {
   const { data } = useQuery({
     queryKey: ["detail-pegawai"],
     queryFn: async () => {
-      const response = await adminServices.getPegawaiDetailAdminPage(
-        params.id
-      );
+      const response = await adminServices.getPegawaiDetailAdminPage(params.id);
 
       return response.data.data;
     },
@@ -239,7 +237,10 @@ const Biodata = () => {
   return (
     <DetailPegawaiLayout title="Biodata Pegawai" subTitile="Data Pegawai">
       {/*sidebar*/}
-      <DetailPegawaiSidebar currentPegawaiId={params.id} accordionData={accordionContent} />
+      <DetailPegawaiSidebar
+        currentPegawaiId={params.id}
+        accordionData={accordionContent}
+      />
       <div className="flex flex-col gap-20 w-full">
         <DetailPegawai
           datasLeft={datasLeft}
@@ -249,13 +250,17 @@ const Biodata = () => {
         />
 
         <div>
-          <div className="flex gap-2 justify-center">
+          <div className="w-full grid grid-cols-2 grid-flow-row min-[1313px]:flex gap-2 mt-10">
             {biodataMenu.map((item, index) => (
               <Button
                 key={index}
                 type="button"
                 onClick={() => setShow(item.show)}
-                className={`bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white rounded-t-2xl rounded-b-none transition-all duration-300 ${
+                className={`${
+                  item.title === "Alamat Domisili & Kontak"
+                    ? "col-span-2 min-[506px]:col-span-1"
+                    : ""
+                } flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
                   show === item.show ? "bg-[#106D63] text-white" : ""
                 }`}
               >
