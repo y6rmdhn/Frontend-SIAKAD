@@ -29,7 +29,7 @@ import SelectFilter from "@/components/blocks/SelectFilter";
 import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 
-// --- Dummy Data ---
+// --- Dummy Data (ini di copy) Start---
 const dummyLeftColumn = [
   { name: "Nama Lengkap" },
   { name: "NIP" },
@@ -65,6 +65,7 @@ const dummyDatasRight: (string | number)[] = [
   "ahmad.s@kantor.go.id",
   "081234567890",
 ];
+// --- Dummy Data (ini di copy) End---
 
 const Keluarga = () => {
   const params = useParams();
@@ -79,6 +80,7 @@ const Keluarga = () => {
 
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
+          {/* start (Ini di copy) */}
           <DetailPegawai
             leftColumn={dummyLeftColumn}
             rightColumn={dummyRightColumn}
@@ -86,7 +88,9 @@ const Keluarga = () => {
             datasRight={dummyDatasRight}
             classname="bg-[#F6FBFF] text-xs md:text-sm border-l-4 border-l-[#92D3FF]"
           />
+          {/* end (Ini di copy) */}
 
+          {/* Start (Ini di copy) */}
           <CustomCard
             actions={
               <div className="flex gap-4 flex-col md:flex-row">
@@ -101,7 +105,9 @@ const Keluarga = () => {
               </div>
             }
           />
+          {/* end (Ini di copy) */}
 
+          {/* Start (Ini di copy) */}
           <div className="gap-5 flex flex-col md:flex-row">
             <SelectFilter
               classname="w-full md:w-32 "
@@ -111,6 +117,7 @@ const Keluarga = () => {
 
             <SearchInput />
           </div>
+          {/* end (Ini di copy) */}
         </div>
 
         <Table className="mt-10 table-auto border-separate border-spacing-x-[1px] text-xs md:text-sm">
