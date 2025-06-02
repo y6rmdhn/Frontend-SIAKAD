@@ -11,22 +11,25 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {FaPlus} from "react-icons/fa";
+import {FaPlus, FaRegTrashAlt} from "react-icons/fa";
 import {FaSquareFull} from "react-icons/fa";
-import {HiMiniTrash} from "react-icons/hi2";
 import {IoEyeOutline} from "react-icons/io5";
 import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import InfoList from "@/components/blocks/InfoList";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import {useEffect} from "react";
 import {parseISO, format} from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
+import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
+import {toast} from "sonner";
+import deleteDataDosenServices from "@/services/dosen.delete.services.ts";
 
 const Orangtua = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
+    const queryClient = useQueryClient();
 
     // get data
     const {data} = useQuery({
@@ -36,6 +39,19 @@ const Orangtua = () => {
             return response.data;
         },
     });
+
+    // delete data
+    const {mutate: deleteData} = useMutation({
+        mutationFn: (id: number) => deleteDataDosenServices.deteleDataOrangtua(id),
+        onSuccess: () => {
+            toast.success("Data berhasil dihapus");
+            queryClient.invalidateQueries({queryKey: ["orangtua-dosen"]});
+        }
+    })
+
+    const handleDeleteData = (id: number) => {
+        deleteData(id)
+    }
 
     useEffect(() => {
         if (!searchParam.get("page")) {
@@ -130,7 +146,7 @@ const Orangtua = () => {
                             <FaSquareFull className="w-3 h-3"/>
                         </TableHead>
                         {data?.table_columns.map((item) => (
-                            <TableHead className="text-center text-white border">
+                            <TableHead key={item.id} className="text-center text-white border">
                                 {item.label}
                             </TableHead>
                         ))}
@@ -138,7 +154,7 @@ const Orangtua = () => {
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
                     {data?.data.data.map((item) => (
-                        <TableRow className=" even:bg-gray-100">
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">{item.id}</TableCell>
                             <TableCell className="text-center">{item.nama}</TableCell>
                             <TableCell className="text-center">{item.status_orangtua}</TableCell>
@@ -180,15 +196,20 @@ const Orangtua = () => {
                                             <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
                                         </Button>
                                     </Link>
-                                    <Link to="">
+                                    <ConfirmDialog
+                                        title="Hapus Data?"
+                                        description="Apakah Anda yakin ingin menghapus data ini?"
+                                        onConfirm={() => handleDeleteData(item.id)}
+                                    >
                                         <Button
                                             size="icon"
+                                            type="button"
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
-                                            <HiMiniTrash className="w-5! h-5! text-[#FDA31A]"/>
+                                            <FaRegTrashAlt className="text-[#FDA31A]"/>
                                         </Button>
-                                    </Link>
+                                    </ConfirmDialog>
                                 </div>
                             </TableCell>
                         </TableRow>

@@ -21,6 +21,9 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataOrangtuaWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/orangtua`),
+
     getDataOrangtuaDetail: (id) =>
         axiosInstance.get(`${endpoint.DOSEN}/orangtua/` + id),
 
@@ -30,6 +33,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataPasanganWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/pasangan`),
     getDataPasanganDetail: (id) =>
         axiosInstance.get(`${endpoint.DOSEN}/pasangan/` + id),
 
