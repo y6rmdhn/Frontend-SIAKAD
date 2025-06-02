@@ -6,6 +6,8 @@ const deleteDataDosenServices = {
         axiosInstance.delete(`${endpoint.DOSEN}/orangtua/${id}`),
     deteleDataAnak: (id: number) =>
         axiosInstance.delete(`${endpoint.DOSEN}/anak/${id}`),
+    deteleDataPasangan: (id: number) =>
+        axiosInstance.delete(`${endpoint.DOSEN}/pasangan/${id}`),
 };
 
 export default deleteDataDosenServices;

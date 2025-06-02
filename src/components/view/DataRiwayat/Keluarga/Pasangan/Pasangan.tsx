@@ -11,31 +11,48 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {FaPlus} from "react-icons/fa";
+import {FaPlus, FaRegTrashAlt} from "react-icons/fa";
 import {FaSquareFull} from "react-icons/fa";
 import {HiMiniTrash} from "react-icons/hi2";
 import {IoEyeOutline} from "react-icons/io5";
 import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import InfoList from "@/components/blocks/InfoList";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import {useEffect} from "react";
 import {parseISO, format} from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
+import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
+import deleteDataDosenServices from "@/services/dosen.delete.services.ts";
+import {toast} from "sonner";
 
 const Pasangan = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
+    const queryClient = useQueryClient();
 
     // get data
     const {data} = useQuery({
-        queryKey: ["orangtua-dosen", searchParam.get("page")],
+        queryKey: ["pasangan-dosen", searchParam.get("page")],
         queryFn: async () => {
             const response = await dosenServices.getDataPasangan(searchParam.get("page"));
             return response.data;
         },
     });
+
+    // delete data
+    const {mutate: deleteData} = useMutation({
+        mutationFn: (id: number) => deleteDataDosenServices.deteleDataPasangan(id),
+        onSuccess: () => {
+            toast.success("Data berhasil dihapus");
+            queryClient.invalidateQueries({queryKey: ["pasangan-dosen"]});
+        }
+    })
+
+    const handleDeleteData = (id: number) => {
+        deleteData(id)
+    }
 
     useEffect(() => {
         if (!searchParam.get("page")) {
@@ -182,15 +199,20 @@ const Pasangan = () => {
                                             <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
                                         </Button>
                                     </Link>
-                                    <Link to="">
+                                    <ConfirmDialog
+                                        title="Hapus Data?"
+                                        description="Apakah Anda yakin ingin menghapus data ini?"
+                                        onConfirm={() => handleDeleteData(item.id)}
+                                    >
                                         <Button
                                             size="icon"
+                                            type="button"
                                             variant="ghost"
                                             className="cursor-pointer"
                                         >
-                                            <HiMiniTrash className="w-5! h-5! text-[#FDA31A]"/>
+                                            <FaRegTrashAlt className="text-[#FDA31A]"/>
                                         </Button>
-                                    </Link>
+                                    </ConfirmDialog>
                                 </div>
                             </TableCell>
                         </TableRow>
