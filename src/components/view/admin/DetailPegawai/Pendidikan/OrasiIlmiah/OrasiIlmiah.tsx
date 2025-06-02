@@ -1,6 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import DetailPegawai from "@/components/blocks/BiodataDetailPegawai/DetailPegawai";
 import { Label } from "@/components/ui/label";
 import {
   Pagination,
@@ -12,15 +12,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,13 +19,50 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import biodataDummy from "@/constant/biodataDummy/biodataDummy";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
-import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import {Link, useParams} from "react-router-dom";
 import DetailPegawaiSidebar from "../../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
 import accordionContent from "../../../../../../constant/arccodionContent/arccodionContent";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import unitKerjaOptions from "@/constant/dummyFilter";
+import SearchInput from "@/components/blocks/SearchInput";
+
+const dummyLeftColumn = [
+  { name: "Nama Lengkap" },
+  { name: "NIP" },
+  { name: "Tempat Lahir" },
+  { name: "Tanggal Lahir" },
+  { name: "Jenis Kelamin" },
+  { name: "Agama" },
+];
+
+const dummyDatasLeft: (string | number)[] = [
+  "Ahmad Subagja",
+  "199001012020011001",
+  "Bandung",
+  "01 Januari 1990",
+  "Laki-laki",
+  "Islam",
+];
+
+const dummyRightColumn = [
+  { name: "Jabatan" },
+  { name: "Unit Kerja" },
+  { name: "Status Pegawai" },
+  { name: "Tanggal Pengangkatan" },
+  { name: "Email Kantor" },
+  { name: "Nomor Telepon" },
+];
+
+const dummyDatasRight: (string | number)[] = [
+  "Staf Analis Data",
+  "Divisi Teknologi Informasi",
+  "Pegawai Tetap",
+  "15 Maret 2020",
+  "ahmad.s@kantor.go.id",
+  "081234567890",
+];
 
 const OrasiIlmiah = () => {
 
@@ -47,80 +75,42 @@ const OrasiIlmiah = () => {
 
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex w-full bg-[#F6FBFF] border-l-4 border-l-[#92D3FF]">
-            <div className="flex flex-col w-full">
-              {biodataDummy.leftColumn.map((item, index) => (
-                <div
-                  key={index}
-                  className="border-b flex justify-between items-center py-2 pl-2"
-                >
-                  <h1 className="text-[#3F6FA9] font-semibold">{item.label}</h1>
-                  <h1>{item.value}</h1>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col w-full">
-              {biodataDummy.rightColumn.map((item, index) => (
-                <div
-                  key={index}
-                  className="border-b flex justify-between items-center py-2 pl-5 pr-2"
-                >
-                  <h1 className="text-[#3F6FA9] font-semibold">{item.label}</h1>
-                  <h1>{item.value}</h1>
-                </div>
-              ))}
-            </div>
-          </div>
+          <DetailPegawai
+            leftColumn={dummyLeftColumn}
+            rightColumn={dummyRightColumn}
+            datasLeft={dummyDatasLeft}
+            datasRight={dummyDatasRight}
+            classname="bg-[#F6FBFF] text-xs md:text-sm border-l-4 border-l-[#92D3FF]"
+          />
 
+          {/* Start (Ini di copy) */}
           <CustomCard
             actions={
-              <div className="grid grid-rows-1 grid-flow-col gap-6">
-                <div className="flex">
-                  <Label className="pr-30 text-[#FDA31A]">
-                    Status Pengajuan
-                  </Label>
-                  <Select>
-                    <SelectTrigger className="w-80">
-                      <SelectValue placeholder="--Semua Pengajuan--" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Unit Kerja</SelectLabel>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="flex gap-4 flex-col md:flex-row">
+                <Label className="md:pr-30 text-[#FDA31A]">
+                  Status Pengajuan
+                </Label>
+                <SelectFilter
+                  classname="w-full md:w-80"
+                  options={unitKerjaOptions}
+                  placeholder="--Semua Pengajuan--"
+                />
               </div>
             }
           />
+          {/* end (Ini di copy) */}
 
-          <div className="gap-5 flex">
-            <Select>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="--Semua--" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Unit Kerja</SelectLabel>
-                  <SelectItem value="apple">Apple</SelectItem>
-                  <SelectItem value="banana">Banana</SelectItem>
-                  <SelectItem value="blueberry">Blueberry</SelectItem>
-                  <SelectItem value="grapes">Grapes</SelectItem>
-                  <SelectItem value="pineapple">Pineapple</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+          {/* Start (Ini di copy) */}
+          <div className="gap-5 flex flex-col md:flex-row">
+            <SelectFilter
+              classname="w-full md:w-32 "
+              options={unitKerjaOptions}
+              placeholder="--Semua--"
+            />
 
-            <div className="relative">
-              <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-              <Input placeholder="Search" className="w-80 pr-8" />
-            </div>
+            <SearchInput />
           </div>
+          {/* end (Ini di copy) */}
         </div>
 
         <Table className="mt-10 table-auto border-separate border-spacing-x-[1px]">
