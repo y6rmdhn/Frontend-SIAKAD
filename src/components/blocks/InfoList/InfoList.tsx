@@ -17,7 +17,7 @@ const InfoList: React.FC<InfoListProps> = ({ items }) => {
             {/* Kolom Kiri */}
             <ul className="flex flex-col text-[#2572BE]  px-4 md:pr-0">
                 {leftItems.map((item, index) => (
-                    <li className="flex justify-between border-b border-b-[#6AAEF1] py-1" key={index}>
+                    <li className="flex flex-col md:flex-row item-start md:justify-between border-b border-b-[#6AAEF1] py-1" key={index}>
                         <span className="font-semibold">{item.label}</span>
                         <span className="md:pr-2">{item.value}</span>
                     </li>
@@ -27,7 +27,7 @@ const InfoList: React.FC<InfoListProps> = ({ items }) => {
             {/* Kolom Kanan */}
             <ul className="flex flex-col text-[#2572BE] px-4 md:pl-0">
                 {rightItems.map((item, index) => (
-                    <li className="flex justify-between border-b border-b-[#6AAEF1] py-1" key={index}>
+                    <li className="flex flex-col md:flex-row item-start md:justify-between border-b border-b-[#6AAEF1] py-1" key={index}>
                         <span className="font-semibold md:pl-2">{item.label}</span>
                         <span>{item.value}</span>
                     </li>

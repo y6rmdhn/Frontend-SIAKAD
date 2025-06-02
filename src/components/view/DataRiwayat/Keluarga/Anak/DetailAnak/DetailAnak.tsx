@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
@@ -9,50 +9,100 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
-import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
-import { z } from "zod";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {z} from "zod";
+import { IoIosArrowBack } from "react-icons/io";
+import dosenServices from "@/services/dosen.services.ts";
+import postDosenServices from "@/services/create.dosen.services.ts";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {toast} from "sonner";
 
-// Define interface for the data item
-interface anakItem {
-  nama: string;
-  jenis_kelamin: string;
-  tempat_lahir: string;
-  tgl_lahir: Date;
-  anak_ke: number;
-  pekerjaan_anak: string;
-  keterangan: string;
-  submit_type: string;
-  // Add other properties as needed
-}
-
-// Define interface for the API response
-interface anakResponse {
-  data: anakItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
-}
-
-const anakSchema = z.object({
-  id: z.number().optional(),
-  pangkat: z.string().min(1, "Pangkat tidak boleh kosong"),
-  nama_golongan: z.string().min(1, "Nama Golongan tidak boleh kosong"),
+const detailAnakSchema = z.object({
+  nama: z.string().min(1, "Nama tidak boleh kosong"),
+  jenis_kelamin: z.string(),
+  tempat_lahir: z.string().min(1, "Tempat lahir tidak boleh kosong"),
+  tgl_lahir: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Tanggal lahir tidak valid",
+  }).pipe(z.coerce.date()),
+  anak_ke: z.preprocess(
+      (val) => (val === "" || val === null || val === undefined ? undefined : String(val)),
+      z.string()
+          .regex(/^\d*$/, "Anak ke harus berupa angka")
+          .transform((val) => (val === "" || val === undefined ? undefined : Number(val)))
+          .refine(val => val === undefined || val > 0, "Anak ke harus lebih besar dari 0 jika diisi")
+          .optional()
+  ),
+  pekerjaan_anak: z.string().optional(),
+  keterangan: z.string().optional(),
+  submit_type: z.string(),
+  umur: z.string().optional(),
 });
 
+export type DetailAnakFormData = z.infer<typeof detailAnakSchema>;
+
 const DetailAnak = () => {
-  const form = useForm({
-    nama: "",
-    jenis_kelamin: "",
-    tempat_lahir: "",
-    tgl_lahir: "",
-    anak_ke: "",
-    pekerjaan_anak: "",
-    keterangan: "",
-    submit_type: "submit",
+
+  const navigate = useNavigate();
+
+  const form = useForm<DetailAnakFormData>({
+    defaultValues: {
+      nama: "",
+      jenis_kelamin: "",
+      tempat_lahir: "",
+      tgl_lahir: undefined,
+      anak_ke: undefined,
+      umur: "",
+      pekerjaan_anak: "",
+      keterangan: "",
+      submit_type: "submit",
+    }, resolver: zodResolver(detailAnakSchema)
   });
 
-  const handleSubmitAnak = (values) => {};
+  // get data
+  const {data} = useQuery({
+    queryKey: ["anak-detail-dosen"],
+    queryFn: async () => {
+      const response = await dosenServices.getDataAnakWithoutParam();
+      return response.data;
+    },
+  });
+
+  // add data
+  const {mutate} = useMutation({
+    mutationFn:  (data: FormData) => postDosenServices.addDataAnak(data),
+    onSuccess: () => {
+      form.reset();
+      toast.success("Data berhasil ditambahkan");
+      navigate("/data-riwayat/keluarga/anak")
+    },
+    onError: (error: any) => {
+      console.error("Mutation error:", error.response.data);
+    }
+  })
+
+  const handleSubmitAnak = (values: DetailAnakFormData) => {
+    const formData = new FormData();
+
+    formData.append('nama', values.nama);
+    formData.append('jenis_kelamin', values.jenis_kelamin || "");
+    formData.append('tempat_lahir', values.tempat_lahir);
+    if (values.tgl_lahir instanceof Date) {
+      formData.append('tgl_lahir', values.tgl_lahir.toISOString().split('T')[0]);
+    } else {
+      formData.append('tgl_lahir', "");
+    }
+    if (values.anak_ke !== undefined) { // Kirim hanya jika ada nilai
+      formData.append('anak_ke', String(values.anak_ke));
+    }
+    formData.append('pekerjaan_anak', values.pekerjaan_anak || "");
+    formData.append('keterangan', values.keterangan || "");
+    formData.append('submit_type', values.submit_type);
+    if (values.umur) {
+      formData.append('umur', values.umur);
+    }
+    
+    mutate(formData);
+  };
 
   return (
     <div className="mt-10 mb-20">
@@ -63,25 +113,28 @@ const DetailAnak = () => {
           <CustomCard
             actions={
               <div>
-                <div className="flex justify-end">
-                  <Link to="/data-riwayat/keluarga/anak">
-                    <Button className="bg-yellow-uika hover:bg-hover-yellow-uika">
-                      <FaPlus /> Tambah Baru
+                <div className="flex w-full justify-end gap-4 flex-col md:flex-row">
+                  <Link className="w-full md:w-auto" to="/data-riwayat/keluarga/anak">
+                    <Button type="button" className="bg-[#00C0EF] w-full md:w-auto hover:bg-[#00A8D1]">
+                      <IoIosArrowBack /> Kembali ke daftar
                     </Button>
                   </Link>
+                    <Button type="submit" className="bg-yellow-uika hover:bg-hover-yellow-uika">
+                      <FaPlus /> {form.formState.isSubmitting ? "Menyimpan..." : "Tambah Baru"}
+                    </Button>
                 </div>
 
                 <InfoList
-                  items={[
-                    "NIP",
-                    "Nama",
-                    "Unit Kerja",
-                    "Status",
-                    "Jab. Akademik",
-                    "Jab. Fungsional",
-                    "Jab. Struktural",
-                    "Pendidikan",
-                  ]}
+                    items={[
+                      {label: "NIP", value: data?.pegawai_info.nip},
+                      {label: "Nama", value: data?.pegawai_info.nama},
+                      {label: "Unit Kerja", value: data?.pegawai_info.unit_kerja},
+                      {label: "Status", value: data?.pegawai_info.status},
+                      {label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik},
+                      {label: "Jab. Fungsional", value: data?.pegawai_info.jab_fungsional},
+                      {label: "Jab. Struktural", value: data?.pegawai_info.jab_struktural},
+                      {label: "Pendidikan", value: data?.pegawai_info.pendidikan},
+                    ]}
                 />
 
                 <div className="mt-10 grid md:grid-rows-7 md:grid-flow-col md:items-center gap-4 w-full">
@@ -98,11 +151,10 @@ const DetailAnak = () => {
                     form={form}
                     label="Jenis Kelamin"
                     name="jenis_kelamin"
-                    placeholder="--Laki-laki--"
+                    placeholder="--Pilih--"
                     options={[
-                      { label: "Admin", value: "admin" },
-                      { label: "User", value: "user" },
-                      { label: "Guest", value: "guest" },
+                      { label: "Laki-Laki", value: "Laki-laki" },
+                      { label: "Perempuan", value: "Perempuan" },
                     ]}
                     labelStyle="text-[#3F6FA9]"
                     required={false}
@@ -119,7 +171,7 @@ const DetailAnak = () => {
                   <FormFieldInput
                     form={form}
                     label="Tanggal Lahir"
-                    name="tanggal_lahir"
+                    name="tgl_lahir"
                     type="date"
                     labelStyle="text-[#3F6FA9]"
                     required={true}
@@ -133,19 +185,20 @@ const DetailAnak = () => {
                     required={false}
                   />
 
-                  {/* <FormFieldInputFile
-                    form={form}
-                    label="File Akte Kelahiran"
-                    name="file_akte_kelahiran"
-                    classname="border-none shadow-none"
-                    labelStyle="text-[#3F6FA9]"
-                    required={false}
-                  /> */}
+                  {/*<FormFieldInputFile*/}
+                  {/*  form={form}*/}
+                  {/*  label="File Akte Kelahiran"*/}
+                  {/*  name="file_akte_kelahiran"*/}
+                  {/*  classname="border-none shadow-none"*/}
+                  {/*  labelStyle="text-[#3F6FA9]"*/}
+                  {/*  required={false}*/}
+                  {/*/>*/}
 
                   <FormFieldInput
                     form={form}
                     label="Anak Ke"
                     name="anak_ke"
+                    type="number"
                     labelStyle="text-[#3F6FA9]"
                     required={false}
                   />

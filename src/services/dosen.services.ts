@@ -9,6 +9,9 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataAnakWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/anak`),
+
     getDataAnakDetail: (id) =>
         axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
 

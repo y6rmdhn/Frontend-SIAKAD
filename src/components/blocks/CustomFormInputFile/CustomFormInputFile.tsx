@@ -71,7 +71,7 @@ export const FormFieldInputFile = ({
                 />
               </div>
               <FormDescription className="text-xs text-blue-500 whitespace-pre-line">
-                jpg.jpeg.pdf(nmaks. 2 MB
+                jpg.jpeg.pdf(maks. 2 MB)
               </FormDescription>
             </div>
           </FormControl>
