@@ -141,15 +141,19 @@ const PendidikanFormalUserPage = lazy(() => import("./pages/dataRiwayat/kualifik
 const DiklatUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/diklat"));
 const RiwayatPekerjaanUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/riwayatPekerjaan"));
 const DetailPangkatUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/pangkat/detailPangkat"));
+const DetailDataPangkatUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/pangkat/detaildataPangkat"));
 const DetailJabatanAkademikUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanAkademik/detailJabatanAkademik"));
+const DetailDataJabatanAkademikUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanAkademik/detaildataJabatanAkademik"));
 const DetailPendidikanFormalUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/pendidikanFormal/detailPendidikanFormal"));
 const DetailDiklatUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/diklat/detailDiklat"));
 const DetailRiwayatPekerjaanUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detailRiwayatPekerjaan"));
 const ForgetPasswordPage = lazy(() => import("./pages/auth/forgetPassword"));
 const JabatanFungsionalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional")); // Perhatikan path 'jabatanfungsional'
 const DetailJabatanFungsionalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional/detailJabatanFungsional"));
+const DetailDataJabatanFungsionalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional/detaildataJabatanFungsional"));
 const JabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular")); // Perhatikan path 'jabatanStruktular'
 const DetailJabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular/detailJabatanStruktural"));
+const DetailDataJabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular/detaildataJabatanStruktural"));
 const BahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar"));
 const DetailBahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detailBahanAjar"));
 const DataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering"));
@@ -183,6 +187,7 @@ const DetailOrganisasiUserPage = lazy(() => import("./pages/dataRiwayat/Pengemba
 const PelanggaranUserPage = lazy(() => import("./pages/dataRiwayat/Kompensasi/Pelanggaran")); // Ada duplikasi nama, beri alias _User
 const HubunganKerjaUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/hubunganKerja"));
 const DetailHubunganKerjaUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja"));
+const DetailDataHubunganKerjaUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/hubunganKerja/detaildataHubunganKerja"));
 const PengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian"));
 const DetailPengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian"));
 const BeritaPage = lazy(() => import("./pages/admin/operasional/berita")); // Ada duplikasi nama, pastikan ini benar atau beri alias
@@ -293,6 +298,8 @@ function App() {
                 path="detail-jabatan-akademik"
                 Component={DetailJabatanAkademikUserPage}
               />
+              <Route path="detail-data-jabatan-akademik" Component={DetailDataJabatanAkademikUserPage}
+              />
               <Route
                 path="jabatan-fungsional"
                 Component={JabatanFungsionalUserPage}
@@ -300,6 +307,8 @@ function App() {
               <Route
                 path="detail-jabatan-fungsional"
                 Component={DetailJabatanFungsionalUserPage}
+              />
+              <Route path="detail-data-jabatan-fungsional" Component={DetailDataJabatanFungsionalUserPage}
               />
               <Route
                 path="jabatan-struktural"
@@ -309,14 +318,18 @@ function App() {
                 path="detail-jabatan-struktural"
                 Component={DetailJabatanStrukturalUserPage}
               />
+              <Route 
+                path="detail-data-jabatan-struktural" 
+                Component={DetailDataJabatanStrukturalUserPage}
+              />
               <Route path="hubungan-kerja" Component={HubunganKerjaUserPage} />
-              <Route
-                path="detail-hubungan-kerja"
-                Component={DetailHubunganKerjaUserPage}
+              <Route path="detail-hubungan-kerja" Component={DetailHubunganKerjaUserPage}/>
+              <Route path="detail-data-hubungan-kerja" Component={DetailDataHubunganKerjaUserPage}
               />
 
               <Route path="pangkat" Component={PangkatUserPage} />
               <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
+              <Route path="detail-data-pangkat" Component={DetailDataPangkatUserPage}/>
             </Route>
 
             {/* DATA RIWAYAT > KELUARGA */}
