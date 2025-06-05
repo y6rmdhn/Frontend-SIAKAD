@@ -102,7 +102,7 @@ const Sertifikasi = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="">
+                <Link to="/data-riwayat/kompetensi/detail-data-sertifikasi">
                   <Button
                     size="icon"
                     variant="ghost"

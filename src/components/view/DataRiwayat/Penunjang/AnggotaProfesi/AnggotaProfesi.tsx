@@ -82,7 +82,7 @@ const AnggotaProfesi = () => {
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                <Link to="/data-riwayat/penunjang/detail-data-anggota-profesi">
                   <Button
                     size="icon"
                     variant="ghost"
