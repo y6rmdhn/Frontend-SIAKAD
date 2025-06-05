@@ -95,7 +95,7 @@ const Pembicara = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                <Link to="/data-riwayat/pelaksanaan-pengabdian/detail-data-pembicara">
                   <Button
                     size="icon"
                     variant="ghost"
