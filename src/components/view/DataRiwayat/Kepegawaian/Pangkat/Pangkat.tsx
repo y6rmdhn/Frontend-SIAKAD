@@ -152,7 +152,7 @@ const Pangkat = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/kepegawaian/detail-data-pangkat">
+                                    <Link to={"/data-riwayat/kepegawaian/detail-data-pangkat/" + item.id }>
                                         <Button
                                             size="icon"
                                             variant="ghost"

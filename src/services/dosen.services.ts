@@ -45,18 +45,29 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataPangkatWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/pangkat`),
+    getDataPangkatDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/pangkat/` + id),
+
     getJabatanAkademik: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`, {
             params: {
                 page: page,
             },
         }),
+
+    getDataJabatanakademikWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`),
+
     getJabatanFungsional: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`, {
             params: {
                 page: page,
             },
         }),
+    getDataJabatanakfungsionalWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`),
     getJabatanStruktural: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`, {
             params: {

@@ -60,7 +60,7 @@ const JenisSk = () => {
     const form = useForm({
         defaultValues: {
             kode: "",
-            jenis_sk: "",
+            jenis_sk_id: "",
         },
         resolver: zodResolver(jenisSkSchema),
     });
@@ -138,7 +138,7 @@ const JenisSk = () => {
         form.reset({
             id: item.id,
             kode: item.kode,
-            jenis_sk: item.jenis_sk
+            jenis_sk_id: item.jenis_sk
         });
 
         setIsEditMode(true);
@@ -204,7 +204,7 @@ const JenisSk = () => {
                                         if (!isEditMode) {
                                             form.reset({
                                                 kode: "",
-                                                jenis_sk: "",
+                                                jenis_sk_id: "",
                                             });
 
                                             searchParam.set("page", "1");

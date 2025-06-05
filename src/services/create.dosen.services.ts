@@ -9,6 +9,12 @@ const postDosenServices = {
         axiosInstance.post(`${endpoint.DOSEN}/pasangan`, payload),
     addDataOrangtua: (payload: IOrangtuaPost) =>
         axiosInstance.post(`${endpoint.DOSEN}/orangtua`, payload),
+    addDataPangkat: (payload: FormData) =>
+        axiosInstance.post(`${endpoint.DOSEN}/pangkat`, payload),
+    addDataJabatanAkademik: (payload: FormData) =>
+        axiosInstance.post(`${endpoint.DOSEN}/jabatanakademik`, payload),
+    addDataJabatanfungsional: (payload: FormData) =>
+        axiosInstance.post(`${endpoint.DOSEN}/jabatanfungsional`, payload),
 };
 
 export default postDosenServices;

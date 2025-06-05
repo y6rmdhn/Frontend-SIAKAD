@@ -52,22 +52,22 @@ export const FormFieldInputFile = ({
                 >
                   Choose File
                 </Button>
-                <span
-                  className="text-xs lg:text-sm text-muted-foreground truncate max-w-[200px]"
-                  title={field.value?.name}
-                >
-                  {field.value?.name
-                    ? field.value.name.length > 10
-                      ? field.value.name.slice(0, 18) + "..."
-                      : field.value.name
-                    : "No file chosen"}
+                  <span
+                      className="text-xs lg:text-sm text-muted-foreground truncate max-w-[200px]"
+                      title={field.value?.[0]?.name}
+                  >
+                  {field.value?.[0]?.name
+                      ? field.value[0].name.length > 25
+                          ? field.value[0].name.slice(0, 25) + "..."
+                          : field.value[0].name
+                      : "No file chosen"}
                 </span>
                 <Input
                   ref={fileInputRef}
                   type="file"
                   className="hidden"
-                  accept=".jpg,.jpeg,.pdf"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                  accept="image/jpeg,image/png,application/pdf"
+                  onChange={(e) => field.onChange(e.target.files)}
                 />
               </div>
               <FormDescription className="text-xs text-blue-500 whitespace-pre-line">

@@ -155,7 +155,7 @@ const JabatanAkademik = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/kepegawaian/detail-data-jabatan-akademik">
+                                    <Link to={"/data-riwayat/kepegawaian/detail-data-jabatan-akademik/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"

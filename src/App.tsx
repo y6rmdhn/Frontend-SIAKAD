@@ -298,7 +298,7 @@ function App() {
                 path="detail-jabatan-akademik"
                 Component={DetailJabatanAkademikUserPage}
               />
-              <Route path="detail-data-jabatan-akademik" Component={DetailDataJabatanAkademikUserPage}
+              <Route path="detail-data-jabatan-akademik/:id" Component={DetailDataJabatanAkademikUserPage}
               />
               <Route
                 path="jabatan-fungsional"
@@ -308,7 +308,7 @@ function App() {
                 path="detail-jabatan-fungsional"
                 Component={DetailJabatanFungsionalUserPage}
               />
-              <Route path="detail-data-jabatan-fungsional" Component={DetailDataJabatanFungsionalUserPage}
+              <Route path="detail-data-jabatan-fungsional/:id" Component={DetailDataJabatanFungsionalUserPage}
               />
               <Route
                 path="jabatan-struktural"
@@ -319,17 +319,17 @@ function App() {
                 Component={DetailJabatanStrukturalUserPage}
               />
               <Route 
-                path="detail-data-jabatan-struktural" 
+                path="detail-data-jabatan-struktural/:id"
                 Component={DetailDataJabatanStrukturalUserPage}
               />
               <Route path="hubungan-kerja" Component={HubunganKerjaUserPage} />
               <Route path="detail-hubungan-kerja" Component={DetailHubunganKerjaUserPage}/>
-              <Route path="detail-data-hubungan-kerja" Component={DetailDataHubunganKerjaUserPage}
+              <Route path="detail-data-hubungan-kerja/:id" Component={DetailDataHubunganKerjaUserPage}
               />
 
               <Route path="pangkat" Component={PangkatUserPage} />
               <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
-              <Route path="detail-data-pangkat" Component={DetailDataPangkatUserPage}/>
+              <Route path="detail-data-pangkat/:id" Component={DetailDataPangkatUserPage}/>
             </Route>
 
             {/* DATA RIWAYAT > KELUARGA */}
