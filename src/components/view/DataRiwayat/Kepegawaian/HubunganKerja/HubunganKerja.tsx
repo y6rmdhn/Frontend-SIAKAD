@@ -127,6 +127,27 @@ const HubunganKerja = () => {
                             <TableCell className="text-center">{item.nama_hub_kerja}</TableCell>
                             <TableCell className="text-center">{item.nama_status_aktif}</TableCell>
                             <TableCell className="text-center">{item.pejabat_penetap}</TableCell>
+                            <TableCell className="text-center">
+                                <Button
+                                    size="sm"
+                                    className={`w-full text-xs lg:text-sm text-black
+    ${
+                                        item.status_pengajuan === "draf"
+                                            ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
+                                            : item.status_pengajuan === "diajukan"
+                                                ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
+                                                : item.status_pengajuan === "disetujui"
+                                                    ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
+                                                    : item.status_pengajuan === "ditolak"
+                                                        ? "bg-red-500 hover:bg-red-500"
+                                                        : "bg-slate-300 hover:bg-slate-300"
+                                    }
+  `}
+                                >
+                                    {item.status_pengajuan}
+                                </Button>
+                            </TableCell>
+                            <TableCell className="text-center">{item.is_aktif_label}</TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
                                     <Link to="/data-riwayat/kepegawaian/detail-data-hubungan-kerja">

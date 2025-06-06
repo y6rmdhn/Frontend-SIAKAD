@@ -84,8 +84,9 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataHubunganKerjaWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/hubungankerja`),
 
-//     Kompetensi
 };
 
 export default dosenServices;
