@@ -68,12 +68,16 @@ const dosenServices = {
         }),
     getDataJabatanakfungsionalWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`),
+
     getJabatanStruktural: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`, {
             params: {
                 page: page,
             },
         }),
+    getDataJabatanakstrukturalWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`),
+
     getHubunganKerja: (page) =>
         axiosInstance.get(`${endpoint.DOSEN}/hubungankerja`, {
             params: {
