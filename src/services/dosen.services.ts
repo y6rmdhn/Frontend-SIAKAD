@@ -111,6 +111,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataKemampuanBahasaWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
 
 };
 

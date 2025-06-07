@@ -21,6 +21,8 @@ const postDosenServices = {
         axiosInstance.post(`${endpoint.DOSEN}/hubungankerja`, payload),
     addDataDiklat: (payload: FormData) =>
         axiosInstance.post(`${endpoint.DOSEN}/data-diklat`, payload),
+    addDataKemampuanbahasa: (payload: FormData) =>
+        axiosInstance.post(`${endpoint.DOSEN}/datakemampuanbahasa`, payload),
 };
 
 export default postDosenServices;
