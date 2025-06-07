@@ -116,7 +116,6 @@ const DetailHubunganKerja = () => {
             }
         });
 
-        // 4. Panggil 'mutate' dengan FormData yang sudah disiapkan
         mutate(formData);
     };
 
