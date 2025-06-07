@@ -120,6 +120,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDataOrganisasiWithoutParam: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
 };
 
 export default dosenServices;

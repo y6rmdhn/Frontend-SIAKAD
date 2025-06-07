@@ -94,39 +94,39 @@ const DetailJabatanFungsional = () => {
         Object.keys(values).forEach(key => {
             const value = values[key as keyof DetailJabatanFungsionalSchema];
 
-            if (key === 'file_sk_jabatan') {
-                if (value instanceof FileList && value.length > 0) {
-                    formData.append(key, value[0]);
-                }
-            } else {
-                if (value !== null && value !== undefined) {
-                    formData.append(key, value as string);
-                }
-            }
-        });
+            if (key === 'file_sk_jabatan    </Button>') {
+                                        if (value instanceof FileList && value.length > 0) {
+                                        formData.append(key, value[0]);
+                                    }
+                                    } else {
+                                        if (value !== null && value !== undefined) {
+                                        formData.append(key, value as string);
+                                    }
+                                    }
+                                        });
 
-        mutate(formData);
-    };
+                                        mutate(formData);
+                                        };
 
-    return (
-        <div className="mt-10 mb-20">
-            <Title title="Jabatan Fungsional" subTitle="Detail Jabatan Fungsional"/>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmitJabatanFungsional)}>
-                    <CustomCard
-                        actions={
-                            <div className="flex justify-end w-full mt-10">
-                                <div className="flex justify-end gap-2 w-full md:w-auto flex-col md:flex-row">
-                                    <Link
-                                        className="w-full md:w-auto"
-                                        to="/data-riwayat/kepegawaian/jabatan-fungsional"
-                                    >
-                                        <Button
-                                            className="bg-green-light-uika w-full md:w-auto hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
-                                            <IoIosArrowBack/>
-                                            Kembali ke Daftar
-                                        </Button>
-                                    </Link>
+                                        return (
+                                        <div className="mt-10 mb-20">
+                                            <Title title="Jabatan Fungsional" subTitle="Detail Jabatan Fungsional"/>
+                                            <Form {...form}>
+                                                <form onSubmit={form.handleSubmit(handleSubmitJabatanFungsional)}>
+                                                    <CustomCard
+                                                        actions={
+                                                            <div className="flex justify-end w-full mt-10">
+                                                                <div className="flex justify-end gap-2 w-full md:w-auto flex-col md:flex-row">
+                                                                    <Link
+                                                                        className="w-full md:w-auto"
+                                                                        to="/data-riwayat/kepegawaian/jabatan-fungsional"
+                                                                    >
+                                                                        <Button
+                                                                            className="bg-green-light-uika w-full md:w-auto hover:bg-[#329C59] cursor-pointer flex items-center gap-2">
+                                                                            <IoIosArrowBack/>
+                                                                            Kembali ke Daftar
+
+                                                                    </Link>
 
                                     <Button
                                         className="bg-[#FDA31A] w-full md:w-auto hover:bg-[#329C59] cursor-pointer flex items-center gap-2">

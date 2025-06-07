@@ -53,6 +53,10 @@ const operasional: {
         title: "Permohonan Cuti",
         href: "/admin/operasional/cuti/permohonan-cuti",
       },
+      {
+        title: "Permohonan Izin",
+        href: "/admin/operasional/cuti/permohonan-izin",
+      },
     ],
   },
   {

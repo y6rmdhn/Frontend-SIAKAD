@@ -32,16 +32,12 @@ import {
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
+import Title from "@/components/blocks/Title";
 
 const PermohonanIzin = () => {
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-lg sm:text-2xl font-normal">
-        Validasi Pengajuan Cuti{" "}
-        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
-          Daftar Pengajuan Cuti
-        </span>
-      </h1>
+      <Title title="Pengajuan Izin" subTitle="Daftar Pengajuan Izin" />
 
       <CustomCard
         actions={
@@ -139,10 +135,11 @@ const PermohonanIzin = () => {
             <TableHead className="text-center"></TableHead>
             <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
             <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Sisa Cuti</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Cuti Dipakai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Jumlah Cuti</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Jenis Izin</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Keterangan Izin</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Lama Izin</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Status</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Tgl Disetujui</TableHead>
             <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
@@ -156,6 +153,7 @@ const PermohonanIzin = () => {
               Prof.Dr.Hj.Indupurnahayu,Dra.,Ak.,MM.,CA.
             </TableCell>
             <TableCell className="text-center text-xs sm:text-sm">Sekolah Pascasarjana</TableCell>
+            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
             <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
             <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
             <TableCell className="text-center text-xs sm:text-sm">0</TableCell>

@@ -30,6 +30,7 @@ const kemampuanBahasaSchema = z.object({
     kemampuan_bicara: z.string().optional(),
     kemampuan_mendengar: z.string().optional(),
     kemampuan_menulis: z.string().optional(),
+    submit_type: z.string(),
 
     file_pendukung: z.any()
         .optional()
@@ -56,6 +57,7 @@ const DetailKemampuanBahasa = () => {
             kemampuan_bicara: "",
             kemampuan_mendengar: "",
             kemampuan_menulis: "",
+            submit_type: "submit",
             file_pendukung: undefined,
         },
     });
