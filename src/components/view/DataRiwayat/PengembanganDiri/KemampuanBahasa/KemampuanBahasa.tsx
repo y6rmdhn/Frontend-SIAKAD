@@ -97,7 +97,7 @@ const KemampuanBahasa = () => {
                 <SearchInput/>
             </div>
 
-            <Table className="mt-10 table-auto">
+            <Table className="mt-10 table-auto  text-xs md:text-sm">
                 <TableHeader>
                     <TableRow className="bg-[#E7ECF2] ">
                         <TableHead className="text-center text-black text-xs sm:text-sm">Tahun</TableHead>
