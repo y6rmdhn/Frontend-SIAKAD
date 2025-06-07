@@ -97,6 +97,13 @@ const dosenServices = {
     getDataDiklatWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/data-diklat`),
 
+    getRiwayatPekerjaan: (page) =>
+        axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen`, {
+            params: {
+                page: page,
+            },
+        }),
+
 };
 
 export default dosenServices;
