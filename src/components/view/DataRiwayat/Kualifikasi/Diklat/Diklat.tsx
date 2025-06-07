@@ -28,7 +28,7 @@ const Diklat = () => {
 
     // get data
     const {data} = useQuery({
-        queryKey: ["jabatan-hubungan-kerja-dosen", searchParam.get("page")],
+        queryKey: ["diklat-dosen", searchParam.get("page")],
         queryFn: async () => {
             const response = await dosenServices.getDiklat(searchParam.get("page"));
             console.log(response.data)

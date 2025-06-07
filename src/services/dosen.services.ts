@@ -104,6 +104,14 @@ const dosenServices = {
             },
         }),
 
+    // Pengenbangan Diri
+    getKemampuanBahasa: (page) =>
+        axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`, {
+            params: {
+                page: page,
+            },
+        }),
+
 };
 
 export default dosenServices;
