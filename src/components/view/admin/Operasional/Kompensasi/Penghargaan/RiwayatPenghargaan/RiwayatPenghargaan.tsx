@@ -175,9 +175,11 @@ const RiwayatPenghargaan = () => {
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
+                <Link to="/admin/operasional/kompensasi/detail-data-penghargaan">
                 <Button size="icon" variant="ghost" className="cursor-pointer">
                   <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                 </Button>
+                </Link>
 
                 <Button size="icon" variant="ghost" className="cursor-pointer">
                   <MdEdit className="w-5! h-5! text-[#26A1F4]" />

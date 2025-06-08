@@ -27,6 +27,8 @@ const ModulePage = lazy(() => import("./pages/module"));
 const ProfilPage = lazy(() => import("./pages/profil"));
 const RiwayatPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan"));
 const DetailPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan"));
+const DetailDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/detaildataPenghargaan"));
+const EditDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/editdataPenghargaan"));
 const DokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal"));
 const DetailDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/detailDokumenInternal"));
 const SettingValidasiPage = lazy(() => import("./pages/admin/validasiData/settingValidasi"));
@@ -873,9 +875,14 @@ function App() {
                   Component={DetailRiwayatPelanggaranPage}
                 />
                 <Route path="penghargaan" Component={RiwayatPenghargaanPage} />
+                <Route path="detail-penghargaan" Component={DetailPenghargaanPage}/>
                 <Route
-                  path="detail-penghargaan"
-                  Component={DetailPenghargaanPage}
+                  path="detail-data-penghargaan"
+                  Component={DetailDataPenghargaanPage}
+                />
+                <Route
+                  path="edit-data-penghargaan"
+                  Component={EditDataPenghargaanPage}
                 />
                 <Route path="dokumen-internal" Component={DokumenInternalPage} />
                 <Route
