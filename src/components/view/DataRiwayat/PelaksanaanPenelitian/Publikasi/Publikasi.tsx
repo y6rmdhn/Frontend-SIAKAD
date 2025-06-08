@@ -91,7 +91,7 @@ const Publikasi = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="">
+                <Link to="/data-riwayat/pelaksanaan-penelitian/detail-data-publikasi">
                   <Button
                     size="icon"
                     variant="ghost"

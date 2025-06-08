@@ -181,10 +181,13 @@ const DetailTesUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Tes/
 const DetailDataTesUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Tes/detaildataTes"));
 const PatenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten"));
 const DetailPatenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detailPaten"));
+const DetailDataPatenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detaildataPaten"));
 const PenelitianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian"));
 const DetailPenelitianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detailPenelitian"));
+const DetailDataPenelitianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detaildataPenelitian"));
 const PublikasiUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi"));
 const DetailPublikasiUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detailPublikasi"));
+const DetailDataPublikasiUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detaildataPublikasi"));
 const KemampuanBahasaUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa"));
 const DetailKemampuanBahasaUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa"));
 const DetailDataKemampuanBahasaUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detaildataKemampuanBahasa"));
@@ -412,15 +415,25 @@ function App() {
             <Route path="pelaksanaan-penelitian">
               <Route path="paten" Component={PatenUserPage} />
               <Route path="detail-paten" Component={DetailPatenUserPage} />
+              <Route path="detail-data-paten" Component={DetailDataPatenUserPage} 
+              />
               <Route path="penelitian" Component={PenelitianUserPage} />
               <Route
                 path="detail-penelitian"
                 Component={DetailPenelitianUserPage}
               />
+              <Route
+                path="detail-data-penelitian"
+                Component={DetailDataPenelitianUserPage}
+              />
               <Route path="publikasi" Component={PublikasiUserPage} />
               <Route
                 path="detail-publikasi"
                 Component={DetailPublikasiUserPage}
+              />
+              <Route
+                path="detail-data-publikasi"
+                Component={DetailDataPublikasiUserPage}
               />
             </Route>
 
