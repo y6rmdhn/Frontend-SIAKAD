@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoSaveSharp } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const DetailRiwayatPelanggaran = () => {
   const form = useForm();
@@ -34,9 +35,11 @@ const DetailRiwayatPelanggaran = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                    <IoIosArrowBack /> Kembali ke Daftar
-                  </Button>
+                  <Link to="/admin/operasional/kompensasi/pelanggaran">
+                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+                      <IoIosArrowBack /> Kembali ke Daftar
+                    </Button>
+                  </Link>
 
                   <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
                     <IoSaveSharp /> Simpan

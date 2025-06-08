@@ -14,12 +14,13 @@ import { BiRefresh } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import {FormFieldInputFile} from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
 
-const EditDataPenghargaan = () => {
+
+const EditDataPelanggaran = () => {
     const form = useForm();
 
     return (
         <div className="mt-10 mb-20">
-            <Title title="Penghargaan" subTitle="Detail Penghargaan" />
+            <Title title="Pelanggaran" subTitle="Detail Pelanggaran" />
 
             <Form {...form}>
                 <form>
@@ -35,7 +36,7 @@ const EditDataPenghargaan = () => {
                                     <div>
                                         <Link
                                             className="w-full xl:w-auto"
-                                            to="/admin/operasional/kompensasi/penghargaan"
+                                            to="/admin/operasional/kompensasi/pelanggaran"
                                         >
                                             <Button className="bg-[#3ABC67] w-full xl:w-auto hover:bg-hover-blue-200 text-xs sm:text-sm">
                                                 <IoIosArrowBack /> Kembali ke Daftar
@@ -74,44 +75,34 @@ const EditDataPenghargaan = () => {
                                 />
                                 <FormFieldInput
                                     form={form}
-                                    label="Tgl Penghargaan"
-                                    name="tgl_penghargaan"
+                                    label="Tgl Pelanggaran"
+                                    name="tgl_pelanggaran"
                                     required={true}
                                     labelStyle="text-[#3F6FA9]"
                                     type="date"
                                 />
                                 <FormFieldSelect
                                     form={form}
-                                    label="Jenis Penghargaan"
-                                    name="jenis_penghargaan"
+                                    label="Jenis Pelanggaran"
+                                    name="jenis_pelanggaran"
                                     labelStyle="text-[#3F6FA9]"
                                     options={[
                                         {
                                             value: "1",
-                                            label: "Emas",
+                                            label: "Terlambat",
                                         },
                                         {
                                             value: "2",
-                                            label: "Perak",
+                                            label: "Alpa",
                                         },
                                         {
                                             value: "3",
-                                            label: "Perunggu",
+                                            label: "lainnya",
                                         },
                                     ]}
                                     required={true}
-                                    placeholder="Emas"
+                                    placeholder="Terlambat atau Alpa"
                                 />
-                                <FormFieldInput
-                                    form={form}
-                                    label="Nama Penghargaan"
-                                    name="nama_penghargaan"
-                                    required={false}
-                                    labelStyle="text-[#3F6FA9]"
-                                />
-                            </div>
-                            {/* KANAN */}
-                            <div className="space-y-2">
                                 <FormFieldInput
                                     form={form}
                                     label="No.SK"
@@ -119,6 +110,9 @@ const EditDataPenghargaan = () => {
                                     required={false}
                                     labelStyle="text-[#3F6FA9]"
                                 />
+                            </div>
+                            {/* KANAN */}
+                            <div className="space-y-2">
                                 <FormFieldInput
                                     form={form}
                                     label="Tgl.SK"
@@ -151,4 +145,4 @@ const EditDataPenghargaan = () => {
     );
 };
 
-export default EditDataPenghargaan;
+export default EditDataPelanggaran;

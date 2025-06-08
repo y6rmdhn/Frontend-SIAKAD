@@ -33,6 +33,7 @@ import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Pelanggaran = () => {
   return (
@@ -135,9 +136,11 @@ const Pelanggaran = () => {
 
         <div className="w-full grid sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:flex lg:w-auto">
           <div className="w-full lg:w-auto">
-            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
-              <FaPlus /> Tambah
-            </Button>
+            <Link to="/admin/operasional/kompensasi/detail-riwayat-pelanggaran">
+              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                <FaPlus /> Tambah
+              </Button>
+            </Link>
           </div>
 
           <div className="w-full lg:w-auto">
@@ -168,9 +171,11 @@ const Pelanggaran = () => {
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
+                <Link to="/admin/operasional/kompensasi/detail-data-pelanggaran">
+                  <Button size="icon" variant="ghost" className="cursor-pointer">
+                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                  </Button>
+                </Link>
 
                 <Button size="icon" variant="ghost" className="cursor-pointer">
                   <MdEdit className="w-5! h-5! text-[#26A1F4]" />
