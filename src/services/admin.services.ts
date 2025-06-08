@@ -133,6 +133,12 @@ const adminServices = {
                 page: page,
             },
         }),
+    getPenghargaan: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/datapenghargaan`, {
+            params: {
+                page: page,
+            },
+        }),
 
     getStatus: () =>
         axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
