@@ -45,6 +45,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
   jenisPelanggaran: (payload: IJenisPelanggaran) =>
       axiosInstance.post(`${endpoint.ADMIN}/jenis-pelanggaran`, payload),
+    jabatanAkademik: (payload: IJenisPelanggaran) =>
+        axiosInstance.post(`${endpoint.ADMIN}/jabatan-akademik`, payload),
 };
 
 export default potsReferensiServices;

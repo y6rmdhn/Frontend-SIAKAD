@@ -121,6 +121,18 @@ const adminServices = {
                 page: page,
             },
         }),
+    getMediaPublikasi: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/media-publikasi`, {
+            params: {
+                page: page,
+            },
+        }),
+    getSettingKehadiran: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/setting-kehadiran`, {
+            params: {
+                page: page,
+            },
+        }),
 
     getStatus: () =>
         axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),

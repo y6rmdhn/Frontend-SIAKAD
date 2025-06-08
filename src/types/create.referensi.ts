@@ -81,6 +81,15 @@ interface IJenisPelanggaran {
     nama_pelanggaran: string,
 }
 
+interface IJabatanAkademik {
+    kode: string,
+    nama_pelanggaran: string,
+}
+
+interface IMediaPublikasi {
+    nama: string,
+}
+
 export type {
     IJenisTesPost,
     IOutputPenelitianPost,
@@ -96,4 +105,6 @@ export type {
     IPengabdian,
     IJenisPublikasi,
     IJenisPelanggaran,
+    IJabatanAkademik,
+    IMediaPublikasi,
 };
