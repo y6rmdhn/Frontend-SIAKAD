@@ -122,6 +122,21 @@ const dosenServices = {
         }),
     getDataOrganisasiWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
+
+    // riwayat kehadiran
+    getDataRiwayatKehadiran: (tahun) =>
+        axiosInstance.get(`${endpoint.DOSEN}/riwayat-kehadiran`, {
+            params: {
+                tahun: tahun,
+            },
+        }),
+    getDataDetailRiwayatKehadiran: (tahun, bulan) =>
+        axiosInstance.get(`${endpoint.DOSEN}/riwayat-kehadiran/detail`, {
+            params: {
+                tahun: tahun,
+                bulan: bulan
+            },
+        }),
 };
 
 export default dosenServices;

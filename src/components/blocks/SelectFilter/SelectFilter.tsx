@@ -17,29 +17,35 @@ interface SelectFilterProps {
   placeholder?: string;
   classname?: string;
   options: Option[];
+  label?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
 function SelectFilter({
-  placeholder = "--Semua--",
-  options = [],
-  classname,
-}: SelectFilterProps) {
+                        placeholder = "--Semua--",
+                        options = [],
+                        classname,
+                        label,
+                        value,
+                        onValueChange,
+                      }: SelectFilterProps) {
   return (
-    <Select>
-      <SelectTrigger className={`w-full text-xs lg:text-sm ${classname}`}>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Unit Kerja</SelectLabel>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger className={`w-full text-xs lg:text-sm ${classname}`}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {label && <SelectLabel>{label}</SelectLabel>}
+            {options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
   );
 }
 
