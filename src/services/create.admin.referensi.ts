@@ -4,7 +4,7 @@ import {
   IJabatanAkademikPost,
   IJamKerja,
   IJenisCutiPost,
-  IJenisLuaran,
+  IJenisLuaran, IJenisPelanggaran,
   IJenisPublikasi,
   IJenisSertifikasi,
   IJenisSk,
@@ -43,8 +43,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/jenis-pkm`, payload),
   jenisPublikasi: (payload: IJenisPublikasi) =>
     axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
-  // jenisPublikasi: (payload: IJenisPublikasi) =>
-  //     axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
+  jenisPelanggaran: (payload: IJenisPelanggaran) =>
+      axiosInstance.post(`${endpoint.ADMIN}/jenis-pelanggaran`, payload),
 };
 
 export default potsReferensiServices;

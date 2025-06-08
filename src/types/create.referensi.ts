@@ -76,6 +76,11 @@ interface IJenisPublikasi {
     jenis_publikasi: string,
 }
 
+interface IJenisPelanggaran {
+    kode: string,
+    nama_pelanggaran: string,
+}
+
 export type {
     IJenisTesPost,
     IOutputPenelitianPost,
@@ -89,5 +94,6 @@ export type {
     IJenisLuaran,
     IJenisSertifikasi,
     IPengabdian,
-    IJenisPublikasi
+    IJenisPublikasi,
+    IJenisPelanggaran,
 };

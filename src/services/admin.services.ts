@@ -115,6 +115,12 @@ const adminServices = {
                 page: page,
             },
         }),
+    getJenisPelanggaran: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/jenis-pelanggaran`, {
+            params: {
+                page: page,
+            },
+        }),
 
     getStatus: () =>
         axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
