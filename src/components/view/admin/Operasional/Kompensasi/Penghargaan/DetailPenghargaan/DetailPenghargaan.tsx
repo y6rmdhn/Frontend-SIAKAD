@@ -8,10 +8,100 @@ import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoSaveSharp } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {FormFieldInputFile} from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
+import potsReferensiServices from "@/services/create.admin.referensi.ts";
+
+
+// --- Konfigurasi Validasi ---
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+
+// --- Skema Zod untuk Form Penghargaan ---
+const penghargaanSchema = z.object({
+  // Field Wajib
+  pegawai_id: z.string().min(1, "Pegawai wajib diisi."),
+  tanggal_penghargaan: z.string().min(1, "Tanggal penghargaan wajib diisi."),
+  jenis_penghargaan: z.string().min(1, "Jenis penghargaan wajib dipilih."),
+
+  // Field Opsional
+  nama_penghargaan: z.string().optional(),
+  no_sk: z.string().optional(),
+  tanggal_sk: z.string().optional(),
+  keterangan: z.string().optional(),
+  submit_type: z.string(),
+
+  // Validasi opsional untuk file
+  file_penghargaan: z.any()
+      .optional()
+      .refine(
+          (files) => !files || files.length === 0 || (files[0] && files[0].size <= MAX_FILE_SIZE),
+          `Ukuran file maksimal 5MB.`
+      )
+      .refine(
+          (files) => !files || files.length === 0 || (files[0] && ACCEPTED_MIME_TYPES.includes(files[0].type)),
+          "Hanya format .pdf, .jpg, .png yang diterima."
+      ),
+});
+
+type PenghargaanSchema = z.infer<typeof penghargaanSchema>;
 
 const DetailPenghargaan = () => {
-  const form = useForm();
+  const navigate = useNavigate();
+  const form = useForm<PenghargaanSchema>({
+    resolver: zodResolver(penghargaanSchema),
+    defaultValues: {
+      pegawai_id: "",
+      tanggal_penghargaan: "",
+      jenis_penghargaan: "",
+      nama_penghargaan: "",
+      no_sk: "",
+      tanggal_sk: "",
+      keterangan: "",
+      submit_type: "submit",
+      file_penghargaan: undefined,
+    },
+  });
+
+  // add data
+  const {mutate} = useMutation({
+    mutationFn: (formData: FormData) => potsReferensiServices.penghargaan(formData),
+    onSuccess: (response) => {
+      console.log("Server response:", response);
+      form.reset();
+      toast.success("Data berhasil ditambahkan");
+      navigate("/admin/operasional/kompensasi/penghargaan");
+    },
+    onError: (error: any) => {
+      console.error("Mutation error:", error);
+      const errorMessage = error.response?.data?.message || "Gagal menambahkan data.";
+      toast.error(errorMessage);
+    },
+  });
+
+  const handleSubmitData = (values: PenghargaanSchema) => {
+    const formData = new FormData();
+
+    Object.keys(values).forEach(key => {
+      const valueKey = key as keyof PenghargaanSchema;
+      const value = values[valueKey];
+
+      if (key === 'file_penghargaan') {
+        if (value instanceof FileList && value.length > 0) {
+          formData.append(key, value[0]);
+        }
+      } else {
+        if (value !== null && value !== undefined && value !== "") {
+          formData.append(key, value as string);
+        }
+      }
+    });
+    mutate(formData);
+  };
 
   return (
     <div className="mt-10 mb-20">
@@ -23,7 +113,7 @@ const DetailPenghargaan = () => {
       </h1>
 
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(handleSubmitData)}>
           <CustomCard
             actions={
               <div className="w-full flex flex-col gap-4 lg:flex-row justify-between mt-10">
@@ -38,14 +128,14 @@ const DetailPenghargaan = () => {
                       type="button"
                       to="/admin/operasional/kompensasi/penghargaan"
                     >
-                      <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                      <Button type="button" className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
                         <IoIosArrowBack /> Kembali ke Daftar
                       </Button>
                     </Link>
                   </div>
 
                   <div className="w-full lg:w-auto">
-                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                    <Button type="submit" className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
                       <IoSaveSharp /> Simpan
                     </Button>
                   </div>
@@ -57,7 +147,7 @@ const DetailPenghargaan = () => {
               <FormFieldInput
                 form={form}
                 label="Pegawai"
-                name="pegawai"
+                name="pegawai_id"
                 required={true}
                 labelStyle="text-[#3F6FA9]"
                 placeholder="Cari Pegawai"
@@ -65,7 +155,7 @@ const DetailPenghargaan = () => {
               <FormFieldInput
                 form={form}
                 label="Tgl Penghargaan"
-                name="tgl_penghargaan"
+                name="tanggal_penghargaan"
                 required={true}
                 labelStyle="text-[#3F6FA9]"
                 type="date"
@@ -77,20 +167,16 @@ const DetailPenghargaan = () => {
                 labelStyle="text-[#3F6FA9]"
                 options={[
                   {
-                    value: "1",
-                    label: "Pelanggaran Ringan",
+                    value: "Emas",
+                    label: "Emas",
                   },
                   {
-                    value: "2",
-                    label: "Pelanggaran Sedang",
-                  },
-                  {
-                    value: "3",
-                    label: "Pelanggaran Berat",
+                    value: "Dosen Berprestasi",
+                    label: "Dosen Berprestasi",
                   },
                 ]}
                 required={true}
-                placeholder="Terlambat atau Alpa"
+                placeholder="--Pilih Jenis Penghargaan--"
               />
               <FormFieldInput
                 form={form}
@@ -109,7 +195,7 @@ const DetailPenghargaan = () => {
               <FormFieldInput
                 form={form}
                 label="Tgl.SK"
-                name="tgl_sk"
+                name="tanggal_sk"
                 required={false}
                 labelStyle="text-[#3F6FA9]"
                 type="date"
@@ -122,14 +208,16 @@ const DetailPenghargaan = () => {
                 labelStyle="text-[#3F6FA9]"
                 type="textarea"
               />
-              <FormFieldInput
-                form={form}
-                label="File Keterangan"
-                name="file_keterangan"
-                required={false}
-                labelStyle="text-[#3F6FA9]"
-                type="file"
+
+              <FormFieldInputFile
+                  form={form}
+                  label="File Penghargaan"
+                  name="file_penghargaan"
+                  classname="border-none shadow-none"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
               />
+
             </div>
           </CustomCard>
         </form>

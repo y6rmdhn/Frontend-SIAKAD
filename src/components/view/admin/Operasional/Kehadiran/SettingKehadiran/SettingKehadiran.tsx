@@ -95,7 +95,7 @@ const SettingKehadiran = () => {
 
     return (
         <div className="mt-10 mb-10">
-            <h1 className="text-xs sm:text-sm font-normal">Setting Kehadiran</h1>
+            <h1 className="text-2xl sm:text-sm font-normal">Setting Kehadiran</h1>
             <CustomCard
                 actions={
                     <div className="w-full flex justify-end">
