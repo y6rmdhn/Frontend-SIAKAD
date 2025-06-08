@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
   IJamKerja,
-  IJenisCutiPost, IJenisLuaran, IJenisPublikasi, IJenisSk,
+  IJenisCutiPost, IJenisLuaran, IJenisPelanggaran, IJenisPublikasi, IJenisSk,
   IJenisTesPost,
   IOutputPenelitianPost, IPengabdian, IStatusEselon, IStatusKeaktifan, IStatusPangkat,
 } from "@/types/create.referensi";
@@ -32,6 +32,8 @@ const putReferensiServices = {
       axiosInstance.put(`${endpoint.ADMIN}/jenis-pkm/${id}`, payload),
   jenisPublikasi: (id: number, payload: IJenisPublikasi) =>
       axiosInstance.put(`${endpoint.ADMIN}/jenis-publikasi/${id}`, payload),
+  jenisPelanggaran: (id: number, payload: IJenisPelanggaran) =>
+      axiosInstance.put(`${endpoint.ADMIN}/jenis-pelanggaran/${id}`, payload),
 };
 
 export default putReferensiServices;

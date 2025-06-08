@@ -24,6 +24,9 @@ import {RiResetLeftFill} from "react-icons/ri";
 import potsReferensiServices from "@/services/create.admin.referensi.ts";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
+import putReferensiServices from "@/services/put.admin.referensi.ts";
+import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
+import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 
 
 // Define interface for the data item
@@ -68,7 +71,7 @@ const JenisPelanggaran = () => {
     const queryClient = useQueryClient();
 
     // get data
-    const {data} = useQuery({
+    const {data} = useQuery<JenisPelanggaranResponse>({
         queryKey: ["jenis-pelanggaran", searchParam.get("page")],
         queryFn: async () => {
             const response = await adminServices.getJenisPelanggaran(
@@ -91,9 +94,63 @@ const JenisPelanggaran = () => {
         },
     });
 
+    // edit
+    const {mutate: updateData} = useMutation({
+        mutationFn: (data: jenisPelanggaranFormvalue) => putReferensiServices.jenisPelanggaran(data.id!, data),
+        onSuccess: () => {
+            form.reset();
+            toast.success("Data berhasil diedit");
+            setIsAddData(false);
+            setIsEditMode(false);
+
+            queryClient.invalidateQueries({queryKey: ["jenis-pelanggaran"]});
+        }
+    })
+
+    // hapus data
+    const {mutate: deleteData} = useMutation({
+        mutationFn: (id: number) => deleteReferensiServices.deteleJenisPelanggaran(id),
+        onSuccess: () => {
+            toast.success("Data berhasil dihapus");
+            queryClient.invalidateQueries({queryKey: ["jenis-pelanggaran"]});
+
+            if (editingItemId) {
+                form.reset();
+                setEditingItemId(null);
+                setIsEditMode(false);
+                setIsAddData(false);
+            }
+        }
+    })
+
+    const handleDelete = (id: number) => {
+        deleteData(id)
+    };
+
     const handleSubmitData = (values: jenisPelanggaranFormvalue) => {
-        postData(values)
+        if (isEditMode && editingItemId) {
+            updateData(values)
+        } else {
+            postData(values)
+        }
     }
+
+    const handleEditItem = (item: JenisPelanggaranItem) => {
+        form.reset({
+            id: item.id,
+            kode: item.kode,
+            nama_pelanggaran: item.nama_pelanggaran,
+        });
+
+        setIsEditMode(true);
+        setEditingItemId(item.id);
+        setIsAddData(true);
+
+        if (Number(searchParam.get("page")) !== 1) {
+            searchParam.set("page", "1");
+            setSearchParam(searchParam);
+        }
+    };
 
     const handleCancel = () => {
         form.reset()
@@ -229,22 +286,30 @@ const JenisPelanggaran = () => {
                                             className="text-center text-xs sm:text-sm">{item.nama_pelanggaran}</TableCell>
                                         <TableCell className="h-full">
                                             <div className="flex justify-center items-center w-full h-full">
-                                                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                                                <Button
+                                                    size="icon"
+                                                    type="button"
+                                                    variant="ghost"
+                                                    className="cursor-pointer"
+                                                    onClick={() => handleEditItem(item)}
+                                                    disabled={isEditMode && editingItemId !== item.id}
+                                                >
+                                                    <MdEdit className="w-5! h-5! text-[#26A1F4]"/>
+                                                </Button>
+                                                <ConfirmDialog
+                                                    title="Hapus Data?"
+                                                    description="Apakah Anda yakin ingin menghapus data ini?"
+                                                    onConfirm={() => handleDelete(item.id)}
+                                                >
                                                     <Button
                                                         size="icon"
+                                                        type="button"
                                                         variant="ghost"
                                                         className="cursor-pointer"
                                                     >
-                                                        <MdEdit className="w-5! h-5! text-[#26A1F4]"/>
+                                                        <FaRegTrashAlt className="text-red-500"/>
                                                     </Button>
-                                                </Link>
-                                                <Button
-                                                    size="icon"
-                                                    variant="ghost"
-                                                    className="cursor-pointer"
-                                                >
-                                                    <FaRegTrashAlt className="text-red-500"/>
-                                                </Button>
+                                                </ConfirmDialog>
                                             </div>
                                         </TableCell>
                                     </TableRow>
