@@ -154,7 +154,7 @@ const Diklat = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/kualifikasi/detail-data-diklat">
+                                    <Link to={"/data-riwayat/kualifikasi/detail-data-diklat/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"

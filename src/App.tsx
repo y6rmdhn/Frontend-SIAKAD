@@ -387,7 +387,7 @@ function App() {
               />
               <Route path="diklat" Component={DiklatUserPage} />
               <Route path="detail-diklat" Component={DetailDiklatUserPage} />
-              <Route path="detail-data-diklat" Component={DetailDataDiklatUserPage} 
+              <Route path="detail-data-diklat/:id" Component={DetailDataDiklatUserPage}
               />
               <Route
                 path="riwayat-pekerjaan"
@@ -456,7 +456,7 @@ function App() {
                 Component={DetailKemampuanBahasaUserPage}
               />
               <Route
-                path="detail-data-kemampuan-bahasa"
+                path="detail-data-kemampuan-bahasa/:id"
                 Component={DetailDataKemampuanBahasaUserPage}
               />
               <Route
@@ -468,7 +468,7 @@ function App() {
                 Component={DetailOrganisasiUserPage}
               />
               <Route
-                path="detail-data-organisasi"
+                path="detail-data-organisasi/:id"
                 Component={DetailDataOrganisasiUserPage}
               />
             </Route>

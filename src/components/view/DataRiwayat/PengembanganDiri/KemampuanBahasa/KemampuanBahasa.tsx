@@ -147,7 +147,7 @@ const KemampuanBahasa = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/pengembangan-diri/detail-data-kemampuan-bahasa">
+                                    <Link to={"/data-riwayat/pengembangan-diri/detail-data-kemampuan-bahasa/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"

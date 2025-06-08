@@ -103,6 +103,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getDiklatDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/data-diklat/` + id),
     getDataDiklatWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/data-diklat`),
 
@@ -120,6 +122,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getKemampuanBahasaDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa/` + id),
     getDataKemampuanBahasaWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
 
@@ -129,6 +133,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getOrganisasiDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi/` + id),
     getDataOrganisasiWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
 

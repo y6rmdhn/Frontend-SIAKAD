@@ -146,7 +146,7 @@ const Organisasi = () => {
                             </TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/pengembangan-diri/detail-data-organisasi">
+                                    <Link to={"/data-riwayat/pengembangan-diri/detail-data-organisasi/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"
