@@ -150,7 +150,7 @@ const HubunganKerja = () => {
                             <TableCell className="text-center">{item.is_aktif_label}</TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/data-riwayat/kepegawaian/detail-data-hubungan-kerja">
+                                    <Link to={"/data-riwayat/kepegawaian/detail-data-hubungan-kerja/" + item.id}>
                                         <Button
                                             size="icon"
                                             variant="ghost"

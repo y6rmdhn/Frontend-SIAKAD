@@ -17,7 +17,7 @@ import {FaPlus} from "react-icons/fa";
 import {IoEyeOutline} from "react-icons/io5";
 import {Link, useSearchParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import dosenServices from "@/services/dosen.services.ts";
 import {parseISO, format} from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
@@ -25,9 +25,6 @@ import CustomPagination from "@/components/blocks/CustomPagination";
 const JabatanAkademik = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState<number>(
-        Number(searchParam.get("page") || 1)
-    );
 
     // get data
     const {data} = useQuery({
@@ -121,7 +118,7 @@ const JabatanAkademik = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
+                    {data?.data.data.map((item: any) => (
                         <TableRow className=" even:bg-gray-100">
                             <TableCell className="text-center">
                                 {item.tmt_jabatan ? format(parseISO(item.tmt_jabatan), "dd MMMM yyyy")

@@ -57,6 +57,9 @@ const dosenServices = {
             },
         }),
 
+    getJabatanAkademikDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik/` + id),
+
     getDataJabatanakademikWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`),
 
@@ -66,6 +69,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getJabatanFungsionalDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional/` + id),
     getDataJabatanakfungsionalWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`),
 
@@ -75,6 +80,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getJabatanStrukturalDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural/` + id),
     getDataJabatanakstrukturalWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`),
 
@@ -84,6 +91,8 @@ const dosenServices = {
                 page: page,
             },
         }),
+    getHubunganKerjaDetail: (id) =>
+        axiosInstance.get(`${endpoint.DOSEN}/hubungankerja/` + id),
     getDataHubunganKerjaWithoutParam: () =>
         axiosInstance.get(`${endpoint.DOSEN}/hubungankerja`),
 

@@ -4,8 +4,23 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { IoIosArrowBack } from "react-icons/io";
 import { Label } from "@/components/ui/label";
+import {useQuery} from "@tanstack/react-query";
+import dosenServices from "@/services/dosen.services.ts";
+import {format, parseISO} from "date-fns";
 
 const DetailDataHubunganKerja = () => {
+
+    const params = useParams();
+
+    // get data
+    const {data} = useQuery({
+        queryKey: ["detail-hubungan-kerja-dosen"],
+        queryFn: async () => {
+            const response = await dosenServices.getHubunganKerjaDetail(params.id);
+            console.log(response.data)
+            return response.data;
+        },
+    });
 
     return (
         <div className="mt-10 mb-20">
@@ -29,31 +44,42 @@ const DetailDataHubunganKerja = () => {
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Jabatan Struktural</Label>
-                                    <Label className="text-xs sm:text-sm"></Label>
+                                    <Label className="text-xs sm:text-sm">{data?.data.nama_hub_kerja}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">No. SK</Label>
-                                    <Label className="text-xs sm:text-sm"></Label>
+                                    <Label className="text-xs sm:text-sm">{data?.data.no_sk}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tgl. SK</Label>
-                                    <Label className="text-xs sm:text-sm"></Label>
+                                    <Label className="text-xs sm:text-sm">
+                                        {data?.data.tgl_sk ? format(parseISO(data?.data.tgl_sk), "dd MMMM yyyy")
+                                            : "-"}
+                                    </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tgl. Mulai</Label>
-                                    <Label className="text-xs sm:text-sm"></Label>
+                                    <Label className="text-xs sm:text-sm">
+                                        {data?.data.tgl_mulai ? format(parseISO(data?.data.tgl_mulai), "dd MMMM yyyy")
+                                            : "-"}
+                                    </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tgl. Selesai</Label>
-                                    <Label className="text-xs sm:text-sm"></Label>
+                                    <Label className="text-xs sm:text-sm">
+                                        {data?.data.tgl_selesai ? format(parseISO(data?.data.tgl_selesai), "dd MMMM yyyy")
+                                            : "-"}
+                                    </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Pejabat Penetap</Label>
-                                    <Label className="text-xs sm:text-sm">[Nullable]</Label>
+                                    <Label className="text-xs sm:text-sm">
+                                        {data?.data.pejabat_penetap}
+                                    </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Status Aktif</Label>
-                                    <Label className="text-xs sm:text-sm">Aktif</Label>
+                                    <Label className="text-xs sm:text-sm">{data?.data.is_aktif_label}</Label>
                                 </div>
                             </div>
 
@@ -61,19 +87,19 @@ const DetailDataHubunganKerja = () => {
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Status Pengajuan</Label>
-                                    <Label className="text-xs sm:text-sm">Disetujui</Label>
+                                    <Label className="text-xs sm:text-sm">{data?.data.status_pengajuan}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Tanggal Diajukan</Label>
-                                    <Label className="text-xs sm:text-sm">29 Mei 2025</Label>
+                                    <Label className="text-xs sm:text-sm">-</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Tanggal Disetujui</Label>
-                                    <Label className="text-xs sm:text-sm">29 Mei 2025</Label>
+                                    <Label className="text-xs sm:text-sm">-</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Dibuat Oleh</Label>
-                                    <Label className="text-xs sm:text-sm">Azka Fadillah Rahman</Label>
+                                    <Label className="text-xs sm:text-sm">-</Label>
                                 </div>
                             </div>
                         </div>
