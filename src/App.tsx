@@ -159,10 +159,13 @@ const DetailJabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/k
 const DetailDataJabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular/detaildataJabatanStruktural"));
 const BahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar"));
 const DetailBahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detailBahanAjar"));
+const DetailDataBahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detaildataBahanAjar"));
 const DataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering"));
 const DetailDataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detailDatasering"));
+const DetailDataDataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detaildataDatasering"));
 const OrasiIlmiahUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah"));
 const DetailOrasiIlmiahUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detailOrasiIlmiah"));
+const DetailDataOrasiIlmiahUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detaildataOrasiIlmiah"));
 const BimbinganMahasiswaUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bimbinganMahasiswa"));
 const PembimbingDosenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen"));
 const PembinaanMahasiswaUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembinaanMahasiswa"));
@@ -171,8 +174,11 @@ const PengujianMahasiswaUserPage = lazy(() => import("./pages/dataRiwayat/Pelaks
 const TugasTambahanUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan"));
 const VisitingScientistUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist"));
 const DetailTugasTambahanUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detailTugasTambahan"));
+const DetailDataTugasTambahanUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detaildataTugastambahan"));
 const DetailVisitingScientistUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detailVisitingScientist"));
+const DetailDataVisitingScientistUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detaildataVisitingScientist"));
 const DetailPembimbingDosenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detailPembimbingDosen"));
+const DetailDataPembimbingDosenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detaildataPembimbingDosen"));
 const SertifikasiUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Sertifikasi"));
 const DetailSertifikasiUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Sertifikasi/detailSertifikasi"));
 const DetailDataSertifikasiUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Sertifikasi/detaildataSertifikasi"));
@@ -575,6 +581,10 @@ function App() {
                 path="detail-bahan-ajar"
                 Component={DetailBahanAjarUserPage}
               />
+              <Route
+                path="detail-data-bahan-ajar"
+                Component={DetailDataBahanAjarUserPage}
+              />
 
               <Route
                 path="bimbingan-mahasiswa"
@@ -586,10 +596,18 @@ function App() {
                 path="detail-datasering"
                 Component={DetailDataseringUserPage}
               />
+              <Route
+                path="detail-data-datasering"
+                Component={DetailDataDataseringUserPage}
+              />
               <Route path="orasi-ilmiah" Component={OrasiIlmiahUserPage} />
               <Route
                 path="detail-orasi-ilmiah"
                 Component={DetailOrasiIlmiahUserPage}
+              />
+              <Route
+                path="detail-data-orasi-ilmiah"
+                Component={DetailDataOrasiIlmiahUserPage}
               />
               <Route
                 path="pembimbing-dosen"
@@ -598,6 +616,10 @@ function App() {
               <Route
                 path="detail-pembimbing-dosen"
                 Component={DetailPembimbingDosenUserPage}
+              />
+              <Route
+                path="detail-data-pembimbing-dosen"
+                Component={DetailDataPembimbingDosenUserPage}
               />
               <Route
                 path="pembinaan-mahasiswa"
@@ -614,6 +636,10 @@ function App() {
                 Component={DetailTugasTambahanUserPage}
               />
               <Route
+                path="detail-data-tugas-tambahan"
+                Component={DetailDataTugasTambahanUserPage}
+              />
+              <Route
                 path="visiting-scientist"
                 Component={VisitingScientistUserPage}
               />
@@ -621,6 +647,10 @@ function App() {
                 path="detail-visiting-scientist"
                 Component={DetailVisitingScientistUserPage}
               />
+              <Route
+                path="detail-data-visiting-scientist"
+                Component={DetailDataVisitingScientistUserPage}
+                />
             </Route>
           </Route>
 

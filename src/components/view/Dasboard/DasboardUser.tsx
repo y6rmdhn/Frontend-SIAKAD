@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { Link } from "react-router-dom";
 
 const pieData = [
   { browser: "akademik", visitors: 275, fill: "#92F1A8" },
@@ -147,16 +148,18 @@ const DasboardUser = () => {
                   Segera mengisi data riwayat anda
                 </p>
               </div>
-              <Button
-                onClick={() => setDetail("absen")}
-                className={
-                  detail === "absen"
-                    ? " bg-[#106D63] cursor-pointer"
-                    : " bg-[#106D63] cursor-pointer"
-                }
-              >
-                Lihat Detail
-              </Button>
+              <Link to="/tahapan-data-riwayat">
+                <Button
+                  onClick={() => setDetail("absen")}
+                  className={
+                    detail === "absen"
+                      ? " bg-[#106D63] cursor-pointer"
+                      : " bg-[#106D63] cursor-pointer"
+                  }
+                >
+                  Lihat Detail
+                </Button>
+              </Link>
             </div>
           </div>
 
