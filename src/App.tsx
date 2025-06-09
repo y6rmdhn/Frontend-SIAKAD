@@ -21,6 +21,8 @@ const PeriodeCutiPage = lazy(() => import("./pages/admin/operasional/cuti/period
 const PermohonanCutiPage = lazy(() => import("./pages/admin/operasional/cuti/permohonanCuti"));
 const PelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/pelanggaran"));
 const DetailRiwayatPelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran"));
+const DetailDataPelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/pelanggaran/detaildataPelanggaran"));
+const EditDataPelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/pelanggaran/editdataPelanggaran"));
 const DasboardPageUser = lazy(() => import("./pages/dasboard")); // Asumsi ini untuk user
 const RiwayatKehadiranPage = lazy(() => import("./pages/riwayatKehadiran")); // Asumsi ini untuk user
 const ModulePage = lazy(() => import("./pages/module"));
@@ -873,6 +875,14 @@ function App() {
                 <Route
                   path="detail-riwayat-pelanggaran"
                   Component={DetailRiwayatPelanggaranPage}
+                />
+                <Route
+                  path="detail-data-pelanggaran"
+                  Component={DetailDataPelanggaranPage}
+                />
+                <Route
+                  path="edit-data-pelanggaran"
+                  Component={EditDataPelanggaranPage}
                 />
                 <Route path="penghargaan" Component={RiwayatPenghargaanPage} />
                 <Route path="detail-penghargaan" Component={DetailPenghargaanPage}/>
