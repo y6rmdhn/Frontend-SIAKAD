@@ -877,21 +877,21 @@ function App() {
                   Component={DetailRiwayatPelanggaranPage}
                 />
                 <Route
-                  path="detail-data-pelanggaran"
+                  path="detail-data-pelanggaran/:id"
                   Component={DetailDataPelanggaranPage}
                 />
                 <Route
-                  path="edit-data-pelanggaran"
+                  path="edit-data-pelanggaran/:id"
                   Component={EditDataPelanggaranPage}
                 />
                 <Route path="penghargaan" Component={RiwayatPenghargaanPage} />
-                <Route path="detail-penghargaan" Component={DetailPenghargaanPage}/>
+                <Route path="detail-penghargaan/" Component={DetailPenghargaanPage}/>
                 <Route
-                  path="detail-data-penghargaan"
+                  path="detail-data-penghargaan/:id"
                   Component={DetailDataPenghargaanPage}
                 />
                 <Route
-                  path="edit-data-penghargaan"
+                  path="edit-data-penghargaan/:id"
                   Component={EditDataPenghargaanPage}
                 />
                 <Route path="dokumen-internal" Component={DokumenInternalPage} />
