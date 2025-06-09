@@ -152,6 +152,8 @@ const dosenServices = {
                 bulan: bulan
             },
         }),
+    getStatusAbsen: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/absensi/status`),
 };
 
 export default dosenServices;
