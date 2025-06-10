@@ -33,6 +33,8 @@ const DetailDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/k
 const EditDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/editdataPenghargaan"));
 const DokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal"));
 const DetailDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/detailDokumenInternal"));
+const DetailDataDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal/detaildataDokumenInternal"));
+const EditDataDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal/editdataDokumenInternal"));
 const SettingValidasiPage = lazy(() => import("./pages/admin/validasiData/settingValidasi"));
 const KeluargaPage = lazy(() => import("./pages/admin/validasiData/keluarga"));
 const MonitoringPage = lazy(() => import("./pages/admin/validasiData/monitoring"));
@@ -898,6 +900,14 @@ function App() {
                 <Route
                   path="detail-dokumen-internal"
                   Component={DetailDokumenInternalPage}
+                />
+                <Route
+                  path="detail-data-dokumen-internal"
+                  Component={DetailDataDokumenInternalPage}
+                />
+                <Route
+                  path="edit-data-dokumen-internal"
+                  Component={EditDataDokumenInternalPage}
                 />
               </Route>
             </Route>

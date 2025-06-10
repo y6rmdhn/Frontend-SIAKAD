@@ -32,6 +32,7 @@ import {
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
+import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const DokumenInternal = () => {
@@ -107,39 +108,49 @@ const DokumenInternal = () => {
         }
       />
 
-      <div className="w-full flex flex-col md:flex-row gap-5 md:flex justify-between mt-10">
-        <div className="grid grid-rows-2 sm:flex gap-4">
-          <div>
-          <Select>
-            <SelectTrigger className="w-full sm:w-32">
-              <SelectValue placeholder="--Semua--" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Unit Kerja</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+      <div className="w-full flex flex-col lg:flex-row justify-between mt-6">
+        <div className="w-full grid sm:grid-cols-2 gap-4 lg:flex lg:w-full">
+          <div className="w-full lg:w-32">
+            <Select>
+              <SelectTrigger className="w-full lg:w-32 text-xs sm:text-sm">
+                <SelectValue placeholder="--Semua--" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Unit Kerja</SelectLabel>
+                  <SelectItem value="apple">Apple</SelectItem>
+                  <SelectItem value="banana">Banana</SelectItem>
+                  <SelectItem value="blueberry">Blueberry</SelectItem>
+                  <SelectItem value="grapes">Grapes</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="relative w-full md:w-90">
+          <div className="relative w-full lg:w-90">
             <Input
               placeholder="Search"
-              className="w-full pr-10"
+              className="w-full pr-8 lg:w-90 text-xs sm:text-sm"
             />
             <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
           </div>
         </div>
 
-        <div className="flex gap-4">
-          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto">
-            Batalkan
-          </Button>
+        <div className="w-full grid sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:flex lg:w-auto">
+          <div className="w-full lg:w-auto">
+            <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+                <FaPlus /> Tambah
+              </Button>
+            </Link>
+          </div>
+
+          <div className="w-full lg:w-auto">
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+              Batalkan
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -154,6 +165,7 @@ const DokumenInternal = () => {
             <TableHead className="text-center text-xs sm:text-sm">Menu Referensi</TableHead>
             <TableHead className="text-center text-xs sm:text-sm">Status Dokumen</TableHead>
             <TableHead className="text-center text-xs sm:text-sm">File</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
@@ -167,9 +179,10 @@ const DokumenInternal = () => {
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                <Link to="/admin/operasional/kompensasi/detail-data-dokumen-internal">
                   <Button
                     size="icon"
                     variant="ghost"
@@ -181,6 +194,10 @@ const DokumenInternal = () => {
 
                 <Button size="icon" variant="ghost" className="cursor-pointer">
                   <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                </Button>
+
+                <Button size="icon" variant="ghost" className="cursor-pointer">
+                  <FaRegTrashAlt className="w-5! h-5! text-[#DC2525]" />
                 </Button>
               </div>
             </TableCell>
