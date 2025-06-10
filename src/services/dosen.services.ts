@@ -154,6 +154,9 @@ const dosenServices = {
         }),
     getStatusAbsen: () =>
         axiosInstance.get(`${endpoint.DOSEN}/absensi/status`),
+
+    getHistoryAbsensi: () =>
+        axiosInstance.get(`${endpoint.DOSEN}/absensi/history`),
 };
 
 export default dosenServices;
