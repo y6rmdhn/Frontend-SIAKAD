@@ -43,103 +43,102 @@ const DetailDataDiklat = () => {
                             {/* KIRI */}
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Jenis
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Jenis
                                         Diklat</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.jenis_diklat}</Label>
+                                        className="text-xs sm:text-sm">{data?.data.jenis_diklat}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Kategori
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Kategori
                                         Kegiatan</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.kategori_diklat}</Label>
+                                        className="text-xs sm:text-sm">{data?.data.kategori_diklat}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tingkat
+                                    <Label className=" text-[#2572BE] text-xs sm:text-sm">Tingkat
                                         Diklat</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.tingkat_diklat}</Label>
+                                        className="text-xs sm:text-sm">{data?.data.tingkat_diklat}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Nama
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Nama
                                         Diklat</Label>
-                                    <Label className="text-xs sm:text-sm font-semibold">{data?.data.nama_diklat}</Label>
+                                    <Label className="text-xs sm:text-sm ">{data?.data.nama_diklat}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label
-                                        className="font-semibold text-[#2572BE] text-xs sm:text-sm">Penyelenggara</Label>
+                                        className=" text-[#2572BE] text-xs sm:text-sm">Penyelenggara</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.penyelenggara}</Label>
+                                        className="text-xs sm:text-sm ">{data?.data.penyelenggara}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Peran</Label>
-                                    <Label className="text-xs sm:text-sm font-semibold">{data?.data.peran}</Label>
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Peran</Label>
+                                    <Label className="text-xs sm:text-sm">{data?.data.peran}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Jumlah
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Jumlah
                                         Jam</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.jumlah_jam} Jam</Label>
+                                        className="text-xs sm:text-sm">{data?.data.jumlah_jam} Jam</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Nomor
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Nomor
                                         Sertifikat</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.no_sertifikat}</Label>
+                                        className="text-xs sm:text-sm">{data?.data.no_sertifikat}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tahun
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Tahun
                                         Penyelenggara</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.tahun_penyelenggaraan}</Label>
+                                        className="text-xs sm:text-sm">{data?.data.tahun_penyelenggaraan}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tempat</Label>
-                                    <Label className="text-xs sm:text-sm font-semibold">{data?.data.tempat}</Label>
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Tempat</Label>
+                                    <Label className="text-xs sm:text-sm">{data?.data.tempat}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tanggal
+                                    <Label className=" text-[#2572BE] text-xs sm:text-sm">Tanggal
                                         Mulai</Label>
-                                    <Label className="text-xs sm:text-sm font-semibold">
+                                    <Label className="text-xs sm:text-sm">
                                         {data?.data.tgl_mulai ? format(parseISO(data?.data.tgl_mulai), "dd MMMM yyyy")
                                             : "-"}
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tanggal
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Tanggal
                                         Selesai</Label>
-                                    <Label className="text-xs sm:text-sm font-semibold">
+                                    <Label className="text-xs sm:text-sm">
                                         {data?.data.tgl_selesai ? format(parseISO(data?.data.tgl_selesai), "dd MMMM yyyy")
                                             : "-"}
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">SK
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">SK
                                         Penugasan</Label>
                                     <Label
-                                        className="text-xs sm:text-sm font-semibold">{data?.data.sk_penugasan ? data?.data.sk_penugasan : "-"}</Label>
+                                        className="text-xs sm:text-sm ">{data?.data.sk_penugasan ? data?.data.sk_penugasan : "-"}</Label>
                                 </div>
                             </div>
 
                             {/* KANAN */}
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Status
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Status
                                         Pengajuan</Label>
                                     <Label className="text-xs sm:text-sm">{data?.data.status_pengajuan}</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Tanggal
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Tanggal
                                         Diajukan</Label>
                                     <Label className="text-xs sm:text-sm">
                                         {data?.data.timestamps.tgl_diajukan
-
                                             ? format(parseISO(data?.data.timestamps.tgl_diajukan), "dd MMMM yyyy")
                                             : "-"}
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Tanggal
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Tanggal
                                         Disetujui</Label>
                                     <Label className="text-xs sm:text-sm">
                                         {data?.data.timestamps.tgl_disetujui
@@ -148,9 +147,9 @@ const DetailDataDiklat = () => {
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Dibuat
+                                    <Label className="text-[#2572BE] text-xs sm:text-sm">Dibuat
                                         Oleh</Label>
-                                    <Label className="text-xs sm:text-sm">-</Label>
+                                    <Label className="text-xs sm:text-sm">{data?.pegawai.nama || '-'}</Label>
                                 </div>
                             </div>
                         </div>
