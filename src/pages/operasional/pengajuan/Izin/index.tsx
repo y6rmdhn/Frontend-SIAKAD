@@ -15,7 +15,7 @@ const IzinPage = () => {
       <Breadcrumb className="mt-10">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>
+            <BreadcrumbLink href="/dasboard">Pegawai</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

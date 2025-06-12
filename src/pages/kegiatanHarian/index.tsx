@@ -17,7 +17,7 @@ const KegiatanHarianPage = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              href="/gate/pegawai"
+              href="/dasboard"
               className="flex items-center gap-2"
             >
               <MdGroups className="w-6 h-6" />

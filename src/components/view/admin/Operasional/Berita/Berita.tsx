@@ -16,11 +16,11 @@ import {
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { FaCheck, FaRegTrashAlt } from "react-icons/fa";
+import { FaCheck, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { parseISO, format } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 // Define interfaces for data structures
 interface BeritaItem {
@@ -116,9 +116,19 @@ const Berita = () => {
           <SearchInput className=""/>
         </div>
 
-        <Button className="bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto mt-2 md:mt-0">
-          Batalkan
-        </Button>
+
+         
+        <div className="flex items-center space-x-2">
+          <Link to="/admin/operasional/detail-berita">
+          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+            <FaPlus /> Tambah
+          </Button>
+          </Link>
+              
+          <Button className="bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto mt-2 md:mt-0">
+            Batalkan
+          </Button>
+        </div>
       </div>
 
       <Table className="mt-10 table-auto">

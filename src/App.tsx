@@ -245,6 +245,7 @@ const TahapanDataRiwayatPageUser = lazy(() => import("./pages/tahapandatariwayat
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
 import LoadingText from "./components/blocks/LoadingText";
+import DetailBeritaPage from "./pages/admin/operasional/berita/detailberita";
 
 function App() {
   const { isHydrate } = useHydration();
@@ -857,6 +858,8 @@ function App() {
 
               {/* OPERASIONAL > BERITA */}
               <Route path="berita" Component={BeritaPage} />
+              <Route path="detail-berita" Component={DetailBeritaPage} />
+             
 
               {/* OPERASIONAL > CUTI */}
               <Route path="cuti">
