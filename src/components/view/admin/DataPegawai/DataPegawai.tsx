@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useMutation } from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SearchInput from "@/components/blocks/SearchInput";
 import Title from "@/components/blocks/Title";
 import {useState} from "react";
+import adminServices from "../../../../services/admin.services";
+import wilayahIdServices from "@/services/binderByte.services.ts";
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -110,7 +112,7 @@ const DataPegawai = () => {
       nama: "",
       gelar_depan: "",
       gelar_belakang: "",
-      jenis_kelamin: "lk",
+      jenis_kelamin: undefined,
       agama: "",
       tempat_lahir: "",
       tanggal_lahir: undefined,
@@ -151,36 +153,88 @@ const DataPegawai = () => {
     resolver: zodResolver(dataPegawaiSchema),
   });
 
+  const selectedProvinceId = form.watch('provinsi');
+  const selectedCityId = form.watch('kota');
+
+  const { data: provincesData, isLoading: isProvincesLoading } = useQuery({
+    queryKey: ['provinsi-wilayah-id'],
+    queryFn: wilayahIdServices.getProvinsi,
+  });
+
+  const { data: citiesData, isLoading: isCitiesLoading } = useQuery({
+    queryKey: ['kota-wilayah-id', selectedProvinceId],
+    queryFn: () => wilayahIdServices.getKota(selectedProvinceId),
+    enabled: !!selectedProvinceId,
+  });
+
+  const { data: kecamatanData, isLoading: isKecamatanLoading } = useQuery({
+    queryKey: ['kecamatan-wilayah-id', selectedCityId],
+    queryFn: () => wilayahIdServices.getKecamatan(selectedCityId),
+    enabled: !!selectedCityId,
+  });
+
+  const provinceOptions = provincesData?.data?.map(prov => ({ label: prov.name, value: prov.code })) || [];
+  const cityOptions = citiesData?.data?.map(city => ({ label: city.name, value: city.code })) || [];
+  const kecamatanOptions = kecamatanData?.data?.map(kec => ({ label: kec.name, value: kec.code })) || [];
+
   const { mutate: postDataPegawai, isPending } = useMutation({
     mutationFn: (data: FormData) => postPegawaiServices.dataPegawai(data),
     onSuccess: () => {
       form.reset();
       toast.success("Data berhasil ditambahkan");
     },
-    // tambahkan onError untuk debugging jika perlu
     onError: (error) => {
       console.error("Gagal menyimpan:", error);
       toast.error(error.response?.data?.message || "Terjadi kesalahan");
     }
   });
 
+
+    const {data: statusPernikahanData} = useQuery({
+        queryKey: ["status-pernikahan-select"],
+        queryFn: async () => {
+            const response = await adminServices.getStatusPernikahanReferensi();
+
+            return response.data.data;
+        },
+    });
+    const statusPernikahanOptions = statusPernikahanData?.data?.map(item => ({
+        label: item.nama_status,
+        value: item.id.toString(),
+    })) || [];
+
   const handleSubmitDataPegawai = (values) => {
+    const valuesForApi = { ...values };
+
+    const provinceName = provincesData?.data?.find(p => p.code === values.provinsi)?.name;
+    if (provinceName) {
+      valuesForApi.provinsi = provinceName;
+    }
+
+    const cityName = citiesData?.data?.find(c => c.code === values.kota)?.name;
+    if (cityName) {
+      valuesForApi.kota = cityName;
+    }
+
+    const kecamatanName = kecamatanData?.data?.find(k => k.code === values.kecamatan)?.name;
+    if (kecamatanName) {
+      valuesForApi.kecamatan = kecamatanName;
+    }
+
     const formData = new FormData();
-    Object.keys(values).forEach((key) => {
-      const value = values[key];
+    Object.keys(valuesForApi).forEach((key) => {
+      const value = valuesForApi[key];
       if (value !== null && value !== undefined && value !== '') {
-
         if (key === 'tanggal_lahir' && value instanceof Date) {
-
           const formattedDate = value.toISOString().split('T')[0];
-
           formData.append(key, formattedDate);
-
         } else {
           formData.append(key, value);
         }
       }
     });
+
+    console.log("Data yang dikirim ke API:", Object.fromEntries(formData));
     postDataPegawai(formData);
   };
 
@@ -191,7 +245,15 @@ const DataPegawai = () => {
             <KepegawaianSection form={form} />
           </div>
           <div style={{ display: show === 'domisili' ? 'block' : 'none' }}>
-            <DomisiliSection form={form} />
+            <DomisiliSection
+                form={form}
+                provinceOptions={provinceOptions}
+                cityOptions={cityOptions}
+                kecamatanOptions={kecamatanOptions}
+                isProvincesLoading={isProvincesLoading}
+                isCitiesLoading={isCitiesLoading}
+                isKecamatanLoading={isKecamatanLoading}
+            />
           </div>
           <div style={{ display: show === 'rekening-bank' ? 'block' : 'none' }}>
             <RekeningBankSection form={form} />
@@ -249,12 +311,12 @@ const DataPegawai = () => {
               </CardHeader>
 
               <CardContent className="mt-10">
-                <div className="flex flex-col md:grid md:grid-rows-6 md:grid-flow-col gap-y-5 gap-x-12">
-                  <FormFieldInput form={form} label="NIP" name="nip" required={true} />
-                  <FormFieldInput form={form} label="NUPK" name="nuptk" required={true} />
-                  <FormFieldInput form={form} label="Nama Lengkap" name="nama" required={true} />
-                  <FormFieldInput form={form} label="Gelar Depan" name="gelar_depan" required={false} />
-                  <FormFieldInput form={form} label="Gelar Belakang" name="gelar_belakang" required={false} />
+                <div className="flex flex-col md:grid md:grid-rows-6 md:grid-flow-col gap-5">
+                  <FormFieldInput form={form} label="NIP" name="nip" labelStyle="text-[#3F6FA9]" required={true} />
+                  <FormFieldInput form={form} label="NUPTK" name="nuptk" labelStyle="text-[#3F6FA9]" required={true} />
+                  <FormFieldInput form={form} label="Nama Lengkap" name="nama" labelStyle="text-[#3F6FA9]" required={true} />
+                  <FormFieldInput form={form} label="Gelar Depan" name="gelar_depan" labelStyle="text-[#3F6FA9]" required={false} />
+                  <FormFieldInput form={form} label="Gelar Belakang" name="gelar_belakang" labelStyle="text-[#3F6FA9]" required={false} />
                   <FormFieldInput
                       label="Jenis Kelamin"
                       name="jenis_kelamin"
@@ -264,10 +326,18 @@ const DataPegawai = () => {
                       options={[{ label: "Laki-laki", value: "Laki-laki" }, { label: "Perempuan", value: "Perempuan" }]}
                       labelStyle="text-[#3F6FA9]"
                   />
-                  <FormFieldInput form={form} label="Agama" name="agama" required={true} />
-                  <FormFieldInput form={form} label="Tempat Lahir" name="tempat_lahir" required={false} />
-                  <FormFieldInput form={form} type="date" label="Tgl Lahir" name="tanggal_lahir" required={true} />
-                  <FormFieldInput form={form} label="Status Nikah" name="kode_status_pernikahan" required={false} />
+                  <FormFieldInput form={form} label="Agama" name="agama" labelStyle="text-[#3F6FA9]" required={true} />
+                  <FormFieldInput form={form} label="Tempat Lahir" name="tempat_lahir" labelStyle="text-[#3F6FA9]" required={false} />
+                  <FormFieldInput form={form} type="date" label="Tgl Lahir"  name="tanggal_lahir" labelStyle="text-[#3F6FA9]" required={true} />
+                  <FormFieldSelect
+                      form={form}
+                      label="Status Nikah"
+                      name="kode_status_pernikahan"
+                      placeholder="--Pilih--"
+                      options={statusPernikahanOptions}
+                      labelStyle="text-[#3F6FA9]"
+                      required={false}
+                  />
                   <FormFieldSelect
                       form={form}
                       label="Golongan Darah"

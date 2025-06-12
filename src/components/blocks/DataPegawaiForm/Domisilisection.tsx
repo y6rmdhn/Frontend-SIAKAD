@@ -2,67 +2,32 @@ import {FormFieldInput} from "../CustomFormInput/CustomFormInput";
 import {FormFieldSelect} from "../CustomFormSelect/CustomFormSelect";
 import {COUNTRIES} from "@/constant/countries/countries.ts";
 import React, {useEffect, useRef} from 'react';
-import {useQuery} from "@tanstack/react-query";
-import wilayahIdServices from "@/services/binderByte.services.ts";
+import adminServices from "@/services/admin.services.ts";
+import {InfiniteScrollSelect} from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect.tsx";
 
-const DomisiliSection = ({form}) => {
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
 
-    function usePrevious(value) {
-        const ref = useRef();
-        useEffect(() => {
-            ref.current = value;
-        });
-        return ref.current;
-    }
+const DomisiliSection = ({
+                             form,
+                             provinceOptions,
+                             cityOptions,
+                             kecamatanOptions,
+                             isProvincesLoading,
+                             isCitiesLoading,
+                             isKecamatanLoading
+                         }) => {
 
-    const { watch, setValue } = form;
+    const {watch, setValue} = form;
     const selectedProvinceId = watch('provinsi');
     const selectedCityId = watch('kota');
     const prevProvinceId = usePrevious(selectedProvinceId);
     const prevCityId = usePrevious(selectedCityId);
-
-
-
-    const {
-        data: provincesData,
-        isLoading: isProvincesLoading
-    } = useQuery({
-        queryKey: ['provinsi-wilayah-id'], // Gunakan key baru
-        queryFn: wilayahIdServices.getProvinsi,
-    });
-
-    const {
-        data: citiesData,
-        isLoading: isCitiesLoading
-    } = useQuery({
-        queryKey: ['kota-wilayah-id', selectedProvinceId],
-        queryFn: () => wilayahIdServices.getKota(selectedProvinceId),
-        enabled: !!selectedProvinceId,
-    });
-
-    const {
-        data: kecamatanData,
-        isLoading: isKecamatanLoading
-    } = useQuery({
-        queryKey: ['kecamatan-wilayah-id', selectedCityId],
-        queryFn: () => wilayahIdServices.getKecamatan(selectedCityId),
-        enabled: !!selectedCityId,
-    });
-
-    const provinceOptions = provincesData?.data?.map(prov => ({
-        label: prov.name,
-        value: prov.code,
-    })) || [];
-
-    const cityOptions = citiesData?.data?.map(city => ({
-        label: city.name,
-        value: city.code,
-    })) || [];
-
-    const kecamatanOptions = kecamatanData?.data?.map(kec => ({
-        label: kec.name,
-        value: kec.code,
-    })) || [];
 
     useEffect(() => {
         if (prevProvinceId !== undefined && prevProvinceId !== selectedProvinceId) {
@@ -77,7 +42,7 @@ const DomisiliSection = ({form}) => {
         }
     }, [selectedCityId, prevCityId, setValue]);
 
-    return(
+    return (
         <div className="grid lg:grid-rows-6 lg:grid-flow-col gap-y-4 lg:gap-y-0 gap-x-5 mt-10 items-center">
             <FormFieldInput
                 form={form}
@@ -147,18 +112,17 @@ const DomisiliSection = ({form}) => {
                 labelStyle="text-[#3F6FA9]"
                 required={true}
             />
-            <FormFieldSelect
+            <InfiniteScrollSelect
                 form={form}
                 label="Suku"
                 name="suku"
                 labelStyle="text-[#3F6FA9]"
-                options={[
-                    {label: "Admin", value: "admin"},
-                    {label: "User", value: "user"},
-                    {label: "Guest", value: "guest"},
-                ]}
                 placeholder="--Pilih Suku--"
                 required={false}
+                queryKey="suku"
+                queryFn={adminServices.getSukuParams}
+                itemValue="id"
+                itemLabel="nama_suku"
             />
             <FormFieldInput
                 form={form}
@@ -170,7 +134,7 @@ const DomisiliSection = ({form}) => {
             />
             <FormFieldInput
                 form={form}
-                label="No. Whatsapp"
+                label="No. Domisili Kontak"
                 name="no_telepon_domisili_kontak"
                 labelStyle="text-[#3F6FA9]"
                 required={true}

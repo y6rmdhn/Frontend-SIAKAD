@@ -2,19 +2,19 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 
 const adminServices = {
-    getStatusAktif: (page) =>
+    getStatusAktif: (page?) =>
         axiosInstance.get(`${endpoint.ADMIN}/status-aktif`, {
             params: {
                 page: page,
             },
         }),
-    getUnitKerja: (page) =>
+    getUnitKerja: (page?) =>
         axiosInstance.get(`${endpoint.ADMIN}/unit-kerja`, {
             params: {
                 page: page,
             },
         }),
-    getHubunganKerja: (page) =>
+    getHubunganKerja: (page?) =>
         axiosInstance.get(`${endpoint.ADMIN}/hubungan-kerja`, {
             params: {
                 page: page,
@@ -73,12 +73,19 @@ const adminServices = {
                 page: page,
             },
         }),
-    getMasterPangkatReferensi: (page) =>
+    getMasterPangkatReferensi: (page?) =>
         axiosInstance.get(`${endpoint.ADMIN}/master-pangkat`, {
             params: {
                 page: page,
             },
         }),
+    getStatusPernikahanReferensi: (page?) =>
+        axiosInstance.get(`${endpoint.ADMIN}/status-pernikahan`, {
+            params: {
+                page: page,
+            },
+        }),
+
     getEselonReferensi: (page) =>
         axiosInstance.get(`${endpoint.ADMIN}/eselon`, {
             params: {
@@ -153,6 +160,12 @@ const adminServices = {
 
     getSuku: (idSuku: number) =>
         axiosInstance.get(`${endpoint.ADMIN}/suku/` + idSuku),
+    getSukuParams: (page) =>
+        axiosInstance.get(`${endpoint.ADMIN}/suku`, {
+            params: {
+                page: page,
+            },
+        }),
 };
 
 export default adminServices;

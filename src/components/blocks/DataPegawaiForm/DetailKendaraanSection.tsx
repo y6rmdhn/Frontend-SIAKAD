@@ -16,9 +16,8 @@ const DetailKendaraanSection = ({ form }) => (
       name="jenis_kendaraan"
       labelStyle="text-[#3F6FA9]"
       options={[
-        { label: "Admin", value: "admin" },
-        { label: "User", value: "user" },
-        { label: "Guest", value: "guest" },
+        { label: "Mobil", value: "Mobil" },
+        { label: "Motor", value: "Motor" },
       ]}
       placeholder="--Pilih Jenis Kendaraan--"
       required={false}

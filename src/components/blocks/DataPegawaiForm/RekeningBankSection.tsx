@@ -1,5 +1,6 @@
 import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
+import {INDONESIAN_BANKS} from "@/constant/Bank/indonesianBank.ts";
 
 const RekeningBankSection = ({ form }) => (
   <div className="grid lg:grid-rows-2 lg:grid-flow-col gap-4 mt-10">
@@ -8,11 +9,7 @@ const RekeningBankSection = ({ form }) => (
       label="Nama BANK"
       name="nama_bank"
       labelStyle="text-[#3F6FA9]"
-      options={[
-        { label: "Admin", value: "admin" },
-        { label: "User", value: "user" },
-        { label: "Guest", value: "guest" },
-      ]}
+      options={INDONESIAN_BANKS}
       placeholder="--Pilih BANK--"
       required={false}
     />
