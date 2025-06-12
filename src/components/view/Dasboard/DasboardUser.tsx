@@ -187,8 +187,8 @@ const DasboardUser = () => {
                                           {historyAbsen?.map((item: any) => (
                                             <TableRow key={item.id} className=" even:bg-gray-100">
                                                 <TableCell className="text-center">{format(parseISO(item.tanggal), "dd-MM-yyyy")}</TableCell>
-                                                <TableCell className="text-center">{item.jam_masuk.substring(0, 5)} </TableCell>
-                                                <TableCell className="text-center">{item.jam_keluar.substring(0, 5)}</TableCell>
+                                                <TableCell className="text-center">{item.jam_masuk?.substring(0, 5)} </TableCell>
+                                                <TableCell className="text-center">{item.jam_keluar?.substring(0, 5) }</TableCell>
                                             </TableRow>
                                           ))}
                                         </TableBody>

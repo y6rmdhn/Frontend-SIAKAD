@@ -81,6 +81,10 @@ export function AbsensiModal({ open, onOpenChange, absenType = 'masuk', onAbsenS
         }
 
         const distance = getDistanceInMeters(targetLocation, userLocation);
+        if (distance > allowedRadius) {
+            toast.error("Gagal Absen", { description: `Anda berada di luar radius presensi (${Math.round(distance)} meter).` });
+            return;
+        }
 
         const formData = new FormData();
         formData.append('latitude', data.latitude);
