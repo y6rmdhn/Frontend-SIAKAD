@@ -1,61 +1,74 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import CustomCard from "@/components/blocks/Card";
+import Title from "@/components/blocks/Title";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+
+import { useForm } from "react-hook-form";
+import SearchInput from "@/components/blocks/SearchInput";
+import { IoIosArrowBack, IoMdAdd } from "react-icons/io";
+import { IoSaveSharp } from "react-icons/io5";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { BiRefresh } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import {FormFieldInputFile} from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { IoIosArrowBack, IoMdAdd } from "react-icons/io";
-import { IoSaveSharp } from "react-icons/io5";
 import { Separator } from "@/components/ui/separator";
-import Title from "@/components/blocks/Title";
-import CustomCard from "@/components/blocks/Card";
-import { Form } from "@/components/ui/form";
-import SearchInput from "@/components/blocks/SearchInput";
-import { useForm } from "react-hook-form";
-import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
 
 
-const DetailBerita = () => {
-  const form = useForm();
 
-  return (
-    <div className="mt-10 mb-20">
-      <Title title="Berita" subTitle="Detail Berita" />
+const EditDataBerita = () => {
+    const form = useForm();
 
-      <Separator className="w-full bg-green-500" />
+    return (
+        <div className="mt-10 mb-20">
+            <Title title="Berita" subTitle="Detail Berita" />
 
-      <Form {...form}>
-        <form>
-          <CustomCard
-            actions={
-              <div className="w-full flex flex-col gap-4 lg:flex-row justify-between">
-                <div>
-                  <SearchInput />
-                </div>
+            <Separator className="w-full bg-green-500" />
 
-                <div className="w-full flex flex-col lg:justify-end sm:flex-row gap-4">
-                  <div className="w-full lg:w-auto">
-                    <Link
-                      type="button"
-                      to="/admin/operasional/berita"
-                    >
-                      <Button type="button" className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
-                        <IoIosArrowBack /> Kembali ke Daftar
-                      </Button>
-                    </Link>
-                  </div>
+            <Form {...form}>
+                <form>
+                    <CustomCard
+                        actions={
+                            <div className="w-full flex flex-col gap-4 lg:flex-row justify-between">
+                                <div className="w-full lg:w-96 relative">
+                                    <SearchInput />
+                                </div>
 
-                  <div className="w-full lg:w-auto">
-                    <Button type="submit" className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
-                      <IoSaveSharp /> Simpan
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            }
-          />
-          <div className="space-y-5 mt-5">
+                                <div className="w-full flex flex-col lg:flex-row justify-end gap-2">
+                                    <div>
+                                        <Link
+                                            className="w-full xl:w-auto"
+                                            to="/admin/operasional/berita"
+                                        >
+                                            <Button className="bg-[#3ABC67] w-full xl:w-auto hover:bg-hover-blue-200 text-xs sm:text-sm">
+                                                <IoIosArrowBack /> Kembali ke Daftar
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                    <div>
+                                        <Button className="bg-[#3ABC67] w-full xl:w-auto hover:bg-hover-blue-200 text-xs sm:text-sm">
+                                            <IoSaveSharp /> Simpan
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        <Button className="bg-[#3ABC67] w-full xl:w-auto hover:bg-hover-blue-200 text-xs sm:text-sm">
+                                            <BiRefresh className="bg-[#FDA31A] rounded-full" /> Batal
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        <Button className="bg-[#F56954] w-full xl:w-auto hover:bg-hover-blue-200 text-xs sm:text-sm">
+                                            <FaRegTrashAlt /> Hapus
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    />
+                    <div className="space-y-5 mt-5">
             {/* Unit */}
             <div>
               <Label className="text-sm font-semibold text-[#2572BE]">Unit<span className="text-red-500">*</span></Label>
@@ -146,10 +159,10 @@ const DetailBerita = () => {
               </Button>
             </div>
           </div>
-        </form>
-      </Form>
-    </div>
-  );
+                </form>
+            </Form>
+        </div>
+    );
 };
 
-export default DetailBerita;
+export default EditDataBerita;

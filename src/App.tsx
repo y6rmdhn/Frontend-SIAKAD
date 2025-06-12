@@ -215,6 +215,8 @@ const PengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPen
 const DetailPengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian"));
 const DetailDataPengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/detaildataPengabdian"));
 const BeritaPage = lazy(() => import("./pages/admin/operasional/berita")); // Ada duplikasi nama, pastikan ini benar atau beri alias
+const DetailDataBeritaPage = lazy(() => import("./pages/admin/operasional/berita/detaildataBerita"));
+const EditDataBeritaPage = lazy(() => import("./pages/admin/operasional/berita/editdataBerita"));
 const PembicaraUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara"));
 const DetailPembicaraUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara"));
 const DetailDataPembicaraUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/detaildataPembicara"));
@@ -866,6 +868,11 @@ function App() {
               {/* OPERASIONAL > BERITA */}
               <Route path="berita" Component={BeritaPage} />
               <Route path="detail-berita" Component={DetailBeritaPage} />
+              <Route path="detail-data-berita" Component={DetailDataBeritaPage} />
+              <Route
+                path="edit-data-berita"
+                Component={EditDataBeritaPage}
+              />
              
 
               {/* OPERASIONAL > CUTI */}
