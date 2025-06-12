@@ -113,18 +113,18 @@ const Berita = () => {
             options={[{ value: "apple", label: "apple" }]}
           />
 
-          <SearchInput className=""/>
+          <SearchInput className="" />
         </div>
 
 
-         
+
         <div className="flex items-center space-x-2">
           <Link to="/admin/operasional/detail-berita">
-          <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
-            <FaPlus /> Tambah
-          </Button>
+            <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
+              <FaPlus /> Tambah
+            </Button>
           </Link>
-              
+
           <Button className="bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto mt-2 md:mt-0">
             Batalkan
           </Button>
@@ -172,13 +172,15 @@ const Berita = () => {
               </TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
-                  >
-                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                  </Button>
+                  <Link to="/admin/operasional/detail-data-berita">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
 
                   <Button
                     size="icon"
