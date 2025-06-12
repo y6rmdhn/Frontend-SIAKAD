@@ -38,7 +38,6 @@ const DetailDataOrganisasi = () => {
         )
     }
 
-    // --- PERUBAHAN 3: Fungsi helper untuk format tanggal agar lebih rapi ---
     const formatDate = (dateString: string | null | undefined) => {
         if (!dateString) return "-";
         try {

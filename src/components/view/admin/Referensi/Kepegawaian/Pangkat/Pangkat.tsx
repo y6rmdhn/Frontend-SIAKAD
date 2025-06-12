@@ -245,6 +245,7 @@ const Pangkat = () => {
                                 <TableRow className="bg-gray-100">
                                     <TableHead className="text-center text-xs sm:text-sm">Pangkat</TableHead>
                                     <TableHead className="text-center text-xs sm:text-sm">Golongan</TableHead>
+                                    <TableHead className="text-center text-xs sm:text-sm">Detail Tunjangan</TableHead>
                                     <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -296,6 +297,7 @@ const Pangkat = () => {
                                     <TableRow key={index} className=" even:bg-gray-100">
                                         <TableCell className="text-center text-xs sm:text-sm">{item.pangkat}</TableCell>
                                         <TableCell className="text-center text-xs sm:text-sm">{item.nama_golongan}</TableCell>
+                                        <TableCell className="text-center text-xs sm:text-sm"></TableCell>
                                         <TableCell className="h-full">
                                             <div className="flex justify-center items-center w-full h-full">
                                                 <Button

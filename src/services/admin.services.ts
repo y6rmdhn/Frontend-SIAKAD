@@ -143,8 +143,13 @@ const adminServices = {
     getStatus: () =>
         axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
 
+
+    // for detail
     getPegawaiDetailAdminPage: (idPegawai) =>
         axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),
+
+    getDetailPenghargaan: (id) =>
+        axiosInstance.get(`${endpoint.ADMIN}/datapenghargaan/` + id),
 
     getSuku: (idSuku: number) =>
         axiosInstance.get(`${endpoint.ADMIN}/suku/` + idSuku),

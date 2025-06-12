@@ -16,4 +16,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      '/api-wilayah': {
+        target: 'https://wilayah.id',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-wilayah/, ''),
+      },
+    },
+  },
 });

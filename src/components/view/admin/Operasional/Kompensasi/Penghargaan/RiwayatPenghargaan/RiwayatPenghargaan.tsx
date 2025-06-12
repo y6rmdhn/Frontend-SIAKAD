@@ -25,14 +25,9 @@ import {FiSearch} from "react-icons/fi";
 import {IoEyeOutline} from "react-icons/io5";
 import {MdEdit} from "react-icons/md";
 import {Link, useSearchParams} from "react-router-dom";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
-import potsReferensiServices from "@/services/create.admin.referensi.ts";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import putReferensiServices from "@/services/put.admin.referensi.ts";
-import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {toast} from "sonner";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import {format, parseISO} from "date-fns";
@@ -41,11 +36,6 @@ const RiwayatPenghargaan = () => {
 
 
     const [searchParam, setSearchParam] = useSearchParams();
-    const [isAddData, setIsAddData] = useState<boolean>(false);
-    const [isEditMode, setIsEditMode] = useState<boolean>(false);
-    const [editingItemId, setEditingItemId] = useState<number | null>(null);
-    const [currentPage, setCurrentPage] = useState<number>(Number(searchParam.get("page") || 1));
-    const queryClient = useQueryClient();
 
     // get data
     const {data} = useQuery({
@@ -59,12 +49,6 @@ const RiwayatPenghargaan = () => {
         },
     });
 
-    useEffect(() => {
-        const page = Number(searchParam.get("page") || 1);
-        if (page !== currentPage) {
-            setCurrentPage(page);
-        }
-    }, [searchParam]);
 
     useEffect(() => {
         if (!searchParam.get("page")) {
@@ -198,12 +182,6 @@ const RiwayatPenghargaan = () => {
                             </Button>
                         </Link>
                     </div>
-
-                    <div className="w-full lg:w-auto">
-                        <Button variant="destructive" className="cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
-                            <FaRegTrashAlt/> Hapus
-                        </Button>
-                    </div>
                 </div>
             </div>
 
@@ -221,7 +199,7 @@ const RiwayatPenghargaan = () => {
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
                     {data?.data.map((item: any) => (
-                        <TableRow className=" even:bg-gray-100">
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">
                                 <Checkbox
                                     className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer"/>
@@ -236,14 +214,17 @@ const RiwayatPenghargaan = () => {
                             <TableCell className="text-center text-xs sm:text-sm">{item.nama_penghargaan}</TableCell>
                             <TableCell className="h-full">
                                 <div className="flex justify-center items-center w-full h-full">
-                                    <Link to="/admin/operasional/kompensasi/detail-data-penghargaan">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                                        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
-                                    </Button>
-                </Link>
+                                    <Link to={"/admin/operasional/kompensasi/detail-data-penghargaan/" + item.id}>
+                                        <Button size="icon" variant="ghost" className="cursor-pointer">
+                                            <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
+                                        </Button>
+                                    </Link>
 
                                     <Button size="icon" variant="ghost" className="cursor-pointer">
                                         <MdEdit className="w-5! h-5! text-[#26A1F4]"/>
+                                    </Button>
+                                    <Button size="icon" variant="ghost" className="cursor-pointer">
+                                        <FaRegTrashAlt className="w-4! h-4! text-red-500"/>
                                     </Button>
                                 </div>
                             </TableCell>
@@ -256,11 +237,6 @@ const RiwayatPenghargaan = () => {
                 currentPage={Number(searchParam.get("page") || 1)}
                 links={data?.links || []}
                 onPageChange={(page) => {
-
-                    if (isEditMode) {
-                        toast.warning("Selesaikan edit data terlebih dahulu");
-                        return;
-                    }
 
                     searchParam.set("page", page.toString());
                     setSearchParam(searchParam);

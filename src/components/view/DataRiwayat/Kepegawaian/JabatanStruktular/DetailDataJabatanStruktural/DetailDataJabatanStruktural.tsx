@@ -103,7 +103,7 @@ const DetailDataJabatanStruktural = () => {
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Dibuat Oleh</Label>
-                                    <Label className="text-xs sm:text-sm">-</Label>
+                                    <Label className="text-xs sm:text-sm">{data?.pegawai.nama || '-'}</Label>
                                 </div>
                             </div>
                         </div>

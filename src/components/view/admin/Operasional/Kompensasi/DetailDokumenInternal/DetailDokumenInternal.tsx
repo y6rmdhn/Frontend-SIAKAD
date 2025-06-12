@@ -1,5 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -8,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt, FaSave } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const DetailDokumenInternal = () => {
   const form = useForm();
@@ -33,17 +35,19 @@ const DetailDokumenInternal = () => {
 
                 <div className="w-full flex flex-col lg:justify-end sm:flex-row gap-4">
                   <div className="w-full lg:w-auto">
-                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
-                    <IoIosArrowBack />
-                    Kembali ke Daftar
-                  </Button>
+                    <Link to="/admin/operasional/kompensasi/dokumen-internal">
+                      <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
+                        <IoIosArrowBack />
+                        Kembali ke Daftar
+                      </Button>
+                    </Link>
                   </div>
-                  
+
                   <div className="w-full lg:w-auto">
-                  <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
-                    <FaSave />
-                    Simpan
-                  </Button>
+                    <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
+                      <FaSave />
+                      Simpan
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -137,13 +141,12 @@ const DetailDokumenInternal = () => {
                 required={false}
                 placeholder="Pengajaran"
               />
-              <FormFieldInput
+              <FormFieldInputFile
                 form={form}
                 label="File"
                 name="file"
                 required={false}
                 labelStyle="text-[#3F6FA9]"
-                type="date"
               />
               <FormFieldSelect
                 form={form}
@@ -169,8 +172,8 @@ const DetailDokumenInternal = () => {
               />
               <FormFieldSelect
                 form={form}
-                label="Tinggkat"
-                name="tinggkat"
+                label="Tingkat"
+                name="tingkat"
                 labelStyle="text-[#3F6FA9]"
                 options={[
                   {
@@ -187,7 +190,7 @@ const DetailDokumenInternal = () => {
                   },
                 ]}
                 required={true}
-                placeholder="--Pilih Tinggkat--"
+                placeholder="--Pilih Tingkat--"
               />
               <FormFieldInput
                 form={form}

@@ -90,6 +90,16 @@ interface IMediaPublikasi {
     nama: string,
 }
 
+interface IPenghargaan {
+    jenis_penghargaan: string,
+    nama_penghargaan: string,
+    no_sk: string,
+    tanggal_sk: string,
+    tanggal_penghargaan: string,
+    keterangan: string,
+}
+
+
 export type {
     IJenisTesPost,
     IOutputPenelitianPost,
@@ -107,4 +117,5 @@ export type {
     IJenisPelanggaran,
     IJabatanAkademik,
     IMediaPublikasi,
+    IPenghargaan,
 };

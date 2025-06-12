@@ -33,6 +33,8 @@ const DetailDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/k
 const EditDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/editdataPenghargaan"));
 const DokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal"));
 const DetailDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/detailDokumenInternal"));
+const DetailDataDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal/detaildataDokumenInternal"));
+const EditDataDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal/editdataDokumenInternal"));
 const SettingValidasiPage = lazy(() => import("./pages/admin/validasiData/settingValidasi"));
 const KeluargaPage = lazy(() => import("./pages/admin/validasiData/keluarga"));
 const MonitoringPage = lazy(() => import("./pages/admin/validasiData/monitoring"));
@@ -81,6 +83,7 @@ const IzinPage = lazy(() => import("./pages/operasional/pengajuan/Izin")); // As
 const BeritaOperasionalUserPage = lazy(() => import("./pages/operasional/berita"));
 const DetailDokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/detailDokumen"));
 const DokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/dokumen"));
+const DetailDataDokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/detaildataDokumen"));
 const KepegawaianHomebasePage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/homebase"));
 const KepegawaianPangkatPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/pangkat"));
 const KepegawaianJabatanAkademikPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/jabatanAkademik"));
@@ -297,6 +300,10 @@ function App() {
               Component={DetailDokumenInternalUserPage}
             />
             <Route path="dokumen-internal" Component={DokumenInternalUserPage} />
+            <Route
+              path="detail-data-dokumen-internal"
+              Component={DetailDataDokumenInternalUserPage}
+            />
 
             <Route path="pengajuan">
               <Route path="cuti" Component={CutiPage} />
@@ -880,27 +887,35 @@ function App() {
                   Component={DetailRiwayatPelanggaranPage}
                 />
                 <Route
-                  path="detail-data-pelanggaran"
+                  path="detail-data-pelanggaran/:id"
                   Component={DetailDataPelanggaranPage}
                 />
                 <Route
-                  path="edit-data-pelanggaran"
+                  path="edit-data-pelanggaran/:id"
                   Component={EditDataPelanggaranPage}
                 />
                 <Route path="penghargaan" Component={RiwayatPenghargaanPage} />
-                <Route path="detail-penghargaan" Component={DetailPenghargaanPage}/>
+                <Route path="detail-penghargaan/" Component={DetailPenghargaanPage}/>
                 <Route
-                  path="detail-data-penghargaan"
+                  path="detail-data-penghargaan/:id"
                   Component={DetailDataPenghargaanPage}
                 />
                 <Route
-                  path="edit-data-penghargaan"
+                  path="edit-data-penghargaan/:id"
                   Component={EditDataPenghargaanPage}
                 />
                 <Route path="dokumen-internal" Component={DokumenInternalPage} />
                 <Route
                   path="detail-dokumen-internal"
                   Component={DetailDokumenInternalPage}
+                />
+                <Route
+                  path="detail-data-dokumen-internal"
+                  Component={DetailDataDokumenInternalPage}
+                />
+                <Route
+                  path="edit-data-dokumen-internal"
+                  Component={EditDataDokumenInternalPage}
                 />
               </Route>
             </Route>

@@ -151,7 +151,7 @@ const DokumenInternal = () => {
               <TableCell className="text-center"></TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
-                  <Link to="">
+                  <Link to="/operasional/detail-data-dokumen-internal">
                     <Button
                       size="icon"
                       variant="ghost"

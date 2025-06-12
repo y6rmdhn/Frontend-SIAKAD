@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label"; // Assuming Label is used, though not explicitly in file inputs
+import { Label } from "@/components/ui/label";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdOutlineFileDownload } from "react-icons/md";
 import InfoList from "@/components/blocks/InfoList";
