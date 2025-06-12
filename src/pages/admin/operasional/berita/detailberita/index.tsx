@@ -6,10 +6,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Berita from "@/components/view/admin/Operasional/Berita";
+import DetailBerita from "@/components/view/admin/Operasional/Berita/DetailBerita";
 import SimKepegawaianLayout from "@/layouts/SimKepegawaianLayout";
 
-const BeritaPage = () => {
+const DetailBeritaPage = () => {
   return (
     <SimKepegawaianLayout>
       <Breadcrumb className="mt-10">
@@ -21,11 +21,15 @@ const BeritaPage = () => {
           <BreadcrumbItem>
             <BreadcrumbPage>Berita</BreadcrumbPage>
           </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Detail Berita</BreadcrumbPage>
+          </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <Berita />
+      <DetailBerita />
     </SimKepegawaianLayout>
   );
 };
 
-export default BeritaPage;
+export default DetailBeritaPage;

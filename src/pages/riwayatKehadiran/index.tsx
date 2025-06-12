@@ -17,7 +17,7 @@ const RiwayatKehadiranPage = () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              href="/gate/pegawai "
+              href="/dasboard "
               className="flex items-center gap-2"
             >
               <MdGroups className="w-6 h-6" />
@@ -26,7 +26,7 @@ const RiwayatKehadiranPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Kehadiran</BreadcrumbLink>
+            <BreadcrumbLink href="/">Kehadiran</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

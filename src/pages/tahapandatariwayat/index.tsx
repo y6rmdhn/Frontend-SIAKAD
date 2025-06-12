@@ -15,7 +15,7 @@ const TahapanDataRiwayatPageUser = () => {
       <Breadcrumb className="mt-10 pl-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/gate/pegawai">Pegawai</BreadcrumbLink>
+            <BreadcrumbLink href="/dasboard">Pegawai</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
