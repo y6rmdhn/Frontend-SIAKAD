@@ -1,17 +1,10 @@
 import CustomCard from "@/components/blocks/Card";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import SelectFilter from "@/components/blocks/SelectFilter";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -29,13 +22,73 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const Pelanggaran = () => {
+  const [searchParam, setSearchParam] = useSearchParams();
+
+  // get data
+  const { data, isLoading } = useQuery({
+    queryKey: ["jenis-pelanggaran-kompensasi", searchParam.get("page")],
+    queryFn: async () => {
+      const response = await adminServices.getPelanggaran(
+        searchParam.get("page")
+      );
+
+      return response.data;
+    },
+  });
+
+  const unitKerjaOptions =
+    data?.filters?.unit_kerja?.map((unitKerja) => ({
+      label: unitKerja.nama,
+      value: unitKerja.id,
+    })) || [];
+
+  const jabatanFungsionalOptions =
+    data?.filters?.jabatan_fungsional?.map((item) => ({
+      label: item.nama,
+      value: item.id,
+    })) || [];
+
+  const jabatanPelanggaranOptions =
+    data?.filters?.jenis_pelanggaran?.map((item) => ({
+      label: item.nama,
+      value: item.id,
+    })) || [];
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      searchParam.set("page", "1");
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      searchParam.set("page", "1");
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      searchParam.set("page", data.last_page.toString());
+      setSearchParam(searchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
+
   return (
     <div className="mt-10 mb-20">
       <h1 className="text-lg sm:text-2xl font-normal">
@@ -50,59 +103,29 @@ const Pelanggaran = () => {
           <div className="grid grid-rows-3 lg:grid-rows-2 grid-flow-col gap-5 lg:gap-10">
             <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
-              <Select>
-                <SelectTrigger className="text-xs sm:text-sm w-full">
-                  <SelectValue placeholder="041001 - Universitas Ibn Khaldun" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectFilter
+                classname="w-full md:w-80"
+                options={unitKerjaOptions}
+                placeholder="--Semua Pengajuan--"
+              />
             </div>
             <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">Jenis Pelanggaran</Label>
-              <Select>
-                <SelectTrigger className="text-xs sm:text-sm w-full">
-                  <SelectValue placeholder="--Semua Jenis Pelanggaran--" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectFilter
+                classname="w-full md:w-80"
+                options={jabatanPelanggaranOptions}
+                placeholder="--Semua Pengajuan--"
+              />
             </div>
             <div className="flex flex-col sm:flex-row">
               <Label className="w-full text-[#FDA31A]">
                 Jabatan Fungsional
               </Label>
-              <Select>
-                <SelectTrigger className="text-xs sm:text-sm w-full">
-                  <SelectValue placeholder="--Semua Jabatan Fungsional--" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SelectFilter
+                classname="w-full md:w-80"
+                options={jabatanFungsionalOptions}
+                placeholder="--Semua Pengajuan--"
+              />
             </div>
           </div>
         }
@@ -130,7 +153,10 @@ const Pelanggaran = () => {
 
           <div className="w-full relative lg:w-90">
             <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-full pr-8 lg:w-90 text-xs sm:text-sm" />
+            <Input
+              placeholder="Search"
+              className="w-full pr-8 lg:w-90 text-xs sm:text-sm"
+            />
           </div>
         </div>
 
@@ -142,12 +168,6 @@ const Pelanggaran = () => {
               </Button>
             </Link>
           </div>
-
-          <div className="w-full lg:w-auto">
-            <Button variant="destructive" className="cursor-pointer w-full lg:w-auto text-xs sm:text-sm">
-              <FaRegTrashAlt /> Hapus
-            </Button>
-          </div>
         </div>
       </div>
 
@@ -155,61 +175,92 @@ const Pelanggaran = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tanggal Pelanggaran</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Jenis Pelanggaran</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Nama Pegawai
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Tanggal Pelanggaran
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Jenis Pelanggaran
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Aksi
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center">
-              <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-            </TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-data-pelanggaran">
-                  <Button size="icon" variant="ghost" className="cursor-pointer">
-                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                  </Button>
-                </Link>
+          {data?.data?.data?.map((item) => (
+            <TableRow className=" even:bg-gray-100">
+              <TableCell className="text-center">
+                <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.nama_pegawai}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.tgl_pelanggaran_formatted}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.jenis_pelanggaran}
+              </TableCell>
+              <TableCell className="h-full">
+                <div className="flex justify-center items-center w-full h-full">
+                  <Link
+                    to={
+                      "/admin/operasional/kompensasi/detail-data-pelanggaran/" +
+                      item.id
+                    }
+                  >
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
 
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+                  <Link
+                    to={
+                      "/admin/operasional/kompensasi/edit-data-pelanggaran/" +
+                      item.id
+                    }
+                  >
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <FaRegTrashAlt className="w-4! h-4! text-red-500" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 
-      <Pagination className="mt-8 flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <CustomPagination
+        currentPage={Number(searchParam.get("page") || 1)}
+        links={data?.links || []}
+        onPageChange={(page) => {
+          searchParam.set("page", page.toString());
+          setSearchParam(searchParam);
+        }}
+        hasNextPage={!!data?.next_page_url}
+        hasPrevPage={!!data?.prev_page_url}
+        totalPages={data?.last_page}
+      />
     </div>
   );
 };

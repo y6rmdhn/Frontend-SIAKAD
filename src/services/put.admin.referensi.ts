@@ -2,9 +2,18 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
   IJamKerja,
-  IJenisCutiPost, IJenisLuaran, IJenisPelanggaran, IJenisPublikasi, IJenisSk,
+  IJenisCutiPost,
+  IJenisLuaran,
+  IJenisPelanggaran,
+  IJenisPublikasi,
+  IJenisSk,
   IJenisTesPost,
-  IOutputPenelitianPost, IPengabdian, IPenghargaan, IStatusEselon, IStatusKeaktifan, IStatusPangkat,
+  IOutputPenelitianPost,
+  IPengabdian,
+  IPenghargaan,
+  IStatusEselon,
+  IStatusKeaktifan,
+  IStatusPangkat,
 } from "@/types/create.referensi";
 
 const putReferensiServices = {
@@ -15,27 +24,32 @@ const putReferensiServices = {
   jenisCuti: (id: number, payload: IJenisCutiPost) =>
     axiosInstance.put(`${endpoint.ADMIN}/daftar-cuti/${id}`, payload),
   jenisSk: (id: number, payload: IJenisSk) =>
-      axiosInstance.put(`${endpoint.ADMIN}/jenis-sk/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-sk/${id}`, payload),
   statusAktif: (id: number, payload: IStatusKeaktifan) =>
-      axiosInstance.put(`${endpoint.ADMIN}/status-aktif/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/status-aktif/${id}`, payload),
   pangkat: (id: number, payload: IStatusPangkat) =>
-      axiosInstance.put(`${endpoint.ADMIN}/master-pangkat/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/master-pangkat/${id}`, payload),
   eselon: (id: number, payload: IStatusEselon) =>
-      axiosInstance.put(`${endpoint.ADMIN}/eselon/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/eselon/${id}`, payload),
   jamKerja: (id: number, payload: IJamKerja) =>
-      axiosInstance.put(`${endpoint.ADMIN}/jam-kerja/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/jam-kerja/${id}`, payload),
   jenisSertifikasi: (id: number, payload: IJenisLuaran) =>
-      axiosInstance.put(`${endpoint.ADMIN}/master-jenis-sertifikasi/${id}`, payload),
+    axiosInstance.put(
+      `${endpoint.ADMIN}/master-jenis-sertifikasi/${id}`,
+      payload
+    ),
   jenisLuaran: (id: number, payload: IJenisLuaran) =>
-      axiosInstance.put(`${endpoint.ADMIN}/jenis-luaran/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-luaran/${id}`, payload),
   jenisPengabdian: (id: number, payload: IPengabdian) =>
-      axiosInstance.put(`${endpoint.ADMIN}/jenis-pkm/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-pkm/${id}`, payload),
   jenisPublikasi: (id: number, payload: IJenisPublikasi) =>
-      axiosInstance.put(`${endpoint.ADMIN}/jenis-publikasi/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-publikasi/${id}`, payload),
   jenisPelanggaran: (id: number, payload: IJenisPelanggaran) =>
-      axiosInstance.put(`${endpoint.ADMIN}/jenis-pelanggaran/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-pelanggaran/${id}`, payload),
   penghargaan: (id: number, payload: any) =>
-      axiosInstance.put(`${endpoint.ADMIN}/datapenghargaan/${id}`, payload),
+    axiosInstance.put(`${endpoint.ADMIN}/datapenghargaan/${id}`, payload),
+  pelanggaran: (id: number, payload: any) =>
+    axiosInstance.put(`${endpoint.ADMIN}/datapelanggaran/${id}`, payload),
 };
 
 export default putReferensiServices;

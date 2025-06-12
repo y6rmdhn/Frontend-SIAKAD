@@ -11,170 +11,242 @@ import { IoIosArrowBack } from "react-icons/io";
 import { IoSaveSharp } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { BiRefresh } from "react-icons/bi";
-import {FormFieldInputFile} from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
-import {Link, useNavigate, useParams} from "react-router-dom";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
-import {toast} from "sonner";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import putReferensiServices from "@/services/put.admin.referensi.ts";
 
 const penghargaanSchema = z.object({
-    pegawai_id: z.string().min(1, "Pegawai wajib diisi."),
-    tanggal_penghargaan: z.string().min(1, "Tanggal penghargaan wajib diisi."),
-    jenis_penghargaan: z.string().min(1, "Jenis penghargaan wajib dipilih."),
-    nama_penghargaan: z.string().optional(),
-    no_sk: z.string().optional(),
-    tanggal_sk: z.string().optional(),
-    keterangan: z.string().optional(),
-    file_penghargaan: z.any().optional(),
+  pegawai_id: z.string().min(1, "Pegawai wajib diisi."),
+  tanggal_penghargaan: z.string().min(1, "Tanggal penghargaan wajib diisi."),
+  jenis_penghargaan: z.string().min(1, "Jenis penghargaan wajib dipilih."),
+  nama_penghargaan: z.string().optional(),
+  no_sk: z.string().optional(),
+  tanggal_sk: z.string().optional(),
+  keterangan: z.string().optional(),
+  file_penghargaan: z.any().optional(),
 });
 type PenghargaanSchema = z.infer<typeof penghargaanSchema>;
 
 interface UpdatePenghargaanPayload {
-    id: number;
-    data: Omit<PenghargaanSchema, 'file_penghargaan'>;
+  id: number;
+  data: Omit<PenghargaanSchema, "file_penghargaan">;
 }
 
 const PenghargaanForm = ({ initialData }: { initialData: any }) => {
-    const params = useParams();
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
+  const params = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-    const form = useForm<PenghargaanSchema>({
-        resolver: zodResolver(penghargaanSchema),
-        defaultValues: {
-            pegawai_id: String(initialData.pegawai_id) || "",
-            tanggal_penghargaan: initialData.tanggal_penghargaan ? initialData.tanggal_penghargaan.split('T')[0] : "",
-            jenis_penghargaan: initialData.jenis_penghargaan || "",
-            nama_penghargaan: initialData.nama_penghargaan || "",
-            no_sk: initialData.no_sk || "",
-            tanggal_sk: initialData.tanggal_sk ? initialData.tanggal_sk.split('T')[0] : "",
-            keterangan: initialData.keterangan || "",
-            file_penghargaan: undefined,
-        },
-    });
+  const form = useForm<PenghargaanSchema>({
+    resolver: zodResolver(penghargaanSchema),
+    defaultValues: {
+      pegawai_id: String(initialData.pegawai_id) || "",
+      tanggal_penghargaan: initialData.tanggal_penghargaan
+        ? initialData.tanggal_penghargaan.split("T")[0]
+        : "",
+      jenis_penghargaan: initialData.jenis_penghargaan || "",
+      nama_penghargaan: initialData.nama_penghargaan || "",
+      no_sk: initialData.no_sk || "",
+      tanggal_sk: initialData.tanggal_sk
+        ? initialData.tanggal_sk.split("T")[0]
+        : "",
+      keterangan: initialData.keterangan || "",
+      file_penghargaan: undefined,
+    },
+  });
 
-    const { mutate, isPending } = useMutation({
-        mutationFn: (payload: UpdatePenghargaanPayload) =>
-            putReferensiServices.penghargaan(payload.id, payload.data),
-        onSuccess: () => {
-            toast.success("Data berhasil diperbarui");
-            queryClient.invalidateQueries({ queryKey: ["default-value-penghargaan-admin"] });
-            navigate("/admin/operasional/kompensasi/penghargaan");
-        },
-        onError: (error: any) => {
-            const errorMessage = error.response?.data?.message || "Gagal memperbarui data.";
-            toast.error(errorMessage);
-        },
-    });
+  const { mutate, isPending } = useMutation({
+    mutationFn: (payload: UpdatePenghargaanPayload) =>
+      putReferensiServices.penghargaan(payload.id, payload.data),
+    onSuccess: () => {
+      toast.success("Data berhasil diperbarui");
+      queryClient.invalidateQueries({
+        queryKey: ["default-value-penghargaan-admin"],
+      });
+      navigate("/admin/operasional/kompensasi/penghargaan");
+    },
+    onError: (error: any) => {
+      const errorMessage =
+        error.response?.data?.message || "Gagal memperbarui data.";
+      toast.error(errorMessage);
+    },
+  });
 
-    const handleSubmitData = (values: PenghargaanSchema) => {
-        if (!params.id) return toast.error("ID data tidak ditemukan!");
-        const numericId = Number(params.id);
-        const { file_penghargaan, ...dataToSend } = values;
-        const payloadForApi = {
-            ...dataToSend,
-            nama_penghargaan: dataToSend.nama_penghargaan || '',
-            no_sk: dataToSend.no_sk || '',
-            tanggal_sk: dataToSend.tanggal_sk || '',
-            keterangan: dataToSend.keterangan || '',
-        };
-        mutate({ id: numericId, data: payloadForApi });
+  const handleSubmitData = (values: PenghargaanSchema) => {
+    if (!params.id) return toast.error("ID data tidak ditemukan!");
+    const numericId = Number(params.id);
+    const { file_penghargaan, ...dataToSend } = values;
+    const payloadForApi = {
+      ...dataToSend,
+      nama_penghargaan: dataToSend.nama_penghargaan || "",
+      no_sk: dataToSend.no_sk || "",
+      tanggal_sk: dataToSend.tanggal_sk || "",
+      keterangan: dataToSend.keterangan || "",
     };
+    mutate({ id: numericId, data: payloadForApi });
+  };
 
-    const onFormError = (errors: any) => {
-        console.error("Validation Errors:", errors);
-        toast.error("Gagal submit, periksa kembali isian form Anda.");
-    };
+  const onFormError = (errors: any) => {
+    console.error("Validation Errors:", errors);
+    toast.error("Gagal submit, periksa kembali isian form Anda.");
+  };
 
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmitData, onFormError)}>
-                <CustomCard
-                    actions={
-                        <div className="w-full flex flex-col gap-4 lg:flex-row justify-between">
-                            <div className="w-full lg:w-96 relative">
-                                <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2"/>
-                                <Input placeholder="Search" className="lg:w-96 w-full pr-8 text-xs sm:text-sm"/>
-                            </div>
-                            <div className="w-full flex flex-col lg:flex-row justify-end gap-2">
-                                <Link className="w-full xl:w-auto" to="/admin/operasional/kompensasi/penghargaan">
-                                    <Button type="button" className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm">
-                                        <IoIosArrowBack /> Kembali ke Daftar
-                                    </Button>
-                                </Link>
-                                <Button type="submit" className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm" disabled={isPending}>
-                                    <IoSaveSharp /> {isPending ? 'Menyimpan...' : 'Simpan'}
-                                </Button>
-                                <Button type="button" onClick={() => form.reset()} className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm">
-                                    <BiRefresh className="bg-[#FDA31A] rounded-full" /> Batal
-                                </Button>
-                                <Button type="button" className="bg-[#F56954] w-full xl:w-auto hover:bg-[#d45d4b] text-white text-xs sm:text-sm">
-                                    <FaRegTrashAlt /> Hapus
-                                </Button>
-                            </div>
-                        </div>
-                    }
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmitData, onFormError)}>
+        <CustomCard
+          actions={
+            <div className="w-full flex flex-col gap-4 lg:flex-row justify-between">
+              <div className="w-full lg:w-96 relative">
+                <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
+                <Input
+                  placeholder="Search"
+                  className="lg:w-96 w-full pr-8 text-xs sm:text-sm"
+                />
+              </div>
+              <div className="w-full flex flex-col lg:flex-row justify-end gap-2">
+                <Link
+                  className="w-full xl:w-auto"
+                  to="/admin/operasional/kompensasi/penghargaan"
                 >
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5">
-                        <div className="space-y-2">
-                            <FormFieldInput form={form} label="Pegawai" name="pegawai_id" required disabled/>
-                            <FormFieldInput form={form} label="Tgl Penghargaan" name="tanggal_penghargaan" required type="date"/>
-                            <FormFieldSelect form={form} label="Jenis Penghargaan" name="jenis_penghargaan" options={[{ value: "Dosen Berprestasi", label: "Dosen Berprestasi" }, { value: "Lainnya", label: "Lainnya" }]} required />
-                            <FormFieldInput form={form} label="Nama Penghargaan" name="nama_penghargaan"/>
-                        </div>
+                  <Button
+                    type="button"
+                    className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm"
+                  >
+                    <IoIosArrowBack /> Kembali ke Daftar
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm"
+                  disabled={isPending}
+                >
+                  <IoSaveSharp /> {isPending ? "Menyimpan..." : "Simpan"}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => form.reset()}
+                  className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm"
+                >
+                  <BiRefresh className="bg-[#FDA31A] rounded-full" /> Batal
+                </Button>
+                <Button
+                  type="button"
+                  className="bg-[#F56954] w-full xl:w-auto hover:bg-[#d45d4b] text-white text-xs sm:text-sm"
+                >
+                  <FaRegTrashAlt /> Hapus
+                </Button>
+              </div>
+            </div>
+          }
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5">
+            <div className="space-y-2">
+              <FormFieldInput
+                form={form}
+                label="Pegawai"
+                name="pegawai_id"
+                required
+                disabled
+              />
+              <FormFieldInput
+                form={form}
+                label="Tgl Penghargaan"
+                name="tanggal_penghargaan"
+                required
+                type="date"
+              />
+              <FormFieldSelect
+                form={form}
+                label="Jenis Penghargaan"
+                name="jenis_penghargaan"
+                options={[
+                  { value: "Dosen Berprestasi", label: "Dosen Berprestasi" },
+                  { value: "Lainnya", label: "Lainnya" },
+                ]}
+                required
+              />
+              <FormFieldInput
+                form={form}
+                label="Nama Penghargaan"
+                name="nama_penghargaan"
+              />
+            </div>
 
-                        <div className="space-y-2">
-                            <FormFieldInput form={form} label="No.SK" name="no_sk"/>
-                            <FormFieldInput form={form} label="Tgl.SK" name="tanggal_sk" type="date"/>
-                            <FormFieldInput form={form} label="Keterangan" name="keterangan" type="textarea"/>
-                            <FormFieldInputFile form={form} label="File Penghargaan" name="file_penghargaan"/>
-                            {initialData.file_penghargaan && (
-                                <a href={initialData.file_penghargaan} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline">
-                                    Lihat File Saat Ini
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                </CustomCard>
-            </form>
-        </Form>
-    );
+            <div className="space-y-2">
+              <FormFieldInput form={form} label="No.SK" name="no_sk" />
+              <FormFieldInput
+                form={form}
+                label="Tgl.SK"
+                name="tanggal_sk"
+                type="date"
+              />
+              <FormFieldInput
+                form={form}
+                label="Keterangan"
+                name="keterangan"
+                type="textarea"
+              />
+              <FormFieldInputFile
+                form={form}
+                label="File Penghargaan"
+                name="file_penghargaan"
+              />
+              {initialData.file_penghargaan && (
+                <a
+                  href={initialData.file_penghargaan}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 text-sm hover:underline"
+                >
+                  Lihat File Saat Ini
+                </a>
+              )}
+            </div>
+          </div>
+        </CustomCard>
+      </form>
+    </Form>
+  );
 };
 
 const EditDataPenghargaan = () => {
-    const params = useParams();
+  const params = useParams();
 
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ["default-value-penghargaan-admin", params.id],
-        queryFn: async () => {
-            if (!params.id) return null;
-            const response = await adminServices.getDetailPenghargaan(params.id);
-            return response.data;
-        },
-        enabled: !!params.id,
-    });
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["default-value-penghargaan-admin", params.id],
+    queryFn: async () => {
+      if (!params.id) return null;
+      const response = await adminServices.getDetailPenghargaan(params.id);
+      return response.data;
+    },
+    enabled: !!params.id,
+  });
 
-    if (isLoading) return (
-        <div className="mt-10 text-center">Memuat data untuk diedit...</div>
-    );
+  if (isLoading)
+    return <div className="mt-10 text-center">Memuat data untuk diedit...</div>;
 
-    if (isError) return (
-        <div className="mt-10 text-center text-red-500">Gagal memuat data. Silakan coba lagi.</div>
-    );
-
-    if (!data?.data) return (
-        <div className="mt-10 text-center">Data tidak ditemukan.</div>
-    )
-
+  if (isError)
     return (
-        <div className="mt-10 mb-20">
-            <Title title="Penghargaan" subTitle="Edit Detail Penghargaan" />
-            <PenghargaanForm initialData={data.data} />
-        </div>
+      <div className="mt-10 text-center text-red-500">
+        Gagal memuat data. Silakan coba lagi.
+      </div>
     );
+
+  if (!data?.data)
+    return <div className="mt-10 text-center">Data tidak ditemukan.</div>;
+
+  return (
+    <div className="mt-10 mb-20">
+      <Title title="Penghargaan" subTitle="Edit Detail Penghargaan" />
+      <PenghargaanForm initialData={data.data} />
+    </div>
+  );
 };
 
 export default EditDataPenghargaan;
