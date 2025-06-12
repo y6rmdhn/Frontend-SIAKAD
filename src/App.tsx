@@ -83,6 +83,7 @@ const IzinPage = lazy(() => import("./pages/operasional/pengajuan/Izin")); // As
 const BeritaOperasionalUserPage = lazy(() => import("./pages/operasional/berita"));
 const DetailDokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/detailDokumen"));
 const DokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/dokumen"));
+const DetailDataDokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/detaildataDokumen"));
 const KepegawaianHomebasePage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/homebase"));
 const KepegawaianPangkatPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/pangkat"));
 const KepegawaianJabatanAkademikPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/jabatanAkademik"));
@@ -298,6 +299,10 @@ function App() {
               Component={DetailDokumenInternalUserPage}
             />
             <Route path="dokumen-internal" Component={DokumenInternalUserPage} />
+            <Route
+              path="detail-data-dokumen-internal"
+              Component={DetailDataDokumenInternalUserPage}
+            />
 
             <Route path="pengajuan">
               <Route path="cuti" Component={CutiPage} />
