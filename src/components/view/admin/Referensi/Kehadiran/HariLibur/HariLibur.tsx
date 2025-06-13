@@ -41,7 +41,9 @@ const HariLibur = () => {
             actions={
               <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
                 <div className="w-full grid grid-rows-2 sm:flex">
-                  <Label className="w-60 sm:w-40 md:w-60 text-[#FDA31A] text-xs sm:text-sm">Unit Kerja</Label>
+                  <Label className="w-60 sm:w-40 md:w-60 text-[#FDA31A] text-xs sm:text-sm">
+                    Unit Kerja
+                  </Label>
                   <Select>
                     <SelectTrigger className="w-full sm:w-40 md:w-50 text-xs sm:text-sm">
                       <SelectValue placeholder="2025" />
@@ -67,16 +69,24 @@ const HariLibur = () => {
               </div>
             }
           >
-
-
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center text-xs sm:text-sm">Nama Hari Libur</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Tanggal Mulai</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Tanggal Selesai</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Keterangan</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Nama Hari Libur
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Tanggal Mulai
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Tanggal Selesai
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Keterangan
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Aksi
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">

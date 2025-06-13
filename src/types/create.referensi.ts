@@ -1,121 +1,126 @@
 interface IJenisTesPost {
-    kode: string;
-    jenis_tes: string;
-    nilai_minimal: number;
-    nilai_maksimal: number;
+  kode: string;
+  jenis_tes: string;
+  nilai_minimal: number;
+  nilai_maksimal: number;
 }
 
 interface IOutputPenelitianPost {
-    kode: string;
-    output_penelitian: string;
+  kode: string;
+  output_penelitian: string;
 }
 
 interface IJenisCutiPost {
-    kode: string;
-    nama_jenis_cuti: string;
-    standar_cuti: number;
-    format_nomor_surat: string;
-    keterangan: string;
+  kode: string;
+  nama_jenis_cuti: string;
+  standar_cuti: number;
+  format_nomor_surat: string;
+  keterangan: string;
 }
 
 interface IJabatanAkademikPost {
-    kode: string;
-    nama_jenis_cuti: string;
-    standar_cuti: number;
-    format_nomor_surat: string;
-    keterangan: string;
+  kode: string;
+  nama_jenis_cuti: string;
+  standar_cuti: number;
+  format_nomor_surat: string;
+  keterangan: string;
 }
 
 interface IJenisSk {
-    kode: string;
-    jenis_sk: string;
+  kode: string;
+  jenis_sk: string;
 }
 
 interface IStatusKeaktifan {
-    kode: string;
-    nama_status_aktif: string;
-    status_keluar: boolean;
+  kode: string;
+  nama_status_aktif: string;
+  status_keluar: boolean;
 }
 
 interface IStatusPangkat {
-    pangkat: string;
-    nama_golongan: string;
+  pangkat: string;
+  nama_golongan: string;
 }
 
 interface IStatusEselon {
-    kode: string;
-    nama_eselon: string;
-    status: boolean;
+  kode: string;
+  nama_eselon: string;
+  status: boolean;
 }
 
 interface IJamKerja {
-    jenis_jam_kerja: string,
-    jam_normal: boolean,
-    jam_datang: string,
-    jam_pulang: string,
+  jenis_jam_kerja: string;
+  jam_normal: boolean;
+  jam_datang: string;
+  jam_pulang: string;
 }
 
 interface IJenisSertifikasi {
-    kode: string,
-    nama_sertifikasi: string,
-    jenis_sertifikasi: string,
+  kode: string;
+  nama_sertifikasi: string;
+  jenis_sertifikasi: string;
 }
 
 interface IJenisLuaran {
-    kode: string,
-    jenis_luaran: string,
+  kode: string;
+  jenis_luaran: string;
 }
 
 interface IPengabdian {
-    kode: string,
-    nama_pkm: string,
+  kode: string;
+  nama_pkm: string;
 }
 
 interface IJenisPublikasi {
-    kode: string,
-    jenis_publikasi: string,
+  kode: string;
+  jenis_publikasi: string;
 }
 
 interface IJenisPelanggaran {
-    kode: string,
-    nama_pelanggaran: string,
+  kode: string;
+  nama_pelanggaran: string;
 }
 
 interface IJabatanAkademik {
-    kode: string,
-    nama_pelanggaran: string,
+  kode: string;
+  nama_pelanggaran: string;
 }
 
 interface IMediaPublikasi {
-    nama: string,
+  nama: string;
 }
 
 interface IPenghargaan {
-    jenis_penghargaan: string,
-    nama_penghargaan: string,
-    no_sk: string,
-    tanggal_sk: string,
-    tanggal_penghargaan: string,
-    keterangan: string,
+  jenis_penghargaan: string;
+  nama_penghargaan: string;
+  no_sk: string;
+  tanggal_sk: string;
+  tanggal_penghargaan: string;
+  keterangan: string;
 }
 
+interface IJenisPenghargaan {
+  kode: string;
+  nama: string;
+}
 
 export type {
-    IJenisTesPost,
-    IOutputPenelitianPost,
-    IJenisCutiPost,
-    IJabatanAkademikPost,
-    IJenisSk,
-    IStatusKeaktifan,
-    IStatusPangkat,
-    IStatusEselon,
-    IJamKerja,
-    IJenisLuaran,
-    IJenisSertifikasi,
-    IPengabdian,
-    IJenisPublikasi,
-    IJenisPelanggaran,
-    IJabatanAkademik,
-    IMediaPublikasi,
-    IPenghargaan,
+  IJenisTesPost,
+  IOutputPenelitianPost,
+  IJenisCutiPost,
+  IJabatanAkademikPost,
+  IJenisSk,
+  IStatusKeaktifan,
+  IStatusPangkat,
+  IStatusEselon,
+  IJamKerja,
+  IJenisLuaran,
+  IJenisSertifikasi,
+  IPengabdian,
+  IJenisPublikasi,
+  IJenisPelanggaran,
+  IJabatanAkademik,
+  IMediaPublikasi,
+  IPenghargaan,
+  IJenisPenghargaan,
 };

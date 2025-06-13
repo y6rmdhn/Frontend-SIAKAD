@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 
 // --- AWAL KONVERSI IMPOR ---
@@ -7,245 +7,844 @@ const LoginPage = lazy(() => import("./pages/auth/login"));
 const DasboardPage = lazy(() => import("./pages/admin/dasboard"));
 const PegawaiPage = lazy(() => import("./pages/admin/pegawai"));
 const DataPegawaiPage = lazy(() => import("./pages/admin/dataPegawai"));
-const HubunganKerjaPegawaiPage = lazy(() => import("./pages/admin/operasional/hubunganKerjaPegawai"));
-const SettingKehadiranPage = lazy(() => import("./pages/admin/operasional/kehadiran/settingKehadiran"));
-const ShiftKerjaPage = lazy(() => import("./pages/admin/operasional/kehadiran/shiftKerja"));
-const DataShiftKerjaPage = lazy(() => import("./pages/admin/operasional/kehadiran/dataShiftKerja"));
-const DaftarMonitoringKehadiranPage = lazy(() => import("./pages/admin/operasional/kehadiran/daftarMonitoringKehadiran"));
-const RekapKehadiranPage = lazy(() => import("./pages/admin/operasional/kehadiran/rekapKehadiran"));
-const InputKehadiranPage = lazy(() => import("./pages/admin/operasional/kehadiran/InputKehadiran"));
-const MonitoringRekapKehadiranPage = lazy(() => import("./pages/admin/operasional/monitoringKegiatan"));
-const MonitoringSisaCutiPage = lazy(() => import("./pages/admin/operasional/cuti/monitoringSisaCuti"));
-const PermohonanIzinPage = lazy(() => import("./pages/admin/operasional/cuti/permohonanIzin"));
-const PeriodeCutiPage = lazy(() => import("./pages/admin/operasional/cuti/periodeCuti"));
-const PermohonanCutiPage = lazy(() => import("./pages/admin/operasional/cuti/permohonanCuti"));
-const PelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/pelanggaran"));
-const DetailRiwayatPelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran"));
-const DetailDataPelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/pelanggaran/detaildataPelanggaran"));
-const EditDataPelanggaranPage = lazy(() => import("./pages/admin/operasional/kompensasi/pelanggaran/editdataPelanggaran"));
+const HubunganKerjaPegawaiPage = lazy(
+  () => import("./pages/admin/operasional/hubunganKerjaPegawai")
+);
+const SettingKehadiranPage = lazy(
+  () => import("./pages/admin/operasional/kehadiran/settingKehadiran")
+);
+const ShiftKerjaPage = lazy(
+  () => import("./pages/admin/operasional/kehadiran/shiftKerja")
+);
+const DataShiftKerjaPage = lazy(
+  () => import("./pages/admin/operasional/kehadiran/dataShiftKerja")
+);
+const DaftarMonitoringKehadiranPage = lazy(
+  () => import("./pages/admin/operasional/kehadiran/daftarMonitoringKehadiran")
+);
+const RekapKehadiranPage = lazy(
+  () => import("./pages/admin/operasional/kehadiran/rekapKehadiran")
+);
+const InputKehadiranPage = lazy(
+  () => import("./pages/admin/operasional/kehadiran/InputKehadiran")
+);
+const MonitoringRekapKehadiranPage = lazy(
+  () => import("./pages/admin/operasional/monitoringKegiatan")
+);
+const MonitoringSisaCutiPage = lazy(
+  () => import("./pages/admin/operasional/cuti/monitoringSisaCuti")
+);
+const PermohonanIzinPage = lazy(
+  () => import("./pages/admin/operasional/cuti/permohonanIzin")
+);
+const PeriodeCutiPage = lazy(
+  () => import("./pages/admin/operasional/cuti/periodeCuti")
+);
+const PermohonanCutiPage = lazy(
+  () => import("./pages/admin/operasional/cuti/permohonanCuti")
+);
+const PelanggaranPage = lazy(
+  () => import("./pages/admin/operasional/kompensasi/pelanggaran")
+);
+const DetailRiwayatPelanggaranPage = lazy(
+  () => import("./pages/admin/operasional/kompensasi/detailRiwayatPelanggaran")
+);
+const DetailDataPelanggaranPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/pelanggaran/detaildataPelanggaran"
+    )
+);
+const EditDataPelanggaranPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/pelanggaran/editdataPelanggaran"
+    )
+);
 const DasboardPageUser = lazy(() => import("./pages/dasboard")); // Asumsi ini untuk user
 const RiwayatKehadiranPage = lazy(() => import("./pages/riwayatKehadiran")); // Asumsi ini untuk user
 const ModulePage = lazy(() => import("./pages/module"));
 const ProfilPage = lazy(() => import("./pages/profil"));
-const RiwayatPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan"));
-const DetailPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan"));
-const DetailDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/detaildataPenghargaan"));
-const EditDataPenghargaanPage = lazy(() => import("./pages/admin/operasional/kompensasi/penghargaan/editdataPenghargaan"));
-const DokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal"));
-const DetailDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/detailDokumenInternal"));
-const DetailDataDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal/detaildataDokumenInternal"));
-const EditDataDokumenInternalPage = lazy(() => import("./pages/admin/operasional/kompensasi/dokumenInternal/editdataDokumenInternal"));
-const SettingValidasiPage = lazy(() => import("./pages/admin/validasiData/settingValidasi"));
+const RiwayatPenghargaanPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/penghargaan/riwayatPenghargaan"
+    )
+);
+const DetailPenghargaanPage = lazy(
+  () =>
+    import("./pages/admin/operasional/kompensasi/penghargaan/detailPenghargaan")
+);
+const DetailDataPenghargaanPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/penghargaan/detaildataPenghargaan"
+    )
+);
+const EditDataPenghargaanPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/penghargaan/editdataPenghargaan"
+    )
+);
+const DokumenInternalPage = lazy(
+  () => import("./pages/admin/operasional/kompensasi/dokumenInternal")
+);
+const DetailDokumenInternalPage = lazy(
+  () => import("./pages/admin/operasional/kompensasi/detailDokumenInternal")
+);
+const DetailDataDokumenInternalPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/dokumenInternal/detaildataDokumenInternal"
+    )
+);
+const EditDataDokumenInternalPage = lazy(
+  () =>
+    import(
+      "./pages/admin/operasional/kompensasi/dokumenInternal/editdataDokumenInternal"
+    )
+);
+const SettingValidasiPage = lazy(
+  () => import("./pages/admin/validasiData/settingValidasi")
+);
 const KeluargaPage = lazy(() => import("./pages/admin/validasiData/keluarga"));
-const MonitoringPage = lazy(() => import("./pages/admin/validasiData/monitoring"));
-const HomebasePage = lazy(() => import("./pages/admin/validasiData/kepegawaian/homebase"));
-const HubunganKerjaKepegawaianPage = lazy(() => import("./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian"));
-const JabatanAkademikPage = lazy(() => import("./pages/admin/validasiData/kepegawaian/jabatanAkademik"));
-const JabatanFungionalPage = lazy(() => import("./pages/admin/validasiData/kepegawaian/jabatanFungsional")); // Typo: Fungsional
-const JabatanStrukturalPage = lazy(() => import("./pages/admin/validasiData/kepegawaian/jabatanStruktural"));
-const PangkatPage = lazy(() => import("./pages/admin/validasiData/kepegawaian/pangkat"));
-const SertifikasiPage = lazy(() => import("./pages/admin/validasiData/kompetensi/sertifikasi"));
+const MonitoringPage = lazy(
+  () => import("./pages/admin/validasiData/monitoring")
+);
+const HomebasePage = lazy(
+  () => import("./pages/admin/validasiData/kepegawaian/homebase")
+);
+const HubunganKerjaKepegawaianPage = lazy(
+  () =>
+    import("./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian")
+);
+const JabatanAkademikPage = lazy(
+  () => import("./pages/admin/validasiData/kepegawaian/jabatanAkademik")
+);
+const JabatanFungionalPage = lazy(
+  () => import("./pages/admin/validasiData/kepegawaian/jabatanFungsional")
+); // Typo: Fungsional
+const JabatanStrukturalPage = lazy(
+  () => import("./pages/admin/validasiData/kepegawaian/jabatanStruktural")
+);
+const PangkatPage = lazy(
+  () => import("./pages/admin/validasiData/kepegawaian/pangkat")
+);
+const SertifikasiPage = lazy(
+  () => import("./pages/admin/validasiData/kompetensi/sertifikasi")
+);
 const TesPage = lazy(() => import("./pages/admin/validasiData/kompetensi/tes"));
-const BahanAjarPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPendidikan/bahanAjar"));
-const DataseringPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPendidikan/datasering"));
-const OrasiIlmiahPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPendidikan/orasiIlmiah"));
-const TugasTambahanPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPendidikan/tugasTambahan"));
-const PatenPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPenelitian/paten"));
-const PenelitianPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPenelitian/penelitian"));
-const PublikasiPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPenelitian/publikasi"));
-const JabatanStrukturalKepegawaianPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPengabdian/jabatanStruktural"));
-const PembicaraPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPengabdian/pembicara"));
-const PengabdianPage = lazy(() => import("./pages/admin/validasiData/pelaksanaanPengabdian/pengabdian"));
-const KemampuanBahasaPage = lazy(() => import("./pages/admin/validasiData/pengembangan/kemampuanBahasa"));
-const OrganisasiPage = lazy(() => import("./pages/admin/validasiData/pengembangan/organisasi"));
-const OrganisasiPenunjangPage = lazy(() => import("./pages/admin/validasiData/penunjang/organisasi"));
-const PenghargaanPenunjangPage = lazy(() => import("./pages/admin/validasiData/penunjang/penghargaan"));
-const PenunjangLainPage = lazy(() => import("./pages/admin/validasiData/penunjang/penunjangLain"));
+const BahanAjarPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPendidikan/bahanAjar")
+);
+const DataseringPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPendidikan/datasering")
+);
+const OrasiIlmiahPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPendidikan/orasiIlmiah")
+);
+const TugasTambahanPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPendidikan/tugasTambahan")
+);
+const PatenPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPenelitian/paten")
+);
+const PenelitianPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPenelitian/penelitian")
+);
+const PublikasiPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPenelitian/publikasi")
+);
+const JabatanStrukturalKepegawaianPage = lazy(
+  () =>
+    import("./pages/admin/validasiData/pelaksanaanPengabdian/jabatanStruktural")
+);
+const PembicaraPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPengabdian/pembicara")
+);
+const PengabdianPage = lazy(
+  () => import("./pages/admin/validasiData/pelaksanaanPengabdian/pengabdian")
+);
+const KemampuanBahasaPage = lazy(
+  () => import("./pages/admin/validasiData/pengembangan/kemampuanBahasa")
+);
+const OrganisasiPage = lazy(
+  () => import("./pages/admin/validasiData/pengembangan/organisasi")
+);
+const OrganisasiPenunjangPage = lazy(
+  () => import("./pages/admin/validasiData/penunjang/organisasi")
+);
+const PenghargaanPenunjangPage = lazy(
+  () => import("./pages/admin/validasiData/penunjang/penghargaan")
+);
+const PenunjangLainPage = lazy(
+  () => import("./pages/admin/validasiData/penunjang/penunjangLain")
+);
 const KegiatanHarianPage = lazy(() => import("./pages/kegiatanHarian")); // Asumsi ini untuk user
-const JenisLuaranPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisLuaran"));
-const JenisPelanggaranReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisPelanggaran"));
-const JenisPengabdianReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisPengabdian"));
-const JenisPenghargaanReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisPenghargaan"));
-const JenisPublikasiReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisPublikasi"));
-const JenisSertifikasiReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisSertifikasi"));
-const JenisTesReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/jenisTes"));
-const OutputPenelitianReferensiPage = lazy(() => import("./pages/admin/referensi/aktifitas/outputPenelitian"));
-const JamKerjaReferensiPage = lazy(() => import("./pages/admin/referensi/kehadiran/jamKerja"));
-const JenisCutiReferensiPage = lazy(() => import("./pages/admin/referensi/kehadiran/jenisCuti"));
-const JenisHariReferensiPage = lazy(() => import("./pages/admin/referensi/kehadiran/jenisHari"));
-const JenisIzinReferensiPage = lazy(() => import("./pages/admin/referensi/kehadiran/jenisIzin"));
-const JenisKehadiranReferensiPage = lazy(() => import("./pages/admin/referensi/kehadiran/jenisKehadiran"));
-const HariLiburReferensiPage = lazy(() => import("./pages/admin/referensi/kehadiran/hariLibur"));
+const JenisLuaranPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisLuaran")
+);
+const JenisPelanggaranReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisPelanggaran")
+);
+const JenisPengabdianReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisPengabdian")
+);
+const JenisPenghargaanReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisPenghargaan")
+);
+const JenisPublikasiReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisPublikasi")
+);
+const JenisSertifikasiReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisSertifikasi")
+);
+const JenisTesReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/jenisTes")
+);
+const OutputPenelitianReferensiPage = lazy(
+  () => import("./pages/admin/referensi/aktifitas/outputPenelitian")
+);
+const JamKerjaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kehadiran/jamKerja")
+);
+const JenisCutiReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kehadiran/jenisCuti")
+);
+const JenisHariReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kehadiran/jenisHari")
+);
+const JenisIzinReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kehadiran/jenisIzin")
+);
+const JenisKehadiranReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kehadiran/jenisKehadiran")
+);
+const HariLiburReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kehadiran/hariLibur")
+);
 const BiodataPage = lazy(() => import("./pages/admin/DetailPegawai/Biodata")); // Perhatikan ada duplikasi nama, pastikan path unik atau rename
-const DetailKeluargaPage = lazy(() => import("./pages/admin/DetailPegawai/Keluarga"));
+const DetailKeluargaPage = lazy(
+  () => import("./pages/admin/DetailPegawai/Keluarga")
+);
 const CutiPage = lazy(() => import("./pages/operasional/pengajuan/cuti")); // Asumsi ini untuk user
 const IzinPage = lazy(() => import("./pages/operasional/pengajuan/Izin")); // Asumsi ini untuk user
-const BeritaOperasionalUserPage = lazy(() => import("./pages/operasional/berita"));
-const DetailDokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/detailDokumen"));
-const DokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/dokumen"));
-const DetailDataDokumenInternalUserPage = lazy(() => import("./pages/operasional/dokumenInternal/detaildataDokumen"));
-const KepegawaianHomebasePage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/homebase"));
-const KepegawaianPangkatPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/pangkat"));
-const KepegawaianJabatanAkademikPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/jabatanAkademik"));
-const KepegawaianJabatanFungsionalPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/jabatanFungsional"));
-const KepegawaianJabatanStrukturalPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/jabatanStruktural"));
-const KepegawaianHubunganKerjaPage = lazy(() => import("./pages/admin/DetailPegawai/kepegawaian/hubunganKerja"));
-const KepegawaianPendidikanFormalPage = lazy(() => import("./pages/admin/DetailPegawai/kualifikasi/pendidikanFormal"));
-const KepegawaianDiklatPage = lazy(() => import("./pages/admin/DetailPegawai/kualifikasi/diklat"));
-const KepegawaianRiwayatPekerjaanPage = lazy(() => import("./pages/admin/DetailPegawai/kualifikasi/riwayatPekerjaan"));
-const KepegawaianRiwayatSertifikasiPage = lazy(() => import("./pages/admin/DetailPegawai/kompetensi/riwayatSertifikasi"));
-const KepegawaianRiwayatTesPage = lazy(() => import("./pages/admin/DetailPegawai/kompetensi/riwayatTes"));
-const KepegawaianPresensiPage = lazy(() => import("./pages/admin/DetailPegawai/presensi"));
-const KepegawaianPengajaranPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/pengajaran"));
-const KepegawaianBimbinganMahasiswaPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/bimbingan"));
-const KepegawaianTugasTambahanPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/tugasTambahan"));
-const KepegawaianPengujianMahasiswaPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/pengujianMahasiswa"));
-const KepegawaianVisitingscientistPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/visitingscientist"));
-const KepegawaianPembinaanMahasiswaPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/pembinaanMahasiswa"));
-const KepegawaianDataseringPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/datasering"));
-const KepegawaianBahanAjarPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/bahanAjar"));
-const KepegawaianOrasiIlmiahPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/orasiIlmiah"));
-const KepegawaianPembimbingDosenPage = lazy(() => import("./pages/admin/DetailPegawai/pendidikan/pembimbingDosen"));
-const KepegawaianPenelitianPage = lazy(() => import("./pages/admin/DetailPegawai/penelitian/penelitian"));
-const KepegawaianPublikasiPage = lazy(() => import("./pages/admin/DetailPegawai/penelitian/publikasi"));
-const KepegawaianPatenHkiPage = lazy(() => import("./pages/admin/DetailPegawai/penelitian/patenHki"));
-const KepegawaianPengabdianPage = lazy(() => import("./pages/admin/DetailPegawai/pengabdian/pengabdian"));
-const KepegawaianPengelolaJurnalPage = lazy(() => import("./pages/admin/DetailPegawai/pengabdian/pengelolaJurnal"));
-const KepegawaianPembicaraPage = lazy(() => import("./pages/admin/DetailPegawai/pengabdian/pembicara"));
-const KepegawaianJabatanTugasPage = lazy(() => import("./pages/admin/DetailPegawai/pengabdian/jabatanTugas"));
-const KepegawaianAnggotaProfesiPage = lazy(() => import("./pages/admin/DetailPegawai/penunjang/anggotaProfesi"));
-const KepegawaianPenghargaanPage = lazy(() => import("./pages/admin/DetailPegawai/penunjang/penghargaan"));
-const KepegawaianPenunjangLainPage = lazy(() => import("./pages/admin/DetailPegawai/penunjang/penunjangLain"));
-const KepegawaianOrganisasiPage = lazy(() => import("./pages/admin/DetailPegawai/pengembangan/organisasi"));
-const KepegawaianKemampuanBahasaPage = lazy(() => import("./pages/admin/DetailPegawai/pengembangan/kemampuanBahasa"));
-const KepegawaianKompensasiPage = lazy(() => import("./pages/admin/DetailPegawai/kompensasi"));
-const KepegawaianCutiPage = lazy(() => import("./pages/admin/DetailPegawai/permohonan/cuti"));
-const KepegawaianIzinPage = lazy(() => import("./pages/admin/DetailPegawai/permohonan/izin"));
-const ElesonPage = lazy(() => import("./pages/admin/referensi/kepegawaian/eleson"));
-const GelarAkademikPage = lazy(() => import("./pages/admin/referensi/kepegawaian/gelarAkademik"));
-const HubunganKerjaReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/hubunganKerja"));
-const JabatanAkademikReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jabatanAkademik"));
-const JabatanFungsionalReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jabatanFungsional"));
-const JabatanStrukturalReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jabatanStruktural"));
-const DetailJabatanFungsionalReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jabatanFungsional/detailJabatanFungsional"));
-const DetailJabatanStrukturalReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jabatanStruktural/detailJabatanStruktural"));
-const JenisKenaikanPangkatReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jenisKenaikanPangkat"));
-const JenisSkReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/jenisSK"));
-const MediaPublikasiReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/mediaPublikasi"));
-const PangkatReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/pangkat"));
-const RumpunBidangIlmuReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/rumpunBidangIlmu"));
-const StatusKeaktifanReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/statusKeaktifan"));
-const UnitKerjaReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/unitKerja"));
-const DetailUnitKerjaReferensiPage = lazy(() => import("./pages/admin/referensi/kepegawaian/unitKerja/detailUnitKerja"));
-const KotaReferensiPage = lazy(() => import("./pages/admin/referensi/wilayah/kota"));
-const KecamatanReferensiPage = lazy(() => import("./pages/admin/referensi/wilayah/kecamatan"));
-const NegaraReferensiPage = lazy(() => import("./pages/admin/referensi/wilayah/negara"));
-const ProvinsiReferensiPage = lazy(() => import("./pages/admin/referensi/wilayah/provinsi"));
-const HomebaseUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/homebase"));
-const JabatanAkademikUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanAkademik"));
-const PangkatUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/pangkat"));
-const PendidikanFormalUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/pendidikanFormal"));
-const DiklatUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/diklat"));
-const RiwayatPekerjaanUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/riwayatPekerjaan"));
-const DetailPangkatUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/pangkat/detailPangkat"));
-const DetailDataPangkatUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/pangkat/detaildataPangkat"));
-const DetailJabatanAkademikUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanAkademik/detailJabatanAkademik"));
-const DetailDataJabatanAkademikUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanAkademik/detaildataJabatanAkademik"));
-const DetailPendidikanFormalUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/pendidikanFormal/detailPendidikanFormal"));
-const DetailDiklatUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/diklat/detailDiklat"));
-const DetailRiwayatPekerjaanUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detailRiwayatPekerjaan"));
-const DetailDataRiwayatPekerjaanUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detaildataRiwayatPekerjaan"));
-const DetailDataDiklatUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/diklat/detaildataDiklat"));
-const DetailDataPendidikanFormalUserPage = lazy(() => import("./pages/dataRiwayat/kualifikasi/pendidikanFormal/detaildataPendidikanFormal"));
+const BeritaOperasionalUserPage = lazy(
+  () => import("./pages/operasional/berita")
+);
+const DetailDokumenInternalUserPage = lazy(
+  () => import("./pages/operasional/dokumenInternal/detailDokumen")
+);
+const DokumenInternalUserPage = lazy(
+  () => import("./pages/operasional/dokumenInternal/dokumen")
+);
+const DetailDataDokumenInternalUserPage = lazy(
+  () => import("./pages/operasional/dokumenInternal/detaildataDokumen")
+);
+const KepegawaianHomebasePage = lazy(
+  () => import("./pages/admin/DetailPegawai/kepegawaian/homebase")
+);
+const KepegawaianPangkatPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kepegawaian/pangkat")
+);
+const KepegawaianJabatanAkademikPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kepegawaian/jabatanAkademik")
+);
+const KepegawaianJabatanFungsionalPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kepegawaian/jabatanFungsional")
+);
+const KepegawaianJabatanStrukturalPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kepegawaian/jabatanStruktural")
+);
+const KepegawaianHubunganKerjaPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kepegawaian/hubunganKerja")
+);
+const KepegawaianPendidikanFormalPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kualifikasi/pendidikanFormal")
+);
+const KepegawaianDiklatPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kualifikasi/diklat")
+);
+const KepegawaianRiwayatPekerjaanPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kualifikasi/riwayatPekerjaan")
+);
+const KepegawaianRiwayatSertifikasiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kompetensi/riwayatSertifikasi")
+);
+const KepegawaianRiwayatTesPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kompetensi/riwayatTes")
+);
+const KepegawaianPresensiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/presensi")
+);
+const KepegawaianPengajaranPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/pengajaran")
+);
+const KepegawaianBimbinganMahasiswaPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/bimbingan")
+);
+const KepegawaianTugasTambahanPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/tugasTambahan")
+);
+const KepegawaianPengujianMahasiswaPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/pengujianMahasiswa")
+);
+const KepegawaianVisitingscientistPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/visitingscientist")
+);
+const KepegawaianPembinaanMahasiswaPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/pembinaanMahasiswa")
+);
+const KepegawaianDataseringPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/datasering")
+);
+const KepegawaianBahanAjarPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/bahanAjar")
+);
+const KepegawaianOrasiIlmiahPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/orasiIlmiah")
+);
+const KepegawaianPembimbingDosenPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pendidikan/pembimbingDosen")
+);
+const KepegawaianPenelitianPage = lazy(
+  () => import("./pages/admin/DetailPegawai/penelitian/penelitian")
+);
+const KepegawaianPublikasiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/penelitian/publikasi")
+);
+const KepegawaianPatenHkiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/penelitian/patenHki")
+);
+const KepegawaianPengabdianPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pengabdian/pengabdian")
+);
+const KepegawaianPengelolaJurnalPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pengabdian/pengelolaJurnal")
+);
+const KepegawaianPembicaraPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pengabdian/pembicara")
+);
+const KepegawaianJabatanTugasPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pengabdian/jabatanTugas")
+);
+const KepegawaianAnggotaProfesiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/penunjang/anggotaProfesi")
+);
+const KepegawaianPenghargaanPage = lazy(
+  () => import("./pages/admin/DetailPegawai/penunjang/penghargaan")
+);
+const KepegawaianPenunjangLainPage = lazy(
+  () => import("./pages/admin/DetailPegawai/penunjang/penunjangLain")
+);
+const KepegawaianOrganisasiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pengembangan/organisasi")
+);
+const KepegawaianKemampuanBahasaPage = lazy(
+  () => import("./pages/admin/DetailPegawai/pengembangan/kemampuanBahasa")
+);
+const KepegawaianKompensasiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/kompensasi")
+);
+const KepegawaianCutiPage = lazy(
+  () => import("./pages/admin/DetailPegawai/permohonan/cuti")
+);
+const KepegawaianIzinPage = lazy(
+  () => import("./pages/admin/DetailPegawai/permohonan/izin")
+);
+const ElesonPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/eleson")
+);
+const GelarAkademikPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/gelarAkademik")
+);
+const HubunganKerjaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/hubunganKerja")
+);
+const JabatanAkademikReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/jabatanAkademik")
+);
+const JabatanFungsionalReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/jabatanFungsional")
+);
+const JabatanStrukturalReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/jabatanStruktural")
+);
+const DetailJabatanFungsionalReferensiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/referensi/kepegawaian/jabatanFungsional/detailJabatanFungsional"
+    )
+);
+const DetailJabatanStrukturalReferensiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/referensi/kepegawaian/jabatanStruktural/detailJabatanStruktural"
+    )
+);
+const JenisKenaikanPangkatReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/jenisKenaikanPangkat")
+);
+const JenisSkReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/jenisSK")
+);
+const MediaPublikasiReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/mediaPublikasi")
+);
+const PangkatReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/pangkat")
+);
+const RumpunBidangIlmuReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/rumpunBidangIlmu")
+);
+const StatusKeaktifanReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/statusKeaktifan")
+);
+const UnitKerjaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/unitKerja")
+);
+const DetailUnitKerjaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/unitKerja/detailUnitKerja")
+);
+const KotaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/wilayah/kota")
+);
+const KecamatanReferensiPage = lazy(
+  () => import("./pages/admin/referensi/wilayah/kecamatan")
+);
+const NegaraReferensiPage = lazy(
+  () => import("./pages/admin/referensi/wilayah/negara")
+);
+const ProvinsiReferensiPage = lazy(
+  () => import("./pages/admin/referensi/wilayah/provinsi")
+);
+const HomebaseUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/homebase")
+);
+const JabatanAkademikUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/jabatanAkademik")
+);
+const PangkatUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/pangkat")
+);
+const PendidikanFormalUserPage = lazy(
+  () => import("./pages/dataRiwayat/kualifikasi/pendidikanFormal")
+);
+const DiklatUserPage = lazy(
+  () => import("./pages/dataRiwayat/kualifikasi/diklat")
+);
+const RiwayatPekerjaanUserPage = lazy(
+  () => import("./pages/dataRiwayat/kualifikasi/riwayatPekerjaan")
+);
+const DetailPangkatUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/pangkat/detailPangkat")
+);
+const DetailDataPangkatUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/pangkat/detaildataPangkat")
+);
+const DetailJabatanAkademikUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/jabatanAkademik/detailJabatanAkademik"
+    )
+);
+const DetailDataJabatanAkademikUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/jabatanAkademik/detaildataJabatanAkademik"
+    )
+);
+const DetailPendidikanFormalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kualifikasi/pendidikanFormal/detailPendidikanFormal"
+    )
+);
+const DetailDiklatUserPage = lazy(
+  () => import("./pages/dataRiwayat/kualifikasi/diklat/detailDiklat")
+);
+const DetailRiwayatPekerjaanUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detailRiwayatPekerjaan"
+    )
+);
+const DetailDataRiwayatPekerjaanUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kualifikasi/riwayatPekerjaan/detaildataRiwayatPekerjaan"
+    )
+);
+const DetailDataDiklatUserPage = lazy(
+  () => import("./pages/dataRiwayat/kualifikasi/diklat/detaildataDiklat")
+);
+const DetailDataPendidikanFormalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kualifikasi/pendidikanFormal/detaildataPendidikanFormal"
+    )
+);
 const ForgetPasswordPage = lazy(() => import("./pages/auth/forgetPassword"));
-const JabatanFungsionalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional")); // Perhatikan path 'jabatanfungsional'
-const DetailJabatanFungsionalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional/detailJabatanFungsional"));
-const DetailDataJabatanFungsionalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional/detaildataJabatanFungsional"));
-const JabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular")); // Perhatikan path 'jabatanStruktular'
-const DetailJabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular/detailJabatanStruktural"));
-const DetailDataJabatanStrukturalUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular/detaildataJabatanStruktural"));
-const BahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar"));
-const DetailBahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detailBahanAjar"));
-const DetailDataBahanAjarUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detaildataBahanAjar"));
-const DataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering"));
-const DetailDataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detailDatasering"));
-const DetailDataDataseringUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detaildataDatasering"));
-const OrasiIlmiahUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah"));
-const DetailOrasiIlmiahUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detailOrasiIlmiah"));
-const DetailDataOrasiIlmiahUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detaildataOrasiIlmiah"));
-const BimbinganMahasiswaUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/bimbinganMahasiswa"));
-const PembimbingDosenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen"));
-const PembinaanMahasiswaUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembinaanMahasiswa"));
-const PengajaranUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pengajaran"));
-const PengujianMahasiswaUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pengujianMahasiswa"));
-const TugasTambahanUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan"));
-const VisitingScientistUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist"));
-const DetailTugasTambahanUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detailTugasTambahan"));
-const DetailDataTugasTambahanUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detaildataTugastambahan"));
-const DetailVisitingScientistUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detailVisitingScientist"));
-const DetailDataVisitingScientistUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detaildataVisitingScientist"));
-const DetailPembimbingDosenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detailPembimbingDosen"));
-const DetailDataPembimbingDosenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detaildataPembimbingDosen"));
-const SertifikasiUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Sertifikasi"));
-const DetailSertifikasiUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Sertifikasi/detailSertifikasi"));
-const DetailDataSertifikasiUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Sertifikasi/detaildataSertifikasi"));
+const JabatanFungsionalUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/jabatanfungsional")
+); // Perhatikan path 'jabatanfungsional'
+const DetailJabatanFungsionalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/jabatanfungsional/detailJabatanFungsional"
+    )
+);
+const DetailDataJabatanFungsionalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/jabatanfungsional/detaildataJabatanFungsional"
+    )
+);
+const JabatanStrukturalUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/jabatanStruktular")
+); // Perhatikan path 'jabatanStruktular'
+const DetailJabatanStrukturalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/jabatanStruktular/detailJabatanStruktural"
+    )
+);
+const DetailDataJabatanStrukturalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/jabatanStruktular/detaildataJabatanStruktural"
+    )
+);
+const BahanAjarUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar")
+);
+const DetailBahanAjarUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detailBahanAjar"
+    )
+);
+const DetailDataBahanAjarUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/bahanAjar/detaildataBahanAjar"
+    )
+);
+const DataseringUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/datasering")
+);
+const DetailDataseringUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detailDatasering"
+    )
+);
+const DetailDataDataseringUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/datasering/detaildataDatasering"
+    )
+);
+const OrasiIlmiahUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah")
+);
+const DetailOrasiIlmiahUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detailOrasiIlmiah"
+    )
+);
+const DetailDataOrasiIlmiahUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/orasiIlmiah/detaildataOrasiIlmiah"
+    )
+);
+const BimbinganMahasiswaUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/bimbinganMahasiswa")
+);
+const PembimbingDosenUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen")
+);
+const PembinaanMahasiswaUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/pembinaanMahasiswa")
+);
+const PengajaranUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/pengajaran")
+);
+const PengujianMahasiswaUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/pengujianMahasiswa")
+);
+const TugasTambahanUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan")
+);
+const VisitingScientistUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist")
+);
+const DetailTugasTambahanUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detailTugasTambahan"
+    )
+);
+const DetailDataTugasTambahanUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/tugasTambahan/detaildataTugastambahan"
+    )
+);
+const DetailVisitingScientistUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detailVisitingScientist"
+    )
+);
+const DetailDataVisitingScientistUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/visitingScientist/detaildataVisitingScientist"
+    )
+);
+const DetailPembimbingDosenUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detailPembimbingDosen"
+    )
+);
+const DetailDataPembimbingDosenUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPendidikan/pembimbingDosen/detaildataPembimbingDosen"
+    )
+);
+const SertifikasiUserPage = lazy(
+  () => import("./pages/dataRiwayat/Kompetensi/Sertifikasi")
+);
+const DetailSertifikasiUserPage = lazy(
+  () => import("./pages/dataRiwayat/Kompetensi/Sertifikasi/detailSertifikasi")
+);
+const DetailDataSertifikasiUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/Kompetensi/Sertifikasi/detaildataSertifikasi")
+);
 const TesUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Tes"));
-const DetailTesUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Tes/detailTes"));
-const DetailDataTesUserPage = lazy(() => import("./pages/dataRiwayat/Kompetensi/Tes/detaildataTes"));
-const PatenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten"));
-const DetailPatenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detailPaten"));
-const DetailDataPatenUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detaildataPaten"));
-const PenelitianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian"));
-const DetailPenelitianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detailPenelitian"));
-const DetailDataPenelitianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detaildataPenelitian"));
-const PublikasiUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi"));
-const DetailPublikasiUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detailPublikasi"));
-const DetailDataPublikasiUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detaildataPublikasi"));
-const KemampuanBahasaUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa"));
-const DetailKemampuanBahasaUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa"));
-const DetailDataKemampuanBahasaUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detaildataKemampuanBahasa"));
-const OrganisasiUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/Organisasi"));
-const DetailOrganisasiUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/Organisasi/detailOrganisasi"));
-const DetailDataOrganisasiUserPage = lazy(() => import("./pages/dataRiwayat/PengembanganDiri/Organisasi/detaildataOrganisasi"));
-const PelanggaranUserPage = lazy(() => import("./pages/dataRiwayat/Kompensasi/Pelanggaran")); // Ada duplikasi nama, beri alias _User
-const HubunganKerjaUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/hubunganKerja"));
-const DetailHubunganKerjaUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja"));
-const DetailDataHubunganKerjaUserPage = lazy(() => import("./pages/dataRiwayat/kepegawaian/hubunganKerja/detaildataHubunganKerja"));
-const PengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian"));
-const DetailPengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian"));
-const DetailDataPengabdianUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/detaildataPengabdian"));
+const DetailTesUserPage = lazy(
+  () => import("./pages/dataRiwayat/Kompetensi/Tes/detailTes")
+);
+const DetailDataTesUserPage = lazy(
+  () => import("./pages/dataRiwayat/Kompetensi/Tes/detaildataTes")
+);
+const PatenUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten")
+);
+const DetailPatenUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detailPaten")
+);
+const DetailDataPatenUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/PelaksanaanPenelitian/Paten/detaildataPaten")
+);
+const PenelitianUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian")
+);
+const DetailPenelitianUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detailPenelitian"
+    )
+);
+const DetailDataPenelitianUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPenelitian/Penelitian/detaildataPenelitian"
+    )
+);
+const PublikasiUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi")
+);
+const DetailPublikasiUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detailPublikasi"
+    )
+);
+const DetailDataPublikasiUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPenelitian/Publikasi/detaildataPublikasi"
+    )
+);
+const KemampuanBahasaUserPage = lazy(
+  () => import("./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa")
+);
+const DetailKemampuanBahasaUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detailKemampuanBahasa"
+    )
+);
+const DetailDataKemampuanBahasaUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PengembanganDiri/KemampuanBahasa/detaildataKemampuanBahasa"
+    )
+);
+const OrganisasiUserPage = lazy(
+  () => import("./pages/dataRiwayat/PengembanganDiri/Organisasi")
+);
+const DetailOrganisasiUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/PengembanganDiri/Organisasi/detailOrganisasi")
+);
+const DetailDataOrganisasiUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PengembanganDiri/Organisasi/detaildataOrganisasi"
+    )
+);
+const PelanggaranUserPage = lazy(
+  () => import("./pages/dataRiwayat/Kompensasi/Pelanggaran")
+); // Ada duplikasi nama, beri alias _User
+const HubunganKerjaUserPage = lazy(
+  () => import("./pages/dataRiwayat/kepegawaian/hubunganKerja")
+);
+const DetailHubunganKerjaUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/kepegawaian/hubunganKerja/detailHubunganKerja")
+);
+const DetailDataHubunganKerjaUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/kepegawaian/hubunganKerja/detaildataHubunganKerja"
+    )
+);
+const PengabdianUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian")
+);
+const DetailPengabdianUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/DetailPengabdian"
+    )
+);
+const DetailDataPengabdianUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPengabdian/Pengabdian/detaildataPengabdian"
+    )
+);
 const BeritaPage = lazy(() => import("./pages/admin/operasional/berita")); // Ada duplikasi nama, pastikan ini benar atau beri alias
-const DetailDataBeritaPage = lazy(() => import("./pages/admin/operasional/berita/detaildataBerita"));
-const EditDataBeritaPage = lazy(() => import("./pages/admin/operasional/berita/editdataBerita"));
-const PembicaraUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara"));
-const DetailPembicaraUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara"));
-const DetailDataPembicaraUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/detaildataPembicara"));
-const PengelolaJurnalUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal"));
-const DetailPengelolaJurnalUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal"));
-const DetailDataPengelolaJurnalUserPage = lazy(() => import("./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/detaildataPengelolaJurnal"));
-const AnggotaProfesiUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/AnggotaProfesi"));
-const DetailAnggotaProfesiUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/AnggotaProfesi/DetailAnggotaProfesi"));
-const DetailDataAnggotaProfesiUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/AnggotaProfesi/detaildataAnggotaProfesi"));
-const PenghargaanUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/Penghargaan"));
-const DetailPenghargaanUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan"));
-const DetailDataPenghargaanUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/Penghargaan/detaildataPenghargaan"));
-const PenunjangLainUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/PenunjangLain"));
-const DetailPenunjangLainUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain"));
-const DetailDataPenunjangLainUserPage = lazy(() => import("./pages/dataRiwayat/Penunjang/PenunjangLain/detaildataPenunjangLain"));
+const DetailDataBeritaPage = lazy(
+  () => import("./pages/admin/operasional/berita/detaildataBerita")
+);
+const EditDataBeritaPage = lazy(
+  () => import("./pages/admin/operasional/berita/editdataBerita")
+);
+const PembicaraUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara")
+);
+const DetailPembicaraUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/DetailPembicara"
+    )
+);
+const DetailDataPembicaraUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPengabdian/Pembicara/detaildataPembicara"
+    )
+);
+const PengelolaJurnalUserPage = lazy(
+  () => import("./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal")
+);
+const DetailPengelolaJurnalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/DetailPengelolaJurnal"
+    )
+);
+const DetailDataPengelolaJurnalUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/PelaksanaanPengabdian/PengelolaJurnal/detaildataPengelolaJurnal"
+    )
+);
+const AnggotaProfesiUserPage = lazy(
+  () => import("./pages/dataRiwayat/Penunjang/AnggotaProfesi")
+);
+const DetailAnggotaProfesiUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/Penunjang/AnggotaProfesi/DetailAnggotaProfesi")
+);
+const DetailDataAnggotaProfesiUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/Penunjang/AnggotaProfesi/detaildataAnggotaProfesi"
+    )
+);
+const PenghargaanUserPage = lazy(
+  () => import("./pages/dataRiwayat/Penunjang/Penghargaan")
+);
+const DetailPenghargaanUserPage = lazy(
+  () => import("./pages/dataRiwayat/Penunjang/Penghargaan/DetailPenghargaan")
+);
+const DetailDataPenghargaanUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/Penunjang/Penghargaan/detaildataPenghargaan")
+);
+const PenunjangLainUserPage = lazy(
+  () => import("./pages/dataRiwayat/Penunjang/PenunjangLain")
+);
+const DetailPenunjangLainUserPage = lazy(
+  () =>
+    import("./pages/dataRiwayat/Penunjang/PenunjangLain/DetailPenunjangLain")
+);
+const DetailDataPenunjangLainUserPage = lazy(
+  () =>
+    import(
+      "./pages/dataRiwayat/Penunjang/PenunjangLain/detaildataPenunjangLain"
+    )
+);
 const AnakUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Anak"));
-const DetailAnakUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Anak/detailAnak"));
-const DetailDataAnakUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Anak/detaildataAnak"));
-const OrangtuaUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Orangtua"));
-const DetailOrangtuaUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua"));
-const DetailDataOrangtuaUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Orangtua/detaildataOrangtua"));
-const PasanganUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Pasangan"));
-const DetailPasanganUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Pasangan/detailPasangan"));
-const DetailDataPasanganUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Pasangan/detaildataPasangan"));
+const DetailAnakUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Anak/detailAnak")
+);
+const DetailDataAnakUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Anak/detaildataAnak")
+);
+const OrangtuaUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Orangtua")
+);
+const DetailOrangtuaUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua")
+);
+const DetailDataOrangtuaUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Orangtua/detaildataOrangtua")
+);
+const PasanganUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Pasangan")
+);
+const DetailPasanganUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Pasangan/detailPasangan")
+);
+const DetailDataPasanganUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/Pasangan/detaildataPasangan")
+);
 const BiodataPageUser = lazy(() => import("./pages/biodata"));
-const EvaluasiKerjaUserPage = lazy(() => import("./pages/operasional/EvaluasiKerja"));
-const DetailEvaluasiKerjaUserPage = lazy(() => import("./pages/operasional/EvaluasiKerja/detailEvaluasiKerja"));
-const DetailEvaluasiKerjaPegawaiUserPage = lazy(() => import("./pages/operasional/EvaluasiKerja/detailEvaluasiKerjaPegawai"));
-const TahapanDataRiwayatPageUser = lazy(() => import("./pages/tahapandatariwayat"));
+const EvaluasiKerjaUserPage = lazy(
+  () => import("./pages/operasional/EvaluasiKerja")
+);
+const DetailEvaluasiKerjaUserPage = lazy(
+  () => import("./pages/operasional/EvaluasiKerja/detailEvaluasiKerja")
+);
+const DetailEvaluasiKerjaPegawaiUserPage = lazy(
+  () => import("./pages/operasional/EvaluasiKerja/detailEvaluasiKerjaPegawai")
+);
+const TahapanDataRiwayatPageUser = lazy(
+  () => import("./pages/tahapandatariwayat")
+);
 
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
@@ -266,10 +865,10 @@ function App() {
 
   // Komponen fallback untuk Suspense.
   const SuspenseLoadingFallback = () => (
-      <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
-        <LoadingSpinner />
-        <p>Memuat halaman...</p>
-      </div>
+    <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
+      <LoadingSpinner />
+      <p>Memuat halaman...</p>
+    </div>
   );
 
   return (
@@ -285,7 +884,10 @@ function App() {
           {/* USER PAGES */}
           <Route path="/dasboard" Component={DasboardPageUser} />
           <Route path="/biodata" Component={BiodataPageUser} />
-          <Route path="/tahapan-data-riwayat" Component={TahapanDataRiwayatPageUser} />
+          <Route
+            path="/tahapan-data-riwayat"
+            Component={TahapanDataRiwayatPageUser}
+          />
 
           {/* KEHADIRAN */}
           <Route path="/kehadiran">
@@ -301,7 +903,10 @@ function App() {
               path="detail-dokumen-internal"
               Component={DetailDokumenInternalUserPage}
             />
-            <Route path="dokumen-internal" Component={DokumenInternalUserPage} />
+            <Route
+              path="dokumen-internal"
+              Component={DokumenInternalUserPage}
+            />
             <Route
               path="detail-data-dokumen-internal"
               Component={DetailDataDokumenInternalUserPage}
@@ -311,13 +916,16 @@ function App() {
               <Route path="cuti" Component={CutiPage} />
               <Route path="izin" Component={IzinPage} />
             </Route>
-            <Route
-              path="evaluasi-kerja"
-              Component={EvaluasiKerjaUserPage}
-            />
+            <Route path="evaluasi-kerja" Component={EvaluasiKerjaUserPage} />
             <Route path="evaluasi-kerja">
-              <Route path="form-evaluasi-kerja-dosen" Component={DetailEvaluasiKerjaUserPage} />
-              <Route path="form-evaluasi-kerja-pegawai" Component={DetailEvaluasiKerjaPegawaiUserPage} />
+              <Route
+                path="form-evaluasi-kerja-dosen"
+                Component={DetailEvaluasiKerjaUserPage}
+              />
+              <Route
+                path="form-evaluasi-kerja-pegawai"
+                Component={DetailEvaluasiKerjaPegawaiUserPage}
+              />
             </Route>
           </Route>
 
@@ -334,7 +942,9 @@ function App() {
                 path="detail-jabatan-akademik"
                 Component={DetailJabatanAkademikUserPage}
               />
-              <Route path="detail-data-jabatan-akademik/:id" Component={DetailDataJabatanAkademikUserPage}
+              <Route
+                path="detail-data-jabatan-akademik/:id"
+                Component={DetailDataJabatanAkademikUserPage}
               />
               <Route
                 path="jabatan-fungsional"
@@ -344,7 +954,9 @@ function App() {
                 path="detail-jabatan-fungsional"
                 Component={DetailJabatanFungsionalUserPage}
               />
-              <Route path="detail-data-jabatan-fungsional/:id" Component={DetailDataJabatanFungsionalUserPage}
+              <Route
+                path="detail-data-jabatan-fungsional/:id"
+                Component={DetailDataJabatanFungsionalUserPage}
               />
               <Route
                 path="jabatan-struktural"
@@ -354,33 +966,54 @@ function App() {
                 path="detail-jabatan-struktural"
                 Component={DetailJabatanStrukturalUserPage}
               />
-              <Route 
+              <Route
                 path="detail-data-jabatan-struktural/:id"
                 Component={DetailDataJabatanStrukturalUserPage}
               />
               <Route path="hubungan-kerja" Component={HubunganKerjaUserPage} />
-              <Route path="detail-hubungan-kerja" Component={DetailHubunganKerjaUserPage}/>
-              <Route path="detail-data-hubungan-kerja/:id" Component={DetailDataHubunganKerjaUserPage}
+              <Route
+                path="detail-hubungan-kerja"
+                Component={DetailHubunganKerjaUserPage}
+              />
+              <Route
+                path="detail-data-hubungan-kerja/:id"
+                Component={DetailDataHubunganKerjaUserPage}
               />
 
               <Route path="pangkat" Component={PangkatUserPage} />
               <Route path="detail-pangkat" Component={DetailPangkatUserPage} />
-              <Route path="detail-data-pangkat/:id" Component={DetailDataPangkatUserPage}/>
+              <Route
+                path="detail-data-pangkat/:id"
+                Component={DetailDataPangkatUserPage}
+              />
             </Route>
 
             {/* DATA RIWAYAT > KELUARGA */}
             <Route path="keluarga">
               <Route path="anak" Component={AnakUserPage} />
               <Route path="detail-anak" Component={DetailAnakUserPage} />
-              <Route path="detail-data-anak/:id" Component={DetailDataAnakUserPage}
+              <Route
+                path="detail-data-anak/:id"
+                Component={DetailDataAnakUserPage}
               />
               <Route path="orangtua" Component={OrangtuaUserPage} />
-              <Route path="detail-orangtua" Component={DetailOrangtuaUserPage} />
-              <Route path="detail-data-orangtua/:id" Component={DetailDataOrangtuaUserPage}
+              <Route
+                path="detail-orangtua"
+                Component={DetailOrangtuaUserPage}
+              />
+              <Route
+                path="detail-data-orangtua/:id"
+                Component={DetailDataOrangtuaUserPage}
               />
               <Route path="pasangan" Component={PasanganUserPage} />
-              <Route path="detail-pasangan" Component={DetailPasanganUserPage} />
-              <Route path="detail-data-pasangan/:id" Component={DetailDataPasanganUserPage} />
+              <Route
+                path="detail-pasangan"
+                Component={DetailPasanganUserPage}
+              />
+              <Route
+                path="detail-data-pasangan/:id"
+                Component={DetailDataPasanganUserPage}
+              />
             </Route>
 
             {/* DATA RIWAYAT > KUALIFIKASI */}
@@ -399,7 +1032,9 @@ function App() {
               />
               <Route path="diklat" Component={DiklatUserPage} />
               <Route path="detail-diklat" Component={DetailDiklatUserPage} />
-              <Route path="detail-data-diklat/:id" Component={DetailDataDiklatUserPage}
+              <Route
+                path="detail-data-diklat/:id"
+                Component={DetailDataDiklatUserPage}
               />
               <Route
                 path="riwayat-pekerjaan"
@@ -423,7 +1058,7 @@ function App() {
                 Component={DetailSertifikasiUserPage}
               />
               <Route
-                path="detail-data-sertifikasi"
+                path="detail-data-sertifikasi/:id"
                 Component={DetailDataSertifikasiUserPage}
               />
               <Route path="tes" Component={TesUserPage} />
@@ -435,7 +1070,9 @@ function App() {
             <Route path="pelaksanaan-penelitian">
               <Route path="paten" Component={PatenUserPage} />
               <Route path="detail-paten" Component={DetailPatenUserPage} />
-              <Route path="detail-data-paten" Component={DetailDataPatenUserPage} 
+              <Route
+                path="detail-data-paten"
+                Component={DetailDataPatenUserPage}
               />
               <Route path="penelitian" Component={PenelitianUserPage} />
               <Route
@@ -471,10 +1108,7 @@ function App() {
                 path="detail-data-kemampuan-bahasa/:id"
                 Component={DetailDataKemampuanBahasaUserPage}
               />
-              <Route
-                path="organisasi"
-                Component={OrganisasiUserPage}
-              />
+              <Route path="organisasi" Component={OrganisasiUserPage} />
               <Route
                 path="detail-organisasi"
                 Component={DetailOrganisasiUserPage}
@@ -557,7 +1191,10 @@ function App() {
 
             {/* DATA RIWAYAT > Penunjang */}
             <Route path="penunjang">
-              <Route path="anggota-profesi" Component={AnggotaProfesiUserPage} />
+              <Route
+                path="anggota-profesi"
+                Component={AnggotaProfesiUserPage}
+              />
               <Route
                 path="detail-anggota-profesi"
                 Component={DetailAnggotaProfesiUserPage}
@@ -664,7 +1301,7 @@ function App() {
               <Route
                 path="detail-data-visiting-scientist"
                 Component={DetailDataVisitingScientistUserPage}
-                />
+              />
             </Route>
           </Route>
 
@@ -682,7 +1319,10 @@ function App() {
 
               {/* DETAIL PEGAWAI > KEPEGAWAIAN */}
               <Route path="kepegawaian">
-                <Route path="homebase/:id" Component={KepegawaianHomebasePage} />
+                <Route
+                  path="homebase/:id"
+                  Component={KepegawaianHomebasePage}
+                />
                 <Route path="pangkat/:id" Component={KepegawaianPangkatPage} />
                 <Route
                   path="jabatan-akademik/:id"
@@ -851,7 +1491,10 @@ function App() {
                 path="hubungan-kerja-pegawai"
                 Component={HubunganKerjaPegawaiPage}
               />
-              <Route path="setting-kehadiran" Component={SettingKehadiranPage} />
+              <Route
+                path="setting-kehadiran"
+                Component={SettingKehadiranPage}
+              />
               <Route path="shift-kerja" Component={ShiftKerjaPage} />
               <Route path="data-shift-kerja" Component={DataShiftKerjaPage} />
               <Route
@@ -868,12 +1511,11 @@ function App() {
               {/* OPERASIONAL > BERITA */}
               <Route path="berita" Component={BeritaPage} />
               <Route path="detail-berita" Component={DetailBeritaPage} />
-              <Route path="detail-data-berita" Component={DetailDataBeritaPage} />
               <Route
-                path="edit-data-berita"
-                Component={EditDataBeritaPage}
+                path="detail-data-berita"
+                Component={DetailDataBeritaPage}
               />
-             
+              <Route path="edit-data-berita" Component={EditDataBeritaPage} />
 
               {/* OPERASIONAL > CUTI */}
               <Route path="cuti">
@@ -902,7 +1544,10 @@ function App() {
                   Component={EditDataPelanggaranPage}
                 />
                 <Route path="penghargaan" Component={RiwayatPenghargaanPage} />
-                <Route path="detail-penghargaan/" Component={DetailPenghargaanPage}/>
+                <Route
+                  path="detail-penghargaan/"
+                  Component={DetailPenghargaanPage}
+                />
                 <Route
                   path="detail-data-penghargaan/:id"
                   Component={DetailDataPenghargaanPage}
@@ -911,7 +1556,10 @@ function App() {
                   path="edit-data-penghargaan/:id"
                   Component={EditDataPenghargaanPage}
                 />
-                <Route path="dokumen-internal" Component={DokumenInternalPage} />
+                <Route
+                  path="dokumen-internal"
+                  Component={DokumenInternalPage}
+                />
                 <Route
                   path="detail-dokumen-internal"
                   Component={DetailDokumenInternalPage}
@@ -940,7 +1588,10 @@ function App() {
                   path="hubungan-kerja"
                   Component={HubunganKerjaKepegawaianPage}
                 />
-                <Route path="jabatan-akademik" Component={JabatanAkademikPage} />
+                <Route
+                  path="jabatan-akademik"
+                  Component={JabatanAkademikPage}
+                />
                 <Route
                   path="jabatan-fungsional"
                   Component={JabatanFungionalPage}
@@ -985,14 +1636,20 @@ function App() {
 
               {/* VALIDASI > PENGEMBANGAN */}
               <Route path="pengembangan">
-                <Route path="kemampuan-bahasa" Component={KemampuanBahasaPage} />
+                <Route
+                  path="kemampuan-bahasa"
+                  Component={KemampuanBahasaPage}
+                />
                 <Route path="organisasi" Component={OrganisasiPage} />
               </Route>
 
               {/* VALIDASI > PENUNJANG */}
               <Route path="penunjang">
                 <Route path="organisasi" Component={OrganisasiPenunjangPage} />
-                <Route path="penghargaan" Component={PenghargaanPenunjangPage} />
+                <Route
+                  path="penghargaan"
+                  Component={PenghargaanPenunjangPage}
+                />
                 <Route path="penunjang-lain" Component={PenunjangLainPage} />
               </Route>
             </Route>

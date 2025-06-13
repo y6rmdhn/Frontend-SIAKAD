@@ -5,6 +5,7 @@ import {
   IJenisCutiPost,
   IJenisLuaran,
   IJenisPelanggaran,
+  IJenisPenghargaan,
   IJenisPublikasi,
   IJenisSk,
   IJenisTesPost,
@@ -50,6 +51,8 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/datapenghargaan/${id}`, payload),
   pelanggaran: (id: number, payload: any) =>
     axiosInstance.put(`${endpoint.ADMIN}/datapelanggaran/${id}`, payload),
+  jenisPenghargaan: (id: number, payload: IJenisPenghargaan) =>
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-penghargaan/${id}`, payload),
 };
 
 export default putReferensiServices;

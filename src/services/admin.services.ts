@@ -154,6 +154,13 @@ const adminServices = {
       },
     }),
 
+  getJenisPenghargaanAktifitas: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-penghargaan`, {
+      params: {
+        page: page,
+      },
+    }),
+
   getStatus: () => axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
 
   // for detail

@@ -6,6 +6,7 @@ import {
   IJenisCutiPost,
   IJenisLuaran,
   IJenisPelanggaran,
+  IJenisPenghargaan,
   IJenisPublikasi,
   IJenisSertifikasi,
   IJenisSk,
@@ -52,6 +53,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/datapenghargaan`, payload),
   pelanggaran: (payload: FormData) =>
     axiosInstance.post(`${endpoint.ADMIN}/datapelanggaran`, payload),
+  jenisPenghargaan: (payload: IJenisPenghargaan) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-penghargaan`, payload),
 };
 
 export default potsReferensiServices;
