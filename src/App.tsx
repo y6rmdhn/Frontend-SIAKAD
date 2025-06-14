@@ -425,6 +425,24 @@ const NegaraReferensiPage = lazy(
 const ProvinsiReferensiPage = lazy(
   () => import("./pages/admin/referensi/wilayah/provinsi")
 );
+const AgamaPage = lazy(
+  () => import("./pages/admin/referensi/pelengkap/agama")
+);
+const StatusPernikahanPage = lazy(
+  () => import("./pages/admin/referensi/pelengkap/statusPernikahan")
+)
+const JenjangPendidikanPage = lazy(
+  () => import("./pages/admin/referensi/pelengkap/jenjangPendidikan")
+)
+const BankPage = lazy(
+  () => import("./pages/admin/referensi/pelengkap/bank")
+)
+const SukuPage = lazy(
+  () => import("./pages/admin/referensi/pelengkap/suku")
+)
+const GolonganDarahPage = lazy(
+  () => import("./pages/admin/referensi/pelengkap/golonganDarah")
+)
 const HomebaseUserPage = lazy(
   () => import("./pages/dataRiwayat/kepegawaian/homebase")
 );
@@ -1766,6 +1784,16 @@ function App() {
                 <Route path="kecamatan" Component={KecamatanReferensiPage} />
                 <Route path="negara" Component={NegaraReferensiPage} />
                 <Route path="provinsi" Component={ProvinsiReferensiPage} />
+              </Route>
+
+              {/* REFERENSI > PELENGKAP */}
+              <Route path="pelengkap">
+                <Route path="agama" Component={AgamaPage} />
+                <Route path="status-pernikahan" Component={StatusPernikahanPage} />
+                <Route path="jenjang-pendidikan" Component={JenjangPendidikanPage} />
+                <Route path="bank" Component={BankPage} />
+                <Route path="suku" Component={SukuPage} />
+                <Route path="golongan-darah" Component={GolonganDarahPage} />
               </Route>
             </Route>
           </Route>

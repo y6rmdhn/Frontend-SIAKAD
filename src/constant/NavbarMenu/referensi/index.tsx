@@ -109,6 +109,18 @@ const referensi: {
       { title: "Profinsi", href: "/admin/referensi/wilayah/provinsi" },
     ],
   },
+  {
+    title: "Pelengkap",
+    href: "",
+    childrenItems: [
+      { title: "Agama", href: "/admin/referensi/pelengkap/agama" },
+      { title: "Status Pernikahan", href: "/admin/referensi/pelengkap/status-pernikahan" },
+      { title: "Jenjang Pendidikan", href: "/admin/referensi/pelengkap/jenjang-pendidikan" },
+      { title: "Bank", href: "/admin/referensi/pelengkap/bank" },
+      { title: "Suku", href: "/admin/referensi/pelengkap/suku" },
+      { title: "Golongan Darah", href: "/admin/referensi/pelengkap/golongan-darah" },
+    ],
+  },
 ];
 
 export default referensi;
