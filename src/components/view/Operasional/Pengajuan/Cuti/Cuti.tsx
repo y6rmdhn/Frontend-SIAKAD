@@ -35,9 +35,11 @@ const Cuti = () => {
       <CustomCard
         actions={
           <div className="flex justify-end ">
-            <Button className="bg-[#FDA31A] text-xs md:text-sm">
-              <FaPlus /> Tambah Baru
-            </Button>
+            <Link to="/operasional/pengajuan/tambah-cuti">
+              <Button className="bg-[#FDA31A] text-xs md:text-sm">
+                <FaPlus /> Tambah Baru
+              </Button>
+            </Link>
           </div>
         }
       />
@@ -142,7 +144,7 @@ const Cuti = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                <Link to="/operasional/pengajuan/detail-cuti">
                   <Button
                     size="icon"
                     variant="ghost"

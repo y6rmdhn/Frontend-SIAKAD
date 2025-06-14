@@ -229,10 +229,24 @@ const DetailKeluargaPage = lazy(
   () => import("./pages/admin/DetailPegawai/Keluarga")
 );
 const CutiPage = lazy(() => import("./pages/operasional/pengajuan/cuti")); // Asumsi ini untuk user
+const DetailCutiUserPage = lazy(() => import("./pages/operasional/pengajuan/cuti/detailCuti"));
+const DetailDataCutiUserPage = lazy(
+  () => import("./pages/operasional/pengajuan/cuti/detaildataCuti")
+);
 const IzinPage = lazy(() => import("./pages/operasional/pengajuan/Izin")); // Asumsi ini untuk user
+const DetailIzinUserPage = lazy(() => import("./pages/operasional/pengajuan/Izin/detailIzin"));
+const DetailDataIzinUserPage = lazy(
+  () => import("./pages/operasional/pengajuan/Izin/detaildataIzin")
+);
 const BeritaOperasionalUserPage = lazy(
   () => import("./pages/operasional/berita")
 );
+const DetailBeritaUserPage = lazy(
+  () => import("./pages/operasional/berita/detailBerita")
+)
+const DetailDataBeritaUserPage = lazy(
+  () => import("./pages/operasional/berita/detaildataBerita")
+)
 const DetailDokumenInternalUserPage = lazy(
   () => import("./pages/operasional/dokumenInternal/detailDokumen")
 );
@@ -922,6 +936,11 @@ function App() {
           {/* OPERASIONAL */}
           <Route path="/operasional">
             <Route path="berita" Component={BeritaOperasionalUserPage} />
+            <Route path="tambah-berita" Component={DetailBeritaUserPage} />
+            <Route
+              path="detail-berita"
+              Component={DetailDataBeritaUserPage}
+            />
 
             <Route
               path="detail-dokumen-internal"
@@ -938,7 +957,17 @@ function App() {
 
             <Route path="pengajuan">
               <Route path="cuti" Component={CutiPage} />
+              <Route path="tambah-cuti" Component={DetailCutiUserPage} />
+              <Route 
+                path="detail-cuti" 
+                Component={DetailDataCutiUserPage} 
+              />
               <Route path="izin" Component={IzinPage} />
+              <Route path="tambah-izin" Component={DetailIzinUserPage} />
+              <Route 
+                path="detail-izin" 
+                Component={DetailDataIzinUserPage} 
+              />
             </Route>
             <Route path="evaluasi-kerja" Component={EvaluasiKerjaUserPage} />
             <Route path="evaluasi-kerja">

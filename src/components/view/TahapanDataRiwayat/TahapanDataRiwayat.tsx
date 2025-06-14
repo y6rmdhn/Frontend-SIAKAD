@@ -4,6 +4,7 @@ import CustomCard from "@/components/blocks/Card";
 import { Label } from "@/components/ui/label";
 import { MdEdit } from "react-icons/md";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const TahapanDataRiwayat = () => {
     const [progress] = useState(0); 
@@ -112,9 +113,11 @@ const TahapanDataRiwayat = () => {
                         </div>
 
                         <div className="w-full md:w-auto">
+                            <Link to="/data-riwayat/keluarga/pasangan">
                             <Button className="w-full md:w-auto bg-[#E7E7E7] text-[#D22D17]">
                                 Mulai Setting
                             </Button>
+                            </Link>
                         </div>
                     </div>
                 }

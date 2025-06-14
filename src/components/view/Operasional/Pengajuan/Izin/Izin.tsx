@@ -35,9 +35,11 @@ const Izin = () => {
       <CustomCard
         actions={
           <div className="flex justify-end ">
-            <Button className="bg-[#FDA31A] text-xs md:text-sm">
-              <FaPlus /> Tambah Baru
-            </Button>
+            <Link to="/operasional/pengajuan/tambah-izin">
+              <Button className="bg-[#FDA31A] text-xs md:text-sm">
+                <FaPlus /> Tambah Baru
+              </Button>
+            </Link>
           </div>
         }
       />
@@ -142,7 +144,7 @@ const Izin = () => {
             <TableCell className="text-center"></TableCell>
             <TableCell className="h-full">
               <div className="flex justify-center items-center w-full h-full">
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                <Link to="/operasional/pengajuan/detail-izin">
                   <Button
                     size="icon"
                     variant="ghost"
@@ -151,7 +153,7 @@ const Izin = () => {
                     <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                   </Button>
                 </Link>
-                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                <Link to="">
                   <Button
                     size="icon"
                     variant="ghost"
