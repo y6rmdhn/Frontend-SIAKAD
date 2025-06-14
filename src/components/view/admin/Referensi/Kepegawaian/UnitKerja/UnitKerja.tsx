@@ -391,7 +391,7 @@ const UnitKerja = () => {
                                     <FaPlus className="w-5! h-5! text-green-500" />
                                   </Button>
                                 </Link>
-                                <Link to="">
+                                <Link to="/admin/referensi/kepegawaian/unit-kerja/detail-data-unit-kerja">
                                   <Button
                                     size="icon"
                                     variant="ghost"

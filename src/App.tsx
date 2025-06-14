@@ -407,6 +407,12 @@ const UnitKerjaReferensiPage = lazy(
 const DetailUnitKerjaReferensiPage = lazy(
   () => import("./pages/admin/referensi/kepegawaian/unitKerja/detailUnitKerja")
 );
+const DetailDataUnitKerjaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/unitKerja/detaildataUnitKerja")
+)
+const EditDataUnitKerjaReferensiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/unitKerja/editdataUnitKerja")
+)
 const KotaReferensiPage = lazy(
   () => import("./pages/admin/referensi/wilayah/kota")
 );
@@ -1746,9 +1752,11 @@ function App() {
                   Component={StatusKeaktifanReferensiPage}
                 />
                 <Route path="unit-kerja" Component={UnitKerjaReferensiPage} />
+                <Route path="unit-kerja/detail-unit-kerja" Component={DetailUnitKerjaReferensiPage} />
+                <Route path="unit-kerja/detail-data-unit-kerja" Component={DetailDataUnitKerjaReferensiPage}/>
                 <Route
-                  path="unit-kerja/detail-unit-kerja"
-                  Component={DetailUnitKerjaReferensiPage}
+                  path="unit-kerja/edit-data-unit-kerja"
+                  Component={EditDataUnitKerjaReferensiPage}
                 />
               </Route>
 
