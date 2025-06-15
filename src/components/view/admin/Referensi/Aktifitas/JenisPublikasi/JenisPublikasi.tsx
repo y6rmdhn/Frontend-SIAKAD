@@ -10,22 +10,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useForm } from "react-hook-form";
-import {FaPlus, FaRegTrashAlt} from "react-icons/fa";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import adminServices from "@/services/admin.services.ts";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import {MdEdit} from "react-icons/md";
-import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
-import {z} from "zod";
-import {IJenisPublikasi} from "@/types/create.referensi.ts";
+import { MdEdit } from "react-icons/md";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
+import { z } from "zod";
+import { IJenisPublikasi } from "@/types/create.referensi.ts";
 import potsReferensiServices from "@/services/create.admin.referensi.ts";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {FormFieldInput} from "@/components/blocks/CustomFormInput/CustomFormInput.tsx";
-import {IoSaveOutline} from "react-icons/io5";
-import {RiResetLeftFill} from "react-icons/ri";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput.tsx";
+import { IoSaveOutline } from "react-icons/io5";
+import { RiResetLeftFill } from "react-icons/ri";
 import putReferensiServices from "@/services/put.admin.referensi.ts";
 import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
 
@@ -49,7 +49,6 @@ interface JenisPublikasiResponse {
 const jenisPublikasiSchema = z.object({
   id: z.number().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
-  bobot_iku: z.number().optional(),
   jenis_publikasi: z.string().min(1, "Jenis publikasi tidak boleh kosong"),
 });
 
@@ -61,22 +60,24 @@ const JenisPublikasi = () => {
       kode: "",
       jenis_publikasi: "",
     },
-    resolver: zodResolver(jenisPublikasiSchema)
+    resolver: zodResolver(jenisPublikasiSchema),
   });
 
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(Number(searchParam.get("page") || 1));
+  const [currentPage, setCurrentPage] = useState<number>(
+    Number(searchParam.get("page") || 1)
+  );
   const queryClient = useQueryClient();
 
   // get data
-  const {data} = useQuery<JenisPublikasiResponse>({
+  const { data } = useQuery<JenisPublikasiResponse>({
     queryKey: ["jenis-publikasi", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getJenisPublikasi(
-          searchParam.get("page")
+        searchParam.get("page")
       );
 
       return response.data.data;
@@ -84,36 +85,38 @@ const JenisPublikasi = () => {
   });
 
   // tambah
-  const {mutate: postJenisPublikasi} = useMutation({
+  const { mutate: postJenisPublikasi } = useMutation({
     mutationFn: (data: IJenisPublikasi) =>
-        potsReferensiServices.jenisPublikasi(data),
+      potsReferensiServices.jenisPublikasi(data),
     onSuccess: () => {
       form.reset();
       toast.success("Data berhasil ditambahkan");
       setIsAddData(false);
-      queryClient.invalidateQueries({queryKey: ["jenis-publikasi"]});
+      queryClient.invalidateQueries({ queryKey: ["jenis-publikasi"] });
     },
   });
 
   // edit
-  const {mutate: putJenisPublikasi} = useMutation({
-    mutationFn: (data: jenisPublikasiFormvalue) => putReferensiServices.jenisPublikasi(data.id!, data),
+  const { mutate: putJenisPublikasi } = useMutation({
+    mutationFn: (data: jenisPublikasiFormvalue) =>
+      putReferensiServices.jenisPublikasi(data.id!, data),
     onSuccess: () => {
       form.reset();
       toast.success("Data berhasil diedit");
       setIsAddData(false);
       setIsEditMode(false);
 
-      queryClient.invalidateQueries({queryKey: ["jenis-publikasi"]});
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["jenis-publikasi"] });
+    },
+  });
 
   // hapus data
-  const {mutate: deleteJenisPengabdian} = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleJenisPublikasi(id),
+  const { mutate: deleteJenisPengabdian } = useMutation({
+    mutationFn: (id: number) =>
+      deleteReferensiServices.deteleJenisPublikasi(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
-      queryClient.invalidateQueries({queryKey: ["jenis-publikasi"]});
+      queryClient.invalidateQueries({ queryKey: ["jenis-publikasi"] });
 
       if (editingItemId) {
         form.reset();
@@ -121,21 +124,20 @@ const JenisPublikasi = () => {
         setIsEditMode(false);
         setIsAddData(false);
       }
-    }
-  })
+    },
+  });
 
   const handleDelete = (id: number) => {
-    deleteJenisPengabdian(id)
-
+    deleteJenisPengabdian(id);
   };
 
   const handleJenisPublikasi = (values: jenisPublikasiFormvalue) => {
-    if (isEditMode && editingItemId){
-      putJenisPublikasi(values)
-    }else{
+    if (isEditMode && editingItemId) {
+      putJenisPublikasi(values);
+    } else {
       postJenisPublikasi(values);
     }
-  }
+  };
 
   const handleEditItem = (item: JenisPublikasiItem) => {
     form.reset({
@@ -155,7 +157,7 @@ const JenisPublikasi = () => {
   };
 
   const handleCancel = () => {
-    form.reset()
+    form.reset();
     setIsEditMode(false);
     setEditingItemId(null);
     setIsAddData(false);
@@ -184,9 +186,9 @@ const JenisPublikasi = () => {
 
   useEffect(() => {
     if (
-        data?.last_page &&
-        Number(searchParam.get("page")) > data.last_page &&
-        data.last_page > 0
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
     ) {
       searchParam.set("page", data.last_page.toString());
       setSearchParam(searchParam);
@@ -202,24 +204,28 @@ const JenisPublikasi = () => {
             actions={
               <div className="flex justify-end">
                 <div className="flex gap-4">
-                  <Button type="button" onClick={() => {
-                    if (!isEditMode) {
-                      form.reset({
-                        kode: "",
-                        jenis_publikasi: "",
-                      })
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (!isEditMode) {
+                        form.reset({
+                          kode: "",
+                          jenis_publikasi: "",
+                        });
 
-                      setIsAddData(true);
-                      searchParam.set("page", "1");
-                      setSearchParam(searchParam);
-                    }
-                  }} className={`cursor-pointer ${
+                        setIsAddData(true);
+                        searchParam.set("page", "1");
+                        setSearchParam(searchParam);
+                      }
+                    }}
+                    className={`cursor-pointer ${
                       isEditMode
-                          ? "bg-gray-400"
-                          : "bg-green-light-uika hover:bg-[#329C59]"
-                  }`}
-                          disabled={isEditMode}>
-                    <FaPlus className="w-4! h-4! text-white"/>
+                        ? "bg-gray-400"
+                        : "bg-green-light-uika hover:bg-[#329C59]"
+                    }`}
+                    disabled={isEditMode}
+                  >
+                    <FaPlus className="w-4! h-4! text-white" />
                     Tambah
                   </Button>
                 </div>
@@ -229,119 +235,116 @@ const JenisPublikasi = () => {
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Jenis Publikasi</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Bobot Iku 5</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Kode
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Jenis Publikasi
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Aksi
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
                 {(isAddData || isEditMode) && currentPage === 1 && (
-                    <TableRow className=" even:bg-gray-100">
-                      <TableCell className="text-center text-xs sm:text-sm">
-                        <FormFieldInput
-                            inputStyle="w-full"
-                            position={true}
-                            form={form}
-                            name="kode"
-                            required={false}
-                        />
-                      </TableCell>
-                      <TableCell className="text-center text-xs sm:text-sm">
-                        <FormFieldInput
-                            inputStyle="w-full"
-                            position={true}
-                            form={form}
-                            name="jenis_publikasi"
-                            required={false}
-                        />
-                      </TableCell>
-                      <TableCell className="text-center text-xs sm:text-sm">
-                        <FormFieldInput
-                            inputStyle="w-full"
-                            position={true}
-                            form={form}
-                            type="number"
-                            name="bobot_iku"
-                            required={false}
-                        />
-                      </TableCell>
-                      <TableCell className="h-full">
-                        <div className="flex justify-center items-center w-full h-full">
-                          <Button
-                              type="submit"
-                              size="icon"
-                              variant="ghost"
-                              className="cursor-pointer"
-                          >
-                            <IoSaveOutline className="w-5! h-5!"/>
-                          </Button>
-                          <Button
-                              size="icon"
-                              type="button"
-                              variant="ghost"
-                              className="cursor-pointer"
-                              onClick={handleCancel}
-                          >
-                            <RiResetLeftFill className="text-yellow-uika"/>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                  <TableRow className=" even:bg-gray-100">
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        form={form}
+                        name="kode"
+                        required={false}
+                      />
+                    </TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        form={form}
+                        name="jenis_publikasi"
+                        required={false}
+                      />
+                    </TableCell>
+                    <TableCell className="h-full">
+                      <div className="flex justify-center items-center w-full h-full">
+                        <Button
+                          type="submit"
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoSaveOutline className="w-5! h-5!" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          type="button"
+                          variant="ghost"
+                          className="cursor-pointer"
+                          onClick={handleCancel}
+                        >
+                          <RiResetLeftFill className="text-yellow-uika" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 )}
                 {data?.data.map((item) => (
-                <TableRow key={item.id} className=" even:bg-gray-100">
-                  <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">{item.jenis_publikasi}</TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
-                  <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                      <Button
+                  <TableRow key={item.id} className=" even:bg-gray-100">
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      {item.kode}
+                    </TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      {item.jenis_publikasi}
+                    </TableCell>
+                    <TableCell className="h-full">
+                      <div className="flex justify-center items-center w-full h-full">
+                        <Button
                           size="icon"
                           variant="ghost"
                           type="button"
                           className="cursor-pointer"
                           onClick={() => handleEditItem(item)}
                           disabled={isEditMode && editingItemId !== item.id}
-                      >
-                        <MdEdit className="w-5! h-5! text-[#26A1F4]"/>
-                      </Button>
-                      <ConfirmDialog
+                        >
+                          <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                        </Button>
+                        <ConfirmDialog
                           title="Hapus Data?"
                           description="Apakah Anda yakin ingin menghapus data ini?"
                           onConfirm={() => handleDelete(item.id)}
-                      >
-                        <Button
+                        >
+                          <Button
                             size="icon"
                             type="button"
                             variant="ghost"
                             className="cursor-pointer"
-                        >
-                          <FaRegTrashAlt className="text-red-500"/>
-                        </Button>
-                      </ConfirmDialog>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                  ))}
+                          >
+                            <FaRegTrashAlt className="text-red-500" />
+                          </Button>
+                        </ConfirmDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
             <CustomPagination
-                currentPage={Number(searchParam.get("page") || 1)}
-                links={data?.links || []}
-                onPageChange={(page) => {
+              currentPage={Number(searchParam.get("page") || 1)}
+              links={data?.links || []}
+              onPageChange={(page) => {
+                if (isEditMode) {
+                  toast.warning("Selesaikan edit data terlebih dahulu");
+                  return;
+                }
 
-                  if (isEditMode) {
-                    toast.warning("Selesaikan edit data terlebih dahulu");
-                    return;
-                  }
-
-                  searchParam.set("page", page.toString());
-                  setSearchParam(searchParam);
-                }}
-                hasNextPage={!!data?.next_page_url}
-                hasPrevPage={!!data?.prev_page_url}
-                totalPages={data?.last_page}
+                searchParam.set("page", page.toString());
+                setSearchParam(searchParam);
+              }}
+              hasNextPage={!!data?.next_page_url}
+              hasPrevPage={!!data?.prev_page_url}
+              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

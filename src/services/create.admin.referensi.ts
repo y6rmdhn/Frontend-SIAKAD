@@ -71,6 +71,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/suku`, payload),
   golonganDarah: (payload: IGolonganDarah) =>
     axiosInstance.post(`${endpoint.ADMIN}/golongan-darah`, payload),
+  beritaOperasional: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.ADMIN}/berita`, payload),
 };
 
 export default potsReferensiServices;

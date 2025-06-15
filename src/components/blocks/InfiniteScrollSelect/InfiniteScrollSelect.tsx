@@ -23,11 +23,10 @@ type InfiniteScrollSelectProps = {
   placeholder?: string;
   labelStyle?: string;
   required?: boolean;
-  // Props untuk kustomisasi query
   queryKey: string;
   queryFn: (page: number) => Promise<any>;
-  itemValue: string; // Key untuk value (misal: "id")
-  itemLabel: string; // Key untuk label (misal: "nama_suku")
+  itemValue: string;
+  itemLabel: string;
 };
 
 export const InfiniteScrollSelect = ({
@@ -47,32 +46,26 @@ export const InfiniteScrollSelect = ({
       queryKey: [queryKey],
       queryFn: async ({ pageParam = 1 }) => {
         const response = await queryFn(pageParam);
-        // Kembalikan seluruh objek respons agar info paginasi bisa diakses
         return response.data;
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        // Ambil info paginasi dari dalam properti 'data'
         const paginationInfo = lastPage.data;
 
-        // Pastikan info paginasi ada sebelum diakses
         if (
           !paginationInfo ||
           paginationInfo.current_page >= paginationInfo.last_page
         ) {
-          return undefined; // Tidak ada halaman berikutnya
+          return undefined;
         }
 
-        // Kembalikan nomor halaman berikutnya
         return paginationInfo.current_page + 1;
       },
     });
 
-  // Gabungkan semua data dari semua halaman yang sudah di-fetch
   const options =
     data?.pages.flatMap((page) => page?.data?.data).filter(Boolean) ?? [];
 
-  // Konversi data menjadi format { label, value } yang siap pakai
   const selectOptions = options.map((item) => ({
     label: item[itemLabel],
     value: item[itemValue].toString(),
@@ -111,7 +104,6 @@ export const InfiniteScrollSelect = ({
                   </SelectItem>
                 ))}
 
-                {/* Tampilkan tombol "Muat lebih banyak" jika ada halaman berikutnya */}
                 {hasNextPage && (
                   <div className="p-1">
                     <Button
@@ -119,7 +111,7 @@ export const InfiniteScrollSelect = ({
                       variant="ghost"
                       className="w-full justify-center text-xs"
                       onClick={(e) => {
-                        e.preventDefault(); // Mencegah dropdown tertutup
+                        e.preventDefault();
                         fetchNextPage();
                       }}
                       disabled={isFetchingNextPage}

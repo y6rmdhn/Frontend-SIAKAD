@@ -20,7 +20,7 @@ const adminServices = {
         page: page,
       },
     }),
-  getJabatanAkademik: (page) =>
+  getJabatanAkademik: (page?) =>
     axiosInstance.get(`${endpoint.ADMIN}/jabatan-akademik`, {
       params: {
         page: page,
@@ -197,6 +197,8 @@ const adminServices = {
         page: page,
       },
     }),
+
+  getBeritaSelect: () => axiosInstance.get(`${endpoint.ADMIN}/berita`),
 
   // for detail
   getPegawaiDetailAdminPage: (idPegawai) =>
