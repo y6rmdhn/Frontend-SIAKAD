@@ -106,7 +106,7 @@ const referensi: {
       { title: "Kecamatan", href: "/admin/referensi/wilayah/kecamatan" },
       { title: "Kota", href: "/admin/referensi/wilayah/kota" },
       { title: "Negara", href: "/admin/referensi/wilayah/negara" },
-      { title: "Profinsi", href: "/admin/referensi/wilayah/provinsi" },
+      { title: "Provinsi", href: "/admin/referensi/wilayah/provinsi" },
     ],
   },
 ];

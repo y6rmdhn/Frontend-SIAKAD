@@ -7,19 +7,116 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchInput from "@/components/blocks/SearchInput";
-// import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import potsReferensiServices from "@/services/create.admin.referensi";
+import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo } from "react";
+import { useAllUnitKerja } from "@/hooks/useAllUnitKerja";
+
+const unitKerjaSchema = z.object({
+  kode_unit: z
+    .string({ required_error: "Kode Unit wajib diisi." })
+    .min(1, "Kode Unit tidak boleh kosong."),
+  nama_unit: z
+    .string({ required_error: "Nama Unit wajib diisi." })
+    .min(1, "Nama Unit tidak boleh kosong."),
+
+  jenis_unit_id: z.coerce.number().optional(),
+  tk_pendidikan_id: z.coerce.number().optional(),
+  akreditasi_id: z.coerce.number().optional(),
+  parent_unit_id: z.string().optional(),
+
+  alamat: z.string().optional(),
+  telepon: z.string().optional(),
+  website: z
+    .string()
+    .url({ message: "Format URL tidak valid." })
+    .or(z.literal(""))
+    .optional(),
+  alamat_email: z
+    .string()
+    .email({ message: "Format email tidak valid." })
+    .or(z.literal(""))
+    .optional(),
+  no_sk_akreditasi: z.string().optional(),
+  tanggal_akreditasi: z.string().optional(),
+  no_sk_pendirian: z.string().optional(),
+  tanggal_sk_pendirian: z.string().optional(),
+  gedung: z.string().optional(),
+});
+
+type UnitKerjaSchema = z.infer<typeof unitKerjaSchema>;
 
 const DetailUnitKerja = () => {
-  const form = useForm();
+  const navigate = useNavigate();
+  const form = useForm<UnitKerjaSchema>({
+    resolver: zodResolver(unitKerjaSchema),
+    defaultValues: {
+      kode_unit: "",
+      nama_unit: "",
+      parent_unit_id: "",
+      alamat: "",
+      telepon: "",
+      website: "",
+      alamat_email: "",
+      no_sk_akreditasi: "",
+      no_sk_pendirian: "",
+      gedung: "",
+    },
+  });
 
-  // const {  } = useMutation({
-  //   mutationFn: async () =>
-  // })
+  // add data
+  const { mutate: postAdd } = useMutation({
+    mutationFn: (data: UnitKerjaSchema) =>
+      potsReferensiServices.unitKerja(data),
+    onSuccess: () => {
+      form.reset();
+      toast.success("Data berhasil ditambahkan");
+      navigate("/admin/referensi/kepegawaian/unit-kerja");
+    },
+  });
 
-  const handleSubmitDetailUnitKerja = (values) => {
-    console.log(values);
+  const {
+    data: dataParentUnit,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isFetching,
+  } = useAllUnitKerja();
+
+  useEffect(() => {
+    if (hasNextPage && !isFetching) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetching, fetchNextPage]);
+
+  const parentUnitOptions = useMemo(() => {
+    if (!dataParentUnit) {
+      return [];
+    }
+
+    return dataParentUnit.pages
+      .flatMap((page) => page.data.data)
+      .filter(
+        (unit) =>
+          unit.parent_unit_id === "041001" || unit.parent_unit_id === null
+      )
+      .map((unit) => ({
+        label: unit.nama_unit,
+        value: unit.kode_unit,
+      }));
+  }, [dataParentUnit]);
+
+  console.log(parentUnitOptions);
+
+  const handleSubmitDetailUnitKerja = (values: UnitKerjaSchema) => {
+    console.log("Data yang dikirim ke API:", values);
+
+    postAdd(values);
   };
 
   return (
@@ -44,7 +141,10 @@ const DetailUnitKerja = () => {
                     </Link>
                   </div>
                   <div className="w-full sm:w-auto">
-                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto">
+                    <Button
+                      type="submit"
+                      className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
+                    >
                       <IoSaveSharp /> Simpan
                     </Button>
                   </div>
@@ -56,53 +156,50 @@ const DetailUnitKerja = () => {
               <FormFieldInput
                 form={form}
                 label="Kode Unit"
-                name="kodeUnit"
+                name="kode_unit"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
               <FormFieldInput
                 form={form}
                 label="Nama Unit"
-                name="namaUnit"
+                name="nama_unit"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
-              <FormFieldInput
+              {/* <FormFieldInput
                 form={form}
                 label="Nama Unit(EN)"
                 name="namaUnitEn"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
-              />
-              <FormFieldInput
+              /> */}
+              {/* <FormFieldInput
                 form={form}
                 label="Nama Singkat"
                 name="namaSingkat"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
-              />
+              /> */}
               <FormFieldSelect
                 form={form}
                 label="Parent Unit"
-                name="parentUnit"
+                name="parent_unit_id"
                 labelStyle="text-[#3F6FA9]"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
-                ]}
+                options={parentUnitOptions}
                 placeholder="--Pilih Parent Unit--"
                 required={false}
               />
               <FormFieldSelect
                 form={form}
                 label="Jenis Unit"
-                name="jenisUnit"
+                name="jenis_unit_id"
                 labelStyle="text-[#3F6FA9]"
                 options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
+                  { label: "Universitas", value: "1" },
+                  { label: "Fakultas", value: "2" },
+                  { label: "Jurusan", value: "3" },
+                  { label: "Program Studi", value: "4" },
                 ]}
                 placeholder="--Pilih Jenis Unit--"
                 required={false}
@@ -110,12 +207,15 @@ const DetailUnitKerja = () => {
               <FormFieldSelect
                 form={form}
                 label="TK.Pendidikan"
-                name="tkPendidikan"
+                name="tk_pendidikan_id"
                 labelStyle="text-[#3F6FA9]"
                 options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
+                  { label: "D3 - Diploma 3", value: "1" },
+                  { label: "D4 - Diploma 4", value: "2" },
+                  { label: "S1 - Strata 1", value: "3" },
+                  { label: "Prof - Profesi", value: "4" },
+                  { label: "S2 - Strata 2", value: "5" },
+                  { label: "S3 - Strata 3", value: "6" },
                 ]}
                 placeholder="--Pilih Tk.Pendidikan--"
                 required={false}
@@ -131,7 +231,7 @@ const DetailUnitKerja = () => {
               <FormFieldInput
                 form={form}
                 label="Telpon"
-                name="telpon"
+                name="telepon"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
               />
@@ -145,19 +245,27 @@ const DetailUnitKerja = () => {
               <FormFieldInput
                 form={form}
                 label="Alamat Email"
-                name="alamatEmail"
+                name="alamat_email"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
               />
               <FormFieldSelect
                 form={form}
                 label="Akreditasi"
-                name="akreditasi"
+                name="akreditasi_id"
                 labelStyle="text-[#3F6FA9]"
                 options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
+                  { label: "A", value: "1" },
+                  { label: "B", value: "2" },
+                  { label: "C", value: "3" },
+                  { label: "Unggul", value: "4" },
+                  { label: "Baik Sekali", value: "5" },
+                  { label: "Baik", value: "6" },
+                  { label: "Minimum", value: "7" },
+                  {
+                    label: "Tidak Terakreditasi/ Kadaluwarsa",
+                    value: "8",
+                  },
                 ]}
                 placeholder="-Pilih Akreditasi-"
                 required={false}
@@ -165,14 +273,14 @@ const DetailUnitKerja = () => {
               <FormFieldInput
                 form={form}
                 label="No.SK Akreditasi"
-                name="noSkAkreditasi"
+                name="no_sk_akreditasi"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
               />
               <FormFieldInput
                 form={form}
                 label="Tanggal Akreditasi"
-                name="noSkAkreditasi"
+                name="tanggal_akreditasi"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
                 type="date"
@@ -180,14 +288,14 @@ const DetailUnitKerja = () => {
               <FormFieldInput
                 form={form}
                 label="No.SK Pendirian"
-                name="noSkPendirian"
+                name="no_sk_pendirian"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
               />
               <FormFieldInput
                 form={form}
                 label="Tanggal Sk Pendirian"
-                name="tanggalSkPendirian"
+                name="tanggal_sk_pendirian"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
                 type="date"
@@ -198,14 +306,14 @@ const DetailUnitKerja = () => {
                 name="gedung"
                 labelStyle="text-[#3F6FA9]"
                 options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
+                  { label: "Gedung A", value: "Gedung A" },
+                  { label: "Gedung B", value: "Gedung B" },
+                  { label: "Gedung C", value: "Gedung C" },
                 ]}
                 placeholder="Pilih Gedung"
                 required={false}
               />
-              <FormFieldInput
+              {/* <FormFieldInput
                 form={form}
                 label="Akademik"
                 name="akademik"
@@ -220,7 +328,7 @@ const DetailUnitKerja = () => {
                 labelStyle="text-[#3F6FA9]"
                 required={false}
                 type="checkbox"
-              />
+              /> */}
             </div>
           </CustomCard>
         </form>

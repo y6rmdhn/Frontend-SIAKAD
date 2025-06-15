@@ -30,30 +30,20 @@ import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomForm
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
+import dosenServices from "@/services/dosen.services";
+import { useQuery } from "@tanstack/react-query";
 
 const DetailSertifikasi = () => {
   const form = useForm();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string>("No file chosen");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Ukuran file maksimal 2 MB!");
-        event.target.value = ""; // reset input
-        setFileName("No file chosen");
-      } else {
-        setFileName(file.name);
-      }
-    } else {
-      setFileName("No file chosen");
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
+  // get data
+  const { data } = useQuery({
+    queryKey: ["anak-detail-dosen"],
+    queryFn: async () => {
+      const response = await dosenServices.getDataDataSertifikasiWithoutParam();
+      return response.data;
+    },
+  });
 
   return (
     <div className="mt-10 mb-20">
@@ -80,14 +70,23 @@ const DetailSertifikasi = () => {
 
             <InfoList
               items={[
-                "NIP",
-                "Nama",
-                "Unit Kerja",
-                "Status",
-                "Jab. Akademik",
-                "Jab. Fungsional",
-                "Jab. Struktural",
-                "Pendidikan",
+                { label: "NIP", value: data?.pegawai_info.nip },
+                { label: "Nama", value: data?.pegawai_info.nama },
+                { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
+                { label: "Status", value: data?.pegawai_info.status },
+                {
+                  label: "Jab. Akademik",
+                  value: data?.pegawai_info.jab_akademik,
+                },
+                {
+                  label: "Jab. Fungsional",
+                  value: data?.pegawai_info.jab_fungsional,
+                },
+                {
+                  label: "Jab. Struktural",
+                  value: data?.pegawai_info.jab_struktural,
+                },
+                { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
               ]}
             />
 
@@ -212,7 +211,7 @@ const DetailSertifikasi = () => {
           </div>
         }
       >
-        <div className="mt-10">
+        {/* <div className="mt-10">
           <div className="border-b-1 border-[#FDA31A] mb-5">
             <h1 className="text-sm font-semibold text-[#3ABC67]">
               Dokumen Pendukung
@@ -318,7 +317,7 @@ const DetailSertifikasi = () => {
               </TableRow>
             </TableBody>
           </Table>
-        </div>
+        </div> */}
       </CustomCard>
     </div>
   );

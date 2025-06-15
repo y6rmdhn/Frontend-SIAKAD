@@ -164,6 +164,9 @@ const dosenServices = {
     }),
   getDetailDataSertifikasiDosen: (id) =>
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen/` + id),
+
+  getDataDataSertifikasiWithoutParam: () =>
+    axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen`),
 };
 
 export default dosenServices;

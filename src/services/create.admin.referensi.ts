@@ -1,9 +1,11 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
-  IJabatanAkademikPost,
+  IHubunganKerja,
+  IJabatanAkademik,
   IJamKerja,
   IJenisCutiPost,
+  IJenisHari,
   IJenisLuaran,
   IJenisPelanggaran,
   IJenisPenghargaan,
@@ -16,6 +18,7 @@ import {
   IStatusEselon,
   IStatusKeaktifan,
   IStatusPangkat,
+  UnitKerja,
 } from "@/types/create.referensi";
 
 const potsReferensiServices = {
@@ -25,7 +28,7 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/output-penelitian`, payload),
   jeniCuti: (payload: IJenisCutiPost) =>
     axiosInstance.post(`${endpoint.ADMIN}/daftar-cuti`, payload),
-  jabatanAkademik: (payload: IJabatanAkademikPost) =>
+  jabatanAkademik: (payload: IJabatanAkademik) =>
     axiosInstance.post(`${endpoint.ADMIN}/jabatan-akademik`, payload),
   jenisSk: (payload: IJenisSk) =>
     axiosInstance.post(`${endpoint.ADMIN}/jenis-sk`, payload),
@@ -47,14 +50,18 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/jenis-publikasi`, payload),
   jenisPelanggaran: (payload: IJenisPelanggaran) =>
     axiosInstance.post(`${endpoint.ADMIN}/jenis-pelanggaran`, payload),
-  jabatanAkademik: (payload: IJenisPelanggaran) =>
-    axiosInstance.post(`${endpoint.ADMIN}/jabatan-akademik`, payload),
   penghargaan: (payload: FormData) =>
     axiosInstance.post(`${endpoint.ADMIN}/datapenghargaan`, payload),
   pelanggaran: (payload: FormData) =>
     axiosInstance.post(`${endpoint.ADMIN}/datapelanggaran`, payload),
   jenisPenghargaan: (payload: IJenisPenghargaan) =>
     axiosInstance.post(`${endpoint.ADMIN}/jenis-penghargaan`, payload),
+  unitKerja: (payload: UnitKerja) =>
+    axiosInstance.post(`${endpoint.ADMIN}/unit-kerja`, payload),
+  jenisHari: (payload: IJenisHari) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-hari`, payload),
+  hubunganKerja: (payload: IHubunganKerja) =>
+    axiosInstance.post(`${endpoint.ADMIN}/hubungan-kerja`, payload),
 };
 
 export default potsReferensiServices;

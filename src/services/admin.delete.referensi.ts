@@ -30,6 +30,14 @@ const deleteReferensiServices = {
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-pelanggaran/${id}`),
   deteleJenisPenghargaan: (id: number) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-penghargaan/${id}`),
+  deteleUnitKerja: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/unit-kerja/${id}`),
+  deteleJenisHari: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jenis-hari/${id}`),
+  deteleHubunganKerja: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/hubungan-kerja/${id}`),
+  deteleJabatanAkademik: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jabatan-akademik/${id}`),
 };
 
 export default deleteReferensiServices;

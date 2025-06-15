@@ -82,8 +82,9 @@ interface IJenisPelanggaran {
 }
 
 interface IJabatanAkademik {
+  role_id: number;
   kode: string;
-  nama_pelanggaran: string;
+  jabatan_akademik: string;
 }
 
 interface IMediaPublikasi {
@@ -102,6 +103,38 @@ interface IPenghargaan {
 interface IJenisPenghargaan {
   kode: string;
   nama: string;
+}
+
+interface UnitKerja {
+  kode_unit: string;
+  nama_unit: string;
+  jenis_unit_id: number;
+  tk_pendidikan_id: number;
+  akreditasi_id: number;
+
+  parent_unit_id?: string;
+  alamat?: string;
+  telepon?: string;
+  website?: string;
+  alamat_email?: string;
+  no_sk_akreditasi?: string;
+  tanggal_akreditasi?: string;
+  no_sk_pendirian?: string;
+  tanggal_sk_pendirian?: string;
+  gedung?: string;
+}
+
+interface IJenisHari {
+  kode: string;
+  nama_hari: string;
+  jenis_hari: boolean;
+}
+
+interface IHubunganKerja {
+  kode: string;
+  nama_hub_kerja: string;
+  status_aktif: boolean;
+  pns: boolean;
 }
 
 export type {
@@ -123,4 +156,7 @@ export type {
   IMediaPublikasi,
   IPenghargaan,
   IJenisPenghargaan,
+  UnitKerja,
+  IJenisHari,
+  IHubunganKerja,
 };

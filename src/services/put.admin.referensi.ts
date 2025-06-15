@@ -1,8 +1,11 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
+  IHubunganKerja,
+  IJabatanAkademik,
   IJamKerja,
   IJenisCutiPost,
+  IJenisHari,
   IJenisLuaran,
   IJenisPelanggaran,
   IJenisPenghargaan,
@@ -53,6 +56,12 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/datapelanggaran/${id}`, payload),
   jenisPenghargaan: (id: number, payload: IJenisPenghargaan) =>
     axiosInstance.put(`${endpoint.ADMIN}/jenis-penghargaan/${id}`, payload),
+  jenisHari: (id: number, payload: IJenisHari) =>
+    axiosInstance.put(`${endpoint.ADMIN}/jenis-hari/${id}`, payload),
+  hubunganKerja: (id: number, payload: IHubunganKerja) =>
+    axiosInstance.put(`${endpoint.ADMIN}/hubungan-kerja/${id}`, payload),
+  jabatanAkademik: (id: number, payload: IJabatanAkademik) =>
+    axiosInstance.put(`${endpoint.ADMIN}/jabatan-akademik/${id}`, payload),
 };
 
 export default putReferensiServices;

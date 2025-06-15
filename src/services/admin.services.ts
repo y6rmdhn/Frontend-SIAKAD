@@ -163,6 +163,13 @@ const adminServices = {
 
   getStatus: () => axiosInstance.get(`${endpoint.ADMIN}/status-aktif`),
 
+  getParentUnitSelect: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/unit-kerja`, {
+      params: {
+        page: page,
+      },
+    }),
+
   // for detail
   getPegawaiDetailAdminPage: (idPegawai) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),
@@ -175,7 +182,10 @@ const adminServices = {
 
   getSuku: (idSuku: number) =>
     axiosInstance.get(`${endpoint.ADMIN}/suku/` + idSuku),
-  getSukuParams: (page) =>
+
+  getDaftarRoleID: () => axiosInstance.get(`${endpoint.ADMIN}/role`),
+
+  getSukuParams: (page?) =>
     axiosInstance.get(`${endpoint.ADMIN}/suku`, {
       params: {
         page: page,
