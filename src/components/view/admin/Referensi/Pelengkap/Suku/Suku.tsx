@@ -17,7 +17,6 @@ import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
 import { useEffect, useState } from "react";
@@ -197,7 +196,6 @@ const Suku = () => {
   return (
     <div className="mt-10 mb-20">
       <Title title="Suku" />
-      <Separator className="w-full bg-green-500" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitData)}>
           <CustomCard

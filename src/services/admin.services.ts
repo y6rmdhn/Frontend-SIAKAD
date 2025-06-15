@@ -191,6 +191,13 @@ const adminServices = {
       },
     }),
 
+  getGolonganDarah: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/golongan-darah`, {
+      params: {
+        page: page,
+      },
+    }),
+
   // for detail
   getPegawaiDetailAdminPage: (idPegawai) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),

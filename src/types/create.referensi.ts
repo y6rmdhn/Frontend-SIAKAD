@@ -150,6 +150,10 @@ interface ISuku {
   nama_suku: string;
 }
 
+interface IGolonganDarah {
+  golongan_darah: string;
+}
+
 export type {
   IJenisTesPost,
   IOutputPenelitianPost,
@@ -175,4 +179,5 @@ export type {
   IAgama,
   IStatusPernikahan,
   ISuku,
+  IGolonganDarah,
 };
