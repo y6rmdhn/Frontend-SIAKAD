@@ -40,6 +40,8 @@ const deleteReferensiServices = {
     axiosInstance.delete(`${endpoint.ADMIN}/jabatan-akademik/${id}`),
   deteleDataAgama: (id: number) =>
     axiosInstance.delete(`${endpoint.ADMIN}/agama/${id}`),
+  deteleDataSuku: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/suku/${id}`),
 };
 
 export default deleteReferensiServices;

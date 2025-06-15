@@ -20,6 +20,7 @@ import {
   IStatusKeaktifan,
   IStatusPangkat,
   IStatusPernikahan,
+  ISuku,
 } from "@/types/create.referensi";
 
 const putReferensiServices = {
@@ -68,6 +69,8 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/agama/${id}`, payload),
   statusPernikahan: (id: number, payload: IStatusPernikahan) =>
     axiosInstance.put(`${endpoint.ADMIN}/status-pernikahan/${id}`, payload),
+  sukuAll: (id: number, payload: ISuku) =>
+    axiosInstance.put(`${endpoint.ADMIN}/suku/${id}`, payload),
 };
 
 export default putReferensiServices;

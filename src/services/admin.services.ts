@@ -184,6 +184,13 @@ const adminServices = {
       },
     }),
 
+  getSukuAll: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/suku`, {
+      params: {
+        page: page,
+      },
+    }),
+
   // for detail
   getPegawaiDetailAdminPage: (idPegawai) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),

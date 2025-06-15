@@ -146,6 +146,9 @@ interface IStatusPernikahan {
   kode_status: string;
   nama_status: string;
 }
+interface ISuku {
+  nama_suku: string;
+}
 
 export type {
   IJenisTesPost,
@@ -171,4 +174,5 @@ export type {
   IHubunganKerja,
   IAgama,
   IStatusPernikahan,
+  ISuku,
 };

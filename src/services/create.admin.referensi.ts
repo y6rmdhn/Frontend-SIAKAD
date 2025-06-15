@@ -19,6 +19,7 @@ import {
   IStatusEselon,
   IStatusKeaktifan,
   IStatusPangkat,
+  ISuku,
   UnitKerja,
 } from "@/types/create.referensi";
 
@@ -65,6 +66,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/hubungan-kerja`, payload),
   agama: (payload: IAgama) =>
     axiosInstance.post(`${endpoint.ADMIN}/agama`, payload),
+  suku: (payload: ISuku) =>
+    axiosInstance.post(`${endpoint.ADMIN}/suku`, payload),
 };
 
 export default potsReferensiServices;
