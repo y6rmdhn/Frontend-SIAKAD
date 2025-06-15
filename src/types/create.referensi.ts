@@ -137,6 +137,16 @@ interface IHubunganKerja {
   pns: boolean;
 }
 
+interface IAgama {
+  kode: string;
+  nama_agama: string;
+}
+
+interface IStatusPernikahan {
+  kode_status: string;
+  nama_status: string;
+}
+
 export type {
   IJenisTesPost,
   IOutputPenelitianPost,
@@ -159,4 +169,6 @@ export type {
   UnitKerja,
   IJenisHari,
   IHubunganKerja,
+  IAgama,
+  IStatusPernikahan,
 };

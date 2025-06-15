@@ -170,6 +170,20 @@ const adminServices = {
       },
     }),
 
+  getAgama: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/agama`, {
+      params: {
+        page: page,
+      },
+    }),
+
+  getStatusPernikahan: (page) =>
+    axiosInstance.get(`${endpoint.ADMIN}/status-pernikahan`, {
+      params: {
+        page: page,
+      },
+    }),
+
   // for detail
   getPegawaiDetailAdminPage: (idPegawai) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),
@@ -179,6 +193,9 @@ const adminServices = {
 
   getDetailPelanggaran: (id) =>
     axiosInstance.get(`${endpoint.ADMIN}/datapelanggaran/` + id),
+
+  getDetailUnitKerja: (id) =>
+    axiosInstance.get(`${endpoint.ADMIN}/unit-kerja/` + id),
 
   getSuku: (idSuku: number) =>
     axiosInstance.get(`${endpoint.ADMIN}/suku/` + idSuku),

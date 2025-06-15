@@ -89,7 +89,7 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
             </Link>
             <Link
               to={
-                "/admin/referensi/kepegawaian/unit-kerja/detail-unit-kerja/" +
+                "/admin/referensi/kepegawaian/unit-kerja/detail-data-unit-kerja/" +
                 node.id
               }
             >

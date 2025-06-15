@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
+  IAgama,
   IHubunganKerja,
   IJabatanAkademik,
   IJamKerja,
@@ -62,6 +63,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/jenis-hari`, payload),
   hubunganKerja: (payload: IHubunganKerja) =>
     axiosInstance.post(`${endpoint.ADMIN}/hubungan-kerja`, payload),
+  agama: (payload: IAgama) =>
+    axiosInstance.post(`${endpoint.ADMIN}/agama`, payload),
 };
 
 export default potsReferensiServices;

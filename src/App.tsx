@@ -229,12 +229,16 @@ const DetailKeluargaPage = lazy(
   () => import("./pages/admin/DetailPegawai/Keluarga")
 );
 const CutiPage = lazy(() => import("./pages/operasional/pengajuan/cuti")); // Asumsi ini untuk user
-const DetailCutiUserPage = lazy(() => import("./pages/operasional/pengajuan/cuti/detailCuti"));
+const DetailCutiUserPage = lazy(
+  () => import("./pages/operasional/pengajuan/cuti/detailCuti")
+);
 const DetailDataCutiUserPage = lazy(
   () => import("./pages/operasional/pengajuan/cuti/detaildataCuti")
 );
 const IzinPage = lazy(() => import("./pages/operasional/pengajuan/Izin")); // Asumsi ini untuk user
-const DetailIzinUserPage = lazy(() => import("./pages/operasional/pengajuan/Izin/detailIzin"));
+const DetailIzinUserPage = lazy(
+  () => import("./pages/operasional/pengajuan/Izin/detailIzin")
+);
 const DetailDataIzinUserPage = lazy(
   () => import("./pages/operasional/pengajuan/Izin/detaildataIzin")
 );
@@ -243,10 +247,10 @@ const BeritaOperasionalUserPage = lazy(
 );
 const DetailBeritaUserPage = lazy(
   () => import("./pages/operasional/berita/detailBerita")
-)
+);
 const DetailDataBeritaUserPage = lazy(
   () => import("./pages/operasional/berita/detaildataBerita")
-)
+);
 const DetailDokumenInternalUserPage = lazy(
   () => import("./pages/operasional/dokumenInternal/detailDokumen")
 );
@@ -422,11 +426,13 @@ const DetailUnitKerjaReferensiPage = lazy(
   () => import("./pages/admin/referensi/kepegawaian/unitKerja/detailUnitKerja")
 );
 const DetailDataUnitKerjaReferensiPage = lazy(
-  () => import("./pages/admin/referensi/kepegawaian/unitKerja/detaildataUnitKerja")
-)
+  () =>
+    import("./pages/admin/referensi/kepegawaian/unitKerja/detaildataUnitKerja")
+);
 const EditDataUnitKerjaReferensiPage = lazy(
-  () => import("./pages/admin/referensi/kepegawaian/unitKerja/editdataUnitKerja")
-)
+  () =>
+    import("./pages/admin/referensi/kepegawaian/unitKerja/editdataUnitKerja")
+);
 const KotaReferensiPage = lazy(
   () => import("./pages/admin/referensi/wilayah/kota")
 );
@@ -439,24 +445,18 @@ const NegaraReferensiPage = lazy(
 const ProvinsiReferensiPage = lazy(
   () => import("./pages/admin/referensi/wilayah/provinsi")
 );
-const AgamaPage = lazy(
-  () => import("./pages/admin/referensi/pelengkap/agama")
-);
+const AgamaPage = lazy(() => import("./pages/admin/referensi/pelengkap/agama"));
 const StatusPernikahanPage = lazy(
   () => import("./pages/admin/referensi/pelengkap/statusPernikahan")
-)
+);
 const JenjangPendidikanPage = lazy(
   () => import("./pages/admin/referensi/pelengkap/jenjangPendidikan")
-)
-const BankPage = lazy(
-  () => import("./pages/admin/referensi/pelengkap/bank")
-)
-const SukuPage = lazy(
-  () => import("./pages/admin/referensi/pelengkap/suku")
-)
+);
+const BankPage = lazy(() => import("./pages/admin/referensi/pelengkap/bank"));
+const SukuPage = lazy(() => import("./pages/admin/referensi/pelengkap/suku"));
 const GolonganDarahPage = lazy(
   () => import("./pages/admin/referensi/pelengkap/golonganDarah")
-)
+);
 const HomebaseUserPage = lazy(
   () => import("./pages/dataRiwayat/kepegawaian/homebase")
 );
@@ -937,10 +937,7 @@ function App() {
           <Route path="/operasional">
             <Route path="berita" Component={BeritaOperasionalUserPage} />
             <Route path="tambah-berita" Component={DetailBeritaUserPage} />
-            <Route
-              path="detail-berita"
-              Component={DetailDataBeritaUserPage}
-            />
+            <Route path="detail-berita" Component={DetailDataBeritaUserPage} />
 
             <Route
               path="detail-dokumen-internal"
@@ -958,16 +955,10 @@ function App() {
             <Route path="pengajuan">
               <Route path="cuti" Component={CutiPage} />
               <Route path="tambah-cuti" Component={DetailCutiUserPage} />
-              <Route 
-                path="detail-cuti" 
-                Component={DetailDataCutiUserPage} 
-              />
+              <Route path="detail-cuti" Component={DetailDataCutiUserPage} />
               <Route path="izin" Component={IzinPage} />
               <Route path="tambah-izin" Component={DetailIzinUserPage} />
-              <Route 
-                path="detail-izin" 
-                Component={DetailDataIzinUserPage} 
-              />
+              <Route path="detail-izin" Component={DetailDataIzinUserPage} />
             </Route>
             <Route path="evaluasi-kerja" Component={EvaluasiKerjaUserPage} />
             <Route path="evaluasi-kerja">
@@ -1799,8 +1790,14 @@ function App() {
                   Component={StatusKeaktifanReferensiPage}
                 />
                 <Route path="unit-kerja" Component={UnitKerjaReferensiPage} />
-                <Route path="unit-kerja/detail-unit-kerja" Component={DetailUnitKerjaReferensiPage} />
-                <Route path="unit-kerja/detail-data-unit-kerja" Component={DetailDataUnitKerjaReferensiPage}/>
+                <Route
+                  path="unit-kerja/detail-unit-kerja"
+                  Component={DetailUnitKerjaReferensiPage}
+                />
+                <Route
+                  path="unit-kerja/detail-data-unit-kerja/:id"
+                  Component={DetailDataUnitKerjaReferensiPage}
+                />
                 <Route
                   path="unit-kerja/edit-data-unit-kerja"
                   Component={EditDataUnitKerjaReferensiPage}
@@ -1818,8 +1815,14 @@ function App() {
               {/* REFERENSI > PELENGKAP */}
               <Route path="pelengkap">
                 <Route path="agama" Component={AgamaPage} />
-                <Route path="status-pernikahan" Component={StatusPernikahanPage} />
-                <Route path="jenjang-pendidikan" Component={JenjangPendidikanPage} />
+                <Route
+                  path="status-pernikahan"
+                  Component={StatusPernikahanPage}
+                />
+                <Route
+                  path="jenjang-pendidikan"
+                  Component={JenjangPendidikanPage}
+                />
                 <Route path="bank" Component={BankPage} />
                 <Route path="suku" Component={SukuPage} />
                 <Route path="golongan-darah" Component={GolonganDarahPage} />
