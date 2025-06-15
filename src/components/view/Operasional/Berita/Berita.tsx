@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/table";
 import { IoAdd } from "react-icons/io5";
 import { HiMiniTrash } from "react-icons/hi2";
+import { IoEyeOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 
@@ -73,10 +75,12 @@ const Berita = () => {
 
               <div className="flex gap-2 order-1 md:order-2 w-full md:w-auto">
                 <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto">
-                  <Button className="bg-[#87E39B] text-white">
-                    <IoAdd />
-                    Tambah
-                  </Button>
+                  <Link to="/operasional/tambah-berita">
+                    <Button className="bg-[#87E39B] text-white">
+                      <IoAdd />
+                      Tambah
+                    </Button>
+                  </Link>
                   <Button className="bg-[#FDA31A] text-white">
                     <HiMiniTrash />
                     Hapus
@@ -119,7 +123,26 @@ const Berita = () => {
               <TableCell className="text-center"></TableCell>
               <TableCell className="text-center"></TableCell>
               <TableCell className="h-full">
-                <div className="flex justify-center items-center w-full h-full"></div>
+                <div className="flex justify-center items-center w-full h-full">
+                  <Link to="/operasional/detail-berita">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
+                  <Link to="">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <HiMiniTrash className="w-5! h-5! text-[#FDA31A]" />
+                    </Button>
+                  </Link>
+                </div>
               </TableCell>
             </TableRow>
           </TableBody>
