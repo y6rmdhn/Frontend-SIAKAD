@@ -112,26 +112,44 @@ const DasboardUser = () => {
                     </div>
 
                     {/* Gaji */}
-                    <div
-                        className="bg-gradient-to-b lg:w-[40%] from-[#00AF9C] to-[#106D63] h-45 rounded-md text-white p-4">
-                        <div className="flex justify-between items-center mb-4">
-                            <h1 className="text-2xl font-medium max-[1193px]:text-lg">
-                                Gaji
-                            </h1>
-                            <BsArrowUpRightCircle className="w-6 h-6"/>
-                        </div>
-                        <div className="flex items-center justify-center gap-4">
-                            <FaMoneyBills className="w-14 h-14"/>
-                            <div className="text-center">
-                                <p className="text-lg max-[1193px]:text-base">
-                                    Total Gaji per bulan
-                                </p>
-                                <p className="text-2xl font-bold mt-1 max-[1193px]:text-base">
-                                    Rp 2.000.000
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <Link to="/penggajian" className="w-full  max-w-sm flex flex-col gap-4 cursor-pointer">
+      {/* Kartu Gaji */}
+      <div className=" h-full bg-gradient-to-r from-teal-600 to-green-600 rounded-xl text-white p-4 hover:brightness-110 transition">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm ">Total Gaji per bulan</p>
+            <p className="text-2xl font-bold">Rp 2.000.000</p>
+          </div>
+          <BsArrowUpRightCircle size={24} />
+        </div>
+      </div>
+
+      {/* Detail Gaji */}
+      <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
+        <h3 className="text-lg font-semibold mb-2">Detail Penggajian</h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span>Gaji Pokok</span>
+            <span>Rp 1.500.000</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tunjangan</span>
+            <span>Rp 700.000</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Potongan</span>
+            <span>- Rp 200.000</span>
+          </div>
+          <hr />
+          <div className="flex justify-between font-bold text-base pt-2">
+            <span>Total Gaji</span>
+            <span>Rp 2.000.000</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+
+
                 </div>
 
                 <div className="w-auto">

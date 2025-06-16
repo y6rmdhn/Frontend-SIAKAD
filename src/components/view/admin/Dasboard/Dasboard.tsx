@@ -21,19 +21,24 @@ import {
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
 import LoadingStateDasbordAdmin from "@/components/blocks/LoadingStateDasboradAdmin/LoadingStateDasbordAdmin.tsx";
+import { is } from "date-fns/locale";
+import { log } from "console";
 
 const Dasboard = () => {
   const { data } = useQuery({
     queryKey: ["dasboard-admin"],
     queryFn: async () => {
       const response = await adminServices.getDasboardAdmin();
-
+     
       console.log(response.data);
 
       return response.data.data;
     },
   });
 
+
+  console.log(data);
+  
   return (
     <div className="mt-10 mb-20">
       <Title title="Dasboard" />
