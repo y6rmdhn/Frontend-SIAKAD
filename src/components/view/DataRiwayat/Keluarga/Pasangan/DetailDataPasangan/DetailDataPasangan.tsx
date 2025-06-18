@@ -50,22 +50,22 @@ const DetailDataPasangan = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm">Nama</Label>
+                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Nama</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.nama_pasangan}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm">Tempat Lahir</Label>
+                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Tempat Lahir</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.tempat_lahir}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm">Tgl Lahir</Label>
+                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Tgl Lahir</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.tgl_lahir ? format(parseISO(data?.data.tgl_lahir), "dd MMMM yyyy")
                                         : "-"}
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm">Pekerjaan</Label>
+                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Pekerjaan</Label>
                                 <Label className="italic text-gray-400 text-xs sm:text-sm">
                                     {data?.data.jenis_pekerjaan
                                         ? data?.data.jenis_pekerjaan
@@ -78,15 +78,15 @@ const DetailDataPasangan = () => {
                         {/* KANAN */}
                         <div className="space-y-2">
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm">Kartu Nikah</Label>
+                                <Label className="font-semibold text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Kartu Nikah</Label>
                                 <Label className="italic text-gray-400 text-xs sm:text-sm">[Nullable]</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm">Status Pengajuan</Label>
+                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm shrink-0 w-38">Status Pengajuan</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.status_pengajuan}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm">Tanggal Diajukan</Label>
+                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm shrink-0 w-38">Tanggal Diajukan</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.timestamps.tgl_diajukan
 
@@ -95,7 +95,7 @@ const DetailDataPasangan = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm">Tanggal Disetujui</Label>
+                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm shrink-0 w-38">Tanggal Disetujui</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.timestamps.tgl_disetujui
                                         ? format(parseISO(data?.data.timestamps.tgl_disetujui), "dd MMMM yyyy")
@@ -103,7 +103,7 @@ const DetailDataPasangan = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm">Dibuat Oleh</Label>
+                                <Label className="text-[#3F6FA9] font-semibold text-xs sm:text-sm shrink-0 w-38">Dibuat Oleh</Label>
                                 <Label className="text-xs sm:text-sm">{data?.pegawai.nama || '-'}</Label>
                             </div>
                         </div>
