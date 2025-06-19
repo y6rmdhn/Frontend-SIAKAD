@@ -18,6 +18,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 4646
           script: |
             # Navigate to the repository directory on the server
             # This is the directory where you initially cloned your repo, NOT the web root
