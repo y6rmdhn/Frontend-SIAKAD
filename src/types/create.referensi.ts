@@ -82,6 +82,7 @@ interface IJenisPelanggaran {
 }
 
 interface IJabatanAkademik {
+  id?: number;
   role_id: number;
   kode: string;
   jabatan_akademik: string;
@@ -108,7 +109,7 @@ interface IJenisPenghargaan {
 interface UnitKerja {
   kode_unit: string;
   nama_unit: string;
-  jenis_unit_id: number;
+  jenis_unit_id?: number;
   tk_pendidikan_id: number;
   akreditasi_id: number;
 

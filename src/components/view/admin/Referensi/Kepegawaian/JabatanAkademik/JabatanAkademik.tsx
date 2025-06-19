@@ -107,7 +107,7 @@ const JabatanAkademik = () => {
   });
 
   const jenisJabatanOptions =
-    jenisJabatan?.data.map((role) => ({
+    jenisJabatan?.data.map((role: { id: { toString: () => any; }; nama: any; }) => ({
       value: role.id.toString(),
       label: role.nama,
     })) || [];
@@ -187,6 +187,7 @@ const JabatanAkademik = () => {
     };
 
     if (isEditMode && editingItemId) {
+      // @ts-ignore
       putData(dataUntukApi);
     } else {
       postData(dataUntukApi);
@@ -374,7 +375,7 @@ const JabatanAkademik = () => {
               )}
               {data?.data.map((item, index) => {
                 const roleName = jenisJabatanOptions.find(
-                  (opt) => opt.value == item.role_id
+                  (opt: { value: number; }) => opt.value == item.role_id
                 )?.label;
 
                 console.log(roleName);

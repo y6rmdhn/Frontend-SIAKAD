@@ -179,8 +179,10 @@ const DetailPangkat = () => {
 
                 if (valueToAppend !== null && valueToAppend !== undefined) {
                     formData.append(key, String(valueToAppend));
-                } else if (key === 'masa_kerja_tahun' && valueToAppend === 0) {
-                    formData.append(key, String(valueToAppend));
+                } else { // @ts-ignore
+                    if (key === 'masa_kerja_tahun' && valueToAppend === 0) {
+                                        formData.append(key, String(valueToAppend));
+                                    }
                 }
             }
         });
@@ -311,7 +313,6 @@ const DetailPangkat = () => {
                             labelStyle="text-[#3F6FA9] text-xs md:text-sm"
                         />
                         <FormFieldInputFile
-                            form={form}
                             label="File Pangkat"
                             name="file_pangkat"
                             classname="border-none shadow-none"

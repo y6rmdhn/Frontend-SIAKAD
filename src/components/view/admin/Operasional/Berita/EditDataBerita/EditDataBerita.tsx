@@ -1,7 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import React, { useState, useMemo, useCallback } from "react";
@@ -19,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 
 //KODE AWAL SLATE JS
 
-import { createEditor, Descendant, Transforms, Editor, Text, BaseEditor, Element as SlateElement } from 'slate';
+import { createEditor, Descendant, Transforms, Editor, BaseEditor, Element as SlateElement } from 'slate';
 import { Slate, Editable, withReact, ReactEditor, RenderElementProps, RenderLeafProps, useSlate } from 'slate-react';
 import { withHistory, HistoryEditor } from 'slate-history';
 import {
@@ -46,7 +45,6 @@ declare module 'slate' {
 
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
-const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
 
 const CustomEditor = {
   isMarkActive(editor: Editor, format: keyof Omit<CustomText, 'text'>): boolean {
@@ -88,7 +86,7 @@ const CustomEditor = {
             LIST_TYPES.includes(n.type),
     });
     const isListActive = !!match;
-    
+
     // Pertama, selalu batalkan format list yang ada
     Transforms.unwrapNodes(editor, {
       match: n =>
@@ -97,21 +95,21 @@ const CustomEditor = {
         LIST_TYPES.includes(n.type),
       split: true,
     });
-    
+
     let newProperties: Partial<SlateElement>;
     // Jika format yang ditekan adalah list yang sama dengan yang aktif,
     // maka kita hanya menonaktifkannya (mengubahnya jadi paragraf)
     if (isListActive && isList && SlateElement.isElement(match[0]) && match[0].type === format) {
         newProperties = { type: 'paragraph' };
         Transforms.setNodes(editor, newProperties);
-    } 
+    }
     // Jika formatnya adalah list (dan tidak ada list yang aktif, atau listnya beda jenis)
     else if (isList) {
         newProperties = { type: 'list-item' };
         Transforms.setNodes(editor, newProperties);
         const block = { type: format as 'numbered-list' | 'bulleted-list', children: [] };
         Transforms.wrapNodes(editor, block);
-    } 
+    }
     // Jika formatnya bukan list (seperti heading)
     else {
         newProperties = { type: format };
@@ -151,7 +149,7 @@ const ToolbarButton = ({ format, icon, type }: { format: string; icon: React.Rea
         default:
             isActive = false;
     }
-    
+
     return (
         <button
             type="button"
@@ -161,9 +159,9 @@ const ToolbarButton = ({ format, icon, type }: { format: string; icon: React.Rea
                 if (type === 'block') CustomEditor.toggleBlock(editor, format as any);
                 if (type === 'align') CustomEditor.toggleAlignment(editor, format as any);
             }}
-            style={{ 
+            style={{
                 cursor: 'pointer', padding: '5px', border: '1px solid transparent', borderRadius: '3px',
-                color: isActive ? 'black' : '#666', backgroundColor: isActive ? '#e0e0e0' : 'transparent' 
+                color: isActive ? 'black' : '#666', backgroundColor: isActive ? '#e0e0e0' : 'transparent'
             }}
             title={format}
         >
@@ -179,12 +177,12 @@ const EditDataBerita = () => {
 
     //SLATE JS
       const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-      
+
       const initialValue: Descendant[] = [{ type: 'paragraph', align: 'left', children: [{ text: '' }] }];
-      
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [value, setValue] = useState<Descendant[]>(initialValue);
-    
+      const [_, setValue] = useState<Descendant[]>(initialValue);
+
       const renderElement = useCallback(({ attributes, children, element }: RenderElementProps) => {
         const style = { textAlign: element.align };
         switch (element.type) {
@@ -196,14 +194,14 @@ const EditDataBerita = () => {
           default: return <p style={style} {...attributes}>{children}</p>;
         }
       }, []);
-    
+
       const renderLeaf = useCallback(({ attributes, children, leaf }: RenderLeafProps) => {
         if (leaf.bold) { children = <strong>{children}</strong>; }
         if (leaf.italic) { children = <em>{children}</em>; }
         if (leaf.underline) { children = <u>{children}</u>; }
         return <span {...attributes}>{children}</span>;
       }, []);
-    
+
       //KODE AKHIR SLATE JS
 
     return (
@@ -280,7 +278,7 @@ const EditDataBerita = () => {
                             >
                               <div className="w-full border rounded-md mt-1">
                                 <div className="flex items-center gap-2 p-2 border-b flex-wrap bg-gray-50">
-                                  <select 
+                                  <select
                                     defaultValue="paragraph"
                                     onChange={e => {
                                         e.preventDefault();

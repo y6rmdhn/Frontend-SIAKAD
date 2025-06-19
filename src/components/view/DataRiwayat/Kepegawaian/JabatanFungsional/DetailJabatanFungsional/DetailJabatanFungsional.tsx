@@ -196,7 +196,6 @@ const DetailJabatanFungsional = () => {
                         />
 
                         <FormFieldInputFile
-                            form={form}
                             label="File Jabatan"
                             name="file_sk_jabatan"
                             classname="border-none shadow-none"

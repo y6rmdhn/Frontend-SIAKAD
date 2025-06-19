@@ -25,6 +25,7 @@ import SelectFilter from "@/components/blocks/SelectFilter";
 import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import InfoList from "@/components/blocks/InfoList";
+import {DummyDataDosen} from "@/constant/DummyDataPegawai/dummyDataPegawai.ts";
 const Publikasi = () => {
   return (
     <div className="mt-10 mb-20">
@@ -42,16 +43,16 @@ const Publikasi = () => {
       />
 
       <InfoList
-        items={[
-          "NIP",
-          "Nama",
-          "Unit Kerja",
-          "Status",
-          "Jab. Akademik",
-          "Jab. Fungsional",
-          "Jab. Struktural",
-          "Pendidikan",
-        ]}
+          items={[
+            { label: "NIP", value: DummyDataDosen.pegawai_info.nip },
+            { label: "Nama", value: DummyDataDosen.pegawai_info.nama },
+            { label: "Unit Kerja", value: DummyDataDosen.pegawai_info.unit_kerja },
+            { label: "Status", value: DummyDataDosen.pegawai_info.status },
+            { label: "Jab. Akademik", value: DummyDataDosen.pegawai_info.jab_akademik },
+            { label: "Jab. Fungsional", value: DummyDataDosen.pegawai_info.jab_fungsional },
+            { label: "Jab. Struktural", value: DummyDataDosen.pegawai_info.jab_struktural },
+            { label: "Pendidikan", value: DummyDataDosen.pegawai_info.pendidikan },
+          ]}
       />
 
       <div className="gap-5 flex flex-col md:flex-row mt-5">

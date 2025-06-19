@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import useResetPassword from "@/hooks/useResetPassword";
-import React from "react";
 import { Link } from "react-router-dom";
 
 const ForgetPassword = () => {

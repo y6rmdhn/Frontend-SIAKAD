@@ -1,7 +1,13 @@
 import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
+import {DataPegawaiSchema} from "@/components/view/admin/DataPegawai/DataPegawai.tsx";
+import {UseFormReturn} from "react-hook-form";
 
-const DetailKendaraanSection = ({ form }) => (
+interface DetailKendaraanSectionProps {
+    form: UseFormReturn<DataPegawaiSchema>;
+}
+
+const DetailKendaraanSection = ({ form }: DetailKendaraanSectionProps) => (
   <div className="grid lg:grid-rows-3 lg:grid-flow-col gap-4 mt-10 items-center">
     <FormFieldInput
       form={form}

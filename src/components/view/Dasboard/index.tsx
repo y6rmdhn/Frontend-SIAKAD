@@ -1,3 +1,3 @@
-import Dasboard from "./Dasboard";
+import DasboardUser from "@/components/view/Dasboard/DasboardUser.tsx";
 
-export default Dasboard;
+export default DasboardUser;

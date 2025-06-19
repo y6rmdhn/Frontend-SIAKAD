@@ -28,7 +28,6 @@ import { useForm } from "react-hook-form";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 import Title from "@/components/blocks/Title";
-import SearchInput from "@/components/blocks/SearchInput";
 
 const DetailBerita = () => {
   const form = useForm({

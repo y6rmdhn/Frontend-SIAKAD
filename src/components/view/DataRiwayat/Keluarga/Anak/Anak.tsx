@@ -19,7 +19,7 @@ import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import {useQuery} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
-import {useEffect} from "react";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
 
 
@@ -124,7 +124,9 @@ const Anak = () => {
             <Table className="mt-10 table-auto text-xs lg:text-sm">
                 <TableHeader>
                     <TableRow className="bg-[#002E5A] ">
-                        {data?.table_columns.map((item) => (
+                        {data?.table_columns.map((item: {
+                            label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined;
+                        }) => (
                             <TableHead className="text-center text-white border">
                                 {item.label}
                             </TableHead>
@@ -132,8 +134,8 @@ const Anak = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
-                        <TableRow className=" even:bg-gray-100">
+                    {data?.data.data.map((item: { id: Key | null | undefined; nama: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; jenis_kelamin: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; anak_ke: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; umur: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; tempat_lahir: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">{item.nama}</TableCell>
                             <TableCell className="text-center">{item.jenis_kelamin}</TableCell>
                             <TableCell className="text-center">{item.anak_ke}</TableCell>

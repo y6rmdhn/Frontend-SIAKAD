@@ -18,6 +18,23 @@ import operasional from "@/constant/NavbarMenu/operasional";
 import validasiData from "@/constant/NavbarMenu/validasiData";
 import referensi from "@/constant/NavbarMenu/referensi";
 
+// Definisikan tipe untuk setiap item di dalam menu
+interface MenuItem {
+  title: string;
+  href: string;
+  childrenItems?: {
+    title: string;
+    href: string;
+  }[];
+}
+
+// Definisikan tipe untuk props MenuGroup
+interface MenuGroupProps {
+  title: string;
+  items: MenuItem[];
+  path: string;
+}
+
 const Navigation = () => {
   const location = useLocation();
 
@@ -78,30 +95,30 @@ const Navigation = () => {
   );
 };
 
-const MenuGroup = ({ title, items, path }) => {
+const MenuGroup = ({ title, items, path }: MenuGroupProps) => {
   const location = useLocation();
-
   const isActive = location.pathname.includes(path);
+
   return (
-    <NavigationMenuItem>
-      <NavigationMenuTrigger
-        className={isActive ? "bg-yellow-uika text-white" : "bg-[#eeeeee]"}
-      >
-        {title}
-      </NavigationMenuTrigger>
-      <NavigationMenuContent className="z-50">
-        <ul className="grid w-52 gap-3 grid-cols-1">
-          {items.map((component) => (
-            <ListItem
-              key={component.title}
-              title={component.title}
-              href={component.href}
-              childrenItems={component.childrenItems}
-            />
-          ))}
-        </ul>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
+      <NavigationMenuItem>
+        <NavigationMenuTrigger
+            className={isActive ? "bg-yellow-uika text-white" : "bg-[#eeeeee]"}
+        >
+          {title}
+        </NavigationMenuTrigger>
+        <NavigationMenuContent className="z-50">
+          <ul className="grid w-52 gap-3 grid-cols-1">
+            {items.map((component: MenuItem) => (
+                <ListItem
+                    key={component.title}
+                    title={component.title}
+                    href={component.href}
+                    childrenItems={component.childrenItems}
+                />
+            ))}
+          </ul>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
   );
 };
 

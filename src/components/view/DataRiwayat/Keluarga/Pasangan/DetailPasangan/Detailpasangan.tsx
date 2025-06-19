@@ -109,24 +109,26 @@ const DetailPasangan = () => {
             if (value !== null && value !== undefined) {
                 if (key === "pasangan_berkerja_dalam_satu_instansi") {
                     formData.append(key, value ? "1" : "0");
-                } else if (value instanceof File) {
-                    formData.append(key, value, value.name);
-                } else if (key === "tgl_lahir" && value) { // value here is a date string
-                    try {
-                        const dateValue = new Date(value as string);
-                        if (!isNaN(dateValue.getTime())) {
-                            formData.append(key, dateValue.toISOString());
-                        } else {
-                            formData.append(key, value as string);
-                        }
-                    } catch (e) {
-                        console.error("Error converting date:", e);
-                        formData.append(key, value as string);
-                    }
-                } else if (typeof value === 'string' && value !== "") {
-                    formData.append(key, value);
-                } else if (typeof value !== 'string') {
-                    formData.append(key, String(value));
+                } else { // @ts-ignore
+                    if (value instanceof File) {
+                                        formData.append(key, value, value.name);
+                                    } else if (key === "tgl_lahir" && value) { // value here is a date string
+                                        try {
+                                            const dateValue = new Date(value as string);
+                                            if (!isNaN(dateValue.getTime())) {
+                                                formData.append(key, dateValue.toISOString());
+                                            } else {
+                                                formData.append(key, value as string);
+                                            }
+                                        } catch (e) {
+                                            console.error("Error converting date:", e);
+                                            formData.append(key, value as string);
+                                        }
+                                    } else if (typeof value === 'string' && value !== "") {
+                                        formData.append(key, value);
+                                    } else if (typeof value !== 'string') {
+                                        formData.append(key, String(value));
+                                    }
                 }
             }
         });

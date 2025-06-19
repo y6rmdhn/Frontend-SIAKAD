@@ -174,7 +174,6 @@ const DetailKemampuanBahasa = () => {
                                 required={false}
                             />
                             <FormFieldInputFile
-                                form={form}
                                 label="File Pendukung"
                                 name="file_pendukung"
                                 classname="border-none shadow-none"

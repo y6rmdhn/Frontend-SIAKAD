@@ -98,7 +98,7 @@ const UnitKerja = () => {
     },
   });
 
-  const handleDelete = (id: nnumber) => {
+  const handleDelete = (id: number) => {
     deleteData(id);
   };
 

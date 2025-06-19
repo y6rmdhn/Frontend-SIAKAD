@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -20,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useRef, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { HiMiniTrash } from "react-icons/hi2";
@@ -211,7 +209,7 @@ const DetailSertifikasi = () => {
           </div>
         }
       >
-        {/* <div className="mt-10">
+         <div className="mt-10">
           <div className="border-b-1 border-[#FDA31A] mb-5">
             <h1 className="text-sm font-semibold text-[#3ABC67]">
               Dokumen Pendukung
@@ -266,21 +264,21 @@ const DetailSertifikasi = () => {
 
                 <TableCell className="border border-gray-200">
                   <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      onClick={triggerFileInput}
-                      className="bg-gray-200 rounded border text-black border-gray-400 hover:bg-gray-300"
-                    >
-                      Choose File
-                    </Button>
-                    <span className="italic text-gray-600">{fileName}</span>
-                    <Input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg"
-                      className="hidden"
-                      onChange={handleFileChange}
-                    />
+                    {/*<Button*/}
+                    {/*  type="button"*/}
+                    {/*  onClick={triggerFileInput}*/}
+                    {/*  className="bg-gray-200 rounded border text-black border-gray-400 hover:bg-gray-300"*/}
+                    {/*>*/}
+                    {/*  Choose File*/}
+                    {/*</Button>*/}
+                    {/*<span className="italic text-gray-600">{fileName}</span>*/}
+                    {/*<Input*/}
+                    {/*  ref={fileInputRef}*/}
+                    {/*  type="file"*/}
+                    {/*  accept=".pdf,.jpg,.jpeg"*/}
+                    {/*  className="hidden"*/}
+                    {/*  onChange={handleFileChange}*/}
+                    {/*/>*/}
                   </div>
                   <span className="text-blue-600 text-xs mt-1">
                     jpg.jpeg pdf (maxsize 2 MB)
@@ -317,7 +315,7 @@ const DetailSertifikasi = () => {
               </TableRow>
             </TableBody>
           </Table>
-        </div> */}
+        </div>
       </CustomCard>
     </div>
   );

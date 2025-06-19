@@ -366,7 +366,7 @@ const BiodataUser = () => {
     },
   });
 
-  const handleSubmitDataPegawai = (values) => {
+  const handleSubmitDataPegawai = (values: { [x: string]: any; }) => {
     const formData = new FormData();
 
     Object.keys(values).forEach((key) => {
@@ -393,12 +393,14 @@ const BiodataUser = () => {
 
   const cardFooterRef = useRef<HTMLDivElement>(null);
 
+  // @ts-ignore
   const FormDataPegawai = ({ show, form }) => {
     switch (show) {
       case "kepegawaian":
         return <KepegawaianSection form={form} />;
       case "domisili":
-        return <DomisiliSection form={form} />;
+        return <DomisiliSection form={form} provinceOptions={[]} cityOptions={[]} kecamatanOptions={[]}
+                                isProvincesLoading={false} isCitiesLoading={false} isKecamatanLoading={false} />;
       case "rekening-bank":
         return <RekeningBankSection form={form} />;
       case "dokumen":

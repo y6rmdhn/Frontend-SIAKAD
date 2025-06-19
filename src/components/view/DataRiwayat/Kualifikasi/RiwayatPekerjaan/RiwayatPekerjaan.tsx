@@ -2,15 +2,6 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import {Button} from "@/components/ui/button";
 import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
     Table,
     TableBody,
     TableCell,
@@ -27,7 +18,7 @@ import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import {useQuery} from "@tanstack/react-query";
 import dosenServices from "../../../../../services/dosen.services";
-import {useEffect} from "react";
+import {JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import {format, parseISO} from "date-fns";
 import CustomPagination from "../../../../blocks/CustomPagination";
 
@@ -131,8 +122,8 @@ const RiwayatPekerjaan = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
-                        <TableRow key={item.id} className=" even:bg-[#E7ECF2]">
+                    {data?.data.data.map((item: { id: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; bidang_usaha: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; jenis_pekerjaan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; instansi: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; jabatan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; mulai_bekerja: string; selesai_bekerja: string; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                        <TableRow className=" even:bg-[#E7ECF2]">
                             <TableCell className="text-center">{item.id}</TableCell>
                             <TableCell className="text-center">{item.bidang_usaha}</TableCell>
                             <TableCell className="text-center">{item.jenis_pekerjaan}</TableCell>

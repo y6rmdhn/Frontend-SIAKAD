@@ -21,13 +21,13 @@ import { IoEyeOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
-import { useEffect } from "react";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import { ChevronDownIcon } from "lucide-react";
+import {ChevronDownIcon} from "lucide-react";
 
 const JabatanStruktural = () => {
     const [searchParam, setSearchParam] = useSearchParams();
-    const { data } = useQuery({
+    const {data} = useQuery({
         queryKey: ["jabatan-struktural", searchParam.get("page")],
         queryFn: async () => {
             const statusKeaktifanResponse = await adminServices.getJabatanStrukturalReferensi(
@@ -65,12 +65,12 @@ const JabatanStruktural = () => {
 
     return (
         <div className="mt-10 mb-20">
-            <Title title="Jabatan Struktural" subTitle="Daftar Jabatan Struktural" />
+            <Title title="Jabatan Struktural" subTitle="Daftar Jabatan Struktural"/>
             <CustomCard
                 actions={
                     <div className="w-full flex flex-col sm:flex-row gap-3">
                         <Label className="w-32 sm:w-45 md:w-60 text-[#FDA31A]">Jabatan Struktural</Label>
-                        <SelectFilter classname="w-58 md:w-80 lg:w-92" options={unitKerjaOptions} />
+                        <SelectFilter classname="w-58 md:w-80 lg:w-92" options={unitKerjaOptions}/>
                     </div>
                 }
             />
@@ -78,7 +78,7 @@ const JabatanStruktural = () => {
             <div className="w-full md:w-auto flex flex-col md:flex-row justify-between mt-6 gap-4">
                 <div className="w-full md:w-auto flex flex-col md:flex-row gap-4 lg:flex lg:w-full">
                     <div className="w-full  md:w-32">
-                        <SelectFilter classname="w-full md:w-32 text-xs sm:text-sm" options={unitKerjaOptions} />
+                        <SelectFilter classname="w-full md:w-32 text-xs sm:text-sm" options={unitKerjaOptions}/>
                     </div>
                     <div className="w-full relative md:w-80">
                         <SearchInput className="w-full md:w-80"/>
@@ -88,14 +88,16 @@ const JabatanStruktural = () => {
                 <div className="w-full flex flex-col md:w-auto lg:flex-row gap-4 lg:mt-0 lg:w-auto">
                     <div className="w-full md:w-auto">
                         <Link to="/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural">
-                            <Button className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto text-xs sm:text-sm">
-                                <FaPlus /> Tambah
+                            <Button
+                                className="cursor-pointer bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto text-xs sm:text-sm">
+                                <FaPlus/> Tambah
                             </Button>
                         </Link>
                     </div>
                     <div className="w-full md:w-auto">
-                        <Button variant="destructive" className="cursor-pointer w-full md:w-25 lg:w-auto text-xs sm:text-sm">
-                            <FaRegTrashAlt /> Hapus
+                        <Button variant="destructive"
+                                className="cursor-pointer w-full md:w-25 lg:w-auto text-xs sm:text-sm">
+                            <FaRegTrashAlt/> Hapus
                         </Button>
                     </div>
                 </div>
@@ -117,8 +119,8 @@ const JabatanStruktural = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.map((item, index) => (
-                        <TableRow key={index} className=" even:bg-gray-100">
+                    {data?.data.map((item: { id: Key | null | undefined; kode: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; keterangan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; parent: { keterangan: any; }; unit_kerja: { nama_unit: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; }) => (
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">
                                 <ChevronDownIcon
                                     className={`text-muted-foreground size-4 transition-transform duration-200`}

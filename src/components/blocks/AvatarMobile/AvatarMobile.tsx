@@ -10,7 +10,13 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { IoExit } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 
-const AvatarMobile = ({ initials, user, logout }) => {
+interface AvatarMobileProps {
+    initials: string;
+    user: string;
+    logout: () => void;
+}
+
+const AvatarMobile = ({ initials, user, logout }: AvatarMobileProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -98,9 +104,9 @@ const AvatarMobile = ({ initials, user, logout }) => {
                                                         {user}
                                                     </h1>
                                                     <span className="flex items-center gap-1 text-xs text-gray-500">
-                            Lihat Profil
-                            <FaArrowRightLong className="ml-1" />
-                          </span>
+                                                        Lihat Profil
+                                                        <FaArrowRightLong className="ml-1" />
+                                                    </span>
                                                 </div>
                                             </Link>
                                             <Button

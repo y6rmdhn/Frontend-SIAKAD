@@ -1,6 +1,6 @@
 import Title from "@/components/blocks/Title"
 import CustomCard from "@/components/blocks/Card";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdEdit } from "react-icons/md";

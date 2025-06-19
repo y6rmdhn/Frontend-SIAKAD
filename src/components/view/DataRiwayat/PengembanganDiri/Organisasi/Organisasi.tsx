@@ -15,7 +15,7 @@ import {FaPlus} from "react-icons/fa";
 import {IoEyeOutline} from "react-icons/io5";
 import {useQuery} from "@tanstack/react-query";
 import dosenServices from "../../../../../services/dosen.services";
-import {useEffect} from "react";
+import {JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import CustomPagination from "../../../../blocks/CustomPagination";
 import SelectFilter from "../../../../blocks/SelectFilter";
 import unitKerjaOptions from "../../../../../constant/dummyFilter";
@@ -110,7 +110,7 @@ const Organisasi = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
+                    {data?.data.data.map((item: { nama_organisasi: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; jabatan_dalam_organisasi: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; jenis_organisasi: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; periode_mulai: string; periode_selesai: string; tempat_organisasi: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; id: string; }) => (
                         <TableRow className=" even:bg-[#E7ECF2]">
                             <TableCell className="text-center text-xs sm:text-sm">{item.nama_organisasi}</TableCell>
                             <TableCell className="text-center text-xs sm:text-sm">{item.jabatan_dalam_organisasi}</TableCell>

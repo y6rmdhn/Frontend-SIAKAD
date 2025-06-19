@@ -11,7 +11,7 @@ import {
   IJenisLuaran,
   IJenisPelanggaran,
   IJenisPenghargaan,
-  IJenisPublikasi,
+  IJenisPublikasi, IJenisSertifikasi,
   IJenisSk,
   IJenisTesPost,
   IOutputPenelitianPost,
@@ -41,7 +41,7 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/eselon/${id}`, payload),
   jamKerja: (id: number, payload: IJamKerja) =>
     axiosInstance.put(`${endpoint.ADMIN}/jam-kerja/${id}`, payload),
-  jenisSertifikasi: (id: number, payload: IJenisLuaran) =>
+  jenisSertifikasi: (id: number, payload: IJenisSertifikasi) =>
     axiosInstance.put(
       `${endpoint.ADMIN}/master-jenis-sertifikasi/${id}`,
       payload
@@ -64,7 +64,12 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/jenis-hari/${id}`, payload),
   hubunganKerja: (id: number, payload: IHubunganKerja) =>
     axiosInstance.put(`${endpoint.ADMIN}/hubungan-kerja/${id}`, payload),
-  jabatanAkademik: (id: number, payload: IJabatanAkademik) =>
+  jabatanAkademik: (id: number, payload: {
+    id?: number | undefined;
+    jabatan_akademik: string;
+    kode: string;
+    role_id: string
+  }) =>
     axiosInstance.put(`${endpoint.ADMIN}/jabatan-akademik/${id}`, payload),
   agama: (id: number, payload: IAgama) =>
     axiosInstance.put(`${endpoint.ADMIN}/agama/${id}`, payload),

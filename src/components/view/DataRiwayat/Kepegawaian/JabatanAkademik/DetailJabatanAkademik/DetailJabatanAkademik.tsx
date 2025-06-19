@@ -203,7 +203,6 @@ const DetailJabatanAkademik = () => {
                             labelStyle="text-[#3F6FA9]"
                         />
                         <FormFieldInputFile
-                            form={form}
                             label="File Jabatan"
                             name="file_jabatan"
                             classname="border-none shadow-none"

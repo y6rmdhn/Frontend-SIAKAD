@@ -13,7 +13,7 @@ import { useFormContext } from "react-hook-form";
 
 type FormFieldInputFileProps = {
   name: string;
-  label: string;
+  label?: string;
   labelStyle?: string;
   classname?: string;
   required?: boolean;

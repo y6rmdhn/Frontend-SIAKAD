@@ -19,7 +19,7 @@ import SelectFilter from "@/components/blocks/SelectFilter";
 import InfoList from "@/components/blocks/InfoList";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
-import {useEffect} from "react";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import {parseISO, format} from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
@@ -145,7 +145,7 @@ const Orangtua = () => {
                         <TableHead className="text-center text-white border">
                             <FaSquareFull className="w-3 h-3"/>
                         </TableHead>
-                        {data?.table_columns.map((item) => (
+                        {data?.table_columns.map((item: { id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
                             <TableHead key={item.id} className="text-center text-white border">
                                 {item.label}
                             </TableHead>
@@ -153,7 +153,7 @@ const Orangtua = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
+                    {data?.data.data.map((item: any) => (
                         <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">{item.id}</TableCell>
                             <TableCell className="text-center">{item.nama}</TableCell>

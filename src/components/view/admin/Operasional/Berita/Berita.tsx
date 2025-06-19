@@ -14,13 +14,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import adminServices from "@/services/admin.services";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { FaCheck, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { parseISO, format } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 // Define interfaces for data structures
 interface BeritaItem {
@@ -43,7 +46,9 @@ interface BeritaResponse {
 
 const Berita = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const queryClient = useQueryClient();
 
+  // get data
   const { data } = useQuery<BeritaResponse>({
     queryKey: ["berita", searchParam.get("page")],
     queryFn: async () => {
@@ -51,6 +56,19 @@ const Berita = () => {
       return response.data.data;
     },
   });
+
+  // hapus data
+  const { mutate: deleteData } = useMutation({
+    mutationFn: (id: number) => deleteReferensiServices.deteleDataBerita(id),
+    onSuccess: () => {
+      toast.success("Data berhasil dihapus");
+      queryClient.invalidateQueries({ queryKey: ["berita"] });
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    deleteData(id);
+  };
 
   const handleDateFormat = (dates: string): string => {
     try {
@@ -95,7 +113,9 @@ const Berita = () => {
       <CustomCard
         actions={
           <div className="sm:flex grid grid-rows-1 gap-3">
-            <Label className="sm:w-45 md:w-60 text-yellow-uika text-xs sm:text-sm">Unit Kerja</Label>
+            <Label className="sm:w-45 md:w-60 text-yellow-uika text-xs sm:text-sm">
+              Unit Kerja
+            </Label>
             <SelectFilter
               classname="w-full md:w-80 lg:w-92 text-xs sm:text-sm"
               placeholder="04001 - Universitas Ibn Khaldun"
@@ -116,18 +136,12 @@ const Berita = () => {
           <SearchInput className="" />
         </div>
 
-
-
         <div className="flex items-center space-x-2">
           <Link to="/admin/operasional/detail-berita">
             <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
               <FaPlus /> Tambah
             </Button>
           </Link>
-
-          <Button className="bg-green-light-uika hover:bg-hover-green-uika w-full md:w-auto mt-2 md:mt-0">
-            Batalkan
-          </Button>
         </div>
       </div>
 
@@ -135,17 +149,29 @@ const Berita = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Judul</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tgl Posting</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tgl Expired</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Prioritas</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Unit Kerja
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Judul
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Tgl Posting
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Tgl Expired
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Prioritas
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Aksi
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.map((item, index) => (
-            <TableRow key={index} className="even:bg-gray-100">
+          {data?.data.map((item) => (
+            <TableRow key={item.id} className="even:bg-gray-100">
               <TableCell className="text-center">
                 <Checkbox />
               </TableCell>
@@ -154,7 +180,9 @@ const Berita = () => {
                   ? item.unit_kerja_id[0]
                   : item.unit_kerja_id}
               </TableCell>
-              <TableCell className="text-center text-xs sm:text-sm">{item.judul}</TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.judul}
+              </TableCell>
               <TableCell className="text-center text-xs sm:text-sm">
                 {handleDateFormat(item.tgl_posting)}
               </TableCell>
@@ -172,7 +200,7 @@ const Berita = () => {
               </TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
-                  <Link to="/admin/operasional/detail-data-berita">
+                  <Link to={"/admin/operasional/detail-data-berita/" + item.id}>
                     <Button
                       size="icon"
                       variant="ghost"
@@ -182,13 +210,20 @@ const Berita = () => {
                     </Button>
                   </Link>
 
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
+                  <ConfirmDialog
+                    title="Hapus Data?"
+                    description="Apakah Anda yakin ingin menghapus data ini?"
+                    onConfirm={() => handleDelete(Number(item.id))}
                   >
-                    <FaRegTrashAlt className="w-4! h-4! text-red-500" />
-                  </Button>
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <FaRegTrashAlt className="text-red-500" />
+                    </Button>
+                  </ConfirmDialog>
                 </div>
               </TableCell>
             </TableRow>

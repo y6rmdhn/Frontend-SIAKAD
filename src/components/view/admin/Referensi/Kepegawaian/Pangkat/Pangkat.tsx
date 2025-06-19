@@ -328,7 +328,7 @@ const Pangkat = () => {
                       {item.nama_golongan}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.tunjangan.toLocaleString("id-ID")}
+                      {item.tunjangan}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">

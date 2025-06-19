@@ -17,7 +17,7 @@ import SelectFilter from "@/components/blocks/SelectFilter";
 import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import {useQuery} from "@tanstack/react-query";
-import {useEffect} from "react";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import dosenServices from "../../../../../services/dosen.services";
 import CustomPagination from "../../../../blocks/CustomPagination";
 import {format, parseISO} from "date-fns";
@@ -122,7 +122,7 @@ const Diklat = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
+                    {data?.data.data.map((item: { id: Key | null | undefined; nama_diklat: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; jenis_diklat: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; penyelenggara: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; tahun_penyelenggaraan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; timestamps: { tgl_diajukan: string; }; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
                         <TableRow key={item.id} className=" even:bg-[#E7ECF2]">
                             <TableCell className="text-center">{item.nama_diklat}</TableCell>
                             <TableCell className="text-center">{item.jenis_diklat}</TableCell>

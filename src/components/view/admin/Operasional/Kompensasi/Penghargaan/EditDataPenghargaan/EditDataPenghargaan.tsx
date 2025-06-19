@@ -152,7 +152,6 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
                 label="Pegawai"
                 name="pegawai_id"
                 required
-                disabled
               />
               <FormFieldInput
                 form={form}
@@ -193,7 +192,6 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
                 type="textarea"
               />
               <FormFieldInputFile
-                form={form}
                 label="File Penghargaan"
                 name="file_penghargaan"
               />

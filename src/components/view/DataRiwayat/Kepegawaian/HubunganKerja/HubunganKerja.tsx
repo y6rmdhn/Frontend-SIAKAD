@@ -16,7 +16,7 @@ import unitKerjaOptions from "@/constant/dummyFilter";
 import {FaPlus} from "react-icons/fa";
 import {IoEyeOutline} from "react-icons/io5";
 import {Link, useSearchParams} from "react-router-dom";
-import {useEffect} from "react";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import {useQuery} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import CustomPagination from "@/components/blocks/CustomPagination";
@@ -101,16 +101,16 @@ const HubunganKerja = () => {
             <Table className="mt-10 table-auto text-xs lg:text-sm">
                 <TableHeader>
                     <TableRow className="bg-gray-300 ">
-                        {data?.table_columns.map((item) => (
-                            <TableHead className="text-center text-black">
+                        {data?.table_columns.map((item: { id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                            <TableHead key={item.id} className="text-center text-black">
                                 {item.label}
                             </TableHead>
                         ))}
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
-                        <TableRow className=" even:bg-gray-100">
+                    {data?.data.data.map((item: { id: Key | null | undefined; no_sk: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; tgl_sk: string; tgl_awal: string; tgl_akhir: string; nama_hub_kerja: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; nama_status_aktif: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; pejabat_penetap: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; is_aktif_label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">{item.no_sk}</TableCell>
                             <TableCell className="text-center">
                                 {item.tgl_sk ? format(parseISO(item.tgl_sk), "dd MMMM yyyy")

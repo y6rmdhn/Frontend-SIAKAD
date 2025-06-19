@@ -163,7 +163,6 @@ const DetailDokumenInternal = () => {
                       />
 
                       <FormFieldInputFile
-                        form={form}
                         label="File"
                         name="file"
                         classname="border-none shadow-none"

@@ -129,13 +129,17 @@ const DetailDiklat = () => {
 
         Object.keys(values).forEach(key => {
             if (key !== 'files') {
+                // @ts-ignore
                 formData.append(key, values[key as keyof Omit<DetailDiklatSchema, 'files'>]);
             }
         });
 
         values.files.forEach((doc, index) => {
+            // @ts-ignore
             formData.append(`files[${index}][tipe_dokumen]`, doc.tipe_dokumen);
+            // @ts-ignore
             formData.append(`files[${index}][nama_dokumen]`, doc.nama_dokumen);
+            // @ts-ignore
             formData.append(`files[${index}][jenis_dokumen]`, doc.jenis_dokumen);
             formData.append(`files[${index}][keterangan]`, doc.keterangan || "");
             if (doc.file && doc.file.length > 0) {
@@ -403,7 +407,7 @@ const DetailDiklat = () => {
 
                                         <TableCell className="border border-gray-200">
                                             <FormFieldInputFile
-                                                form={form}
+                                                label=""
                                                 name={`files.${index}.file`}
                                                 classname="border-none shadow-none"
                                                 labelStyle="text-[#3F6FA9]"

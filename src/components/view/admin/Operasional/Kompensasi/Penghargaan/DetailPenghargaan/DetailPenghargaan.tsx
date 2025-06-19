@@ -210,12 +210,10 @@ const DetailPenghargaan = () => {
               />
 
               <FormFieldInputFile
-                  form={form}
                   label="File Penghargaan"
                   name="file_penghargaan"
                   classname="border-none shadow-none"
                   labelStyle="text-[#3F6FA9]"
-                  required={false}
               />
 
             </div>

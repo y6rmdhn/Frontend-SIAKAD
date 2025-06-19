@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import {

@@ -1,6 +1,5 @@
 import CustomCard from "@/components/blocks/Card";
 import MonitoringInput from "@/components/blocks/MonitoringInput";
-import React from "react";
 import {
   Select,
   SelectContent,

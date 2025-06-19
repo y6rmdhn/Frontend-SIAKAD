@@ -7,9 +7,10 @@ import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string | number | Date) => {
   if (!dateString) return "-";
   const options = { year: "numeric", month: "long", day: "numeric" };
+  // @ts-ignore
   return new Date(dateString).toLocaleDateString("id-ID", options);
 };
 

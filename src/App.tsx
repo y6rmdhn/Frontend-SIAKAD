@@ -1556,7 +1556,7 @@ function App() {
               <Route path="berita" Component={BeritaPage} />
               <Route path="detail-berita" Component={DetailBeritaPage} />
               <Route
-                path="detail-data-berita"
+                path="detail-data-berita/:id"
                 Component={DetailDataBeritaPage}
               />
               <Route path="edit-data-berita" Component={EditDataBeritaPage} />

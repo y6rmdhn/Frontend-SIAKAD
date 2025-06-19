@@ -60,7 +60,7 @@ const JenisSk = () => {
   const form = useForm({
     defaultValues: {
       kode: "",
-      jenis_sk_id: "",
+      jenis_sk: "",
     },
     resolver: zodResolver(jenisSkSchema),
   });
@@ -206,7 +206,7 @@ const JenisSk = () => {
                     if (!isEditMode) {
                       form.reset({
                         kode: "",
-                        jenis_sk_id: "",
+                        jenis_sk: "",
                       });
 
                       searchParam.set("page", "1");
@@ -284,8 +284,8 @@ const JenisSk = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item, index) => (
-                  <TableRow key={index} className=" even:bg-gray-100">
+                {data?.data.map((item) => (
+                  <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
                     </TableCell>

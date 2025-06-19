@@ -142,10 +142,8 @@ const DetailDokumenInternal = () => {
                 placeholder="Pengajaran"
               />
               <FormFieldInputFile
-                form={form}
                 label="File"
                 name="file"
-                required={false}
                 labelStyle="text-[#3F6FA9]"
               />
               <FormFieldSelect

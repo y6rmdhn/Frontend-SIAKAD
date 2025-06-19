@@ -16,8 +16,8 @@ import unitKerjaOptions from "@/constant/dummyFilter";
 import {FaPlus} from "react-icons/fa";
 import {IoEyeOutline} from "react-icons/io5";
 import {Link, useSearchParams} from "react-router-dom";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {useEffect, useState} from "react";
+import {useQuery} from "@tanstack/react-query";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import dosenServices from "@/services/dosen.services.ts";
 import {parseISO, format} from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
@@ -25,13 +25,6 @@ import CustomPagination from "@/components/blocks/CustomPagination";
 const Pangkat = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
-    const queryClient = useQueryClient();
-    const [isAddData, setIsAddData] = useState<boolean>(false);
-    const [isEditMode, setIsEditMode] = useState<boolean>(false);
-    const [editingItemId, setEditingItemId] = useState<number | null>(null);
-    const [currentPage, setCurrentPage] = useState<number>(
-        Number(searchParam.get("page") || 1)
-    );
 
     // get data
     const {data} = useQuery({
@@ -87,14 +80,14 @@ const Pangkat = () => {
 
             <InfoList
                 items={[
-                    { label: "NIP", value: data?.pegawai_info.nip },
-                    { label: "Nama", value: data?.pegawai_info.nama },
-                    { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
-                    { label: "Status", value: data?.pegawai_info.status },
-                    { label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik },
-                    { label: "Jab. Fungsional", value: data?.pegawai_info.jab_fungsional },
-                    { label: "Jab. Struktural", value: data?.pegawai_info.jab_struktural },
-                    { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+                    {label: "NIP", value: data?.pegawai_info.nip},
+                    {label: "Nama", value: data?.pegawai_info.nama},
+                    {label: "Unit Kerja", value: data?.pegawai_info.unit_kerja},
+                    {label: "Status", value: data?.pegawai_info.status},
+                    {label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik},
+                    {label: "Jab. Fungsional", value: data?.pegawai_info.jab_fungsional},
+                    {label: "Jab. Struktural", value: data?.pegawai_info.jab_struktural},
+                    {label: "Pendidikan", value: data?.pegawai_info.pendidikan},
                 ]}
             />
 
@@ -121,8 +114,8 @@ const Pangkat = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
-                        <TableRow className=" even:bg-gray-100">
+                    {data?.data.data.map((item: { id: Key | null | undefined; tmt_pangkat: string; jenis_sk: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; nama_golongan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; masa_kerja: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell
                                 className="text-center">{item.tmt_pangkat ? format(parseISO(item.tmt_pangkat), "dd MMMM yyyy")
                                 : "-"}

@@ -16,7 +16,7 @@ import unitKerjaOptions from "@/constant/dummyFilter";
 import {FaPlus} from "react-icons/fa";
 import {IoEyeOutline} from "react-icons/io5";
 import {Link, useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
 import {useQuery} from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import CustomPagination from "@/components/blocks/CustomPagination";
@@ -25,9 +25,6 @@ import {parseISO, format} from "date-fns";
 const JabatanStruktural = () => {
 
     const [searchParam, setSearchParam] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState<number>(
-        Number(searchParam.get("page") || 1)
-    );
 
     // get data
     const {data} = useQuery({
@@ -105,16 +102,16 @@ const JabatanStruktural = () => {
             <Table className="mt-10 table-auto text-xs lg:text-sm">
                 <TableHeader>
                     <TableRow className="bg-gray-300 ">
-                        {data?.table_columns.map((item) => (
-                            <TableHead className="text-center text-black">
+                        {data?.table_columns.map((item: { id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                            <TableHead key={item.id} className="text-center text-black">
                                 {item.label}
                             </TableHead>
                         ))}
                     </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item) => (
-                        <TableRow className=" even:bg-gray-100">
+                    {data?.data.data.map((item: { id: Key | null | undefined; no_sk: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; tgl_sk: string; tgl_mulai: string; tgl_selesai: string; jenis_jabatan_struktural: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; pejabat_penetap: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+                        <TableRow key={item.id} className=" even:bg-gray-100">
                             <TableCell className="text-center">{item.no_sk}</TableCell>
                             <TableCell className="text-center">
                                 {item.tgl_sk ? format(parseISO(item.tgl_sk), "dd MMMM yyyy")

@@ -254,7 +254,6 @@ const DetailOrganisasi = () => {
                                     {/*    labelStyle="text-[#3F6FA9]"*/}
                                     {/*/>*/}
                                     <FormFieldInputFile
-                                        form={form}
                                         label="File Pendukung"
                                         name="file_dokumen"
                                         classname="border-none shadow-none"
