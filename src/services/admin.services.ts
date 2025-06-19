@@ -207,10 +207,10 @@ const adminServices = {
   getBeritaSelectwithParams: (id: number) =>
     axiosInstance.get(`${endpoint.ADMIN}/berita/` + id),
 
-  getDetailPenghargaan: (id: number) =>
+  getDetailPenghargaan: (id: number | string) =>
     axiosInstance.get(`${endpoint.ADMIN}/datapenghargaan/` + id),
 
-  getDetailPelanggaran: (id: number) =>
+  getDetailPelanggaran: (id: number | string) =>
     axiosInstance.get(`${endpoint.ADMIN}/datapelanggaran/` + id),
 
   getDetailUnitKerja: (id: number) =>

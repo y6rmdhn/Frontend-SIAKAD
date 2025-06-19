@@ -1,6 +1,5 @@
 import { HiUserGroup } from "react-icons/hi2";
 import { BsArrowUpRightCircle } from "react-icons/bs";
-import { FaMoneyBills } from "react-icons/fa6";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import { FaAddressCard } from "react-icons/fa";
 import { PiWarningCircle } from "react-icons/pi";

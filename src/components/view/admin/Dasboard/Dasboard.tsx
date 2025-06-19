@@ -21,8 +21,6 @@ import {
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
 import LoadingStateDasbordAdmin from "@/components/blocks/LoadingStateDasboradAdmin/LoadingStateDasbordAdmin.tsx";
-import { is } from "date-fns/locale";
-import { log } from "console";
 
 // --- START DEFINISI TIPE DATA ---
 

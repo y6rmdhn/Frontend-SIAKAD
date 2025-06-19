@@ -20,37 +20,58 @@ import {
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import InfoList from "@/components/blocks/InfoList";
-import {DummyDataDosen} from "@/constant/DummyDataPegawai/dummyDataPegawai.ts";
+import { DummyDataDosen } from "@/constant/DummyDataPegawai/dummyDataPegawai.ts";
 
 const EvaluasiKerja = () => {
   return (
     <div className="mt-10 mb-20">
-      <Title title="Evaluasi Kerja" subTitle="Data Evaluasi Kerja" />
+      <Title title="Evaluasi Kinerja" subTitle="Data Evaluasi Kinerja" />
       <InfoList
-          items={[
-            { label: "NIP", value: DummyDataDosen.pegawai_info.nip },
-            { label: "Nama", value: DummyDataDosen.pegawai_info.nama },
-            { label: "Unit Kerja", value: DummyDataDosen.pegawai_info.unit_kerja },
-            { label: "Status", value: DummyDataDosen.pegawai_info.status },
-            { label: "Jab. Akademik", value: DummyDataDosen.pegawai_info.jab_akademik },
-            { label: "Jab. Fungsional", value: DummyDataDosen.pegawai_info.jab_fungsional },
-            { label: "Jab. Struktural", value: DummyDataDosen.pegawai_info.jab_struktural },
-            { label: "Pendidikan", value: DummyDataDosen.pegawai_info.pendidikan },
-          ]}
+        items={[
+          { label: "NIP", value: DummyDataDosen.pegawai_info.nip },
+          { label: "Nama", value: DummyDataDosen.pegawai_info.nama },
+          {
+            label: "Unit Kerja",
+            value: DummyDataDosen.pegawai_info.unit_kerja,
+          },
+          { label: "Status", value: DummyDataDosen.pegawai_info.status },
+          {
+            label: "Jab. Akademik",
+            value: DummyDataDosen.pegawai_info.jab_akademik,
+          },
+          {
+            label: "Jab. Fungsional",
+            value: DummyDataDosen.pegawai_info.jab_fungsional,
+          },
+          {
+            label: "Jab. Struktural",
+            value: DummyDataDosen.pegawai_info.jab_struktural,
+          },
+          {
+            label: "Pendidikan",
+            value: DummyDataDosen.pegawai_info.pendidikan,
+          },
+        ]}
       />
 
       <Table className="mt-10 table-auto text-xs lg:text-sm border-1">
         <TableHeader>
           <TableRow className="bg-[#004680] text-white">
-            <TableHead className="text-center text-white border text-xs sm:text-sm">NIP</TableHead>
+            <TableHead className="text-center text-white border text-xs sm:text-sm">
+              NIP
+            </TableHead>
             <TableHead className="text-center text-white border text-xs sm:text-sm">
               Nama Pegawai
             </TableHead>
             <TableHead className="text-center text-white border text-xs sm:text-sm">
               Hubungan Kerja
             </TableHead>
-            <TableHead className="text-center text-white border text-xs sm:text-sm">Fungsional</TableHead>
-            <TableHead className="text-center text-white border text-xs sm:text-sm">Aksi</TableHead>
+            <TableHead className="text-center text-white border text-xs sm:text-sm">
+              Fungsional
+            </TableHead>
+            <TableHead className="text-center text-white border text-xs sm:text-sm">
+              Aksi
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

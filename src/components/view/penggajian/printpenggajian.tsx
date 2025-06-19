@@ -1,4 +1,3 @@
-import Title from "@/components/blocks/Title";
 import {
   Table,
   TableBody,
@@ -8,9 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Printer } from "lucide-react";
-import React, { useEffect } from "react";
-import { IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const printpenggajian = () => {
 

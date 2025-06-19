@@ -196,7 +196,6 @@ const DetailHubunganKerja = () => {
                             labelStyle="text-[#3F6FA9]"
                         />
                         <FormFieldInputFile
-                            form={form}
                             label="File Hubungan Kerja"
                             name="file_hubungan_kerja"
                             classname="border-none shadow-none"

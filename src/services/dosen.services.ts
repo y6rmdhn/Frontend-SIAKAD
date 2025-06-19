@@ -3,7 +3,7 @@ import endpoint from "./endpoint.constant";
 
 const dosenServices = {
   //   keluarga
-  getDataAnak: (page) =>
+  getDataAnak: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/anak`, {
       params: {
         page: page,
@@ -11,9 +11,9 @@ const dosenServices = {
     }),
   getDataAnakWithoutParam: () => axiosInstance.get(`${endpoint.DOSEN}/anak`),
 
-  getDataAnakDetail: (id) => axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
+  getDataAnakDetail: (id: number | string) => axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
 
-  getDataOrangtua: (page) =>
+  getDataOrangtua: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
       params: {
         page: page,
@@ -22,10 +22,10 @@ const dosenServices = {
   getDataOrangtuaWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua`),
 
-  getDataOrangtuaDetail: (id) =>
+  getDataOrangtuaDetail: (id: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua/` + id),
 
-  getDataPasangan: (page) =>
+  getDataPasangan: (page: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/pasangan`, {
       params: {
         page: page,
@@ -33,11 +33,11 @@ const dosenServices = {
     }),
   getDataPasanganWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/pasangan`),
-  getDataPasanganDetail: (id) =>
+  getDataPasanganDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/pasangan/` + id),
 
   // kepegawaian
-  getPangkat: (page) =>
+  getPangkat: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/pangkat`, {
       params: {
         page: page,
@@ -45,68 +45,68 @@ const dosenServices = {
     }),
   getDataPangkatWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/pangkat`),
-  getDataPangkatDetail: (id) =>
+  getDataPangkatDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/pangkat/` + id),
 
-  getJabatanAkademik: (page) =>
+  getJabatanAkademik: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`, {
       params: {
         page: page,
       },
     }),
 
-  getJabatanAkademikDetail: (id) =>
+  getJabatanAkademikDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik/` + id),
 
   getDataJabatanakademikWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`),
 
-  getJabatanFungsional: (page) =>
+  getJabatanFungsional: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`, {
       params: {
         page: page,
       },
     }),
-  getJabatanFungsionalDetail: (id) =>
+  getJabatanFungsionalDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional/` + id),
   getDataJabatanakfungsionalWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`),
 
-  getJabatanStruktural: (page) =>
+  getJabatanStruktural: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`, {
       params: {
         page: page,
       },
     }),
-  getJabatanStrukturalDetail: (id) =>
+  getJabatanStrukturalDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural/` + id),
   getDataJabatanakstrukturalWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`),
 
-  getHubunganKerja: (page) =>
+  getHubunganKerja: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/hubungankerja`, {
       params: {
         page: page,
       },
     }),
-  getHubunganKerjaDetail: (id) =>
+  getHubunganKerjaDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/hubungankerja/` + id),
   getDataHubunganKerjaWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/hubungankerja`),
 
   //  kualifikasi
-  getDiklat: (page) =>
+  getDiklat: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/data-diklat`, {
       params: {
         page: page,
       },
     }),
-  getDiklatDetail: (id) =>
+  getDiklatDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/data-diklat/` + id),
   getDataDiklatWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/data-diklat`),
 
-  getRiwayatPekerjaan: (page) =>
+  getRiwayatPekerjaan: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen`, {
       params: {
         page: page,
@@ -114,36 +114,36 @@ const dosenServices = {
     }),
 
   // Pengenbangan Diri
-  getKemampuanBahasa: (page) =>
+  getKemampuanBahasa: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`, {
       params: {
         page: page,
       },
     }),
-  getKemampuanBahasaDetail: (id) =>
+  getKemampuanBahasaDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa/` + id),
   getDataKemampuanBahasaWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
 
-  getOrganisasi: (page) =>
+  getOrganisasi: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi`, {
       params: {
         page: page,
       },
     }),
-  getOrganisasiDetail: (id) =>
+  getOrganisasiDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi/` + id),
   getDataOrganisasiWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
 
   // riwayat kehadiran
-  getDataRiwayatKehadiran: (tahun) =>
+  getDataRiwayatKehadiran: (tahun: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/riwayat-kehadiran`, {
       params: {
         tahun: tahun,
       },
     }),
-  getDataDetailRiwayatKehadiran: (tahun, bulan) =>
+  getDataDetailRiwayatKehadiran: (tahun: string, bulan: number | undefined) =>
     axiosInstance.get(`${endpoint.DOSEN}/riwayat-kehadiran/detail`, {
       params: {
         tahun: tahun,
@@ -156,13 +156,13 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/absensi/history`),
 
   //   kualifikasi
-  getDataSertifikasiDosen: (page) =>
+  getDataSertifikasiDosen: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen`, {
       params: {
         page: page,
       },
     }),
-  getDetailDataSertifikasiDosen: (id) =>
+  getDetailDataSertifikasiDosen: (id: string | number) =>
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen/` + id),
 
   getDataDataSertifikasiWithoutParam: () =>

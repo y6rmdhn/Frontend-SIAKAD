@@ -8,9 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Printer } from "lucide-react";
-import React from "react";
-import { IoEyeOutline } from "react-icons/io5";
-import { Link, Links } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const penggajian = () => {
 
