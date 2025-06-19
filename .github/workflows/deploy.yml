@@ -1,0 +1,42 @@
+name: Deploy React App to SSH Server
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy and Build on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to the repository directory on the server
+            # This is the directory where you initially cloned your repo, NOT the web root
+            cd /var/www/Frontend-SIAKAD
+
+            # Pull the latest changes from the main branch
+            git pull origin main
+
+            echo "Installing dependencies..."
+            # Install/update dependencies
+            npm install
+
+            echo "Building React App..."
+            # Build the React application. This creates the 'build' folder.
+            npm run build
+
+            echo "Deploying to Nginx..."
+            # Copy the contents of the build folder to the Nginx web root directory.
+            # The -a flag preserves permissions, and the dot/slash syntax is important.
+            sudo rsync -a build/. /var/www/html/
+
+            echo "Deployment successful!"
