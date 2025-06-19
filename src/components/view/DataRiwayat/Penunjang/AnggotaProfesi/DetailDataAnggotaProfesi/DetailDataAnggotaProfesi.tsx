@@ -28,27 +28,27 @@ const DetailDataAnggotaProfesi = () => {
                             {/* KIRI */}
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Kategori Kegiatan</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Kategori Kegiatan</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Peran</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Peran</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Instansi Profesi</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Instansi Profesi</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Nama Organisasi</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Nama Organisasi</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Mulai Keanggotaan</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Mulai Keanggotaan</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Selesai Keanggotaan</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Selesai Keanggotaan</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                             </div>
@@ -56,19 +56,19 @@ const DetailDataAnggotaProfesi = () => {
                             {/* KANAN */}
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Status Pengajuan</Label>
+                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">Status Pengajuan</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">Disetujui</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Tanggal Diajukan</Label>
+                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">Tanggal Diajukan</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">29 Mei 2025</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Tanggal Disetujui</Label>
+                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">Tanggal Disetujui</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">29 Mei 2025</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">Dibuat Oleh</Label>
+                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">Dibuat Oleh</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">Azka Fadillah Rahman</Label>
                                 </div>
                             </div>

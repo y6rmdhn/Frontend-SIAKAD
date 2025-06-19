@@ -42,30 +42,30 @@ const DetailDataOrangtua = () => {
                         {/* KIRI */}
                         <div className="space-y-2">
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Nama</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Nama</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.nama}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Jenis Orang Tua</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Jenis Orang Tua</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.status_orangtua}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Tempat Lahir</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Tempat Lahir</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.tempat_lahir}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Tgl Lahir</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Tgl Lahir</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.tgl_lahir ? format(parseISO(data?.data.tgl_lahir), "dd MMMM yyyy")
                                         : "-"}
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Telepon</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Telepon</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.telepon}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Alamat</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Alamat</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.alamat}</Label>
                             </div>
                         </div>
@@ -73,11 +73,11 @@ const DetailDataOrangtua = () => {
                         {/* KANAN */}
                         <div className="space-y-2">
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Status Pengajuan</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Status Pengajuan</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.status_pengajuan}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Tanggal Diajukan</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Tanggal Diajukan</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.timestamps.tgl_diajukan
 
@@ -86,7 +86,7 @@ const DetailDataOrangtua = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Tanggal Disetujui</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Tanggal Disetujui</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.timestamps.tgl_disetujui
                                         ? format(parseISO(data?.data.timestamps.tgl_disetujui), "dd MMMM yyyy")
@@ -94,7 +94,7 @@ const DetailDataOrangtua = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Dibuat Oleh</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Dibuat Oleh</Label>
                                 <Label className="text-xs sm:text-sm">{data?.pegawai.nama || '-'}</Label>
                             </div>
                         </div>

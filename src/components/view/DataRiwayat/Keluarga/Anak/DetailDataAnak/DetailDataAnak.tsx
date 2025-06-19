@@ -43,32 +43,32 @@ const DetailDataAnak = () => {
                         {/* KIRI */}
                         <div className="space-y-2">
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Nama</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Nama</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.nama}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Tempat Lahir</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Tempat Lahir</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.tempat_lahir}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Tgl Lahir</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Tgl Lahir</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.tgl_lahir ? format(parseISO(data?.data.tgl_lahir), "dd MMMM yyyy")
                                     : "-"}
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Jenis Kelamin</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Jenis Kelamin</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.jenis_kelamin}
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Anak Ke</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Anak Ke</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.anak_ke}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm">Pekerjaan Anak</Label>
+                                <Label className="font-medium text-[#3F6FA9] text-xs sm:text-sm shrink-0 w-38">Pekerjaan Anak</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.pekerjaan_anak}</Label>
                             </div>
                         </div>
@@ -76,15 +76,15 @@ const DetailDataAnak = () => {
                         {/* KANAN */}
                         <div className="space-y-2">
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">File Akte Kelahiran</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">File Akte Kelahiran</Label>
                                 <Label className="italic text-gray-400 text-xs sm:text-sm">[Nullable]</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Status Pengajuan</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Status Pengajuan</Label>
                                 <Label className="text-xs sm:text-sm">{data?.data.status_pengajuan}</Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Tanggal Diajukan</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Tanggal Diajukan</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.timestamps.tgl_diajukan
 
@@ -93,7 +93,7 @@ const DetailDataAnak = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Tanggal Disetujui</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Tanggal Disetujui</Label>
                                 <Label className="text-xs sm:text-sm">
                                     {data?.data.timestamps.tgl_disetujui
                                         ? format(parseISO(data?.data.timestamps.tgl_disetujui), "dd MMMM yyyy")
@@ -101,7 +101,7 @@ const DetailDataAnak = () => {
                                 </Label>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm">Dibuat Oleh</Label>
+                                <Label className="text-[#3F6FA9] font-medium text-xs sm:text-sm shrink-0 w-38">Dibuat Oleh</Label>
                                 <Label className="text-xs sm:text-sm">{data?.pegawai.nama || '-'}</Label>
                             </div>
                         </div>

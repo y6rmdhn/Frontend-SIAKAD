@@ -888,6 +888,8 @@ import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
 import LoadingText from "./components/blocks/LoadingText";
 import DetailBeritaPage from "./pages/admin/operasional/berita/detailberita";
+import penggajianUserPage from "./pages/penggajian";
+import printpenggajian from "./components/view/penggajian/printpenggajian";
 
 function App() {
   const { isHydrate } = useHydration();
@@ -931,6 +933,12 @@ function App() {
           <Route path="/kehadiran">
             <Route path="riwayat-kehadiran" Component={RiwayatKehadiranPage} />
             <Route path="kegiatan-harian" Component={KegiatanHarianPage} />
+          </Route>
+
+          {/* PENGGAJIAN */}
+          <Route path="/penggajian">
+            <Route path="" Component={penggajianUserPage} />
+            <Route path="printpenggajian" Component={printpenggajian} />
           </Route>
 
           {/* OPERASIONAL */}

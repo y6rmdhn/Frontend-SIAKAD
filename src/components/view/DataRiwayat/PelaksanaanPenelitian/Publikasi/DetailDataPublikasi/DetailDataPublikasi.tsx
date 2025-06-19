@@ -28,59 +28,59 @@ const DetailDataPublikasi = () => {
                             {/* KIRI */}
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Jenis Publikasi</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Jenis Publikasi</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">Artikel Ilmiah</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Nama Jurnal</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Nama Jurnal</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Kategori Capaian</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Kategori Capaian</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">Publikasi</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Aktifitas Litabmas</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Aktifitas Litabmas</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tanggal Terbit</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Tanggal Terbit</Label>
                                     <Label className="text-xs sm:text-sm font-semibold">[Nullable]</Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Penerbit</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Penerbit</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Judul</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Judul</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Judul Asli</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Judul Asli</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Edisi</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Edisi</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Volume</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Volume</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Nomor</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Nomor</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Halaman</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Halaman</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Jumlah Halaman</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Jumlah Halaman</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm">Tanggal SK Penugasan</Label>
+                                    <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">Tanggal SK Penugasan</Label>
                                     <Label className="text-xs sm:text-sm font-semibold"></Label>
                                 </div>
                             </div>
