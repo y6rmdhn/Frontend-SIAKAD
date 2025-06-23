@@ -7,6 +7,7 @@ const LoginPage = lazy(() => import("./pages/auth/login"));
 const DasboardPage = lazy(() => import("./pages/admin/dasboard"));
 const PegawaiPage = lazy(() => import("./pages/admin/pegawai"));
 const DataPegawaiPage = lazy(() => import("./pages/admin/dataPegawai"));
+const EditDataPegawaiPage = lazy(() => import("./pages/admin/editdataPegawai"));
 const HubunganKerjaPegawaiPage = lazy(
   () => import("./pages/admin/operasional/hubunganKerjaPegawai")
 );
@@ -1362,6 +1363,7 @@ function App() {
             <Route path="dasboard" Component={DasboardPage} />
             <Route path="pegawai" Component={PegawaiPage} />
             <Route path="pegawai/data-pegawai" Component={DataPegawaiPage} />
+            <Route path="pegawai/edit-data-pegawai" Component={EditDataPegawaiPage} />
 
             {/* DETAIL PEGAWAI */}
             <Route path="detail-pegawai">
