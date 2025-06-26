@@ -16,6 +16,7 @@ import postDosenServices from "@/services/create.dosen.services.ts";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -255,65 +256,42 @@ const DetailPangkat = () => {
           />
 
           <div className="grid md:grid-rows-6 md:grid-flow-col gap-5 items-center mt-4">
-            <FormFieldSelect
+            <InfiniteScrollSelect
               form={form}
-              label="Jenis SK"
+              label="Jenis Sk"
               name="jenis_sk_id"
-              labelStyle="text-[#3F6FA9] text-xs md:text-sm"
-              options={[
-                { value: "1", label: "Perjanjian Kontrak" },
-                { value: "2", label: "SK Tetap 80%" },
-                { value: "3", label: "SK Tetap 100%" },
-                { value: "4", label: "SK Inpassing" },
-                { value: "5", label: "SK Pangkat" },
-                { value: "6", label: "SK Berkala YPIKA" },
-                { value: "7", label: "SK Pangkat YPIKA" },
-              ]}
+              labelStyle="text-[#3F6FA9]"
+              placeholder="--Pilih Jenis Sk--"
               required={true}
-              placeholder="-- Pilih Jenis SK --"
+              queryKey="jenis_sk_datariwayat_pangkat"
+              queryFn={dosenServices.getJenisSk}
+              itemValue="id"
+              itemLabel="jenis_sk"
             />
-            <FormFieldSelect
+            <InfiniteScrollSelect
               form={form}
               label="Jenis Kenaikan Pangkat"
               name="jenis_kenaikan_pangkat_id"
-              labelStyle="text-[#3F6FA9] text-xs md:text-sm"
-              options={[
-                { value: "1", label: "Kopertis" },
-                { value: "2", label: "LLDIKTI4" },
-                { value: "3", label: "Universitas" },
-                { value: "4", label: "Yayasan" },
-              ]}
-              required={false}
-              placeholder="-- Pilih Jenis Kenaikan Pangkat --"
+              labelStyle="text-[#3F6FA9]"
+              placeholder="--Pilih Jenis Kenaikan Pangkat--"
+              required={true}
+              queryKey="jenis_kenaikan_pangkat_datariwayat_pangkat"
+              queryFn={dosenServices.getJenisKenaikanPangkat}
+              itemValue="id"
+              itemLabel="jenis_pangkat"
             />
-            <FormFieldSelect
+            <InfiniteScrollSelect
               form={form}
               label="Nama Pangkat"
               name="pangkat_id"
-              labelStyle="text-[#3F6FA9] text-xs md:text-sm"
-              options={[
-                { value: "1", label: "Juru Muda (I/A)" },
-                { value: "2", label: "Juru Muda Tingkat 1 (I/B)" },
-                { value: "3", label: "Juru (I/C)" },
-                { value: "4", label: "Juru Tingkat 1 (I/D)" },
-                { value: "5", label: "Pengatur Muda (II/A)" },
-                { value: "6", label: "Pengatur Muda Tingkat 1 (II/B)" },
-                { value: "7", label: "Pengatur (II/C)" },
-                { value: "8", label: "Pengatur Tingkat 1 (II/D)" },
-                { value: "9", label: "Penata Muda (III/A)" },
-                { value: "10", label: "Penata Muda Tingkat 1 (III/B)" },
-                { value: "11", label: "Penata (III/C)" },
-                { value: "12", label: "Penata Tingkat 1 (III/D)" },
-                { value: "13", label: "Pembina (IV/A)" },
-                { value: "14", label: "Pembina Tingkat 1 (IV/B)" },
-                { value: "15", label: "Pembina Utama Muda (IV/C)" },
-                { value: "16", label: "Pembina Utama Madya (IV/D)" },
-                { value: "17", label: "Pembina Utama (IV/E)" },
-              ]}
-              required={false}
-              placeholder="-- Pilih Pangkat --"
+              labelStyle="text-[#3F6FA9]"
+              placeholder="--Pilih Nama Pangkat--"
+              required={true}
+              queryKey="jenis_pangkat_datariwayat_pangkat"
+              queryFn={dosenServices.getMasterPangkatReferensi}
+              itemValue="id"
+              itemLabel="nama_golongan"
             />
-
             <FormFieldInput
               form={form}
               label="TMT. Pangkat *"

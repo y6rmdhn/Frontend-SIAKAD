@@ -218,6 +218,50 @@ const dosenServices = {
 
   getDataCutiWithoutParams: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen/` + id),
+
+  // select content
+  getJenisSk: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-sk`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisKenaikanPangkat: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-kenaikan-pangkat`, {
+      params: {
+        page: page,
+      },
+    }),
+  getMasterPangkatReferensi: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/master-pangkat`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJabatanAkademikSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jabatan-akademik`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJabatanStrukturalSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-jabatan-struktural`, {
+      params: {
+        page: page,
+      },
+    }),
+  getHubunganKerjaSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/hubungan-kerja`, {
+      params: {
+        page: page,
+      },
+    }),
+  getStatusAktifSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/status-aktif`, {
+      params: {
+        page: page,
+      },
+    }),
 };
 
 export default dosenServices;

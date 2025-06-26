@@ -121,25 +121,37 @@ const HubunganKerjaKepegawaianPage = lazy(
     import("./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian")
 );
 const DetailHubunganKerjaValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian/detailhubunganKerjaKepegawaian")
-)
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian/detailhubunganKerjaKepegawaian"
+    )
+);
 const JabatanAkademikPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/jabatanAkademik")
 );
 const DetailJabatanAkademikValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/kepegawaian/jabatanAkademik/detailjabatanAkademik")
-)
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/jabatanAkademik/detailjabatanAkademik"
+    )
+);
 const JabatanFungionalPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/jabatanFungsional")
 ); // Typo: Fungsional
 const DetailJabatanFungionalValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/kepegawaian/jabatanFungsional/detailjabatanFungsional")
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/jabatanFungsional/detailjabatanFungsional"
+    )
 );
 const JabatanStrukturalPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/jabatanStruktural")
 );
 const DetailJabatanStrukturalValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/kepegawaian/jabatanStruktural/detailjabatanStruktural")
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/jabatanStruktural/detailjabatanStruktural"
+    )
 );
 const PangkatPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/pangkat")
@@ -151,7 +163,10 @@ const SertifikasiPage = lazy(
   () => import("./pages/admin/validasiData/kompetensi/sertifikasi")
 );
 const DetailSertifikasiValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/kompetensi/sertifikasi/detailSertifikasiValidasi")
+  () =>
+    import(
+      "./pages/admin/validasiData/kompetensi/sertifikasi/detailSertifikasiValidasi"
+    )
 );
 const TesPage = lazy(() => import("./pages/admin/validasiData/kompetensi/tes"));
 const DetailTesValidasiPage = lazy(
@@ -1393,7 +1408,10 @@ function App() {
             <Route path="dasboard" Component={DasboardPage} />
             <Route path="pegawai" Component={PegawaiPage} />
             <Route path="pegawai/data-pegawai" Component={DataPegawaiPage} />
-            <Route path="pegawai/edit-data-pegawai" Component={EditDataPegawaiPage} />
+            <Route
+              path="pegawai/edit-data-pegawai/:id"
+              Component={EditDataPegawaiPage}
+            />
 
             {/* DETAIL PEGAWAI */}
             <Route path="detail-pegawai">
@@ -1672,9 +1690,9 @@ function App() {
                   path="hubungan-kerja"
                   Component={HubunganKerjaKepegawaianPage}
                 />
-                <Route 
-                  path="hubungan-kerja/detail-hubungan-kerja" 
-                  Component={DetailHubunganKerjaValidasiPage} 
+                <Route
+                  path="hubungan-kerja/detail-hubungan-kerja"
+                  Component={DetailHubunganKerjaValidasiPage}
                 />
                 <Route
                   path="jabatan-akademik"
@@ -1701,23 +1719,23 @@ function App() {
                   Component={DetailJabatanStrukturalValidasiPage}
                 />
                 <Route path="pangkat" Component={PangkatPage} />
-                <Route 
-                  path="pangkat/detail-pangkat" 
-                  Component={DetailPangkatValidasiPage} 
+                <Route
+                  path="pangkat/detail-pangkat"
+                  Component={DetailPangkatValidasiPage}
                 />
               </Route>
 
               {/* VALIDASI > KOMPETENSI */}
               <Route path="kompetensi">
                 <Route path="sertifikasi" Component={SertifikasiPage} />
-                <Route 
-                  path="sertifikasi/detail-sertifikasi" 
-                  Component={DetailSertifikasiValidasiPage} 
+                <Route
+                  path="sertifikasi/detail-sertifikasi"
+                  Component={DetailSertifikasiValidasiPage}
                 />
                 <Route path="tes" Component={TesPage} />
-                <Route 
-                  path="tes/detail-tes" 
-                  Component={DetailTesValidasiPage} 
+                <Route
+                  path="tes/detail-tes"
+                  Component={DetailTesValidasiPage}
                 />
               </Route>
 

@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -189,14 +188,6 @@ const JabatanStruktural = () => {
                 <FaPlus /> Tambah
               </Button>
             </Link>
-          </div>
-          <div className="w-full md:w-auto">
-            <Button
-              variant="destructive"
-              className="cursor-pointer w-full md:w-25 lg:w-auto text-xs sm:text-sm"
-            >
-              <FaRegTrashAlt /> Hapus
-            </Button>
           </div>
         </div>
       </div>

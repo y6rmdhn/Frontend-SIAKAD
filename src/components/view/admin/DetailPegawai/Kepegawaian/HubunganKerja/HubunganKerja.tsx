@@ -1,17 +1,7 @@
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import DetailPegawai from "@/components/blocks/BiodataDetailPegawai/DetailPegawai";
 import { Label } from "@/components/ui/label";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -22,52 +12,85 @@ import {
 } from "@/components/ui/table";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
 import { IoEyeOutline } from "react-icons/io5";
-import {Link, useParams} from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import DetailPegawaiSidebar from "../../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
 import accordionContent from "../../../../../../constant/arccodionContent/arccodionContent";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
-
-const dummyLeftColumn = [
-  { name: "Nama Lengkap" },
-  { name: "NIP" },
-  { name: "Tempat Lahir" },
-  { name: "Tanggal Lahir" },
-  { name: "Jenis Kelamin" },
-  { name: "Agama" },
-];
-
-const dummyDatasLeft: (string | number)[] = [
-  "Ahmad Subagja",
-  "199001012020011001",
-  "Bandung",
-  "01 Januari 1990",
-  "Laki-laki",
-  "Islam",
-];
-
-const dummyRightColumn = [
-  { name: "Jabatan" },
-  { name: "Unit Kerja" },
-  { name: "Status Pegawai" },
-  { name: "Tanggal Pengangkatan" },
-  { name: "Email Kantor" },
-  { name: "Nomor Telepon" },
-];
-
-const dummyDatasRight: (string | number)[] = [
-  "Staf Analis Data",
-  "Divisi Teknologi Informasi",
-  "Pegawai Tetap",
-  "15 Maret 2020",
-  "ahmad.s@kantor.go.id",
-  "081234567890",
-];
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { useQuery } from "@tanstack/react-query";
+import adminServices from "@/services/admin.services";
+import InfoList from "@/components/blocks/InfoList";
+import CustomPagination from "@/components/blocks/CustomPagination";
 
 const HubunganKerja = () => {
-
   const params = useParams();
+  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+
+  // get data
+  const { data, isLoading } = useQuery({
+    queryKey: [
+      "hubungan-kerja-detail-pegawai",
+      params.id,
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const response = await adminServices.getHubunganKerjaDetailPegawai(
+        searchParam.get("page") || 1,
+        params.id,
+        searchParam.get("search") || ""
+      );
+      return response.data;
+    },
+  });
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", data.last_page.toString());
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <DetailPegawaiLayout
@@ -75,15 +98,32 @@ const HubunganKerja = () => {
       subTitile="Daftar Hubungan Kerja"
     >
       {/*Sidebar*/}
-      <DetailPegawaiSidebar currentPegawaiId={params.id} accordionData={accordionContent} />
+      <DetailPegawaiSidebar
+        currentPegawaiId={params.id}
+        accordionData={accordionContent}
+      />
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
-          <DetailPegawai
-            leftColumn={dummyLeftColumn}
-            rightColumn={dummyRightColumn}
-            datasLeft={dummyDatasLeft}
-            datasRight={dummyDatasRight}
-            classname="bg-[#F6FBFF] text-xs md:text-sm border-l-4 border-l-[#92D3FF]"
+          <InfoList
+            items={[
+              { label: "NIP", value: data?.pegawai_info.nip },
+              { label: "Nama", value: data?.pegawai_info.nama },
+              { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
+              { label: "Status", value: data?.pegawai_info.status },
+              {
+                label: "Jab. Akademik",
+                value: data?.pegawai_info.jab_akademik,
+              },
+              {
+                label: "Jab. Fungsional",
+                value: data?.pegawai_info.jab_fungsional,
+              },
+              {
+                label: "Jab. Struktural",
+                value: data?.pegawai_info.jab_struktural,
+              },
+              { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+            ]}
           />
 
           {/* Start (Ini di copy) */}
@@ -111,7 +151,10 @@ const HubunganKerja = () => {
               placeholder="--Semua--"
             />
 
-            <SearchInput />
+            <SearchInput
+              value={searchData}
+              onChange={(e) => setSearchData(e.target.value)}
+            />
           </div>
           {/* end (Ini di copy) */}
         </div>
@@ -138,55 +181,68 @@ const HubunganKerja = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="bg-[#E7ECF2]">
-            <TableRow>
-              <TableCell className="flex justify-items-center">
-                <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-              </TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="h-full">
-                <div className="flex justify-center items-center w-full h-full">
-                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer"
-                    >
-                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                    </Button>
-                  </Link>
-                </div>
-              </TableCell>
-            </TableRow>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">
+                  Memuat data...
+                </TableCell>
+              </TableRow>
+            ) : data?.data.data.length > 0 ? (
+              data.data.data.map((item: any) => (
+                <TableRow key={item.id}>
+                  <TableCell className="flex justify-items-center">
+                    <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {item.tgl_awal_formatted}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {item.tgl_akhir_formatted}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {item.hubungan_kerja}
+                  </TableCell>
+                  <TableCell className="text-center capitalize">
+                    {item.status_pengajuan}
+                  </TableCell>
+                  <TableCell className="h-full">
+                    <div className="flex justify-center items-center w-full h-full">
+                      <Link
+                        to={`/admin/operasional/hubungan-kerja/detail/${item.id}`}
+                      >
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">
+                  Data Kosong
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
 
-        <Pagination className="mt-8 flex justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CustomPagination
+          currentPage={Number(searchParam.get("page") || 1)}
+          links={data?.links || []}
+          onPageChange={(page) => {
+            searchParam.set("page", page.toString());
+            setSearchParam(searchParam);
+          }}
+          hasNextPage={!!data?.next_page_url}
+          hasPrevPage={!!data?.prev_page_url}
+          totalPages={data?.last_page}
+        />
       </div>
     </DetailPegawaiLayout>
   );

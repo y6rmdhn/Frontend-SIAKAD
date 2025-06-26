@@ -1,17 +1,7 @@
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import DetailPegawai from "@/components/blocks/BiodataDetailPegawai/DetailPegawai";
 import { Label } from "@/components/ui/label";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -22,68 +12,118 @@ import {
 } from "@/components/ui/table";
 import DetailPegawaiLayout from "@/layouts/DetailPegawaiLayout";
 import { IoEyeOutline } from "react-icons/io5";
-import {Link, useParams} from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import DetailPegawaiSidebar from "../../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
 import accordionContent from "../../../../../../constant/arccodionContent/arccodionContent";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
-
-const dummyLeftColumn = [
-  { name: "Nama Lengkap" },
-  { name: "NIP" },
-  { name: "Tempat Lahir" },
-  { name: "Tanggal Lahir" },
-  { name: "Jenis Kelamin" },
-  { name: "Agama" },
-];
-
-const dummyDatasLeft: (string | number)[] = [
-  "Ahmad Subagja",
-  "199001012020011001",
-  "Bandung",
-  "01 Januari 1990",
-  "Laki-laki",
-  "Islam",
-];
-
-const dummyRightColumn = [
-  { name: "Jabatan" },
-  { name: "Unit Kerja" },
-  { name: "Status Pegawai" },
-  { name: "Tanggal Pengangkatan" },
-  { name: "Email Kantor" },
-  { name: "Nomor Telepon" },
-];
-
-const dummyDatasRight: (string | number)[] = [
-  "Staf Analis Data",
-  "Divisi Teknologi Informasi",
-  "Pegawai Tetap",
-  "15 Maret 2020",
-  "ahmad.s@kantor.go.id",
-  "081234567890",
-];
+import CustomPagination from "@/components/blocks/CustomPagination";
+import { useEffect, useState } from "react";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
+import InfoList from "@/components/blocks/InfoList";
 
 const JabatanFungsional = () => {
+  const params = useParams();
 
-  const params = useParams()
+  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
 
+  // get data
+  const { data } = useQuery({
+    queryKey: [
+      "jabatan-fungsional-detail-pegawai",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const response = await adminServices.getJabatanStrukturalDetailPegawai(
+        searchParam.get("page") || 1,
+        params.id,
+        searchParam.get("search") || ""
+      );
+
+      return response.data;
+    },
+  });
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", data.last_page.toString());
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
   return (
     <DetailPegawaiLayout
       title="Jabatan Fungsional"
       subTitile="Daftar Jabatan Fungsional"
     >
       {/*Sidebar*/}
-      <DetailPegawaiSidebar currentPegawaiId={params.id} accordionData={accordionContent} />
+      <DetailPegawaiSidebar
+        currentPegawaiId={params.id}
+        accordionData={accordionContent}
+      />
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 w-full">
-          <DetailPegawai
-            leftColumn={dummyLeftColumn}
-            rightColumn={dummyRightColumn}
-            datasLeft={dummyDatasLeft}
-            datasRight={dummyDatasRight}
-            classname="bg-[#F6FBFF] text-xs md:text-sm border-l-4 border-l-[#92D3FF]"
+          <InfoList
+            items={[
+              { label: "NIP", value: data?.pegawai_info.nip },
+              { label: "Nama", value: data?.pegawai_info.nama },
+              { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
+              { label: "Status", value: data?.pegawai_info.status },
+              {
+                label: "Jab. Akademik",
+                value: data?.pegawai_info.jab_akademik,
+              },
+              {
+                label: "Jab. Fungsional",
+                value: data?.pegawai_info.jab_fungsional,
+              },
+              {
+                label: "Jab. Struktural",
+                value: data?.pegawai_info.jab_struktural,
+              },
+              { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+            ]}
           />
 
           {/* Start (Ini di copy) */}
@@ -111,7 +151,10 @@ const JabatanFungsional = () => {
               placeholder="--Semua--"
             />
 
-            <SearchInput />
+            <SearchInput
+              value={searchData}
+              onChange={(e) => setSearchData(e.target.value)}
+            />
           </div>
           {/* end (Ini di copy) */}
         </div>
@@ -163,30 +206,17 @@ const JabatanFungsional = () => {
           </TableBody>
         </Table>
 
-        <Pagination className="mt-8 flex justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CustomPagination
+          currentPage={Number(searchParam.get("page") || 1)}
+          links={data?.links || []}
+          onPageChange={(page) => {
+            searchParam.set("page", page.toString());
+            setSearchParam(searchParam);
+          }}
+          hasNextPage={!!data?.next_page_url}
+          hasPrevPage={!!data?.prev_page_url}
+          totalPages={data?.last_page}
+        />
       </div>
     </DetailPegawaiLayout>
   );

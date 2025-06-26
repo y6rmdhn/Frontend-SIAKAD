@@ -46,31 +46,55 @@ export const InfiniteScrollSelect = ({
       queryKey: [queryKey],
       queryFn: async ({ pageParam = 1 }) => {
         const response = await queryFn(pageParam);
+        // Kita tetap return response.data karena itu adalah sumber kebenaran dari API
         return response.data;
       },
       initialPageParam: 1,
-      getNextPageParam: (lastPage) => {
-        const paginationInfo = lastPage.data;
 
+      // [SMART LOGIC] Logika getNextPageParam yang bisa menangani kedua struktur
+      getNextPageParam: (lastPage) => {
+        // Cek dulu apakah paginasi ada di level atas (struktur baru)
+        // atau di dalam object .data (struktur lama)
+        const paginationSource =
+          typeof lastPage?.current_page !== "undefined"
+            ? lastPage
+            : lastPage?.data;
+
+        // Jika tidak ditemukan sumber paginasi atau sudah halaman terakhir
         if (
-          !paginationInfo ||
-          paginationInfo.current_page >= paginationInfo.last_page
+          !paginationSource ||
+          paginationSource.current_page >= paginationSource.last_page
         ) {
           return undefined;
         }
 
-        return paginationInfo.current_page + 1;
+        return paginationSource.current_page + 1;
       },
     });
 
+  // [SMART LOGIC] Logika flatMap yang bisa menangani kedua struktur
   const options =
-    data?.pages.flatMap((page) => page?.data?.data).filter(Boolean) ?? [];
+    data?.pages
+      .flatMap((page) => {
+        // Cek apakah 'page.data' adalah array (Struktur Baru)
+        if (Array.isArray(page?.data)) {
+          return page.data;
+        }
+        // Jika bukan, cek apakah 'page.data.data' adalah array (Struktur Lama)
+        if (Array.isArray(page?.data?.data)) {
+          return page.data.data;
+        }
+        // Jika tidak ada yang cocok, kembalikan array kosong untuk keamanan
+        return [];
+      })
+      .filter(Boolean) ?? [];
 
   const selectOptions = options.map((item) => ({
     label: item[itemLabel],
     value: item[itemValue].toString(),
   }));
 
+  // ... sisa kode JSX tidak berubah ...
   return (
     <FormField
       control={form.control}

@@ -17,16 +17,18 @@ import {
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
 import adminServices from "@/services/admin.services";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaCheck, FaPlus } from "react-icons/fa6";
+import { FaCheck, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import { Link, useSearchParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { useDebounce } from "use-debounce";
+import { toast } from "sonner";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 // --- START DEFINISI TIPE DATA ---
 
@@ -64,6 +66,7 @@ const Pegawai = () => {
   const [selectedPegawaiId, setSelectedPegawaiId] = useState<number[]>([]);
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery<PegawaiApiResponse>({
     queryKey: ["pegawai", searchParam.get("page"), searchParam.get("search")],
@@ -82,6 +85,40 @@ const Pegawai = () => {
       setSelectedPegawaiId((prev) => prev.filter((id) => id !== pegawaiId));
     }
   };
+
+  const { mutate: deleteData } = useMutation({
+    mutationFn: (payload: any) =>
+      deleteReferensiServices.deletePegawai(payload),
+    onSuccess: () => {
+      toast.success("Data berhasil dihapus");
+      queryClient.invalidateQueries({ queryKey: ["pegawai"] });
+      setSelectedPegawaiId([]);
+    },
+    onError: () => {
+      toast.error("Gagal menghapus data");
+    },
+  });
+
+  // --- START PERBAIKAN ---
+
+  // Fungsi untuk menangani penghapusan beberapa data yang dipilih
+  const handleDeleteSelected = () => {
+    const payload = {
+      pegawai_ids: selectedPegawaiId,
+    };
+
+    if (selectedPegawaiId.length > 0) {
+      deleteData(payload);
+    }
+  };
+
+  // Fungsi untuk menangani penghapusan satu data dari baris tabel
+  const handleDeleteSingle = (id: number) => {
+    // Mutation 'deleteData' mengharapkan array, jadi kita kirim id dalam sebuah array
+    deleteData({ pegawai_ids: id });
+  };
+
+  // --- END PERBAIKAN ---
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
@@ -129,6 +166,7 @@ const Pegawai = () => {
   return (
     <div className="w-full mt-10 mb-20">
       <Form {...form}>
+        {/* Menghapus 'onSubmit' dari form karena aksi dikontrol oleh tombol dengan dialog konfirmasi */}
         <form>
           <h1 className="text-2xl font-normal">Pegawai</h1>
           <CustomCard title="Filter">
@@ -150,15 +188,23 @@ const Pegawai = () => {
 
             <div className="flex flex-col md:flex-row gap-2">
               <Link to="/admin/pegawai/data-pegawai">
-                <Button className="cursor-pointer w-full  bg-green-light-uika hover:bg-[#329C59]">
+                <Button className="cursor-pointer w-full bg-green-light-uika hover:bg-[#329C59]">
                   <FaPlus /> Tambah
                 </Button>
               </Link>
 
+              {/* Tombol Hapus Beberapa Data */}
               {selectedPegawaiId.length > 0 && (
-                <Button variant="destructive" className="cursor-pointer">
-                  <FaRegTrashAlt /> Hapus {selectedPegawaiId.length} Data
-                </Button>
+                <ConfirmDialog
+                  title="Hapus Data Terpilih?"
+                  description={`Apakah Anda yakin ingin menghapus ${selectedPegawaiId.length} data ini?`}
+                  // Memanggil fungsi yang benar
+                  onConfirm={handleDeleteSelected}
+                >
+                  <Button variant="destructive" className="cursor-pointer">
+                    <FaRegTrashAlt /> Hapus {selectedPegawaiId.length} Data
+                  </Button>
+                </ConfirmDialog>
               )}
 
               <Button className="cursor-pointer min-w-52 bg-green-light-uika flex lg:justify-start lg:items-center hover:bg-[#329C59]">
@@ -194,7 +240,6 @@ const Pegawai = () => {
                       <TableCell className="font-medium">
                         <Checkbox
                           checked={selectedPegawaiId.includes(item.id)}
-                          // FIX: Mengonversi `checked` menjadi boolean murni
                           onCheckedChange={(checked) =>
                             handleSelectedPegawaiId(item.id, checked === true)
                           }
@@ -213,13 +258,17 @@ const Pegawai = () => {
                       </TableCell>
                       <TableCell className="text-center w-28">
                         <div className="flex">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer"
+                          <Link
+                            to={"/admin/pegawai/edit-data-pegawai/" + item.id}
                           >
-                            <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                          </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="cursor-pointer"
+                            >
+                              <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                            </Button>
+                          </Link>
                           <Link to={"/admin/detail-pegawai/biodata/" + item.id}>
                             <Button
                               size="icon"
@@ -229,13 +278,23 @@ const Pegawai = () => {
                               <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                             </Button>
                           </Link>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer"
+
+                          {/* --- START PERBAIKAN --- */}
+                          {/* Tombol Hapus Satu Data dengan ConfirmDialog */}
+                          <ConfirmDialog
+                            title="Hapus Data?"
+                            description={`Apakah Anda yakin ingin menghapus data "${item.nama_pegawai}"?`}
+                            onConfirm={() => handleDeleteSingle(item.id)}
                           >
-                            <FaRegTrashAlt className="text-red-500" />
-                          </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="cursor-pointer"
+                            >
+                              <FaRegTrashAlt className="text-red-500" />
+                            </Button>
+                          </ConfirmDialog>
+                          {/* --- END PERBAIKAN --- */}
                         </div>
                       </TableCell>
                     </TableRow>

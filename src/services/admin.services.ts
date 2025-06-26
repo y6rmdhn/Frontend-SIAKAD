@@ -333,6 +333,12 @@ const adminServices = {
         search: search,
       },
     }),
+  getJenisJabatanStruktural: (page?: any) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-jabatan-struktural`, {
+      params: {
+        page: page,
+      },
+    }),
 
   getBeritaSelect: () => axiosInstance.get(`${endpoint.ADMIN}/berita`),
 
@@ -361,6 +367,199 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/suku`, {
       params: {
         page: page,
+      },
+    }),
+
+  // detail pegawai
+  getPangkatDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-pangkat`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJabatanStrukturalDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(
+      `${endpoint.ADMIN}/pegawai/${id}/riwayat-jabatan-struktural`,
+      {
+        params: {
+          page: page,
+          search: search,
+        },
+      }
+    ),
+  getJabatanAkademikDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(
+      `${endpoint.ADMIN}/pegawai/${id}/riwayat-jabatan-akademik`,
+      {
+        params: {
+          page: page,
+          search: search,
+        },
+      }
+    ),
+  getHubunganKerjaDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(
+      `${endpoint.ADMIN}/pegawai/${id}/riwayat-hubungan-kerja`,
+      {
+        params: {
+          page: page,
+          search: search,
+        },
+      }
+    ),
+  getPelanggaranDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-pelanggaran`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getSertifikasiDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-sertifikasi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getTesDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-tes`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDiklatDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-diklat`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPendidikanFormalDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(
+      `${endpoint.ADMIN}/pegawai/${id}/riwayat-pendidikan-formal`,
+      {
+        params: {
+          page: page,
+          search: search,
+        },
+      }
+    ),
+  getRiwayatPekerjaanDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-pekerjaan`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getRiwayatPresensiDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-presensi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPenghargaanDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-penghargaan`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getOrganisasiDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-organisasi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getKemampuanBahasaDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(
+      `${endpoint.ADMIN}/pegawai/${id}/riwayat-kemampuan-bahasa`,
+      {
+        params: {
+          page: page,
+          search: search,
+        },
+      }
+    ),
+  getCutiDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-cuti`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getIzinDetailPegawai: (
+    page?: any,
+    id?: string | undefined,
+    search?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-izin`, {
+      params: {
+        page: page,
+        search: search,
       },
     }),
 };

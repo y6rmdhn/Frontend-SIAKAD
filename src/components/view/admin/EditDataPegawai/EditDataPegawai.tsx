@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm, UseFormReturn, FieldErrors } from "react-hook-form"; // Import FieldErrors
 import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import pegawaiDetailMenu from "@/constant/PegawaiDetailMenu";
 import { z } from "zod";
 import KepegawaianSection from "@/components/blocks/DataPegawaiForm/PegawaiSection";
@@ -18,39 +17,50 @@ import DetailKendaraanSection from "@/components/blocks/DataPegawaiForm/DetailKe
 import { zodResolver } from "@hookform/resolvers/zod";
 import SearchInput from "@/components/blocks/SearchInput";
 import Title from "@/components/blocks/Title";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import adminServices from "../../../../services/admin.services";
 import wilayahIdServices from "@/services/binderByte.services.ts";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+import putReferensiServices from "@/services/put.admin.referensi";
+import { toast } from "sonner";
+
+// --- Skema Validasi dan Tipe Data (Tidak ada perubahan) ---
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 
 const fileSchema = z
-    .any()
-    .optional()
-    .refine(
-        (file) => !file || file.size <= MAX_FILE_SIZE_BYTES,
-        `Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB.`
-    )
-    .refine(
-        (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
-        "Format file harus PDF, JPG, atau PNG."
-    );
+  .any()
+  .optional()
+  .refine(
+    (file) => !file || file.size <= MAX_FILE_SIZE_BYTES,
+    `Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB.`
+  )
+  .refine(
+    (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
+    "Format file harus PDF, JPG, atau PNG."
+  );
 
 const optionalEmail = z
-    .string()
-    .email("Format email tidak valid.")
-    .optional()
-    .or(z.literal(""));
+  .string()
+  .email("Format email tidak valid.")
+  .optional()
+  .or(z.literal(""));
 
 const dataPegawaiSchema = z.object({
-  // --- Data Pribadi ---
+  id: z.number().optional(),
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
   nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
-  gelar_depan: z.string().max(20, "Gelar depan maksimal 20 karakter").optional(),
-  gelar_belakang: z.string().max(20, "Gelar belakang maksimal 20 karakter").optional(),
+  gelar_depan: z
+    .string()
+    .max(20, "Gelar depan maksimal 20 karakter")
+    .optional(),
+  gelar_belakang: z
+    .string()
+    .max(20, "Gelar belakang maksimal 20 karakter")
+    .optional(),
   jenis_kelamin: z.enum(["Laki-laki", "Perempuan"], {
     required_error: "Jenis kelamin wajib dipilih",
   }),
@@ -61,8 +71,6 @@ const dataPegawaiSchema = z.object({
   }),
   kode_status_pernikahan: z.string().min(1, "Status pernikahan wajib dipilih"),
   golongan_darah: z.string().optional(),
-
-  // --- Kepegawaian ---
   unit_kerja_id: z.string().min(1, "Unit kerja wajib dipilih"),
   status_aktif_id: z.string().min(1, "Status aktif wajib dipilih"),
   status_kerja: z.string().min(1, "Hubungan kerja wajib dipilih"),
@@ -70,31 +78,56 @@ const dataPegawaiSchema = z.object({
   email_pribadi: optionalEmail,
   golongan: z.string().optional(),
   jabatan_fungsional: z.string().optional(),
-
-  // --- Domisili ---
-  no_ktp: z.string().trim().length(16, "No. KTP harus 16 digit").optional().or(z.literal("")),
-  no_kk: z.string().trim().length(16, "No. KK harus 16 digit").optional().or(z.literal("")),
+  no_ktp: z
+    .string()
+    .trim()
+    .length(16, "No. KTP harus 16 digit")
+    .optional()
+    .or(z.literal("")),
+  no_kk: z
+    .string()
+    .trim()
+    .length(16, "No. KK harus 16 digit")
+    .optional()
+    .or(z.literal("")),
   warga_negara: z.string().min(1, "Warga negara wajib diisi"),
   provinsi: z.string().min(1, "Provinsi wajib dipilih"),
   kota: z.string().min(1, "Kota wajib dipilih"),
   kecamatan: z.string().min(1, "Kecamatan wajib dipilih"),
   alamat_domisili: z.string().trim().min(10, "Alamat minimal 10 karakter"),
-  kode_pos: z.string().trim().length(5, "Kode pos harus 5 digit").optional().or(z.literal("")),
+  kode_pos: z
+    .string()
+    .trim()
+    .length(5, "Kode pos harus 5 digit")
+    .optional()
+    .or(z.literal("")),
   suku: z.string().optional(),
   jarak_rumah_domisili: z.string().optional(),
-  no_whatsapp: z.string().trim().regex(/^08[0-9]{8,11}$/, "Format No. Telpon Whatsapp tidak valid (contoh: 081234567890)"),
-  no_handphone: z.string().trim().regex(/^08[0-9]{8,11}$/, "Format No. telpon tidak valid").optional().or(z.literal("")),
-
-  // --- Rekening Bank ---
+  no_whatsapp: z
+    .string()
+    .trim()
+    .regex(
+      /^08[0-9]{8,11}$/,
+      "Format No. Telpon Whatsapp tidak valid (contoh: 081234567890)"
+    ),
+  no_handphone: z
+    .string()
+    .trim()
+    .regex(/^08[0-9]{8,11}$/, "Format No. telpon tidak valid")
+    .optional()
+    .or(z.literal("")),
   nama_bank: z.string().optional(),
   cabang_bank: z.string().optional(),
   nama_rekening: z.string().optional(),
   no_rekening: z.string().optional(),
-
-  // --- Dokumen ---
   kapreg: z.string().max(50, "Kapreg maksimal 50 karakter").optional(),
   file_kapreg: fileSchema,
-  npwp: z.string().trim().length(15, "NPWP harus 15 digit").optional().or(z.literal("")),
+  npwp: z
+    .string()
+    .trim()
+    .length(15, "NPWP harus 15 digit")
+    .optional()
+    .or(z.literal("")),
   file_npwp: fileSchema,
   file_rekening: fileSchema,
   file_kk: fileSchema,
@@ -102,61 +135,164 @@ const dataPegawaiSchema = z.object({
   file_sertifikasi_dosen: fileSchema,
   no_bpjs: z.string().max(20, "No. BPJS maksimal 20 digit").optional(),
   file_bpjs: fileSchema,
-  no_bpjs_ketenagakerjaan: z.string().max(20, "No. BPJS Ketenagakerjaan maksimal 20 digit").optional(),
+  no_bpjs_ketenagakerjaan: z
+    .string()
+    .max(20, "No. BPJS Ketenagakerjaan maksimal 20 digit")
+    .optional(),
   file_bpjs_ketenagakerjaan: fileSchema,
-  no_bpjs_pensiun: z.string().max(20, "No. BPJS Pensiun maksimal 20 digit").optional(),
+  no_bpjs_pensiun: z
+    .string()
+    .max(20, "No. BPJS Pensiun maksimal 20 digit")
+    .optional(),
   file_tanda_tangan: fileSchema,
-
-  // --- Kendaraan & Fisik ---
   nomor_polisi: z.string().max(10, "Nomor polisi maksimal 10 digit").optional(),
-  jenis_kendaraan: z.string().max(20, "Jenis kendaraan maksimal 20 karakter").optional(),
-  tinggi_badan: z.coerce.number({ invalid_type_error: "Tinggi badan harus angka" }).positive("Tinggi badan harus positif").max(300, "Tinggi badan tidak wajar").optional(),
-  berat_badan: z.coerce.number({ invalid_type_error: "Berat badan harus angka" }).positive("Berat badan harus positif").max(500, "Berat badan tidak wajar").optional(),
+  jenis_kendaraan: z
+    .string()
+    .max(20, "Jenis kendaraan maksimal 20 karakter")
+    .optional(),
+  tinggi_badan: z.coerce
+    .number({ invalid_type_error: "Tinggi badan harus angka" })
+    .positive("Tinggi badan harus positif")
+    .max(300, "Tinggi badan tidak wajar")
+    .optional(),
+  berat_badan: z.coerce
+    .number({ invalid_type_error: "Berat badan harus angka" })
+    .positive("Berat badan harus positif")
+    .max(500, "Berat badan tidak wajar")
+    .optional(),
 });
 
 export type DataPegawaiSchema = z.infer<typeof dataPegawaiSchema>;
 
-// Tipe untuk data dari API wilayah (provinsi, kota, kecamatan)
 interface WilayahItem {
   name: string;
   code?: string;
 }
 
-// Tipe untuk data dari API status pernikahan
-interface StatusPernikahanItem {
-  id: number | string;
-  nama_status: string;
-}
-
-// Tipe untuk props komponen FormDataPegawai
 interface FormDataPegawaiProps {
   show: string;
   form: UseFormReturn<DataPegawaiSchema>;
 }
 
-// --- END DEFINISI TIPE DATA ---
+// --- Komponen Utama ---
 
 const EditDataPegawai = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState<string>("kepegawaian");
+  const params = useParams();
+  const queryClient = useQueryClient();
 
-  // Menambahkan tipe generik ke useForm untuk type safety
-  const form = useForm<DataPegawaiSchema>({
-    defaultValues: {
-      nip: "", nuptk: "", nama: "", gelar_depan: "", gelar_belakang: "",
-      jenis_kelamin: undefined, agama: "", tempat_lahir: "", tanggal_lahir: undefined,
-      kode_status_pernikahan: "", golongan_darah: "", unit_kerja_id: "",
-      status_aktif_id: "", status_kerja: "", email_pegawai: "", email_pribadi: "",
-      golongan: "", jabatan_fungsional: "", no_ktp: "", no_kk: "",
-      warga_negara: "", provinsi: "", kota: "", alamat_domisili: "",
-      kecamatan: "", kode_pos: "", suku: "", jarak_rumah_domisili: "",
-      no_whatsapp: "", no_handphone: "", nama_bank: "", cabang_bank: "",
-      nama_rekening: "", no_rekening: "", kapreg: "", file_kapreg: undefined,
-      npwp: "", file_npwp: undefined, file_rekening: undefined, file_kk: undefined,
-      file_ktp: undefined, file_sertifikasi_dosen: undefined,
+  const { data } = useQuery({
+    queryKey: ["pegawai-edit", params.id],
+    queryFn: async () => {
+      const response = await adminServices.getPegawaiDetailAdminPage(
+        Number(params.id)
+      );
+      return response.data.data;
     },
-    resolver: zodResolver(dataPegawaiSchema),
+    enabled: !!params.id,
   });
+
+  const { mutate: putData } = useMutation({
+    mutationFn: (data: DataPegawaiSchema) =>
+      putReferensiServices.pegawai(data.id!, data),
+    onSuccess: () => {
+      toast.success("Data pegawai berhasil diperbarui");
+      queryClient.invalidateQueries({ queryKey: ["pegawai-edit", params.id] });
+    },
+    onError: (error) => {
+      toast.error(`Gagal memperbarui data: ${error.message}`);
+    },
+  });
+
+  const form = useForm<DataPegawaiSchema>({
+    resolver: zodResolver(dataPegawaiSchema),
+    defaultValues: {
+      nip: "",
+      nuptk: "",
+      nama: "",
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        id: data.id,
+        nip: data.nip || "",
+        nuptk: data.nuptk || "",
+        nama: data.nama || "",
+        gelar_depan: data.gelar_depan || "",
+        gelar_belakang: data.gelar_belakang || "",
+        jenis_kelamin:
+          data.jenis_kelamin === "L"
+            ? "Laki-laki"
+            : data.jenis_kelamin === "P"
+            ? "Perempuan"
+            : undefined,
+        agama: data.agama || "",
+        tempat_lahir: data.tempat_lahir || "",
+        tanggal_lahir: data.tanggal_lahir
+          ? new Date(data.tanggal_lahir)
+          : undefined,
+        kode_status_pernikahan: data.kode_status_pernikahan?.toString() || "",
+        golongan_darah: data.golongan_darah || "",
+        unit_kerja_id: data.unit_kerja_id?.toString() || "",
+        status_aktif_id: data.status_aktif_id?.toString() || "",
+        status_kerja: data.status_kerja || "",
+        email_pegawai: data.email_pegawai || "",
+        email_pribadi: data.email_pribadi || "",
+        no_ktp: data.no_ktp || "",
+        no_kk: data.no_kk || "",
+        warga_negara: "WNI",
+        alamat_domisili: data.alamat_domisili || "",
+        provinsi: data.provinsi || "",
+        kota: data.kota || "",
+        kecamatan: data.kecamatan || "",
+        kode_pos: data.kode_pos || "",
+        suku: data.suku_id?.toString() || "",
+        jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
+        no_whatsapp: data.no_whatsapp || "",
+        no_handphone: data.no_handphone || "",
+        nama_bank: data.nama_bank || "",
+        cabang_bank: data.cabang_bank || "",
+        no_rekening: data.no_rekening || "",
+        npwp: data.npwp || "",
+        kapreg: data.kapreg || "",
+        no_bpjs: data.no_bpjs || "",
+        no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
+        nomor_polisi: data.nomor_polisi || "",
+        jenis_kendaraan: data.jenis_kendaraan || "",
+        tinggi_badan: data.tinggi_badan ? Number(data.tinggi_badan) : undefined,
+        berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
+      });
+    }
+  }, [data, form]);
+
+  const onSubmit = (formData: DataPegawaiSchema) => {
+    putData(formData);
+  };
+
+  // --- START PERBAIKAN ---
+
+  // Fungsi ini akan dipanggil jika validasi Zod GAGAL
+  const onInvalid = (errors: FieldErrors<DataPegawaiSchema>) => {
+    // Ambil field pertama yang error untuk ditampilkan di toast
+    const firstErrorField = Object.keys(errors)[0] as keyof DataPegawaiSchema;
+
+    if (firstErrorField) {
+      const errorMessage = errors[firstErrorField]?.message;
+      // Membuat nama field lebih mudah dibaca (misal: "nama_lengkap" -> "Nama lengkap")
+      const formattedFieldName = firstErrorField
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+
+      toast.error(`${formattedFieldName}: ${errorMessage}`);
+    } else {
+      toast.error("Data tidak valid, silakan periksa kembali isian Anda.");
+    }
+  };
+
+  // --- END PERBAIKAN ---
 
   const selectedProvinceId = form.watch("provinsi");
   const selectedCityId = form.watch("kota");
@@ -165,230 +301,232 @@ const EditDataPegawai = () => {
     queryKey: ["provinsi-wilayah-id"],
     queryFn: wilayahIdServices.getProvinsi,
   });
+  const provinceOptions =
+    provincesData?.data?.map((prov: WilayahItem) => ({
+      label: prov.name,
+      value: prov.code,
+    })) || [];
 
   const { data: citiesData, isLoading: isCitiesLoading } = useQuery({
     queryKey: ["kota-wilayah-id", selectedProvinceId],
     queryFn: () => wilayahIdServices.getKota(selectedProvinceId!),
     enabled: !!selectedProvinceId,
   });
+  const cityOptions =
+    citiesData?.data?.map((city: WilayahItem) => ({
+      label: city.name,
+      value: city.code,
+    })) || [];
 
   const { data: kecamatanData, isLoading: isKecamatanLoading } = useQuery({
     queryKey: ["kecamatan-wilayah-id", selectedCityId],
     queryFn: () => wilayahIdServices.getKecamatan(selectedCityId!),
     enabled: !!selectedCityId,
   });
+  const kecamatanOptions =
+    kecamatanData?.data?.map((kec: WilayahItem) => ({
+      label: kec.name,
+      value: kec.code,
+    })) || [];
 
-  // Menambahkan tipe pada parameter .map()
-  const provinceOptions = provincesData?.data?.map((prov: WilayahItem) => ({
-    label: prov.name,
-    value: prov.code,
-  })) || [];
-  const cityOptions = citiesData?.data?.map((city: WilayahItem) => ({ label: city.name, value: city.code })) || [];
-  const kecamatanOptions = kecamatanData?.data?.map((kec: WilayahItem) => ({ label: kec.name, value: kec.code })) || [];
-
-  const { data: statusPernikahanData } = useQuery({
-    queryKey: ["status-pernikahan-select"],
-    queryFn: async () => {
-      const response = await adminServices.getStatusPernikahanReferensi();
-      return response.data.data;
-    },
-  });
-  const statusPernikahanOptions =
-      statusPernikahanData?.data?.map((item: StatusPernikahanItem) => ({
-        label: item.nama_status,
-        value: item.id.toString(),
-      })) || [];
-
-  // Menambahkan tipe pada parameter 'values'
-  const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => {
-    return (
-        <div>
-          <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
-            <KepegawaianSection form={form} />
-          </div>
-          <div style={{ display: show === "domisili" ? "block" : "none" }}>
-            <DomisiliSection
-                form={form}
-                provinceOptions={provinceOptions}
-                cityOptions={cityOptions}
-                kecamatanOptions={kecamatanOptions}
-                isProvincesLoading={isProvincesLoading}
-                isCitiesLoading={isCitiesLoading}
-                isKecamatanLoading={isKecamatanLoading}
-            />
-          </div>
-          <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
-            <RekeningBankSection form={form} />
-          </div>
-          <div style={{ display: show === "dokumen" ? "block" : "none" }}>
-            <DokumenSection form={form} />
-          </div>
-          <div
-              style={{ display: show === "detail-kendaraan" ? "block" : "none" }}
-          >
-            <DetailKendaraanSection form={form} />
-          </div>
-        </div>
-    );
-  };
+  const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => (
+    <div>
+      <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
+        {" "}
+        <KepegawaianSection form={form} />{" "}
+      </div>
+      <div style={{ display: show === "domisili" ? "block" : "none" }}>
+        <DomisiliSection
+          form={form}
+          provinceOptions={provinceOptions}
+          cityOptions={cityOptions}
+          kecamatanOptions={kecamatanOptions}
+          isProvincesLoading={isProvincesLoading}
+          isCitiesLoading={isCitiesLoading}
+          isKecamatanLoading={isKecamatanLoading}
+        />
+      </div>
+      <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
+        {" "}
+        <RekeningBankSection form={form} />{" "}
+      </div>
+      <div style={{ display: show === "dokumen" ? "block" : "none" }}>
+        {" "}
+        <DokumenSection form={form} />{" "}
+      </div>
+      <div style={{ display: show === "detail-kendaraan" ? "block" : "none" }}>
+        {" "}
+        <DetailKendaraanSection form={form} />{" "}
+      </div>
+    </div>
+  );
 
   return (
-      <div className="mt-10 mb-10">
-        <Title title="Data Pegawai" subTitle="Edit Pegawai" />
-        <Form {...form}>
-          <form>
-            <Card className="mt-5 border-t-yellow-uika border-t-3">
-              <CardHeader>
-                <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-4">
-                  <div className="w-full md:w-auto lg:w-2xs">
-                    <SearchInput />
-                  </div>
-                  <div className="flex flex-col items-center justify-center md:flex-row gap-2 w-full md:w-auto mt-5 md:mt-0">
-                    <Button
-                        type="button"
-                        onClick={() => navigate("/admin/pegawai")}
-                        className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
-                    >
-                      <IoIosArrowBack />
-                      Kembali ke Daftar
-                    </Button>
-                    <Button
-                    type="submit"
-                    className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto"
+    <div className="mt-10 mb-10">
+      <Title title="Data Pegawai" subTitle="Edit Pegawai" />
+      <Form {...form}>
+        {/* --- START PERBAIKAN --- */}
+        {/* Menggunakan callback kedua dari handleSubmit untuk menangani error validasi */}
+        <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
+          {/* --- END PERBAIKAN --- */}
+          <Card className="mt-5 border-t-yellow-uika border-t-3">
+            <CardHeader>
+              <div className="flex flex-col-reverse items-center justify-between gap-4 md:flex-row">
+                <div className="w-full md:w-auto lg:w-2xs">
+                  {" "}
+                  <SearchInput />{" "}
+                </div>
+                <div className="flex w-full flex-col items-center justify-center gap-2 md:w-auto md:flex-row mt-5 md:mt-0">
+                  <Button
+                    type="button"
+                    onClick={() => navigate("/admin/pegawai")}
+                    className="w-full cursor-pointer bg-green-light-uika hover:bg-[#329C59] md:w-auto"
                   >
-                    <span className="flex gap-2 items-center">
-                      <FaSave /> Simpan
+                    <IoIosArrowBack /> Kembali ke Daftar
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="w-full cursor-pointer bg-green-light-uika hover:bg-[#329C59] md:w-auto"
+                  >
+                    <span className="flex items-center gap-2">
+                      {" "}
+                      <FaSave /> Simpan{" "}
                     </span>
                   </Button>
-                  </div>
                 </div>
-              </CardHeader>
+              </div>
+            </CardHeader>
 
-              <CardContent className="mt-10">
-                <div className="flex flex-col md:grid md:grid-rows-6 md:grid-flow-col gap-5">
-                  <FormFieldInput
-                      form={form}
-                      label="NIP"
-                      name="nip"
-                      labelStyle="text-[#3F6FA9]"
-                      required={true}
-                  />
-                  <FormFieldInput
-                      form={form}
-                      label="NUPTK"
-                      name="nuptk"
-                      labelStyle="text-[#3F6FA9]"
-                      required={true}
-                  />
-                  <FormFieldInput
-                      form={form}
-                      label="Nama Lengkap"
-                      name="nama"
-                      labelStyle="text-[#3F6FA9]"
-                      required={true}
-                  />
-                  <FormFieldInput
-                      form={form}
-                      label="Gelar Depan"
-                      name="gelar_depan"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                  />
-                  <FormFieldInput
-                      form={form}
-                      label="Gelar Belakang"
-                      name="gelar_belakang"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                  />
-                  <FormFieldInput
-                      label="Jenis Kelamin"
-                      name="jenis_kelamin"
-                      form={form}
-                      required={false}
-                      type="radio"
-                      options={[
-                        { label: "Laki-laki", value: "Laki-laki" },
-                        { label: "Perempuan", value: "Perempuan" },
-                      ]}
-                      labelStyle="text-[#3F6FA9]"
-                  />
-                  <FormFieldInput
-                      form={form}
-                      label="Agama"
-                      name="agama"
-                      labelStyle="text-[#3F6FA9]"
-                      required={true}
-                  />
-                  <FormFieldInput
-                      form={form}
-                      label="Tempat Lahir"
-                      name="tempat_lahir"
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                  />
-                  <FormFieldInput
-                      form={form}
-                      type="date"
-                      label="Tgl Lahir"
-                      name="tanggal_lahir"
-                      labelStyle="text-[#3F6FA9]"
-                      required={true}
-                  />
-                  <FormFieldSelect
-                      form={form}
-                      label="Status Nikah"
-                      name="kode_status_pernikahan"
-                      placeholder="--Pilih--"
-                      options={statusPernikahanOptions}
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                  />
-                  <FormFieldSelect
-                      form={form}
-                      label="Golongan Darah"
-                      name="golongan_darah"
-                      placeholder="--Pilih--"
-                      options={[
-                        { label: "A", value: "A" },
-                        { label: "B", value: "B" },
-                        { label: "AB", value: "AB" },
-                        { label: "O", value: "O" },
-                      ]}
-                      labelStyle="text-[#3F6FA9]"
-                      required={false}
-                  />
-                </div>
+            <CardContent className="mt-10">
+              <div className="flex flex-col gap-5 md:grid md:grid-flow-col md:grid-rows-6">
+                <FormFieldInput
+                  form={form}
+                  label="NIP"
+                  name="nip"
+                  labelStyle="text-[#3F6FA9]"
+                  required={true}
+                />
+                <FormFieldInput
+                  form={form}
+                  label="NUPTK"
+                  name="nuptk"
+                  labelStyle="text-[#3F6FA9]"
+                  required={true}
+                />
+                <FormFieldInput
+                  form={form}
+                  label="Nama Lengkap"
+                  name="nama"
+                  labelStyle="text-[#3F6FA9]"
+                  required={true}
+                />
+                <FormFieldInput
+                  form={form}
+                  label="Gelar Depan"
+                  name="gelar_depan"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
+                />
+                <FormFieldInput
+                  form={form}
+                  label="Gelar Belakang"
+                  name="gelar_belakang"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
+                />
+                <FormFieldInput
+                  label="Jenis Kelamin"
+                  name="jenis_kelamin"
+                  form={form}
+                  required={true}
+                  type="radio"
+                  options={[
+                    { label: "Laki-laki", value: "Laki-laki" },
+                    { label: "Perempuan", value: "Perempuan" },
+                  ]}
+                  labelStyle="text-[#3F6FA9]"
+                />
+                <InfiniteScrollSelect
+                  form={form}
+                  label="Agama"
+                  name="agama"
+                  labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Agama--"
+                  required={true}
+                  queryKey="agama"
+                  queryFn={adminServices.getAgama}
+                  itemValue="id"
+                  itemLabel="nama_agama"
+                />
+                <FormFieldInput
+                  form={form}
+                  label="Tempat Lahir"
+                  name="tempat_lahir"
+                  labelStyle="text-[#3F6FA9]"
+                  required={true}
+                />
+                <FormFieldInput
+                  form={form}
+                  type="date"
+                  label="Tgl Lahir"
+                  name="tanggal_lahir"
+                  labelStyle="text-[#3F6FA9]"
+                  required={true}
+                />
+                <InfiniteScrollSelect
+                  form={form}
+                  label="Status Nikah"
+                  name="kode_status_pernikahan"
+                  labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Status Pernikahan--"
+                  required={true}
+                  queryKey="status-pernikahan-select"
+                  queryFn={adminServices.getStatusPernikahan}
+                  itemValue="id"
+                  itemLabel="nama_status"
+                />
+                <InfiniteScrollSelect
+                  form={form}
+                  label="Golongan Darah"
+                  name="golongan_darah"
+                  labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Golongan Darah--"
+                  required={false}
+                  queryKey="golongan-darah-select"
+                  queryFn={adminServices.getGolonganDarah}
+                  itemValue="id"
+                  itemLabel="golongan_darah"
+                />
+              </div>
 
-                {/* Bagian Menu Tabbed dan Kontennya dipindahkan ke sini */}
-                <div className="w-full flex flex-col gap-2 mt-10">
-                  <div className="w-full grid grid-cols-2 grid-flow-row  lg:flex gap-2">
-                    {pegawaiDetailMenu.map((item, index) => (
-                        <Button
-                            key={index}
-                            type="button"
-                            onClick={() => setShow(item.show)}
-                            className={`${
-                                item.title === "Alamat Domisili & Kontak"
-                                    ? "col-span-2 min-[506px]:col-span-1"
-                                    : ""
-                            } flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
-                                show === item.show ? "bg-[#106D63] text-white" : ""
-                            }`}
-                        >
-                          {item.title}
-                        </Button>
-                    ))}
-                  </div>
-                  <div className="w-full pb-10">
-                    <FormDataPegawai show={show} form={form} />
-                  </div>
+              <div className="mt-10 flex w-full flex-col gap-2">
+                <div className="grid w-full grid-cols-2 grid-flow-row gap-2 lg:flex">
+                  {pegawaiDetailMenu.map((item, index) => (
+                    <Button
+                      key={index}
+                      type="button"
+                      onClick={() => setShow(item.show)}
+                      className={`${
+                        item.title === "Alamat Domisili & Kontak"
+                          ? "col-span-2 min-[506px]:col-span-1"
+                          : ""
+                      } flex-1 cursor-pointer rounded-lg bg-[#D5D5D5] text-xs text-[#000] hover:bg-[#0A5B4F] hover:text-white md:text-sm lg:rounded-b-none lg:rounded-t-2xl transition-all duration-300 ${
+                        show === item.show ? "bg-[#106D63] text-white" : ""
+                      }`}
+                    >
+                      {item.title}
+                    </Button>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
-          </form>
-        </Form>
-      </div>
+                <div className="w-full pb-10">
+                  <FormDataPegawai show={show} form={form} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </form>
+      </Form>
+    </div>
   );
 };
 

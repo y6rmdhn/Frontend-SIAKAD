@@ -91,6 +91,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/bank`, payload),
   jenisIzin: (payload: jenisIzinFormvalue) =>
     axiosInstance.post(`${endpoint.ADMIN}/jenis-izin`, payload),
+  jabatanStruktural: (payload: any) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jabatan-struktural`, payload),
 };
 
 export default potsReferensiServices;

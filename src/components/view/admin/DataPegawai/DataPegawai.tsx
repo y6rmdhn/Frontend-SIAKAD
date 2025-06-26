@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import pegawaiDetailMenu from "@/constant/PegawaiDetailMenu";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -24,12 +23,13 @@ import { useState } from "react";
 import adminServices from "../../../../services/admin.services";
 import wilayahIdServices from "@/services/binderByte.services.ts";
 import { AxiosError } from "axios";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 
-const fileSchema = z
+export const fileSchema = z
   .any()
   .optional()
   .refine(
@@ -179,12 +179,6 @@ interface WilayahItem {
   code?: string;
 }
 
-// Tipe untuk data dari API status pernikahan
-interface StatusPernikahanItem {
-  id: number | string;
-  nama_status: string;
-}
-
 // Tipe untuk props komponen FormDataPegawai
 interface FormDataPegawaiProps {
   show: string;
@@ -295,19 +289,6 @@ const DataPegawai = () => {
       toast.error(error.response?.data?.message || "Terjadi kesalahan");
     },
   });
-
-  const { data: statusPernikahanData } = useQuery({
-    queryKey: ["status-pernikahan-select"],
-    queryFn: async () => {
-      const response = await adminServices.getStatusPernikahanReferensi();
-      return response.data.data;
-    },
-  });
-  const statusPernikahanOptions =
-    statusPernikahanData?.data?.map((item: StatusPernikahanItem) => ({
-      label: item.nama_status,
-      value: item.id.toString(),
-    })) || [];
 
   // Menambahkan tipe pada parameter 'values'
   const handleSubmitDataPegawai = (values: DataPegawaiSchema) => {
@@ -471,12 +452,17 @@ const DataPegawai = () => {
                   ]}
                   labelStyle="text-[#3F6FA9]"
                 />
-                <FormFieldInput
+                <InfiniteScrollSelect
                   form={form}
                   label="Agama"
                   name="agama"
                   labelStyle="text-[#3F6FA9]"
-                  required={true}
+                  placeholder="--Pilih Agama--"
+                  required={false}
+                  queryKey="agama"
+                  queryFn={adminServices.getAgama}
+                  itemValue="id"
+                  itemLabel="nama_agama"
                 />
                 <FormFieldInput
                   form={form}
@@ -493,28 +479,29 @@ const DataPegawai = () => {
                   labelStyle="text-[#3F6FA9]"
                   required={true}
                 />
-                <FormFieldSelect
+                <InfiniteScrollSelect
                   form={form}
                   label="Status Nikah"
                   name="kode_status_pernikahan"
-                  placeholder="--Pilih--"
-                  options={statusPernikahanOptions}
                   labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Status Pernikahan--"
                   required={false}
+                  queryKey="status-pernikahan-select"
+                  queryFn={adminServices.getStatusPernikahan}
+                  itemValue="id"
+                  itemLabel="nama_status"
                 />
-                <FormFieldSelect
+                <InfiniteScrollSelect
                   form={form}
                   label="Golongan Darah"
                   name="golongan_darah"
-                  placeholder="--Pilih--"
-                  options={[
-                    { label: "A", value: "A" },
-                    { label: "B", value: "B" },
-                    { label: "AB", value: "AB" },
-                    { label: "O", value: "O" },
-                  ]}
                   labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Golongan Darah--"
                   required={false}
+                  queryKey="golongan-darah-select"
+                  queryFn={adminServices.getGolonganDarah}
+                  itemValue="id"
+                  itemLabel="golongan_darah"
                 />
               </div>
 

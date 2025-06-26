@@ -29,6 +29,7 @@ import { JenjangPendidikanSchema } from "@/components/view/admin/Referensi/Pelen
 import { JenisKenaikanPangkatSchema } from "@/components/view/admin/Referensi/Kepegawaian/JenisKenaikanPangkat/JenisKenaikanPangkat";
 import { BankSchema } from "@/components/view/admin/Referensi/Pelengkap/Bank/Bank";
 import { jenisIzinFormvalue } from "@/components/view/admin/Referensi/Kehadiran/JenisIzin/JenisIzin";
+import { DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
 
 const putReferensiServices = {
   jenisTes: (id: number, payload: IJenisTesPost) =>
@@ -106,6 +107,8 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/bank/${id}`, payload),
   jenisIzin: (id: number, payload: jenisIzinFormvalue) =>
     axiosInstance.put(`${endpoint.ADMIN}/jenis-izin/${id}`, payload),
+  pegawai: (id: number, payload: DataPegawaiSchema) =>
+    axiosInstance.put(`${endpoint.ADMIN}/pegawai/${id}`, payload),
 };
 
 export default putReferensiServices;

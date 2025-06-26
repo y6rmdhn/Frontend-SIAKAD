@@ -7,7 +7,6 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 import InfoList from "@/components/blocks/InfoList";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -16,9 +15,8 @@ import { toast } from "sonner";
 import postDosenServices from "@/services/create.dosen.services.ts";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ACCEPTED_MIME_TYPES = ["application/pdf"];
+import { fileSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 const detailHubunganKerjaSchema = z
   .object({
@@ -28,23 +26,7 @@ const detailHubunganKerjaSchema = z
     no_sk: z.string().min(1, "No SK wajib diisi."),
     tgl_sk: z.string().min(1, "Tanggal SK wajib diisi."),
     pejabat_penetap: z.string().min(1, "Pejabat penetap wajib diisi."),
-    file_hubungan_kerja: z
-      .any()
-      .optional()
-      .refine(
-        (files) =>
-          !files ||
-          files.length === 0 ||
-          (files[0] && files[0].size <= MAX_FILE_SIZE),
-        `Ukuran file maksimal 5MB.`
-      )
-      .refine(
-        (files) =>
-          !files ||
-          files.length === 0 ||
-          (files[0] && ACCEPTED_MIME_TYPES.includes(files[0].type)),
-        "Hanya file format .pdf yang diterima."
-      ),
+    file_hubungan_kerja: fileSchema,
     tgl_akhir: z.string().optional(),
     submit_type: z.string().optional(),
     keterangan: z.string().optional(),
@@ -189,21 +171,17 @@ const DetailHubunganKerja = () => {
           />
 
           <div className="mt-10 grid md:grid-rows-5 md:grid-flow-col md:items-center gap-6 w-full">
-            <FormFieldSelect
+            <InfiniteScrollSelect
               form={form}
-              label="Hubungan Kerja"
+              label="Hubungan kerja"
               name="hubungan_kerja_id"
               labelStyle="text-[#3F6FA9]"
-              options={[
-                { value: "1", label: "Tetap Yayasan Dosen" },
-                { value: "2", label: "Tetap Yayasan Karyawan" },
-                { value: "3", label: "PNS/DPK" },
-                { value: "4", label: "Dosen Tidak Tetap" },
-                { value: "5", label: "Kontrak" },
-                { value: "6", label: "Kontrak Fakultas" },
-              ]}
-              required={false}
-              placeholder="-- Pilih Hubungan Kerja --"
+              placeholder="--Pilih Hubungan Kerja--"
+              required={true}
+              queryKey="hubungan_kerja_datariwayat"
+              queryFn={dosenServices.getHubunganKerjaSelect}
+              itemValue="id"
+              itemLabel="nama_hub_kerja"
             />
             <FormFieldInput
               form={form}
@@ -261,31 +239,17 @@ const DetailHubunganKerja = () => {
               required={false}
               labelStyle="text-[#3F6FA9]"
             />
-            <FormFieldSelect
+            <InfiniteScrollSelect
               form={form}
               label="Status Aktif"
               name="status_aktif_id"
               labelStyle="text-[#3F6FA9]"
-              options={[
-                { value: "1", label: "Aktif" },
-                { value: "2", label: "Cuti Luar Tanggungan" },
-                { value: "3", label: "Kontrak Habis" },
-                { value: "4", label: "Wafat" },
-                { value: "5", label: "Mangkir 5 Kali Berturut-turut" },
-                { value: "6", label: "Mengundurkan diri" },
-                { value: "7", label: "Pensiun Dini" },
-                { value: "8", label: "PHK" },
-                { value: "9", label: "Pelanggaran" },
-                { value: "10", label: "Pensiun Normal" },
-                { value: "11", label: "Pernikahan Sesama Karyawan" },
-                { value: "12", label: "Kesalahan Berat" },
-                { value: "13", label: "Sakit Berkepanjangan" },
-                { value: "14", label: "Tidak Aktif" },
-                { value: "15", label: "Tugas Belajar" },
-                { value: "16", label: "Ditahan Pihak Berwajib" },
-              ]}
-              required={false}
-              placeholder="-- Pilih Status Aktif --"
+              placeholder="--Pilih Status Aktif--"
+              required={true}
+              queryKey="status_aktif_datariwayat"
+              queryFn={dosenServices.getStatusAktifSelect}
+              itemValue="id"
+              itemLabel="nama_status_aktif"
             />
             {/*<FormFieldInput*/}
             {/*    form={form}*/}
