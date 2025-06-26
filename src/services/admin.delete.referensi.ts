@@ -46,6 +46,22 @@ const deleteReferensiServices = {
     axiosInstance.delete(`${endpoint.ADMIN}/golongan-darah/${id}`),
   deteleDataBerita: (id: number) =>
     axiosInstance.delete(`${endpoint.ADMIN}/berita/${id}`),
+  deteleDataJenisKehadiran: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jenis-kehadiran/${id}`),
+  deteleDataInputPresensi: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/input-presensi/${id}`),
+  deteleDataPenghargaan: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/datapenghargaan/${id}`),
+  deteleDataPelanggaran: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/datapelanggaran/${id}`),
+  jenjangPendidikan: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jenjang-pendidikan/${id}`),
+  deleteJenisKenaikanPangkat: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jenis-kenaikan-pangkat/${id}`),
+  deleteBank: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/bank/${id}`),
+  deleteJenisIzin: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jenis-izin/${id}`),
 };
 
 export default deleteReferensiServices;

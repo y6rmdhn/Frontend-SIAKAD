@@ -15,10 +15,10 @@ const operasional: {
         title: "Setting Kehadiran",
         href: "/admin/operasional/setting-kehadiran",
       },
-      {
-        title: "Shift Kerja",
-        href: "/admin/operasional/shift-kerja",
-      },
+      // {
+      //   title: "Shift Kerja",
+      //   href: "/admin/operasional/shift-kerja",
+      // },
       {
         title: "Monitoring Kehadiran",
         href: "/admin/operasional/daftar-monitoring-kehadiran",
@@ -41,14 +41,14 @@ const operasional: {
     title: "Cuti",
     href: "",
     childrenItems: [
-      {
-        title: "Monitoring Sisa Cuti",
-        href: "/admin/operasional/cuti/monitoring-sisa-cuti",
-      },
-      {
-        title: "Periode Cuti",
-        href: "/admin/operasional/cuti/periode-cuti",
-      },
+      // {
+      //   title: "Monitoring Sisa Cuti",
+      //   href: "/admin/operasional/cuti/monitoring-sisa-cuti",
+      // },
+      // {
+      //   title: "Periode Cuti",
+      //   href: "/admin/operasional/cuti/periode-cuti",
+      // },
       {
         title: "Permohonan Cuti",
         href: "/admin/operasional/cuti/permohonan-cuti",
@@ -77,10 +77,10 @@ const operasional: {
       },
     ],
   },
-  {
-    title: "Dokumen Internal",
-    href: "/admin/operasional/kompensasi/dokumen-internal",
-  },
+  // {
+  //   title: "Dokumen Internal",
+  //   href: "/admin/operasional/kompensasi/dokumen-internal",
+  // },
 ];
 
 export default operasional;

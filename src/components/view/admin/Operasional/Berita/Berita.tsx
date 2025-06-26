@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import adminServices from "@/services/admin.services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaCheck, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { parseISO, format } from "date-fns";
@@ -24,6 +24,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
+import { useDebounce } from "use-debounce";
 
 // Define interfaces for data structures
 interface BeritaItem {
@@ -47,12 +48,16 @@ interface BeritaResponse {
 const Berita = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const queryClient = useQueryClient();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
 
   // get data
   const { data } = useQuery<BeritaResponse>({
-    queryKey: ["berita", searchParam.get("page")],
+    queryKey: ["berita", searchParam.get("page"), searchParam.get("search")],
     queryFn: async () => {
-      const response = await adminServices.getBerita(searchParam.get("page"));
+      const page = searchParam.get("page") || "1";
+      const search = searchParam.get("search") || "";
+      const response = await adminServices.getBerita(page, search);
       return response.data.data;
     },
   });
@@ -82,16 +87,33 @@ const Berita = () => {
   };
 
   useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
+  useEffect(() => {
     if (!searchParam.get("page")) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
     }
   }, [searchParam, setSearchParam]);
 
   useEffect(() => {
     if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
     }
   }, [searchParam, setSearchParam]);
 
@@ -101,8 +123,9 @@ const Berita = () => {
       Number(searchParam.get("page")) > data.last_page &&
       data.last_page > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
-      setSearchParam(searchParam);
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", data.last_page.toString());
+      setSearchParam(newSearchParam);
     }
   }, [searchParam, data, setSearchParam]);
 
@@ -133,7 +156,10 @@ const Berita = () => {
             options={[{ value: "apple", label: "apple" }]}
           />
 
-          <SearchInput className="" />
+          <SearchInput
+            value={searchData}
+            onChange={(e) => setSearchData(e.target.value)}
+          />
         </div>
 
         <div className="flex items-center space-x-2">

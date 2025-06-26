@@ -25,8 +25,8 @@ const operasional: {
       },
     ],
   },
-    {
-    title: "Evaluasi Kerja",
+  {
+    title: "Evaluasi Kinerja",
     href: "/operasional/evaluasi-kerja",
   },
 ];

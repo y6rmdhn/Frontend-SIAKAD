@@ -11,7 +11,8 @@ const dosenServices = {
     }),
   getDataAnakWithoutParam: () => axiosInstance.get(`${endpoint.DOSEN}/anak`),
 
-  getDataAnakDetail: (id: number | string) => axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
+  getDataAnakDetail: (id: number | string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
 
   getDataOrangtua: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
@@ -134,7 +135,7 @@ const dosenServices = {
   getOrganisasiDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi/` + id),
   getDataOrganisasiWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
+    axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi`),
 
   // riwayat kehadiran
   getDataRiwayatKehadiran: (tahun: number | string) =>
@@ -162,11 +163,61 @@ const dosenServices = {
         page: page,
       },
     }),
+  getDataTesDosen: (page: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/datariwayattes`, {
+      params: {
+        page: page,
+      },
+    }),
   getDetailDataSertifikasiDosen: (id: string | number) =>
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen/` + id),
 
+  getDetailDataTesDosen: (id: string | number) =>
+    axiosInstance.get(`${endpoint.DOSEN}/datariwayattes/` + id),
+
   getDataDataSertifikasiWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen`),
+
+  // operasional
+  getDataIzin: (page: any, search: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-izin-dosen`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataIzinWithoutParams: (id: number | string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-izin-dosen/` + id),
+
+  getDataCuti: (page: any, search: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataBeritaUser: (page: any, search: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/berita-pegawai`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDasboardUser: (
+    tgl_mulai?: string | undefined,
+    tgl_selesai?: string | undefined
+  ) =>
+    axiosInstance.get(`${endpoint.DOSEN}/dosen-dashboard`, {
+      params: {
+        tgl_mulai: tgl_mulai,
+        tgl_selesai: tgl_selesai,
+      },
+    }),
+
+  getBiodataDosen: () => axiosInstance.get(`${endpoint.DOSEN}/biodata`),
+
+  getDataCutiWithoutParams: (id: number | string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen/` + id),
 };
 
 export default dosenServices;

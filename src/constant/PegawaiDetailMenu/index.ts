@@ -3,7 +3,7 @@ const pegawaiDetailMenu = [
   { title: "Alamat Domisili & Kontak", show: "domisili" },
   { title: "Rekening Bank", show: "rekening-bank" },
   { title: "Dokumen", show: "dokumen" },
-  { title: "Detail Kendaraan", show: "detail-kendaraan" },
+  { title: "Lain-lain", show: "detail-kendaraan" },
 ];
 
 export default pegawaiDetailMenu;

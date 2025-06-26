@@ -2,10 +2,10 @@ const accordionContent = [
   {
     title: "Kepegawaian",
     items: [
-      {
-        label: "Homebase",
-        href: "/admin/detail-pegawai/kepegawaian/homebase/",
-      },
+      // {
+      //   label: "Homebase",
+      //   href: "/admin/detail-pegawai/kepegawaian/homebase/",
+      // },
       { label: "Pangkat", href: "/admin/detail-pegawai/kepegawaian/pangkat/" },
       {
         label: "Jabatan Akademik",
@@ -58,100 +58,100 @@ const accordionContent = [
       { label: "Tes", href: "/admin/detail-pegawai/kompetensi/riwayat-tes/" },
     ],
   },
-  {
-    title: "Pelaksanaan Pendidikan",
-    items: [
-      {
-        label: "Pengajar",
-        href: "/admin/detail-pegawai/pendidikan/pengajaran/",
-      },
-      {
-        label: "Bimbingan Mahasiswa",
-        href: "/admin/detail-pegawai/pendidikan/bimbingan-mahasiswa/",
-      },
-      {
-        label: "Pengujian Mahasiswa",
-        href: "/admin/detail-pegawai/pendidikan/pengujian-mahasiswa/",
-      },
-      {
-        label: "Visiting Scientist",
-        href: "/admin/detail-pegawai/pendidikan/visiting-scientist/",
-      },
-      {
-        label: "Pembinaan Mahasiswa",
-        href: "/admin/detail-pegawai/pendidikan/pembinaan-mahasiswa/",
-      },
-      {
-        label: "Datasering",
-        href: "/admin/detail-pegawai/pendidikan/datasering/",
-      },
-      {
-        label: "Bahan Ajar",
-        href: "/admin/detail-pegawai/pendidikan/bahan-ajar/",
-      },
-      {
-        label: "Orasi Ilmiah",
-        href: "/admin/detail-pegawai/pendidikan/orasi-ilmiah/",
-      },
-      {
-        label: "Pembimbing Dosen",
-        href: "/admin/detail-pegawai/pendidikan/pembimbing-dosen/",
-      },
-      {
-        label: "Tugas Tambahan",
-        href: "/admin/detail-pegawai/pendidikan/tugas-tambahan/",
-      },
-    ],
-  },
-  {
-    title: "Pelaksanaan Penelitian",
-    items: [
-      {
-        label: "Penelitian",
-        href: "/admin/detail-pegawai/penelitian/penelitian/",
-      },
-      {
-        label: "Publikasi",
-        href: "/admin/detail-pegawai/penelitian/publikasi/",
-      },
-      {
-        label: "Paten/HKI",
-        href: "/admin/detail-pegawai/penelitian/paten/",
-      },
-    ],
-  },
-  {
-    title: "Pelaksanaan Pengabdian",
-    items: [
-      {
-        label: "Pengelola Jurnal",
-        href: "/admin/detail-pegawai/pengabdian/pengelola-jurnal/",
-      },
-      {
-        label: "Pembicara",
-        href: "/admin/detail-pegawai/pengabdian/pembicara/",
-      },
-      {
-        label: "Jabatan Tugas",
-        href: "/admin/detail-pegawai/pengabdian/jabatan-tugas/",
-      },
-    ],
-  },
+  // {
+  //   title: "Pelaksanaan Pendidikan",
+  //   items: [
+  //     {
+  //       label: "Pengajar",
+  //       href: "/admin/detail-pegawai/pendidikan/pengajaran/",
+  //     },
+  //     {
+  //       label: "Bimbingan Mahasiswa",
+  //       href: "/admin/detail-pegawai/pendidikan/bimbingan-mahasiswa/",
+  //     },
+  //     {
+  //       label: "Pengujian Mahasiswa",
+  //       href: "/admin/detail-pegawai/pendidikan/pengujian-mahasiswa/",
+  //     },
+  //     {
+  //       label: "Visiting Scientist",
+  //       href: "/admin/detail-pegawai/pendidikan/visiting-scientist/",
+  //     },
+  //     {
+  //       label: "Pembinaan Mahasiswa",
+  //       href: "/admin/detail-pegawai/pendidikan/pembinaan-mahasiswa/",
+  //     },
+  //     {
+  //       label: "Datasering",
+  //       href: "/admin/detail-pegawai/pendidikan/datasering/",
+  //     },
+  //     {
+  //       label: "Bahan Ajar",
+  //       href: "/admin/detail-pegawai/pendidikan/bahan-ajar/",
+  //     },
+  //     {
+  //       label: "Orasi Ilmiah",
+  //       href: "/admin/detail-pegawai/pendidikan/orasi-ilmiah/",
+  //     },
+  //     {
+  //       label: "Pembimbing Dosen",
+  //       href: "/admin/detail-pegawai/pendidikan/pembimbing-dosen/",
+  //     },
+  //     {
+  //       label: "Tugas Tambahan",
+  //       href: "/admin/detail-pegawai/pendidikan/tugas-tambahan/",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Pelaksanaan Penelitian",
+  //   items: [
+  //     {
+  //       label: "Penelitian",
+  //       href: "/admin/detail-pegawai/penelitian/penelitian/",
+  //     },
+  //     {
+  //       label: "Publikasi",
+  //       href: "/admin/detail-pegawai/penelitian/publikasi/",
+  //     },
+  //     {
+  //       label: "Paten/HKI",
+  //       href: "/admin/detail-pegawai/penelitian/paten/",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Pelaksanaan Pengabdian",
+  //   items: [
+  //     {
+  //       label: "Pengelola Jurnal",
+  //       href: "/admin/detail-pegawai/pengabdian/pengelola-jurnal/",
+  //     },
+  //     {
+  //       label: "Pembicara",
+  //       href: "/admin/detail-pegawai/pengabdian/pembicara/",
+  //     },
+  //     {
+  //       label: "Jabatan Tugas",
+  //       href: "/admin/detail-pegawai/pengabdian/jabatan-tugas/",
+  //     },
+  //   ],
+  // },
   {
     title: "Penunjang",
     items: [
-      {
-        label: "Anggota Profesi",
-        href: "/admin/detail-pegawai/penunjang/anggota-profesi/",
-      },
+      // {
+      //   label: "Anggota Profesi",
+      //   href: "/admin/detail-pegawai/penunjang/anggota-profesi/",
+      // },
       {
         label: "Penghargaan",
         href: "/admin/detail-pegawai/penunjang/penghargaan/",
       },
-      {
-        label: "Penunjang Lain",
-        href: "/admin/detail-pegawai/penunjang/penunjang-lain/",
-      },
+      // {
+      //   label: "Penunjang Lain",
+      //   href: "/admin/detail-pegawai/penunjang/penunjang-lain/",
+      // },
     ],
   },
   {

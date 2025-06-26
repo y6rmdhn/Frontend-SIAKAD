@@ -3,189 +3,287 @@ import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa6";
 import { Label } from "@/components/ui/label";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination";
 import InfoList from "@/components/blocks/InfoList";
 import Title from "@/components/blocks/Title";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
-import { DummyDataDosen } from "@/constant/DummyDataPegawai/dummyDataPegawai.ts";
+import { useQuery } from "@tanstack/react-query";
+import dosenServices from "@/services/dosen.services";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import { format } from "date-fns";
 
 const Cuti = () => {
-    return (
-        <div className="mt-10 mb-20">
-            <Title title="Cuti" subTitle="Daftar Pengajuan Cuti" />
+  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
 
-            <CustomCard
-                actions={
-                    <div className="flex justify-end">
-                        <Link to="/operasional/pengajuan/tambah-cuti">
-                            <Button className="bg-[#FDA31A] text-xs md:text-sm">
-                                <FaPlus className="mr-2" /> Tambah Baru
-                            </Button>
-                        </Link>
-                    </div>
-                }
-            >
-                <InfoList
-                    items={[
-                        { label: "NIP", value: DummyDataDosen.pegawai_info.nip },
-                        { label: "Nama", value: DummyDataDosen.pegawai_info.nama },
-                        { label: "Unit Kerja", value: DummyDataDosen.pegawai_info.unit_kerja },
-                        { label: "Status", value: DummyDataDosen.pegawai_info.status },
-                        { label: "Jab. Akademik", value: DummyDataDosen.pegawai_info.jab_akademik },
-                        { label: "Jab. Fungsional", value: DummyDataDosen.pegawai_info.jab_fungsional },
-                        { label: "Jab. Struktural", value: DummyDataDosen.pegawai_info.jab_struktural },
-                        { label: "Pendidikan", value: DummyDataDosen.pegawai_info.pendidikan },
-                    ]}
-                />
-            </CustomCard>
+  // get data
+  const { data } = useQuery({
+    queryKey: [
+      "pengajuan-izin-dosen",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const page = searchParam.get("page") || "1";
+      const search = searchParam.get("search") || "";
+      const response = await dosenServices.getDataCuti(page, search);
+      console.log(response.data);
+      return response.data;
+    },
+  });
 
-            {/* Filter */}
-            <CustomCard
-                actions={
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div className="flex gap-4 min-[864px]:flex-row flex-col">
-                            <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">Unit Kerja</Label>
-                            <SelectFilter
-                                classname="w-full"
-                                placeholder="Pilih Unit"
-                                options={[
-                                    { label: "Admin", value: "admin" },
-                                    { label: "User", value: "user" },
-                                    { label: "Guest", value: "guest" },
-                                ]}
-                            />
-                        </div>
-                        <div className="flex gap-4 min-[864px]:flex-row flex-col">
-                            <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">Status</Label>
-                            <SelectFilter
-                                classname="w-full"
-                                placeholder="Pilih Status"
-                                options={[
-                                    { label: "Aktif", value: "aktif" },
-                                    { label: "Cuti", value: "cuti" },
-                                ]}
-                            />
-                        </div>
-                        <div className="flex gap-4 min-[864px]:flex-row flex-col">
-                            <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">Jenis Izin</Label>
-                            <SelectFilter
-                                classname="w-full"
-                                placeholder="Pilih Jenis"
-                                options={[
-                                    { label: "Tahunan", value: "tahunan" },
-                                    { label: "Melahirkan", value: "melahirkan" },
-                                    { label: "Penting", value: "penting" },
-                                ]}
-                            />
-                        </div>
-                    </div>
-                }
-            />
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "-";
+    try {
+      return format(new Date(dateString), "dd MMMM yyyy");
+    } catch (error) {
+      return "Tanggal tidak valid";
+    }
+  };
 
-            <div className="flex mt-4 flex-col min-[864px]:flex-row justify-between gap-5 mb-5">
-                <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto order-2 md:order-1">
-                    <SelectFilter
-                        classname="w-full md:w-30"
-                        options={[
-                            { label: "Admin", value: "admin" },
-                            { label: "User", value: "user" },
-                            { label: "Guest", value: "guest" },
-                        ]}
-                    />
-                    <SearchInput placeholder="Cari Pengajuan Cuti" />
-                </div>
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", data.last_page.toString());
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
+
+  return (
+    <div className="mt-10 mb-20">
+      <Title title="Cuti" subTitle="Daftar Pengajuan Cuti" />
+
+      <CustomCard
+        actions={
+          <div className="flex justify-end">
+            <Link to="/operasional/pengajuan/tambah-cuti">
+              <Button className="bg-[#FDA31A] text-xs md:text-sm">
+                <FaPlus className="mr-2" /> Tambah Baru
+              </Button>
+            </Link>
+          </div>
+        }
+      >
+        <InfoList
+          items={[
+            { label: "NIP", value: data?.pegawai_info.nip },
+            { label: "Nama", value: data?.pegawai_info.nama },
+            { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
+            { label: "Status", value: data?.pegawai_info.status },
+            { label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik },
+            {
+              label: "Jab. Fungsional",
+              value: data?.pegawai_info.jab_fungsional,
+            },
+            {
+              label: "Jab. Struktural",
+              value: data?.pegawai_info.jab_struktural,
+            },
+            { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+          ]}
+        />
+      </CustomCard>
+
+      {/* Filter */}
+      <CustomCard
+        actions={
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex gap-4 min-[864px]:flex-row flex-col">
+              <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">
+                Unit Kerja
+              </Label>
+              <SelectFilter
+                classname="w-full"
+                placeholder="Pilih Unit"
+                options={[
+                  { label: "Admin", value: "admin" },
+                  { label: "User", value: "user" },
+                  { label: "Guest", value: "guest" },
+                ]}
+              />
             </div>
+            <div className="flex gap-4 min-[864px]:flex-row flex-col">
+              <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">
+                Status
+              </Label>
+              <SelectFilter
+                classname="w-full"
+                placeholder="Pilih Status"
+                options={[
+                  { label: "Aktif", value: "aktif" },
+                  { label: "Cuti", value: "cuti" },
+                ]}
+              />
+            </div>
+            <div className="flex gap-4 min-[864px]:flex-row flex-col">
+              <Label className="text-[#FDA31A] md:w-60 text-xs md:text-sm">
+                Jenis Izin
+              </Label>
+              <SelectFilter
+                classname="w-full"
+                placeholder="Pilih Jenis"
+                options={[
+                  { label: "Tahunan", value: "tahunan" },
+                  { label: "Melahirkan", value: "melahirkan" },
+                  { label: "Penting", value: "penting" },
+                ]}
+              />
+            </div>
+          </div>
+        }
+      />
 
-            {/* Table */}
-            <Table className="mt-6 table-auto text-xs lg:text-sm">
-                <TableHeader>
-                    <TableRow className="bg-[#002E5A]">
-                        <TableHead className="text-center text-white"></TableHead>
-                        <TableHead className="text-center text-white">No</TableHead>
-                        <TableHead className="text-center text-white">Tgl. Input</TableHead>
-                        <TableHead className="text-center text-white">Jenis Cuti</TableHead>
-                        <TableHead className="text-center text-white">Keperluan</TableHead>
-                        <TableHead className="text-center text-white">Lama Cuti</TableHead>
-                        <TableHead className="text-center text-white">Status</TableHead>
-                        <TableHead className="text-center text-white">Aksi</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody className="divide-y divide-gray-200">
-                    <TableRow className="even:bg-gray-100">
-                        <TableCell className="text-center">
-                            <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-                        </TableCell>
-                        <TableCell className="text-center">1</TableCell>
-                        <TableCell className="text-center">2025-06-17</TableCell>
-                        <TableCell className="text-center">Cuti Tahunan</TableCell>
-                        <TableCell className="text-center">Liburan Keluarga</TableCell>
-                        <TableCell className="text-center">5 Hari</TableCell>
-                        <TableCell className="text-center">Disetujui</TableCell>
-                        <TableCell>
-                            <div className="flex justify-center items-center gap-2">
-                                <Link to="/operasional/pengajuan/detail-cuti">
-                                    <Button size="icon" variant="ghost" className="cursor-pointer">
-                                        <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
-                                    </Button>
-                                </Link>
-                                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
-                                    <Button size="icon" variant="ghost" className="cursor-pointer">
-                                        <IoIosDocument className="w-5 h-5 text-[#26A1F4]" />
-                                    </Button>
-                                </Link>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-
-            {/* Pagination */}
-            <Pagination className="mt-8 flex justify-end">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#">1</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#" isActive>
-                            2
-                        </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#">3</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationEllipsis />
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationNext href="#" />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+      <div className="flex mt-4 flex-col min-[864px]:flex-row justify-between gap-5 mb-5">
+        <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto order-2 md:order-1">
+          <SelectFilter
+            classname="w-full md:w-30"
+            options={[
+              { label: "Admin", value: "admin" },
+              { label: "User", value: "user" },
+              { label: "Guest", value: "guest" },
+            ]}
+          />
+          <SearchInput
+            value={searchData}
+            onChange={(e) => setSearchData(e.target.value)}
+          />
         </div>
-    );
+      </div>
+
+      {/* Table */}
+      <Table className="mt-6 table-auto text-xs lg:text-sm">
+        <TableHeader>
+          <TableRow className="bg-[#002E5A]">
+            {data?.table_columns.map((column: any) => (
+              <TableHead className="text-center text-white">
+                {column.label}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody className="divide-y divide-gray-200">
+          {data?.data.data.map((item: any) => (
+            <TableRow className="even:bg-gray-100">
+              <TableCell className="text-center">{item.no_urut_cuti}</TableCell>
+              <TableCell className="text-center">{item.jenis_cuti}</TableCell>
+              <TableCell className="text-center">
+                {formatDate(item.tgl_mulai)}
+              </TableCell>
+              <TableCell className="text-center">
+                {formatDate(item.tgl_selesai)}
+              </TableCell>
+              <TableCell className="text-center">
+                {item.jumlah_cuti ? `${item.jumlah_cuti} hari` : "-"}
+              </TableCell>
+              <TableCell className="text-center">{item.alasan_cuti}</TableCell>
+              <TableCell className="text-center">
+                <Button
+                  size="sm"
+                  className={`w-full text-xs lg:text-sm text-black
+                                  ${
+                                    item.status_pengajuan === "draf"
+                                      ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
+                                      : item.status_pengajuan === "diajukan"
+                                      ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
+                                      : item.status_pengajuan === "disetujui"
+                                      ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
+                                      : item.status_pengajuan === "ditolak"
+                                      ? "bg-red-500 hover:bg-red-500"
+                                      : "bg-slate-300 hover:bg-slate-300"
+                                  }
+                                `}
+                >
+                  {item.status_pengajuan}
+                </Button>
+              </TableCell>
+              <TableCell>
+                <div className="flex justify-center items-center gap-2">
+                  <Link to={"/operasional/pengajuan/detail-cuti/" + item.id}>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
+                    </Button>
+                  </Link>
+                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoIosDocument className="w-5 h-5 text-[#26A1F4]" />
+                    </Button>
+                  </Link>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <CustomPagination
+        currentPage={Number(searchParam.get("page") || 1)}
+        links={data?.links || []}
+        onPageChange={(page) => {
+          searchParam.set("page", page.toString());
+          setSearchParam(searchParam);
+        }}
+        hasNextPage={!!data?.next_page_url}
+        hasPrevPage={!!data?.prev_page_url}
+        totalPages={data?.last_page}
+      />
+    </div>
+  );
 };
 
 export default Cuti;

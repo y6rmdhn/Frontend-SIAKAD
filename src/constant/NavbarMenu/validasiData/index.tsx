@@ -3,10 +3,10 @@ const validasiData: {
   href: string;
   childrenItems?: { title: string; href: string }[];
 }[] = [
-  {
-    title: "Setting Validasi",
-    href: "/admin/validasi-data/setting-validasi",
-  },
+  // {
+  //   title: "Setting Validasi",
+  //   href: "/admin/validasi-data/setting-validasi",
+  // },
   {
     title: "Monitoring",
     href: "/admin/validasi-data/monitoring",
@@ -19,10 +19,10 @@ const validasiData: {
     title: "Kepegawaian",
     href: "",
     childrenItems: [
-      {
-        title: "Homebase",
-        href: "/admin/validasi-data/kepegawaian/homebase",
-      },
+      // {
+      //   title: "Homebase",
+      //   href: "/admin/validasi-data/kepegawaian/homebase",
+      // },
       {
         title: "Hubungan Kerja",
         href: "/admin/validasi-data/kepegawaian/hubungan-kerja",
@@ -59,80 +59,80 @@ const validasiData: {
       },
     ],
   },
-  {
-    title: "Pelaksanaan Pendidikan",
-    href: "",
-    childrenItems: [
-      {
-        title: "Bahan Ajar",
-        href: "/admin/validasi-data/pelaksanaan-pendidikan/bahan-ajar",
-      },
-      {
-        title: "Datasering",
-        href: "/admin/validasi-data/pelaksanaan-pendidikan/datasering",
-      },
-      {
-        title: "Orasi Ilmiah",
-        href: "/admin/validasi-data/pelaksanaan-pendidikan/orasi-ilmiah",
-      },
-      {
-        title: "Tugas Tambahan",
-        href: "/admin/validasi-data/pelaksanaan-pendidikan/tugas-tambahan",
-      },
-    ],
-  },
-  {
-    title: "Pelaksanaan Penelitian",
-    href: "",
-    childrenItems: [
-      {
-        title: "Paten",
-        href: "/admin/validasi-data/pelaksanaan-penelitian/paten",
-      },
-      {
-        title: "Penelitian",
-        href: "/admin/validasi-data/pelaksanaan-penelitian/penelitian",
-      },
-      {
-        title: "Publikasi",
-        href: "/admin/validasi-data/pelaksanaan-penelitian/publikasi",
-      },
-    ],
-  },
-  {
-    title: "Pelaksanaan Pengabdian",
-    href: "",
-    childrenItems: [
-      {
-        title: "Jabatan Struktural",
-        href: "/admin/validasi-data/pelaksanaan-pengabdian/jabatan-struktural",
-      },
-      {
-        title: "Pembicara",
-        href: "/admin/validasi-data/pelaksanaan-pengabdian/pembicara",
-      },
-      {
-        title: "Pengabdian",
-        href: "/admin/validasi-data/pelaksanaan-pengabdian/pengabdian",
-      },
-    ],
-  },
+  // // {
+  // //   title: "Pelaksanaan Pendidikan",
+  // //   href: "",
+  // //   childrenItems: [
+  // //     {
+  // //       title: "Bahan Ajar",
+  // //       href: "/admin/validasi-data/pelaksanaan-pendidikan/bahan-ajar",
+  // //     },
+  // //     {
+  // //       title: "Datasering",
+  // //       href: "/admin/validasi-data/pelaksanaan-pendidikan/datasering",
+  // //     },
+  // //     {
+  // //       title: "Orasi Ilmiah",
+  // //       href: "/admin/validasi-data/pelaksanaan-pendidikan/orasi-ilmiah",
+  // //     },
+  // //     {
+  // //       title: "Tugas Tambahan",
+  // //       href: "/admin/validasi-data/pelaksanaan-pendidikan/tugas-tambahan",
+  // //     },
+  // //   ],
+  // // },
+  // // {
+  // //   title: "Pelaksanaan Penelitian",
+  // //   href: "",
+  // //   childrenItems: [
+  // //     {
+  // //       title: "Paten",
+  // //       href: "/admin/validasi-data/pelaksanaan-penelitian/paten",
+  // //     },
+  // //     {
+  // //       title: "Penelitian",
+  // //       href: "/admin/validasi-data/pelaksanaan-penelitian/penelitian",
+  // //     },
+  // //     {
+  // //       title: "Publikasi",
+  // //       href: "/admin/validasi-data/pelaksanaan-penelitian/publikasi",
+  // //     },
+  // //   ],
+  // // },
+  // {
+  //   title: "Pelaksanaan Pengabdian",
+  //   href: "",
+  //   childrenItems: [
+  //     {
+  //       title: "Jabatan Struktural",
+  //       href: "/admin/validasi-data/pelaksanaan-pengabdian/jabatan-struktural",
+  //     },
+  //     {
+  //       title: "Pembicara",
+  //       href: "/admin/validasi-data/pelaksanaan-pengabdian/pembicara",
+  //     },
+  //     {
+  //       title: "Pengabdian",
+  //       href: "/admin/validasi-data/pelaksanaan-pengabdian/pengabdian",
+  //     },
+  //   ],
+  // },
   {
     title: "Penunjang",
     href: "",
     childrenItems: [
-      {
-        title: "Organisasi",
-        href: "/admin/validasi-data/penunjang/organisasi",
-      },
+      // {
+      //   title: "Organisasi",
+      //   href: "/admin/validasi-data/penunjang/organisasi",
+      // },
       {
         title: "Penghargaan",
         href: "/admin/validasi-data/penunjang/penghargaan",
       },
-      {
-        title: "Penunjang Lain",
-        href: "/admin/validasi-data/penunjang/penunjang-lain",
-      },
+      // {
+      //   title: "Penunjang Lain",
+      //   href: "/admin/validasi-data/penunjang/penunjang-lain",
+      // },
     ],
   },
   {

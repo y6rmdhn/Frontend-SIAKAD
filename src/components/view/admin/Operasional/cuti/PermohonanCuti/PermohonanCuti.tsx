@@ -29,9 +29,160 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+// import adminServices from "@/services/admin.services";
+// import patchDataServices from "@/services/patch.admin.services";
+// import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+// import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
+import { IoEyeOutline } from "react-icons/io5";
+import { MdEdit } from "react-icons/md";
+import { useSearchParams } from "react-router-dom";
+// import { toast } from "sonner";
+import { useDebounce } from "use-debounce";
+
+// Definisikan tipe data untuk form dan mutasi
+// interface IFormInput {
+//   keterangan_admin: string;
+// }
+
+// interface IMutationVariables {
+//   id: number;
+//   data: IFormInput;
+// }
+
+// Tipe untuk data item dari API (sesuaikan dengan data asli Anda)
+// interface IzinItem {
+//   id: number;
+//   nip: string;
+//   nama_pegawai: string;
+//   jenis_izin: string;
+//   detail_data: {
+//     keterangan_pemohon: string;
+//     tgl_disetujui: string | null;
+//   };
+//   lama_izin: string;
+//   status: string;
+// }
 
 const PermohonanCuti = () => {
+  const [searchParam, setSearchParam] = useSearchParams();
+  // const queryClient = useQueryClient();
+
+  const [searchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+
+  // State untuk mengelola dialog
+  // const [, setDialogState] = useState<{
+  //   isOpen: boolean;
+  //   action: "approve" | "reject" | null;
+  //   item: IzinItem | null;
+  // }>({
+  //   isOpen: false,
+  //   action: null,
+  //   item: null,
+  // });
+
+  // const form = useForm<IFormInput>({
+  //   defaultValues: {
+  //     keterangan_admin: "",
+  //   },
+  // });
+
+  // Query untuk mengambil data
+  // const { data } = useQuery<{ data: IzinItem[] }>({
+  //   queryKey: [
+  //     "pengajuan-cuti-admin",
+  //     searchParam.get("page"),
+  //     searchParam.get("search"),
+  //   ],
+  //   queryFn: async () => {
+  //     const page = searchParam.get("page") || "1";
+  //     const search = searchParam.get("search") || "";
+  //     const response = await adminServices.getPengajuanCutiAdmin(page, search);
+  //     return response.data;
+  //   },
+  // });
+
+  // Fungsi untuk menutup dialog dan mereset state
+  // const closeDialog = () => {
+  //   setDialogState({ isOpen: false, action: null, item: null });
+  //   form.reset();
+  // };
+
+  // Mutasi untuk MENYETUJUI cuti
+  // const { mutate: approveMutation, isPending: isApproving } = useMutation({
+  //   mutationFn: (variables: IMutationVariables) =>
+  //     patchDataServices.aprovePengajuanCuti(variables.id, variables.data),
+  //   onSuccess: () => {
+  //     toast.success("Berhasil menyetujui pengajuan cuti");
+  //     queryClient.invalidateQueries({ queryKey: ["pengajuan-cuti-admin"] });
+  //     closeDialog();
+  //   },
+  //   onError: (error) => {
+  //     toast.error(`Gagal: ${error.message}`);
+  //   },
+  // });
+
+  // Mutasi untuk MENOLAK cuti
+  // const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
+  //   mutationFn: (variables: IMutationVariables) => {
+  //     const payloadForReject = {
+  //       keterangan: variables.data.keterangan_admin,
+  //     };
+  //     return patchDataServices.tolakPengajuanCuti(
+  //       variables.id,
+  //       payloadForReject
+  //     );
+  //   },
+  //   onSuccess: () => {
+  //     toast.success("Berhasil menolak pengajuan izin");
+  //     queryClient.invalidateQueries({ queryKey: ["pengajuan-cuti-admin"] });
+  //     closeDialog();
+  //   },
+  //   onError: (error) => {
+  //     toast.error(`Gagal: ${error.message}`);
+  //   },
+  // });
+
+  // Fungsi untuk membuka dialog
+  // const handleOpenDialog = (action: "approve" | "reject", item: IzinItem) => {
+  //   setTimeout(() => {
+  //     setDialogState({ isOpen: true, action, item });
+  //   }, 100);
+  // };
+
+  // // Fungsi yang dijalankan saat form di-submit
+  // const onSubmit = (formData: IFormInput) => {
+  //   if (!dialogState.action || !dialogState.item) return;
+
+  //   const variables: IMutationVariables = {
+  //     id: dialogState.item.id,
+  //     data: formData,
+  //   };
+
+  //   if (dialogState.action === "approve") {
+  //     approveMutation(variables);
+  //   } else if (dialogState.action === "reject") {
+  //     rejectMutation(variables);
+  //   }
+  // };
+
+  // const isProcessing = isApproving || isRejecting;
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    if (debouncedInput) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
   return (
     <div className="mt-10 mb-20">
       <h1 className="text-lg sm:text-2xl font-normal">
@@ -122,7 +273,10 @@ const PermohonanCuti = () => {
 
           <div className="w-full md:w-90 relative">
             <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-full md:w-90 pr-8 text-xs sm:text-sm" />
+            <Input
+              placeholder="Search"
+              className="w-full md:w-90 pr-8 text-xs sm:text-sm"
+            />
           </div>
         </div>
 
@@ -135,19 +289,34 @@ const PermohonanCuti = () => {
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Sisa Cuti</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Cuti Dipakai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Jumlah Cuti</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              NIP
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Nama Pegawai
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Unit Kerja
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Sisa Cuti
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Cuti Dipakai
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Jumlah Cuti
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Aksi
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
+          {/* {data?.data.map((item: any) => ( */}
           <TableRow className=" even:bg-gray-100">
             <TableCell className="text-center">
-              <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+              <Checkbox />
             </TableCell>
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
@@ -156,7 +325,7 @@ const PermohonanCuti = () => {
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="text-center text-xs sm:text-sm"></TableCell>
             <TableCell className="h-full">
-              {/* <div className="flex justify-center items-center w-full h-full">
+              <div className="flex justify-center items-center w-full h-full">
                 <Button size="icon" variant="ghost" className="cursor-pointer">
                   <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                 </Button>
@@ -164,9 +333,10 @@ const PermohonanCuti = () => {
                 <Button size="icon" variant="ghost" className="cursor-pointer">
                   <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                 </Button>
-              </div> */}
+              </div>
             </TableCell>
           </TableRow>
+          {/* ))} */}
         </TableBody>
       </Table>
 

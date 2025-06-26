@@ -21,8 +21,30 @@ import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import InfoList from "@/components/blocks/InfoList";
 import { DummyDataDosen } from "@/constant/DummyDataPegawai/dummyDataPegawai.ts";
+// import { useState } from "react";
+// import { useDebounce } from "use-debounce";
 
 const EvaluasiKerja = () => {
+  // const [searchParam] = useSearchParams();
+  // const [searchData] = useState(searchParam.get("search") || "");
+  // const [debouncedInput] = useDebounce(searchData, 500);
+
+  // get data
+  // const { data } = useQuery({
+  //   queryKey: [
+  //     "kompetensi-tes-dosen",
+  //     searchParam.get("page"),
+  //     searchParam.get("search"),
+  //   ],
+  //   queryFn: async () => {
+  //     const response = await dosenServices.getDataTesDosen(
+  //       searchParam.get("page")
+  //     );
+  //     console.log(response.data);
+  //     return response.data;
+  //   },
+  // });
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Evaluasi Kinerja" subTitle="Data Evaluasi Kinerja" />

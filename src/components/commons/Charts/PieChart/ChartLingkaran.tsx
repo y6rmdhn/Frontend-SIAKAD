@@ -48,7 +48,7 @@ export function ChartLingkaran({
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-xl text-center">{title}</CardTitle>
-        <CardDescription>{subtitle}</CardDescription>
+        <CardDescription className="text-center">{subtitle}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer

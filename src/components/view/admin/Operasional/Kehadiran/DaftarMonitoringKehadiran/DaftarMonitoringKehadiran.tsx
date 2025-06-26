@@ -1,17 +1,4 @@
 import CustomCard from "@/components/blocks/Card";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm } from "react-hook-form";
-import { FiSearch } from "react-icons/fi";
 import {
   Table,
   TableBody,
@@ -20,144 +7,187 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
-import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import adminServices from "@/services/admin.services";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import { useDebounce } from "use-debounce";
+import SearchInput from "@/components/blocks/SearchInput";
+import unitKerjaOptions from "@/constant/dummyFilter";
 
 const DaftarMonitoringKehadiran = () => {
-  const form = useForm();
+  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+
+  // get data
+  const { data } = useQuery({
+    queryKey: [
+      "monitoring-kehadiran",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const page = searchParam.get("page") || "1";
+      const search = searchParam.get("search") || "";
+      const response = await adminServices.getMonittoringKehadiran(
+        page,
+        search
+      );
+
+      return response.data.data;
+    },
+  });
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", data.last_page.toString());
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-lg sm:text-2xl font-normal">Daftar Monitoring Kehadiran</h1>
-      <Form {...form}>
-        <form>
-          <CustomCard
-            actions={
-              <div className="mt-5 grid-rows-3 md:grid-rows-2 grid-flow-col grid gap-6">
-                <FormFieldSelect
-                  form={form}
-                  label="Unit Kerja"
-                  name="unit_kerja"
-                  labelStyle="text-[#FDA31A]"
-                  options={[
-                    { label: "Admin", value: "admin" },
-                    { label: "User", value: "user" },
-                    { label: "Guest", value: "guest" },
-                  ]}
-                  placeholder="--041001 Universitas Ibn Khaldun--"
-                  required={false}
-                />
-                <FormFieldSelect
-                  form={form}
-                  label="Status Presensi"
-                  name="status_presensi"
-                  labelStyle="text-[#FDA31A]"
-                  options={[
-                    { label: "Admin", value: "admin" },
-                    { label: "User", value: "user" },
-                    { label: "Guest", value: "guest" },
-                  ]}
-                  placeholder="--Semua Status Presensi--"
-                  required={false}
-                />
-                <FormFieldInput
-                  form={form}
-                  label="Tanggal"
-                  name="tanggal"
-                  labelStyle="text-[#FDA31A]"
-                  required={false}
-                  type="date"
-                />
-              </div>
-            }
-          />
-
-          <div className="mt-10 grid grid-rows-2 sm:flex gap-4">
-            <Select>
-              <SelectTrigger className="w-full sm:w-32">
-                <SelectValue placeholder="--Semua--" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Unit Kerja</SelectLabel>
-                  <SelectItem value="apple">Apple</SelectItem>
-                  <SelectItem value="banana">Banana</SelectItem>
-                  <SelectItem value="blueberry">Blueberry</SelectItem>
-                  <SelectItem value="grapes">Grapes</SelectItem>
-                  <SelectItem value="pineapple">Pineapple</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <div className="relative w-full md:w-80">
-              <Input
-                placeholder="Search"
-                className="w-full pr-10"
-              />
-              <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
-            </div>
-
+      <h1 className="text-lg sm:text-2xl font-normal">
+        Daftar Monitoring Kehadiran
+      </h1>
+      <CustomCard
+        actions={
+          <div className="mt-5 grid-rows-3 md:grid-rows-2 grid-flow-col grid gap-6">
+            <SelectFilter
+              label="Unit Kerja"
+              options={[
+                { label: "Admin", value: "admin" },
+                { label: "User", value: "user" },
+                { label: "Guest", value: "guest" },
+              ]}
+              placeholder="--041001 Universitas Ibn Khaldun--"
+            />
+            <SelectFilter
+              label="Unit Kerja"
+              options={[
+                { label: "Admin", value: "admin" },
+                { label: "User", value: "user" },
+                { label: "Guest", value: "guest" },
+              ]}
+              placeholder="--041001 Universitas Ibn Khaldun--"
+            />
+            <SelectFilter
+              label="Unit Kerja"
+              options={[
+                { label: "Admin", value: "admin" },
+                { label: "User", value: "user" },
+                { label: "Guest", value: "guest" },
+              ]}
+              placeholder="--041001 Universitas Ibn Khaldun--"
+            />
           </div>
-          <Table className="mt-10 table-auto">
-            <TableHeader>
-              <TableRow className="bg-gray-100">
-                <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Unit Kerja</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Jam Kerja</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Kehadiran</TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="divide-y divide-gray-200">
-              <TableRow className=" even:bg-gray-100">
-                <TableCell className="text-center text-xs sm:text-sm">0306077701</TableCell>
-                <TableCell className="text-center text-xs sm:text-sm">A HERI ISWANTO</TableCell>
-                <TableCell className="text-center text-xs sm:text-sm">
-                  Universitas Ibn Khaldun
-                </TableCell>
-                <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
-                <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
-                <TableCell className="text-center text-xs sm:text-sm">Alpha</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+        }
+      />
 
-          <Pagination className="mt-8 flex justify-end">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </form>
-      </Form>
+      <div className="mt-10 grid grid-rows-2 sm:flex gap-4">
+        <SelectFilter
+          classname="w-full md:w-32 "
+          options={unitKerjaOptions}
+          placeholder="--Semua--"
+        />
+        <SearchInput
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+        />
+      </div>
+      <Table className="mt-10 table-auto">
+        <TableHeader>
+          <TableRow className="bg-gray-100">
+            <TableHead className="text-center text-xs sm:text-sm">
+              NIP
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Nama Pegawai
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Unit Kerja
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Kehadiran
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Status
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody className="divide-y divide-gray-200">
+          {data?.map((item: any) => (
+            <TableRow key={item.id} className=" even:bg-gray-100">
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.nip}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.nama_pegawai}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.unit_kerja}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.kehadiran}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.status}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <CustomPagination
+        currentPage={Number(searchParam.get("page") || 1)}
+        links={data?.links || []}
+        onPageChange={(page) => {
+          searchParam.set("page", page.toString());
+          setSearchParam(searchParam);
+        }}
+        hasNextPage={!!data?.next_page_url}
+        hasPrevPage={!!data?.prev_page_url}
+        totalPages={data?.last_page}
+      />
     </div>
   );
 };

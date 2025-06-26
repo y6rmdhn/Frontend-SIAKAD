@@ -6,7 +6,7 @@ import { PiWarningCircle } from "react-icons/pi";
 import { ChartLingkaran } from "@/components/commons/Charts/PieChart/ChartLingkaran";
 import { ChartPegawai } from "@/components/commons/Charts/ChartPegawai/ChartPegawai";
 import { Button } from "@/components/ui/button";
-import { Key, useState } from "react";
+import { Key, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Link } from "react-router-dom";
@@ -29,17 +29,8 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { parseISO, format } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton.tsx"; // Impor untuk loading
-
-const pieData = [
-  { browser: "akademik", visitors: 275, fill: "#92F1A8" },
-  { browser: "non akademik", visitors: 200, fill: "#32A14C" },
-];
-
-const pieConfig = {
-  visitors: { label: "Visitors" },
-  chrome: { label: "Chrome", color: "#4285F4" },
-};
+import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { type ChartConfig } from "@/components/ui/chart";
 
 // Tipe data untuk status absen
 interface StatusAbsen {
@@ -55,14 +46,35 @@ interface HistoryAbsenItem {
   jam_keluar: string;
 }
 
+export const kehadiranChartConfig = {
+  Hadir: {
+    label: "Hadir",
+    color: "hsl(var(--chart-2))",
+  },
+  "Tidak Hadir (Izin, Sakit, Cuti, Alpa)": {
+    label: "Tidak Hadir",
+    color: "hsl(var(--chart-3))",
+  },
+} satisfies ChartConfig;
+
 const DasboardUser = () => {
   const [clkBtn, setClkBtn] = useState<string | null>(null);
   const [_, setDetail] = useState<string | null>(null);
   const userSelector = useSelector((state: RootState) => state.user);
   const [isAbsenModalOpen, setIsAbsenModalOpen] = useState(false);
-  // FIX: Mengubah tipe state agar sesuai dengan props AbsensiModal
   const [absenType, setAbsenType] = useState<"masuk" | "keluar">("masuk");
   const queryClient = useQueryClient();
+
+  // get dasboard user
+  const { data } = useQuery({
+    queryKey: ["dasboard-user", absenType],
+    queryFn: async () => {
+      const response = await dosenServices.getDasboardUser();
+
+      console.log(response.data);
+      return response.data;
+    },
+  });
 
   // get data status adbsen
   const { data: statusAbsen, isLoading: isStatusLoading } =
@@ -78,12 +90,25 @@ const DasboardUser = () => {
   const { data: historyAbsen, isLoading: isHistoryLoading } = useQuery<
     HistoryAbsenItem[]
   >({
-    queryKey: ["history-absen"],
+    queryKey: ["history-absen", absenType],
     queryFn: async () => {
       const response = await dosenServices.getHistoryAbsensi();
       return response.data.data;
     },
   });
+
+  const statistikKehadiranData = useMemo(() => {
+    const grafik = data?.statistik_kehadiran?.grafik;
+    if (!grafik) return [];
+
+    const colors = ["#32A14C", "#FDBA74", "#FF8042", "#FFBB28"];
+
+    return grafik.labels.map((label: string, index: number) => ({
+      name: label,
+      value: grafik.data[index],
+      fill: colors[index % colors.length],
+    }));
+  }, [data]);
 
   const sudahMasuk = statusAbsen?.sudah_absen_masuk;
   const sudahKeluar = statusAbsen?.sudah_absen_keluar;
@@ -120,12 +145,13 @@ const DasboardUser = () => {
         <div className="flex flex-col gap-5 lg:flex-row mb-7">
           <div className="lg:w-[60%]">
             <ChartLingkaran
-              title="Kehadiran"
-              data={pieData}
-              dataKey="visitors"
-              nameKey="browser"
-              config={pieConfig}
-              valueLabel="Visitors"
+              title="Statistik Kehadiran"
+              subtitle={data?.statistik_kehadiran?.rentang_tanggal}
+              data={statistikKehadiranData}
+              dataKey="value"
+              nameKey="name"
+              config={kehadiranChartConfig}
+              valueLabel="Total Hari"
             />
           </div>
 
@@ -176,7 +202,7 @@ const DasboardUser = () => {
         </div>
       </div>
 
-      <div>
+      <div className="lg:w-[40%]">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col lg:flex-row w-full gap-5 md:gap-2">
             {isStatusLoading ? (
@@ -269,7 +295,7 @@ const DasboardUser = () => {
           </div>
 
           <div className="drop-shadow-md bg-white p-4 rounded-lg">
-            <h1 className="text-xl font-bold mb-2">Informasi dan Status</h1>
+            <h1 className="text-xl font-semibold mb-2">Informasi dan Status</h1>
             <div className=" p-4">
               <div className="grid grid-cols-3 gap-4 mb-3 text-sm font-medium">
                 <span>Hari</span>
@@ -278,50 +304,52 @@ const DasboardUser = () => {
               </div>
               <div className="flex items-center justify-center gap-2 border-t-2">
                 <PiWarningCircle className="bg-orange-400 text-white w-4 h-4 rounded-full" />
-                <p className="text-center py-4 text-gray-500">
-                  Hari ini anda belum tercatat hadir
+                <p className="text-center text-xs py-4 text-gray-500">
+                  {data?.status_hari_ini}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="drop-shadow-md bg-white p-4 rounded-lg">
-            <h1 className="text-xl font-bold mb-2">Data Riwayat</h1>
+            <h1 className="text-xl font-semibold mb-2">Data Riwayat</h1>
             <div className="flex items-center justify-center text-center border-t-2 gap-2">
-              <div className=" gap-1">
-                <p className="text-gray-500 mb-2">
-                  Anda Belum Melakukan Pengisian Data Riwayat
-                </p>
-                <p className="text-gray-300 mb-2 text-xs">
-                  Segera mengisi data riwayat anda
-                </p>
-              </div>
-              <Link to="/tahapan-data-riwayat">
-                <Button
-                  onClick={() => setDetail("absen")}
-                  className="bg-[#106D63] cursor-pointer"
+              {!data?.persentase_riwayat.is_lengkap && (
+                <div className="w-full flex gap-2 mt-4">
+                  <p className="text-gray-500 text-sm">
+                    {data?.persentase_riwayat.pesan}
+                  </p>
+                  <Link to="/tahapan-data-riwayat">
+                    <Button
+                      onClick={() => setDetail("absen")}
+                      className="bg-[#106D63] cursor-pointer"
+                    >
+                      Lihat Detail
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="drop-shadow-md bg-white p-4 rounded-lg">
+            <h1 className="text-xl font-semibold mb-2">
+              Berita & Pemberitahuan
+            </h1>
+            <div className="border-t-2">
+              {data?.berita_dan_pemberitahuan.map((item: any, index: any) => (
+                <div
+                  key={item.id}
+                  className="flex flex-col gap-2 p-4 border-b last:border-b-0"
                 >
-                  Lihat Detail
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="drop-shadow-md bg-white p-4 rounded-lg">
-            <h1 className="text-xl font-bold mb-2 ">Pemberitahuan</h1>
-            <div className="flex items-center justify-center gap-2 border-t-2">
-              <PiWarningCircle className="bg-orange-400 text-white w-4 h-4 rounded-full" />
-              <p className="text-center py-4 text-gray-500">
-                Tidak ada pemberitahuan
-              </p>
-            </div>
-          </div>
-
-          <div className="drop-shadow-md bg-white p-4 rounded-lg">
-            <h1 className="text-xl font-bold mb-2">Berita</h1>
-            <div className="flex items-center justify-center gap-2 border-t-2">
-              <PiWarningCircle className="bg-orange-400 text-white w-4 h-4 rounded-full " />
-              <p className="text-center py-4 text-gray-500">Tidak ada berita</p>
+                  <p className="text-sm">
+                    {index + 1}. {item.judul}
+                  </p>
+                  <p className="text-muted-foreground text-xs">
+                    {item.tanggal}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

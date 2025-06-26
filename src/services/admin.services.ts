@@ -51,8 +51,15 @@ const adminServices = {
       },
     }),
   getJenisHari: () => axiosInstance.get(`${endpoint.ADMIN}/jenis-hari`),
-  getBerita: (page: any) =>
+  getBerita: (page: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.ADMIN}/berita`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJenisKehadiran: (page?: any) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-kehadiran`, {
       params: {
         page: page,
       },
@@ -61,10 +68,11 @@ const adminServices = {
   getDasboardAdmin: () =>
     axiosInstance.get(`${endpoint.ADMIN}/dashboard?unit_kerja_id=041001`),
 
-  getPegawaiAdminPage: (page: any) =>
+  getPegawaiAdminPage: (page: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai`, {
       params: {
         page: page,
+        search: search,
       },
     }),
   getJabatanStrukturalReferensi: (page: any) =>
@@ -134,12 +142,8 @@ const adminServices = {
         page: page,
       },
     }),
-  getSettingKehadiran: (page: any) =>
-    axiosInstance.get(`${endpoint.ADMIN}/setting-kehadiran`, {
-      params: {
-        page: page,
-      },
-    }),
+  getSettingKehadiran: () =>
+    axiosInstance.get(`${endpoint.ADMIN}/setting-kehadiran`),
   getPenghargaan: (page: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/datapenghargaan`, {
       params: {
@@ -195,6 +199,138 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/golongan-darah`, {
       params: {
         page: page,
+      },
+    }),
+
+  getMonittoringKehadiran: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/monitoring-presensi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getInputKehadiran: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/input-presensi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPengajuanIzinAdmin: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/validasi-izin`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPengajuanCutiAdmin: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/validasi-cuti`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+
+  getRumpunBidangIlmu: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/rumpun-bidang-ilmu`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJenjangPendidikan: (page: any) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenjang-pendidikan`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisKenaikanPangkat: (page: any) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-kenaikan-pangkat`, {
+      params: {
+        page: page,
+      },
+    }),
+  getBankPelangkap: (page: any) =>
+    axiosInstance.get(`${endpoint.ADMIN}/bank`, {
+      params: {
+        page: page,
+      },
+    }),
+  getMonitoringValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/monitoring/validasi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getKeluargaValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/data-keluarga`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPangkatValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datapangkatadm`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJabatanStrukturalValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datajabatanstrukturaladm`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJabatanFungsionalValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datajabatanfungsionaladm`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getTesKompetensi: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datariwayattesadm`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPenghargaanValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/validasi-penghargaan`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getOrganisasiValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/dataorganisasi`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getSertifikasiValidasiData: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datasertifikasiadm`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJenisIzinReferensi: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jenis-izin`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getKemampuanBahasa: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datakemampuanbahasa`, {
+      params: {
+        page: page,
+        search: search,
       },
     }),
 

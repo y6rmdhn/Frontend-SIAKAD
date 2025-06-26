@@ -1,17 +1,37 @@
-import CustomCard from "@/components/blocks/Card";
+import { useEffect, useState } from "react";
+// import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+// import { toast } from "sonner";
+import { useDebounce } from "use-debounce";
+
+// Impor komponen UI dan ikon
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+// import {
+//   Form,
+//   FormControl,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -29,12 +49,160 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiSearch } from "react-icons/fi";
+// import { Textarea } from "@/components/ui/textarea";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
+
+// Impor komponen & service kustom
+import CustomCard from "@/components/blocks/Card";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import SearchInput from "@/components/blocks/SearchInput";
 import Title from "@/components/blocks/Title";
+import adminServices from "@/services/admin.services";
+// import patchDataServices from "@/services/patch.admin.services";
+
+// Definisikan tipe data untuk form dan mutasi
+// interface IFormInput {
+//   keterangan_admin: string;
+// }
+
+// interface IMutationVariables {
+//   id: number;
+//   data: IFormInput;
+// }
+
+// Tipe untuk data item dari API (sesuaikan dengan data asli Anda)
+interface IzinItem {
+  id: number;
+  nip: string;
+  nama_pegawai: string;
+  jenis_izin: string;
+  detail_data: {
+    keterangan_pemohon: string;
+    tgl_disetujui: string | null;
+  };
+  lama_izin: string;
+  status: string;
+}
 
 const PermohonanIzin = () => {
+  const [searchParam, setSearchParam] = useSearchParams();
+  // const queryClient = useQueryClient();
+
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+
+  // State untuk mengelola dialog
+  // const [dialogState, setDialogState] = useState<{
+  //   isOpen: boolean;
+  //   action: "approve" | "reject" | null;
+  //   item: IzinItem | null;
+  // }>({
+  //   isOpen: false,
+  //   action: null,
+  //   item: null,
+  // });
+
+  // const form = useForm<IFormInput>({
+  //   defaultValues: {
+  //     keterangan_admin: "",
+  //   },
+  // });
+
+  // Query untuk mengambil data
+  const { data, isLoading } = useQuery<{ data: IzinItem[] }>({
+    queryKey: [
+      "pengajuan-izin-admin",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const page = searchParam.get("page") || "1";
+      const search = searchParam.get("search") || "";
+      const response = await adminServices.getPengajuanIzinAdmin(page, search);
+      return response.data;
+    },
+  });
+
+  // Fungsi untuk menutup dialog dan mereset state
+  // const closeDialog = () => {
+  //   setDialogState({ isOpen: false, action: null, item: null });
+  //   form.reset();
+  // };
+
+  // Mutasi untuk MENYETUJUI izin
+  // const { mutate: approveMutation, isPending: isApproving } = useMutation({
+  //   mutationFn: (variables: IMutationVariables) =>
+  //     patchDataServices.aprovePengajuanIzin(variables.id, variables.data),
+  //   onSuccess: () => {
+  //     toast.success("Berhasil menyetujui pengajuan izin");
+  //     queryClient.invalidateQueries({ queryKey: ["pengajuan-izin-admin"] });
+  //     closeDialog();
+  //   },
+  //   onError: (error) => {
+  //     toast.error(`Gagal: ${error.message}`);
+  //   },
+  // });
+
+  // // Mutasi untuk MENOLAK izin
+  // const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
+  //   mutationFn: (variables: IMutationVariables) => {
+  //     const payloadForReject = {
+  //       keterangan: variables.data.keterangan_admin,
+  //     };
+  //     return patchDataServices.tolakPengajuanIzin(
+  //       variables.id,
+  //       payloadForReject
+  //     );
+  //   },
+  //   onSuccess: () => {
+  //     toast.success("Berhasil menolak pengajuan izin");
+  //     queryClient.invalidateQueries({ queryKey: ["pengajuan-izin-admin"] });
+  //     closeDialog();
+  //   },
+  //   onError: (error) => {
+  //     toast.error(`Gagal: ${error.message}`);
+  //   },
+  // });
+
+  // // Fungsi untuk membuka dialog
+  // const handleOpenDialog = (action: "approve" | "reject", item: IzinItem) => {
+  //   setTimeout(() => {
+  //     setDialogState({ isOpen: true, action, item });
+  //   }, 100);
+  // };
+
+  // // Fungsi yang dijalankan saat form di-submit
+  // const onSubmit = (formData: IFormInput) => {
+  //   if (!dialogState.action || !dialogState.item) return;
+
+  //   const variables: IMutationVariables = {
+  //     id: dialogState.item.id,
+  //     data: formData,
+  //   };
+
+  //   if (dialogState.action === "approve") {
+  //     approveMutation(variables);
+  //   } else if (dialogState.action === "reject") {
+  //     rejectMutation(variables);
+  //   }
+  // };
+
+  // const isProcessing = isApproving || isRejecting;
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    if (debouncedInput) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Pengajuan Izin" subTitle="Daftar Pengajuan Izin" />
@@ -52,10 +220,6 @@ const PermohonanIzin = () => {
                   <SelectGroup>
                     <SelectLabel>Unit Kerja</SelectLabel>
                     <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -68,12 +232,8 @@ const PermohonanIzin = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectLabel>Status</SelectLabel>
+                    <SelectItem value="diajukan">Diajukan</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -86,12 +246,8 @@ const PermohonanIzin = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Unit Kerja</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectLabel>Periode</SelectLabel>
+                    <SelectItem value="tahunan">Cuti Tahunan</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -108,94 +264,215 @@ const PermohonanIzin = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Unit Kerja</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
+                <SelectLabel>Filter</SelectLabel>
+                <SelectItem value="semua">--Semua--</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
-
-          <div className="w-full md:w-90 relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input placeholder="Search" className="w-full md:w-90 pr-8 text-xs sm:text-sm" />
-          </div>
+          <SearchInput
+            value={searchData}
+            onChange={(e) => setSearchData(e.target.value)}
+          />
         </div>
-
-        <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-          Batalkan
-        </Button>
       </div>
 
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
             <TableHead className="text-center"></TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">NIP</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Nama Pegawai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Jenis Izin</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Keterangan Izin</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Lama Izin</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Status</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tgl Disetujui</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              NIP
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Nama Pegawai
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Jenis Izin
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Keterangan Izin
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Lama Izin
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Status
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Tgl Disetujui
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Aksi
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center">
-              <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-            </TableCell>
-            <TableCell className="text-center">0002065901</TableCell>
-            <TableCell className="text-center">
-              Prof.Dr.Hj.Indupurnahayu,Dra.,Ak.,MM.,CA.
-            </TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">Sekolah Pascasarjana</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">0</TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={9} className="text-center">
+                Memuat data...
+              </TableCell>
+            </TableRow>
+          ) : (
+            data?.data.map((item) => (
+              <TableRow key={item.id} className=" even:bg-gray-100">
+                <TableCell className="text-center">
+                  <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+                </TableCell>
+                <TableCell className="text-center">{item.nip}</TableCell>
+                <TableCell className="text-center">
+                  {item.nama_pegawai}
+                </TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
+                  {item.jenis_izin}
+                </TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
+                  {item.detail_data.keterangan_pemohon}
+                </TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
+                  {item.lama_izin}
+                </TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
+                  <Button
+                    size="sm"
+                    className={`w-full text-xs lg:text-sm text-black
+                      ${
+                        item.status === "Draf"
+                          ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
+                          : item.status === "Diajukan"
+                          ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
+                          : item.status === "Disetujui"
+                          ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
+                          : item.status === "Ditolak"
+                          ? "bg-red-500 hover:bg-red-500"
+                          : "bg-slate-300 hover:bg-slate-300"
+                      }
+                    `}
+                  >
+                    {item.status}
+                  </Button>
+                </TableCell>
+                <TableCell className="text-center text-xs sm:text-sm">
+                  {item.detail_data.tgl_disetujui || "-"}
+                </TableCell>
+                <TableCell className="h-full">
+                  <div className="flex justify-center items-center w-full h-full">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <MdEdit className="w-5 h-5 text-[#26A1F4]" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Pilih Aksi</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          // onSelect={() => handleOpenDialog("approve", item)}
+                          className="cursor-pointer"
+                        >
+                          Setujui
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          // onSelect={() => handleOpenDialog("reject", item)}
+                          className="cursor-pointer text-red-600 focus:text-red-600"
+                        >
+                          Tolak
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
 
-      <Pagination className="mt-8 flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      {/* <Dialog
+        open={dialogState.isOpen}
+        onOpenChange={(openValue) => {
+          if (!openValue) {
+            closeDialog();
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {dialogState.action === "approve"
+                ? "Konfirmasi Persetujuan Izin"
+                : "Konfirmasi Penolakan Izin"}
+            </DialogTitle>
+            <DialogDescription>
+              Anda akan{" "}
+              {dialogState.action === "approve" ? "menyetujui" : "menolak"}{" "}
+              permohonan izin dari{" "}
+              <strong>{dialogState.item?.nama_pegawai}</strong>. Silakan berikan
+              keterangan.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="keterangan_admin"
+                rules={{ required: "Keterangan wajib diisi." }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Keterangan Admin</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Contoh: Disetujui, harap kembali tepat waktu."
+                        {...field}
+                        disabled={isProcessing}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={closeDialog}
+                  disabled={isProcessing}
+                >
+                  Batal
+                </Button>
+                <Button type="submit" disabled={isProcessing}>
+                  {isProcessing
+                    ? "Memproses..."
+                    : dialogState.action === "approve"
+                    ? "Ya, Setujui"
+                    : "Ya, Tolak"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog> */}
+
+      <CustomPagination
+        currentPage={Number(searchParam.get("page") || 1)}
+        data={data}
+        onPageChange={(page) => {
+          const newSearchParam = new URLSearchParams(searchParam);
+          newSearchParam.set("page", page.toString());
+          setSearchParam(newSearchParam);
+        }}
+      />
     </div>
   );
 };

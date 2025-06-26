@@ -8,7 +8,4 @@ const dataItems = [
   { label: "Wajib Presensi di Lokasi", status: "check" },
 ];
 
-const leftColumnItems = dataItems.filter((item) => item.status === "x");
-const rightColumnItems = dataItems.filter((item) => item.status === "check");
-
-export default { leftColumnItems, rightColumnItems };
+export default { dataItems };

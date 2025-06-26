@@ -25,14 +25,18 @@ import { FiSearch } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import { Link, useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
 import { useEffect } from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { format, parseISO } from "date-fns";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 const RiwayatPenghargaan = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const queryClient = useQueryClient();
 
   // get data
   const { data } = useQuery({
@@ -45,6 +49,22 @@ const RiwayatPenghargaan = () => {
       return response.data.data;
     },
   });
+
+  // hapus data
+  const { mutate: deleteData } = useMutation({
+    mutationFn: (id: number) =>
+      deleteReferensiServices.deteleDataPenghargaan(id),
+    onSuccess: () => {
+      toast.success("Data berhasil dihapus");
+      queryClient.invalidateQueries({
+        queryKey: ["jenis-penghargaan"],
+      });
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    deleteData(id);
+  };
 
   useEffect(() => {
     if (!searchParam.get("page")) {
@@ -246,21 +266,34 @@ const RiwayatPenghargaan = () => {
                       <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                     </Button>
                   </Link>
-
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
+                  <Link
+                    to={
+                      "/admin/operasional/kompensasi/edit-data-penghargaan/" +
+                      item.id
+                    }
                   >
-                    <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                    </Button>
+                  </Link>
+                  <ConfirmDialog
+                    title="Hapus Data?"
+                    description="Apakah Anda yakin ingin menghapus data ini?"
+                    onConfirm={() => handleDelete(item.id)}
                   >
-                    <FaRegTrashAlt className="w-4! h-4! text-red-500" />
-                  </Button>
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <FaRegTrashAlt className="text-red-500" />
+                    </Button>
+                  </ConfirmDialog>
                 </div>
               </TableCell>
             </TableRow>

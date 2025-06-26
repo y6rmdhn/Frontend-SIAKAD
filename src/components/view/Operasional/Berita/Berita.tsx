@@ -19,16 +19,83 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IoAdd } from "react-icons/io5";
+import { IoAdd, IoEyeOutline } from "react-icons/io5";
 import { HiMiniTrash } from "react-icons/hi2";
-import { IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { useQuery } from "@tanstack/react-query";
+import dosenServices from "@/services/dosen.services";
 
 const Berita = () => {
+  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+
+  // get data
+  const { data } = useQuery({
+    queryKey: [
+      "berita-user",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const response = await dosenServices.getDataBeritaUser(
+        searchParam.get("page") || 1,
+        searchParam.get("search") || ""
+      );
+
+      return response.data.data;
+    },
+  });
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (!searchParam.get("page")) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (Number(searchParam.get("page")) < 1) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", "1");
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    if (
+      data?.last_page &&
+      Number(searchParam.get("page")) > data.last_page &&
+      data.last_page > 0
+    ) {
+      const newSearchParam = new URLSearchParams(searchParam);
+      newSearchParam.set("page", data.last_page.toString());
+      setSearchParam(newSearchParam);
+    }
+  }, [searchParam, data, setSearchParam]);
+
   return (
-    <div className="mt-10">
+    <div className="mt-10 mb-20">
       <h1 className="text-2xl font-normal">
         Berita{" "}
         <span className="text-[16px] text-muted-foreground font-normal">
@@ -69,7 +136,10 @@ const Berita = () => {
                     ]}
                   />
 
-                  <SearchInput />
+                  <SearchInput
+                    value={searchData}
+                    onChange={(e) => setSearchData(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -113,38 +183,40 @@ const Berita = () => {
           </TableHeader>
 
           <TableBody className="divide-y divide-gray-200">
-            <TableRow className=" even:bg-gray-100">
-              <TableCell className="text-center">
-                <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-              </TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="text-center"></TableCell>
-              <TableCell className="h-full">
-                <div className="flex justify-center items-center w-full h-full">
-                  <Link to="/operasional/detail-berita">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer"
-                    >
-                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                    </Button>
-                  </Link>
-                  <Link to="">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer"
-                    >
-                      <HiMiniTrash className="w-5! h-5! text-[#FDA31A]" />
-                    </Button>
-                  </Link>
-                </div>
-              </TableCell>
-            </TableRow>
+            {data?.data.map((item: any) => (
+              <TableRow key={item.id} className=" even:bg-gray-100">
+                <TableCell className="text-center">
+                  <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+                </TableCell>
+                <TableCell className="text-center"></TableCell>
+                <TableCell className="text-center">{item.judul}</TableCell>
+                <TableCell className="text-center"></TableCell>
+                <TableCell className="text-center"></TableCell>
+                <TableCell className="text-center"></TableCell>
+                <TableCell className="h-full">
+                  <div className="flex justify-center items-center w-full h-full">
+                    <Link to="/operasional/detail-berita">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                      >
+                        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                      </Button>
+                    </Link>
+                    <Link to="">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                      >
+                        <HiMiniTrash className="w-5! h-5! text-[#FDA31A]" />
+                      </Button>
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
 

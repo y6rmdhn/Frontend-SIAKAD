@@ -1,7 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import putReferensiServices from "@/services/put.admin.referensi.ts";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 const penghargaanSchema = z.object({
   pegawai_id: z.string().min(1, "Pegawai wajib diisi."),
@@ -45,7 +45,7 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
   const form = useForm<PenghargaanSchema>({
     resolver: zodResolver(penghargaanSchema),
     defaultValues: {
-      pegawai_id: String(initialData.pegawai_id) || "",
+      pegawai_id: `${initialData.nip} - ${initialData.nama_pegawai}` || "",
       tanggal_penghargaan: initialData.tanggal_penghargaan
         ? initialData.tanggal_penghargaan.split("T")[0]
         : "",
@@ -160,15 +160,16 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
                 required
                 type="date"
               />
-              <FormFieldSelect
+              <InfiniteScrollSelect
                 form={form}
-                label="Jenis Penghargaan"
                 name="jenis_penghargaan"
-                options={[
-                  { value: "Dosen Berprestasi", label: "Dosen Berprestasi" },
-                  { value: "Lainnya", label: "Lainnya" },
-                ]}
-                required
+                placeholder="--Pilih Jenis--"
+                label="Jenis Penghargaan"
+                required={false}
+                queryKey="jenis-kehadiran-select"
+                queryFn={adminServices.getJenisPenghargaanAktifitas}
+                itemValue="nama"
+                itemLabel="nama"
               />
               <FormFieldInput
                 form={form}
@@ -221,6 +222,8 @@ const EditDataPenghargaan = () => {
     queryFn: async () => {
       if (!params.id) return null;
       const response = await adminServices.getDetailPenghargaan(params.id);
+      console.log(response.data);
+
       return response.data;
     },
     enabled: !!params.id,

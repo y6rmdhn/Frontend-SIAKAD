@@ -8,6 +8,7 @@ import {
   IJamKerja,
   IJenisCutiPost,
   IJenisHari,
+  IJenisKehadiran,
   IJenisLuaran,
   IJenisPelanggaran,
   IJenisPenghargaan,
@@ -23,6 +24,11 @@ import {
   ISuku,
   UnitKerja,
 } from "@/types/create.referensi";
+import { InputPresensiFormValue } from "@/components/view/admin/Operasional/Kehadiran/InpuKehadiran/InputKehadiran";
+import { JenjangPendidikanSchema } from "@/components/view/admin/Referensi/Pelengkap/JenjangPendidikan/JenjangPendidikan";
+import { JenisKenaikanPangkatSchema } from "@/components/view/admin/Referensi/Kepegawaian/JenisKenaikanPangkat/JenisKenaikanPangkat";
+import { BankSchema } from "@/components/view/admin/Referensi/Pelengkap/Bank/Bank";
+import { jenisIzinFormvalue } from "@/components/view/admin/Referensi/Kehadiran/JenisIzin/JenisIzin";
 
 const potsReferensiServices = {
   jenisTes: (payload: IJenisTesPost) =>
@@ -73,6 +79,18 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/golongan-darah`, payload),
   beritaOperasional: (payload: FormData) =>
     axiosInstance.post(`${endpoint.ADMIN}/berita`, payload),
+  jenisKehadiran: (payload: IJenisKehadiran) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-kehadiran`, payload),
+  inputPresensi: (payload: InputPresensiFormValue) =>
+    axiosInstance.post(`${endpoint.ADMIN}/input-presensi`, payload),
+  jenjangPendidikan: (payload: JenjangPendidikanSchema) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenjang-pendidikan`, payload),
+  jenisKenaikanPangkat: (payload: JenisKenaikanPangkatSchema) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-kenaikan-pangkat`, payload),
+  bank: (payload: BankSchema) =>
+    axiosInstance.post(`${endpoint.ADMIN}/bank`, payload),
+  jenisIzin: (payload: jenisIzinFormvalue) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jenis-izin`, payload),
 };
 
 export default potsReferensiServices;

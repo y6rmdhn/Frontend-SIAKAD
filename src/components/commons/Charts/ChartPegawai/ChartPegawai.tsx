@@ -3,14 +3,7 @@
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -36,12 +29,6 @@ const chartConfig = {
 export function ChartPegawai() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Area Chart - Linear</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
-      </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <AreaChart data={chartData} margin={{ left: 12, right: 12 }}>

@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import CustomCard from "@/components/blocks/Card";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import adminServices from "@/services/admin.services";
 import potsReferensiServices from "@/services/create.admin.referensi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
@@ -17,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AxiosError } from "axios"; // Impor untuk penanganan error yang lebih baik
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 // --- START DEFINISI TIPE DATA ---
 
@@ -30,20 +30,14 @@ const pelanggaranSchema = z.object({
   tgl_sk: z.string().optional(),
   keterangan: z.string().optional(),
   file_foto: z
-      .instanceof(File, { message: "Harap pilih sebuah file." })
-      .optional() // Jadikan opsional agar tidak error jika tidak diisi
-      .refine((file) => !file || file.size <= MAX_FILE_SIZE, {
-        message: `Ukuran file maksimal adalah ${MAX_FILE_SIZE / 1024 / 1024} MB.`,
-      }),
+    .instanceof(File, { message: "Harap pilih sebuah file." })
+    .optional() // Jadikan opsional agar tidak error jika tidak diisi
+    .refine((file) => !file || file.size <= MAX_FILE_SIZE, {
+      message: `Ukuran file maksimal adalah ${MAX_FILE_SIZE / 1024 / 1024} MB.`,
+    }),
 });
 
 type PelanggaranFormValue = z.infer<typeof pelanggaranSchema>;
-
-// Tipe untuk item jenis pelanggaran dari API
-interface JenisPelanggaranItem {
-  id: number | string;
-  nama_pelanggaran: string;
-}
 
 // --- END DEFINISI TIPE DATA ---
 
@@ -62,37 +56,20 @@ const DetailRiwayatPelanggaran = () => {
     },
   });
 
-  // get data dengan tipe yang jelas
-  const { data } = useQuery<{ data: { data: JenisPelanggaranItem[] } }>({
-    queryKey: ["jenis-pelanggaran-select-option"],
-    queryFn: async () => {
-      const response = await adminServices.getJenisPelanggaran();
-      return response.data;
-    },
-  });
-
-  // item sekarang memiliki tipe yang benar secara otomatis
-  const jenisPelanggaranOptions =
-      data?.data.data.map((item) => ({
-        label: item.nama_pelanggaran,
-        value: item.id.toString(),
-      })) || [];
-
   // add data
   const { mutate } = useMutation({
     mutationFn: (formData: FormData) =>
-        potsReferensiServices.pelanggaran(formData),
+      potsReferensiServices.pelanggaran(formData),
     onSuccess: (response) => {
       console.log("Server response:", response);
       form.reset();
       toast.success("Data berhasil ditambahkan");
       navigate("/admin/operasional/kompensasi/pelanggaran");
     },
-    // Menambahkan tipe pada error untuk akses yang aman ke .response
     onError: (error: AxiosError<{ message?: string }>) => {
       console.error("Mutation error:", error);
       const errorMessage =
-          error.response?.data?.message || "Gagal menambahkan data.";
+        error.response?.data?.message || "Gagal menambahkan data.";
       toast.error(errorMessage);
     },
   });
@@ -114,103 +91,110 @@ const DetailRiwayatPelanggaran = () => {
   };
 
   return (
-      <div className="mt-10 mb-20">
-        <h1 className="text-lg sm:text-2xl font-normal">
-          Pelanggaran{" "}
-          <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
+    <div className="mt-10 mb-20">
+      <h1 className="text-lg sm:text-2xl font-normal">
+        Pelanggaran{" "}
+        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
           Detail Riwayat Pelanggaran
         </span>
-        </h1>
+      </h1>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmitData)}>
-            <CustomCard
-                actions={
-                  <div className="flex justify-between mt-10">
-                    <div className="flex gap-6">
-                      <div className="relative">
-                        <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-                        <Input placeholder="Search" className="w-96 pr-8" />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <Link to="/admin/operasional/kompensasi/pelanggaran">
-                        <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-                          <IoIosArrowBack /> Kembali ke Daftar
-                        </Button>
-                      </Link>
-
-                      <Button
-                          type="submit"
-                          className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
-                      >
-                        <IoSaveSharp /> Simpan
-                      </Button>
-                    </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmitData)}>
+          <CustomCard
+            actions={
+              <div className="flex justify-between mt-10">
+                <div className="flex gap-6">
+                  <div className="relative">
+                    <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
+                    <Input placeholder="Search" className="w-96 pr-8" />
                   </div>
-                }
-            >
-              <div className="grid grid-rows-4 grid-flow-col gap-x-5 items-center">
-                <FormFieldInput
-                    form={form}
-                    label="Pegawai"
-                    name="pegawai_id"
-                    required={true}
-                    labelStyle="text-[#3F6FA9]"
-                    placeholder="Cari Pegawai"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Tgl Pelanggaran"
-                    name="tgl_pelanggaran"
-                    required={true}
-                    labelStyle="text-[#3F6FA9]"
-                    type="date"
-                />
-                <FormFieldSelect
-                    form={form}
-                    label="Jenis Pelanggaran"
-                    name="jenis_pelanggaran_id"
-                    labelStyle="text-[#3F6FA9]"
-                    options={jenisPelanggaranOptions}
-                    required={true}
-                    placeholder="Terlambat atau Alpa"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="No.SK"
-                    name="no_sk"
-                    required={false}
-                    labelStyle="text-[#3F6FA9]"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Tgl.SK"
-                    name="tgl_sk"
-                    required={false}
-                    labelStyle="text-[#3F6FA9]"
-                    type="date"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Keterangan"
-                    name="keterangan"
-                    required={false}
-                    labelStyle="text-[#3F6FA9]"
-                    type="textarea"
-                />
-                <FormFieldInputFile
-                    label="File Keterangan"
-                    name="file_foto"
-                    required={false}
-                    labelStyle="text-[#3F6FA9]"
-                />
+                </div>
+
+                <div className="flex gap-4">
+                  <Link to="/admin/operasional/kompensasi/pelanggaran">
+                    <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
+                      <IoIosArrowBack /> Kembali ke Daftar
+                    </Button>
+                  </Link>
+
+                  <Button
+                    type="submit"
+                    className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]"
+                  >
+                    <IoSaveSharp /> Simpan
+                  </Button>
+                </div>
               </div>
-            </CustomCard>
-          </form>
-        </Form>
-      </div>
+            }
+          >
+            <div className="grid grid-rows-4 grid-flow-col gap-x-5 items-center">
+              <InfiniteScrollSelect
+                form={form}
+                name="pegawai_id"
+                label="Pegawai"
+                placeholder="--Pilih Pegawai--"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                queryKey="pegawai-select-pelanggaran"
+                queryFn={adminServices.getPegawaiAdminPage}
+                itemValue="id"
+                itemLabel="nama_pegawai"
+              />
+              <FormFieldInput
+                form={form}
+                label="Tgl Pelanggaran"
+                name="tgl_pelanggaran"
+                required={true}
+                labelStyle="text-[#3F6FA9]"
+                type="date"
+              />
+              <InfiniteScrollSelect
+                form={form}
+                name="jenis_pelanggaran_id"
+                label="Jenis Pelanggaran"
+                placeholder="Terlambat atau Alpa"
+                labelStyle="text-[#3F6FA9]"
+                required={false}
+                queryKey="pegawai-select-pelanggaran-kompensasi"
+                queryFn={adminServices.getJenisPelanggaran}
+                itemValue="id"
+                itemLabel="nama_pelanggaran"
+              />
+              <FormFieldInput
+                form={form}
+                label="No.SK"
+                name="no_sk"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldInput
+                form={form}
+                label="Tgl.SK"
+                name="tgl_sk"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+                type="date"
+              />
+              <FormFieldInput
+                form={form}
+                label="Keterangan"
+                name="keterangan"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+                type="textarea"
+              />
+              <FormFieldInputFile
+                label="File Keterangan"
+                name="file_foto"
+                required={false}
+                labelStyle="text-[#3F6FA9]"
+              />
+            </div>
+          </CustomCard>
+        </form>
+      </Form>
+    </div>
   );
 };
 

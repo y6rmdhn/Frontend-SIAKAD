@@ -963,10 +963,16 @@ function App() {
             <Route path="pengajuan">
               <Route path="cuti" Component={CutiPage} />
               <Route path="tambah-cuti" Component={DetailCutiUserPage} />
-              <Route path="detail-cuti" Component={DetailDataCutiUserPage} />
+              <Route
+                path="detail-cuti/:id"
+                Component={DetailDataCutiUserPage}
+              />
               <Route path="izin" Component={IzinPage} />
               <Route path="tambah-izin" Component={DetailIzinUserPage} />
-              <Route path="detail-izin" Component={DetailDataIzinUserPage} />
+              <Route
+                path="detail-izin/:id"
+                Component={DetailDataIzinUserPage}
+              />
             </Route>
             <Route path="evaluasi-kerja" Component={EvaluasiKerjaUserPage} />
             <Route path="evaluasi-kerja">
@@ -1115,7 +1121,10 @@ function App() {
               />
               <Route path="tes" Component={TesUserPage} />
               <Route path="detail-tes" Component={DetailTesUserPage} />
-              <Route path="detail-data-tes" Component={DetailDataTesUserPage} />
+              <Route
+                path="detail-data-tes/:id"
+                Component={DetailDataTesUserPage}
+              />
             </Route>
 
             {/* DETAIL RIWAYAT > PELAKSANAAN PENELITIAN */}

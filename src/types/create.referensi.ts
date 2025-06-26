@@ -155,6 +155,12 @@ interface IGolonganDarah {
   golongan_darah: string;
 }
 
+interface IJenisKehadiran {
+  kode_jenis: string;
+  nama_jenis: string;
+  warna: string;
+}
+
 export type {
   IJenisTesPost,
   IOutputPenelitianPost,
@@ -181,4 +187,5 @@ export type {
   IStatusPernikahan,
   ISuku,
   IGolonganDarah,
+  IJenisKehadiran,
 };

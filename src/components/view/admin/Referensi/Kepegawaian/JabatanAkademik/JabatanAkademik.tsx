@@ -2,7 +2,7 @@ import CustomCard from "@/components/blocks/Card";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SearchInput from "@/components/blocks/SearchInput";
-import { SelectFilter as SelectFilterForm } from "@/components/blocks/SelectFilterForm";
+// import { SelectFilter as SelectFilterForm } from "@/components/blocks/SelectFilterForm";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import putReferensiServices from "@/services/put.admin.referensi";
 import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 // Define interface for the data item
 interface JabatanAkademikItem {
@@ -107,10 +108,12 @@ const JabatanAkademik = () => {
   });
 
   const jenisJabatanOptions =
-    jenisJabatan?.data.map((role: { id: { toString: () => any; }; nama: any; }) => ({
-      value: role.id.toString(),
-      label: role.nama,
-    })) || [];
+    jenisJabatan?.data.map(
+      (role: { id: { toString: () => any }; nama: any }) => ({
+        value: role.id.toString(),
+        label: role.nama,
+      })
+    ) || [];
 
   // tambah
   const { mutate: postData } = useMutation({
@@ -333,12 +336,15 @@ const JabatanAkademik = () => {
                     />
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
-                    <SelectFilterForm
+                    <InfiniteScrollSelect
                       form={form}
                       name="role_id"
                       placeholder="--Pilih Jenis Jabatan--"
-                      options={jenisJabatanOptions}
-                      required
+                      required={false}
+                      queryKey="jenis-jabatan-akademik-select"
+                      queryFn={adminServices.getUnitKerja}
+                      itemValue="id"
+                      itemLabel="nama_unit"
                     />
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
@@ -375,7 +381,7 @@ const JabatanAkademik = () => {
               )}
               {data?.data.map((item, index) => {
                 const roleName = jenisJabatanOptions.find(
-                  (opt: { value: number; }) => opt.value == item.role_id
+                  (opt: { value: number }) => opt.value == item.role_id
                 )?.label;
 
                 console.log(roleName);

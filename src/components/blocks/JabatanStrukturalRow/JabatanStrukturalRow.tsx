@@ -15,27 +15,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { JabatanStrukturalNode } from "@/components/view/admin/Referensi/Kepegawaian/JabatanStruktural/JabatanStruktural";
+// Import the Node type from the parent component to ensure they are in sync
 
-interface UnitNode {
-  id: number;
-  kode_unit: string;
-  nama_unit: string;
-  parent_unit_id: string | null;
-  children: UnitNode[];
-}
-
-interface UnitKerjaRowProps {
-  node: UnitNode;
+// The props now expect the clean JabatanStrukturalNode type
+interface JabatanStrukturalRowProps {
+  node: JabatanStrukturalNode;
   level: number;
   openRows: Record<string, boolean>;
   handleDelete: (id: number) => void;
-  toggleRow: (kode_unit: string) => void;
-  createRefCallback: (
-    kode_unit: string
-  ) => (el: HTMLTableRowElement | null) => void;
+  toggleRow: (kode: string) => void;
+  createRefCallback: (kode: string) => (el: HTMLTableRowElement | null) => void;
 }
 
-const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
+const JabatanStrukturalRow: React.FC<JabatanStrukturalRowProps> = ({
   node,
   level,
   handleDelete,
@@ -43,18 +36,19 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
   toggleRow,
   createRefCallback,
 }) => {
-  const isRowOpen = openRows[node.kode_unit] || false;
+  // The key for open/closed state is the node's unique 'kode'
+  const isRowOpen = openRows[node.kode] || false;
 
   return (
     <React.Fragment>
       <TableRow
         className={level > 0 ? "bg-gray-50" : "even:bg-gray-100"}
-        ref={createRefCallback(node.kode_unit)}
+        ref={createRefCallback(node.kode)}
       >
         <TableCell style={{ paddingLeft: `${(level + 1) * 1}rem` }}>
           {node.children.length > 0 && (
             <Button
-              onClick={() => toggleRow(node.kode_unit)}
+              onClick={() => toggleRow(node.kode)}
               variant="ghost"
               size="icon"
             >
@@ -66,28 +60,31 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
             </Button>
           )}
         </TableCell>
+        {/* Displaying the flattened data */}
         <TableCell className="text-center text-xs sm:text-sm">
-          {node.kode_unit}
+          {node.kode}
         </TableCell>
         <TableCell className="text-left text-xs sm:text-sm">
-          {node.nama_unit}
+          {node.nama_jabatan}
         </TableCell>
         <TableCell className="text-center text-xs sm:text-sm">
-          {node.parent_unit_id || "-"}
+          {node.parent_jabatan_nama}
+        </TableCell>
+        <TableCell className="text-center text-xs sm:text-sm">
+          {node.unit_kerja_nama}
         </TableCell>
         <TableCell className="text-center">
           <div className="flex justify-center items-center w-full h-full">
-            {/* Tombol Aksi */}
-            <Link to="/admin/referensi/kepegawaian/unit-kerja/detail-unit-kerja">
+            {/* The links can be made more generic if needed */}
+            <Link
+              to={`/admin/referensi/kepegawaian/jabatan-struktural/detail/${node.id}`}
+            >
               <Button size="icon" variant="ghost">
                 <FaPlus className="w-5 h-5 text-green-500" />
               </Button>
             </Link>
             <Link
-              to={
-                "/admin/referensi/kepegawaian/unit-kerja/detail-data-unit-kerja/" +
-                node.id
-              }
+              to={`/admin/referensi/kepegawaian/jabatan-struktural/view/${node.id}`}
             >
               <Button size="icon" variant="ghost">
                 <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
@@ -99,15 +96,14 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
                   <FaRegTrashAlt className="text-red-500" />
                 </Button>
               </DialogTrigger>
-
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Konfirmasi Penghapusan</DialogTitle>
                   <DialogDescription>
-                    Apakah Anda benar-benar yakin ingin menghapus unit kerja
+                    Apakah Anda yakin ingin menghapus jabatan
                     <strong className="text-red-600">
                       {" "}
-                      "{node.nama_unit}"
+                      "{node.nama_jabatan}"
                     </strong>
                     ? Tindakan ini tidak dapat dibatalkan.
                   </DialogDescription>
@@ -131,10 +127,11 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
 
       {isRowOpen &&
         node.children.map((childNode) => (
-          <UnitKerjaRow
-            key={childNode.kode_unit}
+          // Recursively render child rows
+          <JabatanStrukturalRow
+            key={childNode.kode}
             node={childNode}
-            level={level + 1} // Tingkatkan level indentasi
+            level={level + 1}
             openRows={openRows}
             toggleRow={toggleRow}
             handleDelete={handleDelete}
@@ -145,4 +142,4 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
   );
 };
 
-export default UnitKerjaRow;
+export default JabatanStrukturalRow;
