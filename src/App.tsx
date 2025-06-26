@@ -417,12 +417,36 @@ const DetailJabatanFungsionalReferensiPage = lazy(
       "./pages/admin/referensi/kepegawaian/jabatanFungsional/detailJabatanFungsional"
     )
 );
+const DetailDataJabatanFungsionalReferensiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/referensi/kepegawaian/jabatanFungsional/detaildataJabatanFungsionalReferensi"
+    )
+);
+const EditJabatanFungsionalReferensiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/referensi/kepegawaian/jabatanFungsional/editJabatanFungsionalReferensi"
+    )
+)
 const DetailJabatanStrukturalReferensiPage = lazy(
   () =>
     import(
       "./pages/admin/referensi/kepegawaian/jabatanStruktural/detailJabatanStruktural"
     )
 );
+const DetailDataJabatanStrukturalReferensiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/referensi/kepegawaian/jabatanStruktural/detaildataJabatanStrukturalReferensi"
+    )
+)
+const EditJabatanStrukturalReferensiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/referensi/kepegawaian/jabatanStruktural/editJabatanStrukturalReferensi"
+    )
+)
 const JenisKenaikanPangkatReferensiPage = lazy(
   () => import("./pages/admin/referensi/kepegawaian/jenisKenaikanPangkat")
 );
@@ -1832,12 +1856,28 @@ function App() {
                   Component={DetailJabatanFungsionalReferensiPage}
                 />
                 <Route
+                  path="jabatan-fungsional/detail-data-jabatan-fungsional"
+                  Component={DetailDataJabatanFungsionalReferensiPage}
+                />
+                <Route
+                  path="jabatan-fungsional/detail-jabatan-fungsional/edit-jabatan-fungsional"
+                  Component={EditJabatanFungsionalReferensiPage}
+                />
+                <Route
                   path="jabatan-struktural"
                   Component={JabatanStrukturalReferensiPage}
                 />
                 <Route
                   path="jabatan-struktural/detail-jabatan-struktural"
                   Component={DetailJabatanStrukturalReferensiPage}
+                />
+                <Route
+                  path="jabatan-struktural/detail-data-jabatan-struktural"
+                  Component={DetailDataJabatanStrukturalReferensiPage}
+                />
+                <Route
+                  path="jabatan-struktural/detail-jabatan-struktural/edit-jabatan-struktural"
+                  Component={EditJabatanStrukturalReferensiPage}
                 />
                 <Route
                   path="jenis-kenaikan-pangkat"

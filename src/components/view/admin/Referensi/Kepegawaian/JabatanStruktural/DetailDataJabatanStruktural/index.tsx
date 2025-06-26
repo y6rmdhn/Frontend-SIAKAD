@@ -1,0 +1,3 @@
+import DetailDataJabatanStrukturalReferensi from "./DetailDataJabatanStruktural";
+
+export default DetailDataJabatanStrukturalReferensi;

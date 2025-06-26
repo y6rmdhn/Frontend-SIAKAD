@@ -1,0 +1,3 @@
+import DetailDataJabatanFungsionalReferensi from "./DetailDataJabatanFungsionalReferensi";
+
+export default DetailDataJabatanFungsionalReferensi;
