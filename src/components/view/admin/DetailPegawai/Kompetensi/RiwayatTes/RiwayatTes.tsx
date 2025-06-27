@@ -209,7 +209,7 @@ const RiwayatTes = () => {
                   </TableCell>
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
-                      <Link to={`/admin/kepegawaian/tes/detail/${item.id}`}>
+                      <Link to={`/admin/validasi-data/kompetensi/tes/detail-tes/${item.id}`}>
                         <Button
                           size="icon"
                           variant="ghost"

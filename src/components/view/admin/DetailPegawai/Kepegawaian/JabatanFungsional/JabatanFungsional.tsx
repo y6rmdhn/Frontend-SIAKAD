@@ -191,7 +191,7 @@ const JabatanFungsional = () => {
               <TableCell className="text-center"></TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
-                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                  <Link to="/admin/validasi-data/kepegawaian/jabatan-fungsional/detail-jabatan-fungsional">
                     <Button
                       size="icon"
                       variant="ghost"
