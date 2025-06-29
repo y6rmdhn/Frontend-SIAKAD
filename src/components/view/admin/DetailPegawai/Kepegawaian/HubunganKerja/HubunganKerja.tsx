@@ -208,7 +208,7 @@ const HubunganKerja = () => {
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link
-                        to={`/admin/operasional/hubungan-kerja/detail/${item.id}`}
+                        to={`/admin/validasi-data/kepegawaian/hubungan-kerja/detail-hubungan-kerja/${item.id}`}
                       >
                         <Button
                           size="icon"
