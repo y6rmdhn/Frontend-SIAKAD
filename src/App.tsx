@@ -206,6 +206,7 @@ const PengabdianPage = lazy(
 const KemampuanBahasaPage = lazy(
   () => import("./pages/admin/validasiData/pengembangan/kemampuanBahasa")
 );
+
 const OrganisasiPage = lazy(
   () => import("./pages/admin/validasiData/pengembangan/organisasi")
 );
@@ -951,6 +952,9 @@ import LoadingText from "./components/blocks/LoadingText";
 import DetailBeritaPage from "./pages/admin/operasional/berita/detailberita";
 import penggajianUserPage from "./pages/penggajian";
 import printpenggajian from "./components/view/penggajian/printpenggajian";
+import DetailDataOrganisasiKepegawaianPage from "./pages/admin/validasiData/pengembangan/organisasi/detaildataOrganisasi";
+import DetailDataKemampuanBahasaKepegawaianPage from "./pages/admin/validasiData/pengembangan/kemampuanBahasa/detaildataKemampuanBahasa";
+import DetailDataPenghargaanKepegawaianPage from "./pages/admin/validasiData/penunjang/penghargaan/detaildataPenghargaan";
 
 function App() {
   const { isHydrate } = useHydration();
@@ -1794,7 +1798,15 @@ function App() {
                   path="kemampuan-bahasa"
                   Component={KemampuanBahasaPage}
                 />
+                <Route
+                path="detail-data-kemampuan-bahasa"
+                Component={DetailDataKemampuanBahasaKepegawaianPage}
+                />
                 <Route path="organisasi" Component={OrganisasiPage} />
+                <Route
+                path="detail-data-organisasi"
+                Component={DetailDataOrganisasiKepegawaianPage}
+                />
               </Route>
 
               {/* VALIDASI > PENUNJANG */}
@@ -1803,6 +1815,10 @@ function App() {
                 <Route
                   path="penghargaan"
                   Component={PenghargaanPenunjangPage}
+                />
+                <Route
+                path="detail-data-penghargaan"
+                Component={DetailDataPenghargaanKepegawaianPage}
                 />
                 <Route path="penunjang-lain" Component={PenunjangLainPage} />
               </Route>

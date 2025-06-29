@@ -392,7 +392,7 @@ const KemampuanBahasa = () => {
               </TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
-                  <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                  <Link to="/admin/pengembangan/kemampuan-bahasa/detail-data-kemampuan-bahasa">
                     <Button
                       size="icon"
                       variant="ghost"
