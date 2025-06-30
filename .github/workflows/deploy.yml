@@ -38,6 +38,6 @@ jobs:
             echo "Deploying to Nginx..."
             # Copy the contents of the build folder to the Nginx web root directory.
             # The -a flag preserves permissions, and the dot/slash syntax is important.
-            sudo rsync -a build/. /var/www/html/
+            sudo rsync -a dist/. /var/www/html/
 
             echo "Deployment successful!"
