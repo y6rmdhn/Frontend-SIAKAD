@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm, UseFormReturn, FieldErrors } from "react-hook-form"; // Import FieldErrors
+import { useForm, UseFormReturn, FieldErrors } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import pegawaiDetailMenu from "@/constant/PegawaiDetailMenu";
@@ -24,7 +24,7 @@ import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/I
 import putReferensiServices from "@/services/put.admin.referensi";
 import { toast } from "sonner";
 
-// --- Skema Validasi dan Tipe Data (Tidak ada perubahan) ---
+// --- Skema Validasi dan Tipe Data ---
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -48,6 +48,7 @@ const optionalEmail = z
   .optional()
   .or(z.literal(""));
 
+// DIPERBARUI: Skema Zod disesuaikan untuk edit
 const dataPegawaiSchema = z.object({
   id: z.number().optional(),
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
@@ -77,7 +78,10 @@ const dataPegawaiSchema = z.object({
   email_pegawai: z.string().email("Format email tidak valid"),
   email_pribadi: optionalEmail,
   golongan: z.string().optional(),
-  jabatan_fungsional: z.string().optional(),
+  // DIPERBARUI: Disesuaikan menjadi _id
+  jabatan_fungsional_id: z.string().optional(),
+  // DITAMBAHKAN: Validasi untuk jabatan akademik
+  jabatan_akademik_id: z.string().optional(),
   no_ktp: z
     .string()
     .trim()
@@ -193,7 +197,7 @@ const EditDataPegawai = () => {
     enabled: !!params.id,
   });
 
-  const { mutate: putData } = useMutation({
+  const { mutate: putData, isPending } = useMutation({
     mutationFn: (data: DataPegawaiSchema) =>
       putReferensiServices.pegawai(data.id!, data),
     onSuccess: () => {
@@ -216,6 +220,7 @@ const EditDataPegawai = () => {
 
   useEffect(() => {
     if (data) {
+      // DIPERBARUI: form.reset disesuaikan dengan skema baru
       form.reset({
         id: data.id,
         nip: data.nip || "",
@@ -241,6 +246,9 @@ const EditDataPegawai = () => {
         status_kerja: data.status_kerja || "",
         email_pegawai: data.email_pegawai || "",
         email_pribadi: data.email_pribadi || "",
+        // DITAMBAHKAN: Mengisi jabatan fungsional dan akademik
+        jabatan_fungsional_id: data.jabatan_fungsional_id?.toString() || "",
+        jabatan_akademik_id: data.jabatan_akademik_id?.toString() || "",
         no_ktp: data.no_ktp || "",
         no_kk: data.no_kk || "",
         warga_negara: "WNI",
@@ -269,31 +277,24 @@ const EditDataPegawai = () => {
   }, [data, form]);
 
   const onSubmit = (formData: DataPegawaiSchema) => {
+    // Tidak perlu FormData, kirim objek JSON langsung
     putData(formData);
   };
 
-  // --- START PERBAIKAN ---
-
-  // Fungsi ini akan dipanggil jika validasi Zod GAGAL
   const onInvalid = (errors: FieldErrors<DataPegawaiSchema>) => {
-    // Ambil field pertama yang error untuk ditampilkan di toast
     const firstErrorField = Object.keys(errors)[0] as keyof DataPegawaiSchema;
-
     if (firstErrorField) {
       const errorMessage = errors[firstErrorField]?.message;
-      // Membuat nama field lebih mudah dibaca (misal: "nama_lengkap" -> "Nama lengkap")
       const formattedFieldName = firstErrorField
         .replace(/_/g, " ")
         .replace(/\b\w/g, (l) => l.toUpperCase());
-
       toast.error(`${formattedFieldName}: ${errorMessage}`);
     } else {
       toast.error("Data tidak valid, silakan periksa kembali isian Anda.");
     }
   };
 
-  // --- END PERBAIKAN ---
-
+  // Kode untuk fetching wilayah tidak berubah
   const selectedProvinceId = form.watch("provinsi");
   const selectedCityId = form.watch("kota");
 
@@ -332,8 +333,7 @@ const EditDataPegawai = () => {
   const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => (
     <div>
       <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
-        {" "}
-        <KepegawaianSection form={form} />{" "}
+        <KepegawaianSection form={form} />
       </div>
       <div style={{ display: show === "domisili" ? "block" : "none" }}>
         <DomisiliSection
@@ -347,16 +347,13 @@ const EditDataPegawai = () => {
         />
       </div>
       <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
-        {" "}
-        <RekeningBankSection form={form} />{" "}
+        <RekeningBankSection form={form} />
       </div>
       <div style={{ display: show === "dokumen" ? "block" : "none" }}>
-        {" "}
-        <DokumenSection form={form} />{" "}
+        <DokumenSection form={form} />
       </div>
       <div style={{ display: show === "detail-kendaraan" ? "block" : "none" }}>
-        {" "}
-        <DetailKendaraanSection form={form} />{" "}
+        <DetailKendaraanSection form={form} />
       </div>
     </div>
   );
@@ -365,16 +362,12 @@ const EditDataPegawai = () => {
     <div className="mt-10 mb-10">
       <Title title="Data Pegawai" subTitle="Edit Pegawai" />
       <Form {...form}>
-        {/* --- START PERBAIKAN --- */}
-        {/* Menggunakan callback kedua dari handleSubmit untuk menangani error validasi */}
         <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
-          {/* --- END PERBAIKAN --- */}
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardHeader>
               <div className="flex flex-col-reverse items-center justify-between gap-4 md:flex-row">
                 <div className="w-full md:w-auto lg:w-2xs">
-                  {" "}
-                  <SearchInput />{" "}
+                  <SearchInput />
                 </div>
                 <div className="flex w-full flex-col items-center justify-center gap-2 md:w-auto md:flex-row mt-5 md:mt-0">
                   <Button
@@ -386,12 +379,16 @@ const EditDataPegawai = () => {
                   </Button>
                   <Button
                     type="submit"
+                    disabled={isPending}
                     className="w-full cursor-pointer bg-green-light-uika hover:bg-[#329C59] md:w-auto"
                   >
-                    <span className="flex items-center gap-2">
-                      {" "}
-                      <FaSave /> Simpan{" "}
-                    </span>
+                    {isPending ? (
+                      "Menyimpan..."
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <FaSave /> Simpan
+                      </span>
+                    )}
                   </Button>
                 </div>
               </div>

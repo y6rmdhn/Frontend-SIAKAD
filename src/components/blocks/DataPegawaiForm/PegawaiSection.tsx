@@ -1,6 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
 import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 import adminServices from "@/services/admin.services.ts";
 import type { DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
 import { InfiniteScrollSelect } from "../InfiniteScrollSelect/InfiniteScrollSelect";
@@ -128,7 +127,7 @@ const KepegawaianSection = ({
         />
       )}
 
-      {isReadOnly ? (
+      {/* {isReadOnly ? (
         <FormFieldInput
           form={form}
           label="Jabatan Fungsional"
@@ -137,18 +136,40 @@ const KepegawaianSection = ({
           readOnly
         />
       ) : (
-        <FormFieldSelect
+        <InfiniteScrollSelect
           form={form}
           label="Jabatan Fungsional"
-          name="jabatan_fungsional"
+          name="jabatan_fungsional_id"
           labelStyle="text-[#3F6FA9]"
-          options={[
-            { label: "Asisten Ahli", value: "1" },
-            { label: "Dosen Praktisi/Industri", value: "2" },
-            // ...opsi lainnya
-          ]}
-          placeholder="--Pilih Jabatan Fungsional--"
+          placeholder="--Pilih Jabatan Fungsional --"
           required={false}
+          queryKey="jabatan-fungsional-select-create-pegawai"
+          queryFn={adminServices.getJabatanFungsional}
+          itemValue="id"
+          itemLabel="nama_jabatan_fungsional"
+        />
+      )} */}
+
+      {isReadOnly ? (
+        <FormFieldInput
+          form={form}
+          label="Jabatan Akademik"
+          name="jabatan_akademik_id"
+          labelStyle="text-[#3F6FA9]"
+          readOnly
+        />
+      ) : (
+        <InfiniteScrollSelect
+          form={form}
+          label="Jabatan Akademik"
+          name="jabatan_akademik_id"
+          labelStyle="text-[#3F6FA9]"
+          placeholder="--Pilih Jabatan Akademik --"
+          required={false}
+          queryKey="jabatan-akademik-select"
+          queryFn={adminServices.getJabatanAkademik}
+          itemValue="id"
+          itemLabel="jabatan_akademik"
         />
       )}
     </div>

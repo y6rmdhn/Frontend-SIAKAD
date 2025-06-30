@@ -1,11 +1,6 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 
-interface IPayload {
-  id: number;
-  keterangan_admin: string;
-}
-
 interface IPayloadWithArray {
   ids: number[];
   keterangan?: string;
@@ -17,27 +12,24 @@ interface IPayloadWithArrayKeteranganAdmin {
 }
 
 const patchDataServices = {
-  aprovePengajuanIzin: (id: number, payload: IPayload) =>
+  aprovePengajuanIzin: (payload: IPayloadWithArray) =>
     axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-izin/${id}/approve`,
+      `${endpoint.ADMIN}/validasi-izin/batch/approve`,
       payload
     ),
-  aprovePengajuanCuti: (
-    id: number,
-    payload: IPayloadWithArrayKeteranganAdmin
-  ) =>
+  tolakPengajuanIzin: (payload: IPayloadWithArray) =>
     axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-cuti/${id}/approve`,
+      `${endpoint.ADMIN}/validasi-izin/batch/reject`,
       payload
     ),
-  tolakPengajuanCuti: (id: number, payload: IPayloadWithArray) =>
+  aprovePengajuanCuti: (payload: IPayloadWithArrayKeteranganAdmin) =>
     axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-cuti/${id}/reject`,
+      `${endpoint.ADMIN}/validasi-cuti/batch/approve`,
       payload
     ),
-  tolakPengajuanIzin: (id: number, payload: IPayload) =>
+  tolakPengajuanCuti: (payload: IPayloadWithArray) =>
     axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-izin/${id}/reject`,
+      `${endpoint.ADMIN}/validasi-cuti/batch/reject`,
       payload
     ),
   tolakDataKeluarga: (payload: IPayloadWithArray) =>
@@ -140,6 +132,36 @@ const patchDataServices = {
   rejectDataRiwayatOrganisasi: (payload: IPayloadWithArray) =>
     axiosInstance.patch(
       `${endpoint.ADMIN}/dataorganisasi/batch/reject`,
+      payload
+    ),
+  approveDataRiwayatHubunganKerja: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datahubungankerjaadm/batch/approve`,
+      payload
+    ),
+  rejectDataRiwayatHubunganKerja: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datahubungankerjaadm/batch/reject`,
+      payload
+    ),
+  approveDataRiwayatJabatanAkademik: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datajabatanakademikadm/batch/approve`,
+      payload
+    ),
+  rejectDataRiwayatJabatanAkademik: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datajabatanakademikadm/batch/reject`,
+      payload
+    ),
+  approveDataPenghargaan: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/validasi-penghargaan/batch/approve`,
+      payload
+    ),
+  rejectDataPenghargaan: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/validasi-penghargaan/batch/reject`,
       payload
     ),
 };

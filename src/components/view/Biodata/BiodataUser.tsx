@@ -56,7 +56,6 @@ const BiodataUser = () => {
       email_pegawai: "",
       email_pribadi: "",
       golongan: "",
-      jabatan_fungsional: "",
       no_ktp: "",
       no_kk: "",
       warga_negara: "",
@@ -101,7 +100,6 @@ const BiodataUser = () => {
         dokumen_identitas,
         rekening_bank,
         status_kepegawaian,
-        jabatan_fungsional_aktif,
       } = getBiodata;
 
       form.reset({
@@ -138,7 +136,6 @@ const BiodataUser = () => {
         cabang_bank: rekening_bank.cabang_bank || "",
         status_aktif_id: status_kepegawaian.status_aktif?.nama_status || "",
         status_kerja: status_kepegawaian.status_kerja || "",
-        jabatan_fungsional: jabatan_fungsional_aktif?.nama_jabatan || "",
         tinggi_badan: biodata_pribadi.tinggi_badan || undefined,
         berat_badan: biodata_pribadi.berat_badan || undefined,
       });

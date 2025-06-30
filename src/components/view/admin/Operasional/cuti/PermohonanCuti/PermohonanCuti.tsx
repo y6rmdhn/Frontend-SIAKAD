@@ -1,17 +1,19 @@
 import CustomCard from "@/components/blocks/Card";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import SearchInput from "@/components/blocks/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -29,146 +31,167 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-// import adminServices from "@/services/admin.services";
-// import patchDataServices from "@/services/patch.admin.services";
-// import { useQuery } from "@tanstack/react-query";
+import adminServices from "@/services/admin.services";
+import patchDataServices from "@/services/patch.admin.services";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-// import { useForm } from "react-hook-form";
-import { FiSearch } from "react-icons/fi";
-import { IoEyeOutline } from "react-icons/io5";
-import { MdEdit } from "react-icons/md";
+import { useForm } from "react-hook-form";
+import { FaCheck } from "react-icons/fa";
+import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { useSearchParams } from "react-router-dom";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
+import { z } from "zod";
 
-// Definisikan tipe data untuk form dan mutasi
-// interface IFormInput {
-//   keterangan_admin: string;
-// }
+type ActionType = "approve" | "reject" | "draft";
 
-// interface IMutationVariables {
-//   id: number;
-//   data: IFormInput;
-// }
+const actionSchema = z.object({
+  keterangan_admin: z.string().optional(),
+});
 
-// Tipe untuk data item dari API (sesuaikan dengan data asli Anda)
-// interface IzinItem {
-//   id: number;
-//   nip: string;
-//   nama_pegawai: string;
-//   jenis_izin: string;
-//   detail_data: {
-//     keterangan_pemohon: string;
-//     tgl_disetujui: string | null;
-//   };
-//   lama_izin: string;
-//   status: string;
-// }
+const rejectActionSchema = z.object({
+  keterangan_admin: z.string().min(10, {
+    message: "Keterangan penolakan wajib diisi (minimal 10 karakter).",
+  }),
+});
+
+type ActionSchema = z.infer<typeof actionSchema>;
 
 const PermohonanCuti = () => {
   const [searchParam, setSearchParam] = useSearchParams();
-  // const queryClient = useQueryClient();
-
-  const [searchData] = useState(searchParam.get("search") || "");
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
+  const [selectedItem, setSelectedItem] = useState<number[]>([]);
 
-  // State untuk mengelola dialog
-  // const [, setDialogState] = useState<{
-  //   isOpen: boolean;
-  //   action: "approve" | "reject" | null;
-  //   item: IzinItem | null;
-  // }>({
-  //   isOpen: false,
-  //   action: null,
-  //   item: null,
-  // });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
+  const queryClient = useQueryClient();
 
-  // const form = useForm<IFormInput>({
-  //   defaultValues: {
-  //     keterangan_admin: "",
-  //   },
-  // });
+  const form = useForm<ActionSchema>({
+    resolver: zodResolver(
+      pendingAction === "reject" ? rejectActionSchema : actionSchema
+    ),
+    defaultValues: {
+      keterangan_admin: "",
+    },
+  });
 
   // Query untuk mengambil data
-  // const { data } = useQuery<{ data: IzinItem[] }>({
-  //   queryKey: [
-  //     "pengajuan-cuti-admin",
-  //     searchParam.get("page"),
-  //     searchParam.get("search"),
-  //   ],
-  //   queryFn: async () => {
-  //     const page = searchParam.get("page") || "1";
-  //     const search = searchParam.get("search") || "";
-  //     const response = await adminServices.getPengajuanCutiAdmin(page, search);
-  //     return response.data;
-  //   },
-  // });
+  const { data } = useQuery({
+    queryKey: [
+      "pengajuan-cuti-admin",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
+    queryFn: async () => {
+      const page = searchParam.get("page") || "1";
+      const search = searchParam.get("search") || "";
+      const response = await adminServices.getPengajuanCutiAdmin(page, search);
+      return response.data;
+    },
+  });
 
-  // Fungsi untuk menutup dialog dan mereset state
-  // const closeDialog = () => {
-  //   setDialogState({ isOpen: false, action: null, item: null });
-  //   form.reset();
-  // };
+  const handleSuccess = (action: ActionType) => {
+    toast.success(`Berhasil ${action} data pengajuan`);
+    setSelectedItem([]);
+    form.reset();
+    setIsDialogOpen(false);
+    queryClient.invalidateQueries({ queryKey: ["pengajuan-cuti-admin"] });
+  };
 
-  // Mutasi untuk MENYETUJUI cuti
-  // const { mutate: approveMutation, isPending: isApproving } = useMutation({
-  //   mutationFn: (variables: IMutationVariables) =>
-  //     patchDataServices.aprovePengajuanCuti(variables.id, variables.data),
-  //   onSuccess: () => {
-  //     toast.success("Berhasil menyetujui pengajuan cuti");
-  //     queryClient.invalidateQueries({ queryKey: ["pengajuan-cuti-admin"] });
-  //     closeDialog();
-  //   },
-  //   onError: (error) => {
-  //     toast.error(`Gagal: ${error.message}`);
-  //   },
-  // });
+  const handleError = (error: Error) => {
+    toast.error(`Gagal: ${error.message}`);
+  };
 
-  // Mutasi untuk MENOLAK cuti
-  // const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
-  //   mutationFn: (variables: IMutationVariables) => {
-  //     const payloadForReject = {
-  //       keterangan: variables.data.keterangan_admin,
-  //     };
-  //     return patchDataServices.tolakPengajuanCuti(
-  //       variables.id,
-  //       payloadForReject
-  //     );
-  //   },
-  //   onSuccess: () => {
-  //     toast.success("Berhasil menolak pengajuan izin");
-  //     queryClient.invalidateQueries({ queryKey: ["pengajuan-cuti-admin"] });
-  //     closeDialog();
-  //   },
-  //   onError: (error) => {
-  //     toast.error(`Gagal: ${error.message}`);
-  //   },
-  // });
+  // reject
+  const { mutate: rejectMutation } = useMutation({
+    mutationFn: (payload: { ids: number[]; keterangan?: string }) =>
+      patchDataServices.aprovePengajuanCuti(payload),
+    onSuccess: () => handleSuccess("reject"),
+    onError: handleError,
+  });
 
-  // Fungsi untuk membuka dialog
-  // const handleOpenDialog = (action: "approve" | "reject", item: IzinItem) => {
-  //   setTimeout(() => {
-  //     setDialogState({ isOpen: true, action, item });
-  //   }, 100);
-  // };
+  // approve
+  const { mutate: approveMutation } = useMutation({
+    mutationFn: (payload: { ids: number[]; keterangan?: string }) =>
+      patchDataServices.aprovePengajuanCuti(payload),
+    onSuccess: () => handleSuccess("approve"),
+    onError: handleError,
+  });
 
-  // // Fungsi yang dijalankan saat form di-submit
-  // const onSubmit = (formData: IFormInput) => {
-  //   if (!dialogState.action || !dialogState.item) return;
+  const handleSubmitData = (values: ActionSchema) => {
+    const payload = {
+      ids: selectedItem,
+      keterangan_admin: values.keterangan_admin,
+    };
 
-  //   const variables: IMutationVariables = {
-  //     id: dialogState.item.id,
-  //     data: formData,
-  //   };
+    switch (pendingAction) {
+      case "approve":
+        if (!payload.keterangan_admin) {
+          delete payload.keterangan_admin;
+        }
+        approveMutation(payload);
+        break;
+      case "reject":
+        rejectMutation(payload);
+        break;
+      default:
+        toast.error("Aksi tidak diketahui");
+    }
+  };
 
-  //   if (dialogState.action === "approve") {
-  //     approveMutation(variables);
-  //   } else if (dialogState.action === "reject") {
-  //     rejectMutation(variables);
-  //   }
-  // };
+  const pageIds = data?.data?.map((item: any) => item.id) || [];
+  const isAllSelectedOnPage =
+    pageIds.length > 0 && pageIds.every((id: any) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: any) =>
+    selectedItem.includes(id)
+  );
 
-  // const isProcessing = isApproving || isRejecting;
+  const handleSelectedItemId = (pegawaiId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedItem((prev) => [...prev, pegawaiId]);
+    } else {
+      setSelectedItem((prev) => prev.filter((id) => id !== pegawaiId));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    const currentPageIds = data?.data?.map((item: any) => item.id) || [];
+    if (checked) {
+      setSelectedItem((prev) => [...new Set([...prev, ...currentPageIds])]);
+    } else {
+      setSelectedItem((prev) =>
+        prev.filter((id) => !currentPageIds.includes(id))
+      );
+    }
+  };
+
+  const handleOpenDialog = (action: ActionType) => {
+    setPendingAction(action);
+    setIsDialogOpen(true);
+  };
+
+  const dialogDetails = {
+    approve: {
+      title: "Konfirmasi Persetujuan",
+      description: `Anda akan menyetujui ${selectedItem.length} data keluarga terpilih. Aksi ini tidak dapat dibatalkan.`,
+      confirmText: "Ya, Setujui",
+      confirmClass: "bg-green-light-uika hover:bg-[#329C59]",
+    },
+    reject: {
+      title: "Konfirmasi Penolakan",
+      description: `Anda akan menolak ${selectedItem.length} data keluarga terpilih. Aksi ini tidak dapat dibatalkan.`,
+      confirmText: "Ya, Tolak",
+      confirmClass: "bg-red-600 hover:bg-red-700",
+    },
+    draft: {
+      title: "Konfirmasi Draft",
+      description: `Anda akan mengubah status ${selectedItem.length} data keluarga terpilih menjadi "draf".`,
+      confirmText: "Ya, Simpan ke Draf",
+      confirmClass: "bg-blue-500 hover:bg-blue-600",
+    },
+  };
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
@@ -271,24 +294,49 @@ const PermohonanCuti = () => {
             </SelectContent>
           </Select>
 
-          <div className="w-full md:w-90 relative">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input
-              placeholder="Search"
-              className="w-full md:w-90 pr-8 text-xs sm:text-sm"
-            />
-          </div>
+          <SearchInput
+            value={searchData}
+            onChange={(e) => setSearchData(e.target.value)}
+          />
         </div>
 
-        <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59]">
-          Refresh
-        </Button>
+        {selectedItem.length > 0 && (
+          <div className="flex md:flex-row flex-col gap-2">
+            <Button
+              type="button"
+              onClick={() => handleOpenDialog("approve")}
+              className="bg-green-light-uika hover:bg-[#329C59]"
+            >
+              <FaCheck className="w-5! h-5! text-white" />
+              Approve {selectedItem.length} data
+            </Button>
+            <Button
+              type="button"
+              onClick={() => handleOpenDialog("reject")}
+              variant="destructive"
+            >
+              <IoClose className="w-5! h-5! text-white" />
+              Reject {selectedItem.length} data
+            </Button>
+          </div>
+        )}
       </div>
 
       <Table className="mt-10 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
-            <TableHead className="text-center"></TableHead>
+            <TableHead className="text-center">
+              <Checkbox
+                onCheckedChange={(checked) => handleSelectAll(checked === true)}
+                checked={
+                  isAllSelectedOnPage
+                    ? true
+                    : isSomeSelectedOnPage
+                    ? "indeterminate"
+                    : false
+                }
+              />
+            </TableHead>
             <TableHead className="text-center text-xs sm:text-sm">
               NIP
             </TableHead>
@@ -313,57 +361,97 @@ const PermohonanCuti = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {/* {data?.data.map((item: any) => ( */}
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center">
-              <Checkbox />
-            </TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-          {/* ))} */}
+          {data?.data.map((item: any) => (
+            <TableRow key={item.id} className="even:bg-gray-100">
+              <TableCell className="text-center">
+                <Checkbox
+                  checked={selectedItem.includes(item.id)}
+                  onCheckedChange={(checked) =>
+                    handleSelectedItemId(item.id, checked === true)
+                  }
+                />
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.nip}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm">
+                {item.nama_pegawai}
+              </TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+              <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+              <TableCell className="h-full">
+                <div className="flex justify-center items-center w-full h-full">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 
-      <Pagination className="mt-8 flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <CustomPagination
+        currentPage={Number(searchParam.get("page") || 1)}
+        data={data}
+        onPageChange={(page) => {
+          const newSearchParam = new URLSearchParams(searchParam);
+          newSearchParam.set("page", page.toString());
+          setSearchParam(newSearchParam);
+        }}
+      />
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmitData)}>
+              <DialogHeader>
+                <DialogTitle>
+                  {pendingAction && dialogDetails[pendingAction]?.title}
+                </DialogTitle>
+                <DialogDescription>
+                  {pendingAction && dialogDetails[pendingAction]?.description}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="py-4">
+                <FormFieldInput
+                  form={form}
+                  name="keterangan_admin"
+                  placeholder="Tambahkan keterangan..."
+                  required={pendingAction === "reject"}
+                />
+              </div>
+
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="submit"
+                  className={
+                    pendingAction
+                      ? dialogDetails[pendingAction]?.confirmClass
+                      : ""
+                  }
+                >
+                  Konfirmasi
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

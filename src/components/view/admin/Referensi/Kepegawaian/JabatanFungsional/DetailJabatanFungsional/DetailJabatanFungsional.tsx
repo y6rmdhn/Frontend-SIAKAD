@@ -6,17 +6,77 @@ import { IoSaveSharp } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import adminServices from "@/services/admin.services";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+import { AxiosError } from "axios";
+import potsReferensiServices from "@/services/create.admin.referensi";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Zod validation schema
+const fungsionalSchema = z.object({
+  kode: z.string().min(1, { message: "Kode Jabatan is required" }),
+  nama_jabatan_fungsional: z
+    .string()
+    .min(1, { message: "Nama Jabatan Fungsional is required" }),
+  jabatan_akademik_id: z
+    .string()
+    .min(1, { message: "Jabatan Akademik is required" }),
+  pangkat_id: z.string().min(1, { message: "Golongan Pangkat is required" }),
+  angka_kredit: z.string().min(1, { message: "Angka Kredit is required" }),
+  usia_pensiun: z.string().min(1, { message: "Usia Pensiun is required" }),
+  keterangan: z.string().optional(),
+});
+
+// Infer the type from the schema
+type FungsionalSchema = z.infer<typeof fungsionalSchema>;
 
 const DetailJabatanFungsional = () => {
-  const form = useForm();
+  const navigate = useNavigate();
+
+  // Initialize react-hook-form with the zod resolver
+  const form = useForm<FungsionalSchema>({
+    resolver: zodResolver(fungsionalSchema),
+    defaultValues: {
+      kode: "",
+      nama_jabatan_fungsional: "",
+      jabatan_akademik_id: "",
+      pangkat_id: "",
+      angka_kredit: "",
+      usia_pensiun: "",
+      keterangan: "",
+    },
+  });
+
+  const { mutate: postAdd, isPending } = useMutation<
+    any,
+    AxiosError,
+    FungsionalSchema // Type for the data passed to mutationFn
+  >({
+    mutationFn: (data) => potsReferensiServices.jabatanFungsional(data),
+    onSuccess: () => {
+      form.reset();
+      toast.success("Data berhasil ditambahkan");
+      navigate("/admin/referensi/kepegawaian/jabatan-fungsional");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Gagal menambahkan data");
+    },
+  });
+
+  // The 'values' are now correctly typed based on the Zod schema
+  const handleSubmitData = (values: FungsionalSchema) => {
+    postAdd(values);
+  };
 
   return (
     <div className="mt-10 mb-20">
       <Title title="Jabatan Fungsional" subTitle="Detail Jabatan Fungsional" />
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(handleSubmitData)}>
           <CustomCard
             actions={
               <div className="flex flex-col sm:flex-row justify-end gap-4">
@@ -30,9 +90,10 @@ const DetailJabatanFungsional = () => {
                 </Link>
                 <Button
                   type="submit"
-                  className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] text-xs sm:text-sm w-full sm:w-auto"
+                  disabled={isPending}
+                  className="text-xs sm:text-sm cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
                 >
-                  <IoSaveSharp /> Simpan
+                  <IoSaveSharp /> {isPending ? "Menyimpan..." : "Simpan"}
                 </Button>
               </div>
             }
@@ -41,42 +102,40 @@ const DetailJabatanFungsional = () => {
               <FormFieldInput
                 form={form}
                 label="Kode Jabatan"
-                name="kode_jabatan"
+                name="kode"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
               <FormFieldInput
                 form={form}
-                label="Jabatan Fungsional"
-                name="jabatan)fungsional"
+                label="Nama Jabatan Fungsional"
+                name="nama_jabatan_fungsional"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
-              <FormFieldSelect
+              <InfiniteScrollSelect
                 form={form}
                 label="Jabatan Akademik"
-                name="jabatan_akademik"
+                name="jabatan_akademik_id"
                 labelStyle="text-[#3F6FA9]"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
-                ]}
                 placeholder="--Pilih Jabatan Akademik--"
                 required={true}
+                queryKey="jab-akademik-select-referensi"
+                queryFn={adminServices.getJabatanAkademik}
+                itemValue="id"
+                itemLabel="jabatan_akademik"
               />
-              <FormFieldSelect
+              <InfiniteScrollSelect
                 form={form}
                 label="Golongan Pangkat"
-                name="golongan_pangkat"
+                name="pangkat_id"
                 labelStyle="text-[#3F6FA9]"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
-                ]}
                 placeholder="--Pilih Golongan Pangkat--"
-                required={false}
+                required={true}
+                queryKey="pangkat-select-referensi"
+                queryFn={adminServices.getMasterPangkatReferensi}
+                itemValue="id"
+                itemLabel="nama_golongan"
               />
               <FormFieldInput
                 form={form}
@@ -91,19 +150,6 @@ const DetailJabatanFungsional = () => {
                 name="usia_pensiun"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
-              />
-              <FormFieldSelect
-                form={form}
-                label="Referensi Sister"
-                name="referensi_sister"
-                labelStyle="text-[#3F6FA9]"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
-                ]}
-                placeholder="--Pilih Referensi Sister--"
-                required={false}
               />
               <FormFieldInput
                 form={form}

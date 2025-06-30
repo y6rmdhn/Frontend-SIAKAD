@@ -93,6 +93,8 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/jenis-izin`, payload),
   jabatanStruktural: (payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/jabatan-struktural`, payload),
+  jabatanFungsional: (payload: any) =>
+    axiosInstance.post(`${endpoint.ADMIN}/jabatan-fungsional`, payload),
 };
 
 export default potsReferensiServices;

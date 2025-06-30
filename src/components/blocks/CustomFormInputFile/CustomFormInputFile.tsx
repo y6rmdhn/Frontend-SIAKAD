@@ -27,8 +27,8 @@ export const FormFieldInputFile = ({
   classname,
   labelStyle,
   required,
-  accept = "image/jpeg,image/png,application/pdf",
-  description = "jpg, jpeg, png, pdf (maks. 2 MB)",
+  accept = "application/pdf,image/jpeg,image/jpg,image/png",
+  description = "PDF, JPG, JPEG, PNG (Maks. 2MB)",
 }: FormFieldInputFileProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useFormContext();
@@ -51,7 +51,6 @@ export const FormFieldInputFile = ({
             {label}
             {required && <span className="text-red-500">*</span>}
           </FormLabel>
-
           <div className="w-full flex flex-col gap-1">
             <FormControl>
               <div className="flex w-full flex-col gap-1">
@@ -66,21 +65,19 @@ export const FormFieldInputFile = ({
                   </Button>
                   <span
                     className="text-xs lg:text-sm text-muted-foreground truncate max-w-[200px]"
-                    title={field.value?.name || "No file chosen"}
+                    title={field.value?.[0]?.name || "No file chosen"}
                   >
-                    {field.value instanceof File
-                      ? field.value.name
+                    {field.value instanceof FileList && field.value.length > 0
+                      ? field.value[0].name
                       : "No file chosen"}
                   </span>
-
                   <Input
                     ref={fileInputRef}
                     type="file"
                     className="hidden"
                     accept={accept}
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      field.onChange(file || null);
+                      field.onChange(e.target.files);
                       form.trigger(name);
                     }}
                     onBlur={field.onBlur}

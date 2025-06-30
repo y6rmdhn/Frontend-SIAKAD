@@ -7,10 +7,10 @@ const operasional: {
     title: "Berita",
     href: "/operasional/berita",
   },
-  {
-    title: "Dokumen Internal",
-    href: "/operasional/dokumen-internal",
-  },
+  // {
+  //   title: "Dokumen Internal",
+  //   href: "/operasional/dokumen-internal",
+  // },
   {
     title: "Pengajuan",
     href: "",

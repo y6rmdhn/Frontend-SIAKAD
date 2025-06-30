@@ -12,12 +12,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
 import { useEffect, useMemo, useRef, useState } from "react";
 import JabatanStrukturalRow from "@/components/blocks/JabatanStrukturalRow/JabatanStrukturalRow";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
+import { toast } from "sonner";
+import { useDebounce } from "use-debounce";
 // Rename the row component to be more specific to its new purpose
 
 // Interface for the raw data item from the API
@@ -99,15 +106,20 @@ function buildTree(items: JabatanStrukturalItem[]): JabatanStrukturalNode[] {
 const JabatanStruktural = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
-  // const queryClient = useQueryClient();
+  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+  const queryClient = useQueryClient();
 
   // --- React Query and other state management remains the same ---
   const { data, fetchNextPage, hasNextPage, isFetching } =
     useInfiniteQuery<JabatanStrukturalApiResponse>({
-      queryKey: ["jabatan-struktural-all"],
+      queryKey: ["jabatan-struktural-all", searchParam.get("search")],
       queryFn: async ({ pageParam = 1 }) => {
+        const search = searchParam.get("search") || "";
         const response = await adminServices.getJabatanStrukturalReferensi(
-          pageParam
+          pageParam,
+          search
         );
         return response.data;
       },
@@ -123,7 +135,6 @@ const JabatanStruktural = () => {
     return data?.pages.flatMap((page) => page.data.data) ?? [];
   }, [data]);
 
-  // The tree data is now built using our powerful buildTree function
   const treeData = useMemo(() => {
     return allJabatanStruktural.length > 0
       ? buildTree(allJabatanStruktural)
@@ -139,11 +150,33 @@ const JabatanStruktural = () => {
       rowRefs.current[kode] = el;
     };
 
-  // Dummy delete function for demonstration
+  const { mutate: deleteData } = useMutation({
+    mutationFn: (id: number) =>
+      deleteReferensiServices.deleteJabatanStruktural(id),
+    onSuccess: () => {
+      toast.success("Data berhasil dihapus");
+      queryClient.invalidateQueries({ queryKey: ["jabatan-struktural-all"] });
+    },
+  });
+
   const handleDelete = (id: number) => {
-    console.log("Deleting item with id:", id);
-    // queryClient.invalidateQueries(...); // Your actual delete logic
+    deleteData(id);
   };
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+
+    if (debouncedInput.length > 3) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
 
   useEffect(() => {
     if (hasNextPage && !isFetching) {
@@ -177,7 +210,10 @@ const JabatanStruktural = () => {
             />
           </div>
           <div className="w-full relative md:w-80">
-            <SearchInput className="w-full md:w-80" />
+            <SearchInput
+              value={searchData}
+              onChange={(e) => setSearchData(e.target.value)}
+            />
           </div>
         </div>
 

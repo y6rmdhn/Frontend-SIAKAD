@@ -16,6 +16,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Definisikan tipe untuk props komponen
 type InfiniteScrollSelectProps = {
   form: any;
   name: string;
@@ -27,6 +28,8 @@ type InfiniteScrollSelectProps = {
   queryFn: (page: number) => Promise<any>;
   itemValue: string;
   itemLabel: string;
+  // TAMBAHKAN PROP OPSIONAL UNTUK DATA AWAL YANG TERPILIH
+  initialSelectedItem?: Record<string, any> | null;
 };
 
 export const InfiniteScrollSelect = ({
@@ -40,61 +43,72 @@ export const InfiniteScrollSelect = ({
   queryFn,
   itemValue,
   itemLabel,
+  // Terima prop baru di sini
+  initialSelectedItem,
 }: InfiniteScrollSelectProps) => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: [queryKey],
       queryFn: async ({ pageParam = 1 }) => {
         const response = await queryFn(pageParam);
-        // Kita tetap return response.data karena itu adalah sumber kebenaran dari API
         return response.data;
       },
       initialPageParam: 1,
-
-      // [SMART LOGIC] Logika getNextPageParam yang bisa menangani kedua struktur
       getNextPageParam: (lastPage) => {
-        // Cek dulu apakah paginasi ada di level atas (struktur baru)
-        // atau di dalam object .data (struktur lama)
+        // Logika ini sudah bagus, bisa menangani berbagai struktur API
         const paginationSource =
           typeof lastPage?.current_page !== "undefined"
             ? lastPage
             : lastPage?.data;
 
-        // Jika tidak ditemukan sumber paginasi atau sudah halaman terakhir
         if (
           !paginationSource ||
           paginationSource.current_page >= paginationSource.last_page
         ) {
           return undefined;
         }
-
         return paginationSource.current_page + 1;
       },
     });
 
-  // [SMART LOGIC] Logika flatMap yang bisa menangani kedua struktur
+  // Logika untuk meratakan semua data dari semua halaman
   const options =
     data?.pages
       .flatMap((page) => {
-        // Cek apakah 'page.data' adalah array (Struktur Baru)
         if (Array.isArray(page?.data)) {
           return page.data;
         }
-        // Jika bukan, cek apakah 'page.data.data' adalah array (Struktur Lama)
         if (Array.isArray(page?.data?.data)) {
           return page.data.data;
         }
-        // Jika tidak ada yang cocok, kembalikan array kosong untuk keamanan
         return [];
       })
       .filter(Boolean) ?? [];
 
-  const selectOptions = options.map((item) => ({
+  // Gunakan 'let' agar bisa dimodifikasi
+  let selectOptions = options.map((item) => ({
     label: item[itemLabel],
     value: item[itemValue].toString(),
   }));
 
-  // ... sisa kode JSX tidak berubah ...
+  // --- LOGIKA UTAMA: Menyuntikkan data awal ---
+  // Cek apakah ada data awal yang diberikan, dan apakah data tersebut
+  // belum ada di dalam daftar pilihan yang sudah di-fetch dari API.
+  if (
+    initialSelectedItem &&
+    !selectOptions.some(
+      (option) => option.value === initialSelectedItem[itemValue]?.toString()
+    )
+  ) {
+    // Jika belum ada, tambahkan data awal tersebut ke bagian paling atas
+    // dari daftar pilihan agar bisa ditampilkan.
+    selectOptions.unshift({
+      label: initialSelectedItem[itemLabel],
+      value: initialSelectedItem[itemValue].toString(),
+    });
+  }
+  // --- Akhir dari Logika Utama ---
+
   return (
     <FormField
       control={form.control}

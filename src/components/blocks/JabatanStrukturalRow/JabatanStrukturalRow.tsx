@@ -77,14 +77,14 @@ const JabatanStrukturalRow: React.FC<JabatanStrukturalRowProps> = ({
           <div className="flex justify-center items-center w-full h-full">
             {/* The links can be made more generic if needed */}
             <Link
-              to={`/admin/referensi/kepegawaian/jabatan-struktural/detail/${node.id}`}
+              to={`/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural`}
             >
               <Button size="icon" variant="ghost">
                 <FaPlus className="w-5 h-5 text-green-500" />
               </Button>
             </Link>
             <Link
-              to={`/admin/referensi/kepegawaian/jabatan-struktural/view/${node.id}`}
+              to={`/admin/referensi/kepegawaian/jabatan-struktural/detail-data-jabatan-struktural/${node.id}`}
             >
               <Button size="icon" variant="ghost">
                 <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />

@@ -107,10 +107,18 @@ const dosenServices = {
   getDataDiklatWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/data-diklat`),
 
-  getRiwayatPekerjaan: (page: any) =>
+  getRiwayatPekerjaan: (page?: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen`, {
       params: {
         page: page,
+        search: search,
+      },
+    }),
+  getPenghargaan: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen`, {
+      params: {
+        page: page,
+        search: search,
       },
     }),
 
@@ -163,12 +171,13 @@ const dosenServices = {
         page: page,
       },
     }),
-  getDataTesDosen: (page: any) =>
+  getDataTesDosen: (page?: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/datariwayattes`, {
       params: {
         page: page,
       },
     }),
+
   getDetailDataSertifikasiDosen: (id: string | number) =>
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen/` + id),
 
@@ -198,6 +207,34 @@ const dosenServices = {
     }),
   getDataBeritaUser: (page: any, search: string | undefined) =>
     axiosInstance.get(`${endpoint.DOSEN}/berita-pegawai`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataPendidikanFormalUser: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataPelanggaran: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/riwayatpelanggarandosen`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataKegiatanHarian: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/kegiatanhariandosen`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataMonitoringKegiatan: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/monitoring-presensi`, {
       params: {
         page: page,
         search: search,
@@ -258,6 +295,43 @@ const dosenServices = {
     }),
   getStatusAktifSelect: (page?: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/status-aktif`, {
+      params: {
+        page: page,
+      },
+    }),
+  getProdiSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/master-prodi-perguruan-tinggi`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenjangPendidikanSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenjang-pendidikan`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisSertifikasiReferensi: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/master-jenis-sertifikasi`, {
+      params: {
+        page: page,
+      },
+    }),
+  getRumpunBidangIlmu: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/rumpun-bidang-ilmu`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getJenisTes: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-test`, {
+      params: {
+        page: page,
+      },
+    }),
+  getJenisPenghargaanReferensi: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-penghargaan`, {
       params: {
         page: page,
       },

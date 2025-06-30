@@ -38,11 +38,13 @@ function SelectFilter({
       <SelectContent>
         <SelectGroup>
           {label && <SelectLabel>{label}</SelectLabel>}
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
+          {options
+            .filter((option) => option.value !== "")
+            .map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
         </SelectGroup>
       </SelectContent>
     </Select>

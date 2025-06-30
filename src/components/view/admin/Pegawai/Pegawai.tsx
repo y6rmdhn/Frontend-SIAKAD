@@ -62,8 +62,8 @@ interface PegawaiApiResponse {
 
 const Pegawai = () => {
   const form = useForm();
-  const [searchParam, setSearchParam] = useSearchParams();
   const [selectedPegawaiId, setSelectedPegawaiId] = useState<number[]>([]);
+  const [searchParam, setSearchParam] = useSearchParams();
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
   const queryClient = useQueryClient();

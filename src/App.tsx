@@ -443,7 +443,7 @@ const EditJabatanFungsionalReferensiPage = lazy(
     import(
       "./pages/admin/referensi/kepegawaian/jabatanFungsional/editJabatanFungsionalReferensi"
     )
-)
+);
 const DetailJabatanStrukturalReferensiPage = lazy(
   () =>
     import(
@@ -455,13 +455,13 @@ const DetailDataJabatanStrukturalReferensiPage = lazy(
     import(
       "./pages/admin/referensi/kepegawaian/jabatanStruktural/detaildataJabatanStrukturalReferensi"
     )
-)
+);
 const EditJabatanStrukturalReferensiPage = lazy(
   () =>
     import(
       "./pages/admin/referensi/kepegawaian/jabatanStruktural/editJabatanStrukturalReferensi"
     )
-)
+);
 const JenisKenaikanPangkatReferensiPage = lazy(
   () => import("./pages/admin/referensi/kepegawaian/jenisKenaikanPangkat")
 );
@@ -1641,7 +1641,10 @@ function App() {
                 path="detail-data-berita/:id"
                 Component={DetailDataBeritaPage}
               />
-              <Route path="edit-data-berita" Component={EditDataBeritaPage} />
+              <Route
+                path="edit-data-berita/:id"
+                Component={EditDataBeritaPage}
+              />
 
               {/* OPERASIONAL > CUTI */}
               <Route path="cuti">
@@ -1890,11 +1893,11 @@ function App() {
                   Component={DetailJabatanStrukturalReferensiPage}
                 />
                 <Route
-                  path="jabatan-struktural/detail-data-jabatan-struktural"
+                  path="jabatan-struktural/detail-data-jabatan-struktural/:id"
                   Component={DetailDataJabatanStrukturalReferensiPage}
                 />
                 <Route
-                  path="jabatan-struktural/detail-jabatan-struktural/edit-jabatan-struktural"
+                  path="jabatan-struktural/detail-jabatan-struktural/edit-jabatan-struktural/:id"
                   Component={EditJabatanStrukturalReferensiPage}
                 />
                 <Route
@@ -1925,7 +1928,7 @@ function App() {
                   Component={DetailDataUnitKerjaReferensiPage}
                 />
                 <Route
-                  path="unit-kerja/edit-data-unit-kerja"
+                  path="unit-kerja/edit-data-unit-kerja/:id"
                   Component={EditDataUnitKerjaReferensiPage}
                 />
               </Route>

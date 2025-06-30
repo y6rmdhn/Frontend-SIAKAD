@@ -14,9 +14,9 @@ import potsReferensiServices from "@/services/create.admin.referensi";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo } from "react";
-import { useAllUnitKerja } from "@/hooks/useAllUnitKerja";
 import { AxiosError } from "axios";
+import adminServices from "@/services/admin.services";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
 // --- START DEFINISI TIPE ---
 
@@ -39,21 +39,13 @@ interface UnitKerja {
   gedung?: string;
 }
 
-// Tipe data dari hook useAllUnitKerja
-interface UnitKerjaFromHook {
-  id: number;
-  nama_unit: string;
-  parent_unit_id: string | null;
-  kode_unit: string;
-}
-
 const unitKerjaSchema = z.object({
   kode_unit: z
-      .string({ required_error: "Kode Unit wajib diisi." })
-      .min(1, "Kode Unit tidak boleh kosong."),
+    .string({ required_error: "Kode Unit wajib diisi." })
+    .min(1, "Kode Unit tidak boleh kosong."),
   nama_unit: z
-      .string({ required_error: "Nama Unit wajib diisi." })
-      .min(1, "Nama Unit tidak boleh kosong."),
+    .string({ required_error: "Nama Unit wajib diisi." })
+    .min(1, "Nama Unit tidak boleh kosong."),
   jenis_unit_id: z.coerce.number().optional(),
   tk_pendidikan_id: z.coerce.number().optional(),
   akreditasi_id: z.coerce.number().optional(),
@@ -61,15 +53,15 @@ const unitKerjaSchema = z.object({
   alamat: z.string().optional(),
   telepon: z.string().optional(),
   website: z
-      .string()
-      .url({ message: "Format URL tidak valid." })
-      .or(z.literal(""))
-      .optional(),
+    .string()
+    .url({ message: "Format URL tidak valid." })
+    .or(z.literal(""))
+    .optional(),
   alamat_email: z
-      .string()
-      .email({ message: "Format email tidak valid." })
-      .or(z.literal(""))
-      .optional(),
+    .string()
+    .email({ message: "Format email tidak valid." })
+    .or(z.literal(""))
+    .optional(),
   no_sk_akreditasi: z.string().optional(),
   tanggal_akreditasi: z.string().optional(),
   no_sk_pendirian: z.string().optional(),
@@ -113,37 +105,10 @@ const DetailUnitKerja = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Gagal menambahkan data");
-    }
+    },
   });
 
-  const {
-    data: dataParentUnit,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-  } = useAllUnitKerja();
-
-  useEffect(() => {
-    if (hasNextPage && !isFetching) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetching, fetchNextPage]);
-
-  const parentUnitOptions = useMemo(() => {
-    if (!dataParentUnit) {
-      return [];
-    }
-    return dataParentUnit.pages
-        .flatMap((page) => page.data.data)
-        .filter(
-            (unit) =>
-                unit.parent_unit_id === "041001" || unit.parent_unit_id === null
-        )
-        .map((unit: UnitKerjaFromHook) => ({
-          label: unit.nama_unit,
-          value: unit.kode_unit,
-        }));
-  }, [dataParentUnit]);
+  // --- FIX: REMOVED useAllUnitKerja hook and useEffect as they are not used ---
 
   // FIX: Mengubah data form agar sesuai dengan tipe yang diharapkan API
   const handleSubmitDetailUnitKerja = (values: UnitKerjaSchema) => {
@@ -161,173 +126,174 @@ const DetailUnitKerja = () => {
   };
 
   return (
-      <div className="mt-10 mb-20">
-        <Title title="Unit Kerja" subTitle="Detail Unit kerja" />
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmitDetailUnitKerja)}>
-            <CustomCard
-                actions={
-                  <div className="flex flex-col sm:flex-row justify-between gap-4 ">
-                    <SearchInput />
-                    <div className="w-full sm:w-auto flex gap-2">
-                      <div className="w-full sm:w-auto">
-                        <Link to="/admin/referensi/kepegawaian/unit-kerja">
-                          <Button
-                              type="button"
-                              className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
-                          >
-                            <IoIosArrowBack /> Kembali Ke Daftar
-                          </Button>
-                        </Link>
-                      </div>
-                      <div className="w-full sm:w-auto">
-                        <Button
-                            type="submit"
-                            className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
-                        >
-                          <IoSaveSharp /> Simpan
-                        </Button>
-                      </div>
-                    </div>
+    <div className="mt-10 mb-20">
+      <Title title="Unit Kerja" subTitle="Detail Unit kerja" />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmitDetailUnitKerja)}>
+          <CustomCard
+            actions={
+              <div className="flex flex-col sm:flex-row justify-between gap-4 ">
+                <SearchInput />
+                <div className="w-full sm:w-auto flex gap-2">
+                  <div className="w-full sm:w-auto">
+                    <Link to="/admin/referensi/kepegawaian/unit-kerja">
+                      <Button
+                        type="button"
+                        className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
+                      >
+                        <IoIosArrowBack /> Kembali Ke Daftar
+                      </Button>
+                    </Link>
                   </div>
-                }
-            >
-              <div className="grid grid-rows-10 md:grid-flow-col items-center gap-x-4 gap-y-4 md:gap-y-0">
-                <FormFieldInput
-                    form={form}
-                    label="Kode Unit"
-                    name="kode_unit"
-                    labelStyle="text-[#3F6FA9]"
-                    required={true}
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Nama Unit"
-                    name="nama_unit"
-                    labelStyle="text-[#3F6FA9]"
-                    required={true}
-                />
-                <FormFieldSelect
-                    form={form}
-                    label="Parent Unit"
-                    name="parent_unit_id"
-                    labelStyle="text-[#3F6FA9]"
-                    options={parentUnitOptions}
-                    placeholder="--Pilih Parent Unit--"
-                />
-                <FormFieldSelect
-                    form={form}
-                    label="Jenis Unit"
-                    name="jenis_unit_id"
-                    labelStyle="text-[#3F6FA9]"
-                    options={[
-                      { label: "Universitas", value: "1" },
-                      { label: "Fakultas", value: "2" },
-                      { label: "Jurusan", value: "3" },
-                      { label: "Program Studi", value: "4" },
-                    ]}
-                    placeholder="--Pilih Jenis Unit--"
-                />
-                <FormFieldSelect
-                    form={form}
-                    label="TK.Pendidikan"
-                    name="tk_pendidikan_id"
-                    labelStyle="text-[#3F6FA9]"
-                    options={[
-                      { label: "D3 - Diploma 3", value: "1" },
-                      { label: "D4 - Diploma 4", value: "2" },
-                      { label: "S1 - Strata 1", value: "3" },
-                      { label: "Prof - Profesi", value: "4" },
-                      { label: "S2 - Strata 2", value: "5" },
-                      { label: "S3 - Strata 3", value: "6" },
-                    ]}
-                    placeholder="--Pilih Tk.Pendidikan--"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Alamat"
-                    name="alamat"
-                    labelStyle="text-[#3F6FA9]"
-                    type="textarea"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Telpon"
-                    name="telepon"
-                    labelStyle="text-[#3F6FA9]"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Website"
-                    name="website"
-                    labelStyle="text-[#3F6FA9]"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Alamat Email"
-                    name="alamat_email"
-                    labelStyle="text-[#3F6FA9]"
-                />
-                <FormFieldSelect
-                    form={form}
-                    label="Akreditasi"
-                    name="akreditasi_id"
-                    labelStyle="text-[#3F6FA9]"
-                    options={[
-                      { label: "A", value: "1" },
-                      { label: "B", value: "2" },
-                      { label: "C", value: "3" },
-                      { label: "Unggul", value: "4" },
-                      { label: "Baik Sekali", value: "5" },
-                      { label: "Baik", value: "6" },
-                      { label: "Minimum", value: "7" },
-                      { label: "Tidak Terakreditasi/ Kadaluwarsa", value: "8" },
-                    ]}
-                    placeholder="-Pilih Akreditasi-"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="No.SK Akreditasi"
-                    name="no_sk_akreditasi"
-                    labelStyle="text-[#3F6FA9]"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Tanggal Akreditasi"
-                    name="tanggal_akreditasi"
-                    labelStyle="text-[#3F6FA9]"
-                    type="date"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="No.SK Pendirian"
-                    name="no_sk_pendirian"
-                    labelStyle="text-[#3F6FA9]"
-                />
-                <FormFieldInput
-                    form={form}
-                    label="Tanggal Sk Pendirian"
-                    name="tanggal_sk_pendirian"
-                    labelStyle="text-[#3F6FA9]"
-                    type="date"
-                />
-                <FormFieldSelect
-                    form={form}
-                    label="Gedung"
-                    name="gedung"
-                    labelStyle="text-[#3F6FA9]"
-                    options={[
-                      { label: "Gedung A", value: "Gedung A" },
-                      { label: "Gedung B", value: "Gedung B" },
-                      { label: "Gedung C", value: "Gedung C" },
-                    ]}
-                    placeholder="Pilih Gedung"
-                />
+                  <div className="w-full sm:w-auto">
+                    <Button
+                      type="submit"
+                      className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full md:w-auto"
+                    >
+                      <IoSaveSharp /> Simpan
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </CustomCard>
-          </form>
-        </Form>
-      </div>
+            }
+          >
+            <div className="grid grid-rows-10 md:grid-flow-col items-center gap-x-4 gap-y-4 md:gap-y-0">
+              <FormFieldInput
+                form={form}
+                label="Kode Unit"
+                name="kode_unit"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
+              />
+              <FormFieldInput
+                form={form}
+                label="Nama Unit"
+                name="nama_unit"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
+              />
+              <InfiniteScrollSelect
+                form={form}
+                label="Parent Unit"
+                name="parent_unit_id"
+                labelStyle="text-[#3F6FA9]"
+                placeholder="--Pilih Parent Unit--"
+                required={true}
+                queryKey="parent-unit-select-referensi-edit"
+                queryFn={(page) => adminServices.getUnitKerja(page)}
+                itemValue="kode_unit"
+                itemLabel="nama_unit"
+              />
+              <FormFieldSelect
+                form={form}
+                label="Jenis Unit"
+                name="jenis_unit_id"
+                labelStyle="text-[#3F6FA9]"
+                options={[
+                  { label: "Universitas", value: "1" },
+                  { label: "Fakultas", value: "2" },
+                  { label: "Jurusan", value: "3" },
+                  { label: "Program Studi", value: "4" },
+                ]}
+                placeholder="--Pilih Jenis Unit--"
+              />
+              <InfiniteScrollSelect
+                form={form}
+                label="TK.Pendidikan"
+                name="tk_pendidikan_id"
+                labelStyle="text-[#3F6FA9]"
+                placeholder="--Pilih Tk Pendidikan--"
+                required={true}
+                queryKey="tk-pendidikan-select-referensi-edit"
+                queryFn={(page) => adminServices.getJenjangPendidikan(page)}
+                itemValue="id"
+                itemLabel="jenjang_pendidikan"
+              />
+              <FormFieldInput
+                form={form}
+                label="Alamat"
+                name="alamat"
+                labelStyle="text-[#3F6FA9]"
+                type="textarea"
+              />
+              <FormFieldInput
+                form={form}
+                label="Telpon"
+                name="telepon"
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldInput
+                form={form}
+                label="Website"
+                name="website"
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldInput
+                form={form}
+                label="Alamat Email"
+                name="alamat_email"
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldSelect
+                form={form}
+                label="Akreditasi"
+                name="akreditasi_id"
+                labelStyle="text-[#3F6FA9]"
+                options={[
+                  { label: "A", value: "1" },
+                  { label: "B", value: "2" },
+                  { label: "C", value: "3" },
+                  { label: "Unggul", value: "4" },
+                  { label: "Baik Sekali", value: "5" },
+                  { label: "Baik", value: "6" },
+                  { label: "Minimum", value: "7" },
+                  { label: "Tidak Terakreditasi/ Kadaluwarsa", value: "8" },
+                ]}
+                placeholder="-Pilih Akreditasi-"
+              />
+              <FormFieldInput
+                form={form}
+                label="No.SK Akreditasi"
+                name="no_sk_akreditasi"
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldInput
+                form={form}
+                label="Tanggal Akreditasi"
+                name="tanggal_akreditasi"
+                labelStyle="text-[#3F6FA9]"
+                type="date"
+              />
+              <FormFieldInput
+                form={form}
+                label="No.SK Pendirian"
+                name="no_sk_pendirian"
+                labelStyle="text-[#3F6FA9]"
+              />
+              <FormFieldInput
+                form={form}
+                label="Tanggal Sk Pendirian"
+                name="tanggal_sk_pendirian"
+                labelStyle="text-[#3F6FA9]"
+                type="date"
+              />
+              <FormFieldSelect
+                form={form}
+                label="Gedung"
+                name="gedung"
+                labelStyle="text-[#3F6FA9]"
+                options={[
+                  { label: "Gedung A", value: "Gedung A" },
+                  { label: "Gedung B", value: "Gedung B" },
+                  { label: "Gedung C", value: "Gedung C" },
+                ]}
+                placeholder="Pilih Gedung"
+              />
+            </div>
+          </CustomCard>
+        </form>
+      </Form>
+    </div>
   );
 };
 

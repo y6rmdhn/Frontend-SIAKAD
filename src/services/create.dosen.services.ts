@@ -35,6 +35,19 @@ const postDosenServices = {
     axiosInstance.post(`${endpoint.DOSEN}/pengajuan-izin-dosen`, payload),
   addDataPengajuanCuti: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, payload),
+  addDataPendidikanFormal: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.DOSEN}/pendidikanformaldosen`, payload),
+  addDataRiwayatPekerjaan: (payload: FormData) =>
+    axiosInstance.post(
+      `${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen`,
+      payload
+    ),
+  addDataSertifikasi: (payload: any) =>
+    axiosInstance.post(`${endpoint.DOSEN}/datasertifikasidosen`, payload),
+  addDataTes: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.DOSEN}/datariwayattes`, payload),
+  addDataPenghargaan: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.DOSEN}/penghargaandosen`, payload),
 };
 
 export default postDosenServices;

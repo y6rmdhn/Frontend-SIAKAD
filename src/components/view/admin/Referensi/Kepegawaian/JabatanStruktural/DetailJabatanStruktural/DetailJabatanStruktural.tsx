@@ -65,7 +65,7 @@ const DetailJabatanStruktural = () => {
     onSuccess: () => {
       form.reset();
       toast.success("Data berhasil ditambahkan");
-      navigate("/admin/referensi/kepegawaian/unit-kerja");
+      navigate("/admin/referensi/kepegawaian/jabatan-struktural");
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Gagal menambahkan data");
@@ -145,7 +145,9 @@ const DetailJabatanStruktural = () => {
                 placeholder="--Pilih Parent Jabatan Struktural--"
                 required={false}
                 queryKey="parent-jabatan-struktural-select-referensi"
-                queryFn={adminServices.getJabatanStrukturalReferensi}
+                queryFn={(page) =>
+                  adminServices.getJabatanStrukturalReferensi(page, "")
+                }
                 itemValue="kode"
                 itemLabel="singkatan"
               />

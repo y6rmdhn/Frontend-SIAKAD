@@ -102,7 +102,7 @@ const Monitoring = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-2">
               <Label className="w-full text-[#FDA31A] text-xs md:text-sm">
-                Hubungan Kerja
+                Pegawai
               </Label>
               <SelectFilter placeholder="" options={unitKerjaOptions} />
             </div>

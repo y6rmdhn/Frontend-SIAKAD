@@ -1,16 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -19,8 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IoAdd, IoEyeOutline } from "react-icons/io5";
-import { HiMiniTrash } from "react-icons/hi2";
+import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { Link, useSearchParams } from "react-router-dom";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
@@ -28,6 +17,8 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import { FaCheck } from "react-icons/fa";
 
 const Berita = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -142,21 +133,6 @@ const Berita = () => {
                   />
                 </div>
               </div>
-
-              <div className="flex gap-2 order-1 md:order-2 w-full md:w-auto">
-                <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto">
-                  <Link to="/operasional/tambah-berita">
-                    <Button className="bg-[#87E39B] text-white">
-                      <IoAdd />
-                      Tambah
-                    </Button>
-                  </Link>
-                  <Button className="bg-[#FDA31A] text-white">
-                    <HiMiniTrash />
-                    Hapus
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
         }
@@ -164,7 +140,6 @@ const Berita = () => {
         <Table className="mt-10 table-auto text-xs lg:text-sm">
           <TableHeader>
             <TableRow className="bg-[#002E5A] ">
-              <TableHead className="text-center text-white"></TableHead>
               <TableHead className="text-center text-white">
                 Unit Kerja
               </TableHead>
@@ -186,13 +161,24 @@ const Berita = () => {
             {data?.data.map((item: any) => (
               <TableRow key={item.id} className=" even:bg-gray-100">
                 <TableCell className="text-center">
-                  <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
+                  <TableCell className="text-center">
+                    {item.unit_kerja_id.join(", ")}
+                  </TableCell>
                 </TableCell>
-                <TableCell className="text-center"></TableCell>
                 <TableCell className="text-center">{item.judul}</TableCell>
-                <TableCell className="text-center"></TableCell>
-                <TableCell className="text-center"></TableCell>
-                <TableCell className="text-center"></TableCell>
+                <TableCell className="text-center">
+                  {item.tgl_posting_formatted}
+                </TableCell>
+                <TableCell className="text-center">
+                  {item.tgl_expired_formatted}
+                </TableCell>
+                <TableCell className="text-center flex justify-center mt-2">
+                  {item.prioritas ? (
+                    <FaCheck className="text-green-500 w-5! h-5!" />
+                  ) : (
+                    <IoClose className="text-red-500 w-5! h-5!" />
+                  )}
+                </TableCell>
                 <TableCell className="h-full">
                   <div className="flex justify-center items-center w-full h-full">
                     <Link to="/operasional/detail-berita">
@@ -204,15 +190,6 @@ const Berita = () => {
                         <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
                       </Button>
                     </Link>
-                    <Link to="">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <HiMiniTrash className="w-5! h-5! text-[#FDA31A]" />
-                      </Button>
-                    </Link>
                   </div>
                 </TableCell>
               </TableRow>
@@ -220,30 +197,17 @@ const Berita = () => {
           </TableBody>
         </Table>
 
-        <Pagination className="mt-8 flex justify-end">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CustomPagination
+          currentPage={Number(searchParam.get("page") || 1)}
+          links={data?.links || []}
+          onPageChange={(page) => {
+            searchParam.set("page", page.toString());
+            setSearchParam(searchParam);
+          }}
+          hasNextPage={!!data?.next_page_url}
+          hasPrevPage={!!data?.prev_page_url}
+          totalPages={data?.last_page}
+        />
       </CustomCard>
     </div>
   );

@@ -29,15 +29,22 @@ const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 
+// Skema untuk validasi file, sekarang hanya ada satu yang benar
 export const fileSchema = z
   .any()
   .optional()
   .refine(
-    (file) => !file || file.size <= MAX_FILE_SIZE_BYTES,
+    (fileList) =>
+      !fileList ||
+      fileList.length === 0 ||
+      fileList[0].size <= MAX_FILE_SIZE_BYTES,
     `Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB.`
   )
   .refine(
-    (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
+    (fileList) =>
+      !fileList ||
+      fileList.length === 0 ||
+      ACCEPTED_FILE_TYPES.includes(fileList[0].type),
     "Format file harus PDF, JPG, atau PNG."
   );
 
@@ -47,6 +54,7 @@ const optionalEmail = z
   .optional()
   .or(z.literal(""));
 
+// Skema utama untuk data pegawai
 const dataPegawaiSchema = z.object({
   // --- Data Pribadi ---
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
@@ -78,7 +86,9 @@ const dataPegawaiSchema = z.object({
   email_pegawai: z.string().email("Format email tidak valid"),
   email_pribadi: optionalEmail,
   golongan: z.string().optional(),
-  jabatan_fungsional: z.string().optional(),
+  // DIPERBAIKI: Validasi untuk jabatan_fungsional_id diaktifkan kembali
+  jabatan_fungsional_id: z.string().optional(),
+  jabatan_akademik_id: z.string().optional(),
 
   // --- Domisili ---
   no_ktp: z
@@ -126,7 +136,7 @@ const dataPegawaiSchema = z.object({
   nama_rekening: z.string().optional(),
   no_rekening: z.string().optional(),
 
-  // --- Dokumen ---
+  // --- Dokumen (DIPERBAIKI: Menggunakan fileSchema lokal) ---
   kapreg: z.string().max(50, "Kapreg maksimal 50 karakter").optional(),
   file_kapreg: fileSchema,
   npwp: z
@@ -173,26 +183,22 @@ const dataPegawaiSchema = z.object({
 
 export type DataPegawaiSchema = z.infer<typeof dataPegawaiSchema>;
 
-// Tipe untuk data dari API wilayah (provinsi, kota, kecamatan)
 interface WilayahItem {
   name: string;
   code?: string;
 }
 
-// Tipe untuk props komponen FormDataPegawai
 interface FormDataPegawaiProps {
   show: string;
   form: UseFormReturn<DataPegawaiSchema>;
 }
 
-// --- END DEFINISI TIPE DATA ---
-
 const DataPegawai = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState<string>("kepegawaian");
 
-  // Menambahkan tipe generik ke useForm untuk type safety
   const form = useForm<DataPegawaiSchema>({
+    resolver: zodResolver(dataPegawaiSchema),
     defaultValues: {
       nip: "",
       nuptk: "",
@@ -211,7 +217,8 @@ const DataPegawai = () => {
       email_pegawai: "",
       email_pribadi: "",
       golongan: "",
-      jabatan_fungsional: "",
+      jabatan_fungsional_id: "",
+      jabatan_akademik_id: "",
       no_ktp: "",
       no_kk: "",
       warga_negara: "",
@@ -236,8 +243,10 @@ const DataPegawai = () => {
       file_kk: undefined,
       file_ktp: undefined,
       file_sertifikasi_dosen: undefined,
+      file_bpjs: undefined,
+      file_bpjs_ketenagakerjaan: undefined,
+      file_tanda_tangan: undefined,
     },
-    resolver: zodResolver(dataPegawaiSchema),
   });
 
   const selectedProvinceId = form.watch("provinsi");
@@ -260,7 +269,6 @@ const DataPegawai = () => {
     enabled: !!selectedCityId,
   });
 
-  // Menambahkan tipe pada parameter .map()
   const provinceOptions =
     provincesData?.data?.map((prov: WilayahItem) => ({
       label: prov.name,
@@ -283,47 +291,45 @@ const DataPegawai = () => {
       form.reset();
       toast.success("Data berhasil ditambahkan");
     },
-    // Menambahkan tipe error untuk akses yang aman ke .response
     onError: (error: AxiosError<{ message?: string }>) => {
       console.error("Gagal menyimpan:", error);
       toast.error(error.response?.data?.message || "Terjadi kesalahan");
     },
   });
 
-  // Menambahkan tipe pada parameter 'values'
   const handleSubmitDataPegawai = (values: DataPegawaiSchema) => {
-    const valuesForApi = { ...values };
-
-    const provinceName = provincesData?.data?.find(
-      (p: WilayahItem) => p.code === values.provinsi
-    )?.name;
-    if (provinceName) {
-      valuesForApi.provinsi = provinceName;
-    }
-
-    const cityName = citiesData?.data?.find(
-      (c: WilayahItem) => c.code === values.kota
-    )?.name;
-    if (cityName) {
-      valuesForApi.kota = cityName;
-    }
-
-    const kecamatanName = kecamatanData?.data?.find(
-      (k: WilayahItem) => k.code === values.kecamatan
-    )?.name;
-    if (kecamatanName) {
-      valuesForApi.kecamatan = kecamatanName;
-    }
-
     const formData = new FormData();
-    Object.keys(valuesForApi).forEach((key) => {
-      const value = valuesForApi[key as keyof DataPegawaiSchema];
-      if (value !== null && value !== undefined && value !== "") {
+
+    // Mapping untuk mengubah ID wilayah menjadi nama
+    const provinceName = provinceOptions.find(
+      (p: any) => p.value === values.provinsi
+    )?.label;
+    const cityName = cityOptions.find(
+      (c: any) => c.value === values.kota
+    )?.label;
+    const kecamatanName = kecamatanOptions.find(
+      (k: any) => k.value === values.kecamatan
+    )?.label;
+
+    Object.keys(values).forEach((key) => {
+      const formKey = key as keyof DataPegawaiSchema;
+      let value = values[formKey];
+
+      if (value instanceof FileList) {
+        if (value.length > 0) {
+          formData.append(formKey, value[0]);
+        }
+      } else if (value !== null && value !== undefined && value !== "") {
+        if (formKey === "provinsi" && provinceName) {
+          value = provinceName;
+        } else if (formKey === "kota" && cityName) {
+          value = cityName;
+        } else if (formKey === "kecamatan" && kecamatanName) {
+          value = kecamatanName;
+        }
+
         if (key === "tanggal_lahir" && value instanceof Date) {
-          const formattedDate = value.toISOString().split("T")[0];
-          formData.append(key, formattedDate);
-        } else if (value instanceof File) {
-          formData.append(key, value);
+          formData.append(key, value.toISOString().split("T")[0]);
         } else {
           formData.append(key, String(value));
         }
@@ -332,6 +338,11 @@ const DataPegawai = () => {
 
     console.log("Data yang dikirim ke API:", Object.fromEntries(formData));
     postDataPegawai(formData);
+  };
+
+  const onInvalid = (errors: any) => {
+    console.error("Validation Errors:", errors);
+    toast.error("Validasi gagal, silakan periksa kembali isian form Anda.");
   };
 
   const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => {
@@ -370,7 +381,7 @@ const DataPegawai = () => {
     <div className="mt-10 mb-10">
       <Title title="Data Pegawai" />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmitDataPegawai)}>
+        <form onSubmit={form.handleSubmit(handleSubmitDataPegawai, onInvalid)}>
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardHeader>
               <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-4">
@@ -444,7 +455,7 @@ const DataPegawai = () => {
                   label="Jenis Kelamin"
                   name="jenis_kelamin"
                   form={form}
-                  required={false}
+                  required={true}
                   type="radio"
                   options={[
                     { label: "Laki-laki", value: "Laki-laki" },
@@ -458,7 +469,7 @@ const DataPegawai = () => {
                   name="agama"
                   labelStyle="text-[#3F6FA9]"
                   placeholder="--Pilih Agama--"
-                  required={false}
+                  required={true}
                   queryKey="agama"
                   queryFn={adminServices.getAgama}
                   itemValue="id"
@@ -469,7 +480,7 @@ const DataPegawai = () => {
                   label="Tempat Lahir"
                   name="tempat_lahir"
                   labelStyle="text-[#3F6FA9]"
-                  required={false}
+                  required={true}
                 />
                 <FormFieldInput
                   form={form}
@@ -485,7 +496,7 @@ const DataPegawai = () => {
                   name="kode_status_pernikahan"
                   labelStyle="text-[#3F6FA9]"
                   placeholder="--Pilih Status Pernikahan--"
-                  required={false}
+                  required={true}
                   queryKey="status-pernikahan-select"
                   queryFn={adminServices.getStatusPernikahan}
                   itemValue="id"
@@ -505,9 +516,8 @@ const DataPegawai = () => {
                 />
               </div>
 
-              {/* Bagian Menu Tabbed dan Kontennya dipindahkan ke sini */}
               <div className="w-full flex flex-col gap-2 mt-10">
-                <div className="w-full grid grid-cols-2 grid-flow-row  lg:flex gap-2">
+                <div className="w-full grid grid-cols-2 grid-flow-row lg:flex gap-2">
                   {pegawaiDetailMenu.map((item, index) => (
                     <Button
                       key={index}
