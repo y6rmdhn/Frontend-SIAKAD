@@ -138,7 +138,7 @@ const RiwayatPekerjaanValidasi = () => {
                         <TableCell className="text-center"></TableCell>
                         <TableCell className="h-full">
                             <div className="flex justify-center items-center w-full h-full">
-                                <Link to="/admin/operasional/kompensasi/detail-dokumen-internal">
+                                <Link to="/admin/validasi-data/kualifikasi/riwayat-pekerjaan/detail-riwayat-pekerjaan">
                                     <Button
                                         size="icon"
                                         variant="ghost"
