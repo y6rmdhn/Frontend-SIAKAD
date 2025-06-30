@@ -110,6 +110,18 @@ const SettingValidasiPage = lazy(
   () => import("./pages/admin/validasiData/settingValidasi")
 );
 const KeluargaPage = lazy(() => import("./pages/admin/validasiData/keluarga"));
+const DetailAnakValidasiPage = lazy(
+  () =>
+    import("./pages/admin/validasiData/keluarga/anak/detailAnakValidasi")
+)
+const DetailOrangtuaValidasiPage = lazy(
+  () =>
+    import("./pages/admin/validasiData/keluarga/orangtua/detailOrangtuaValidasi")
+)
+const DetailPasanganValidasiPage = lazy(
+  () =>
+    import("./pages/admin/validasiData/keluarga/pasangan/detailPasanganValidasi")
+)
 const MonitoringPage = lazy(
   () => import("./pages/admin/validasiData/monitoring")
 );
@@ -1720,8 +1732,13 @@ function App() {
             {/* VALIDASI */}
             <Route path="validasi-data">
               <Route path="setting-validasi" Component={SettingValidasiPage} />
-              <Route path="keluarga" Component={KeluargaPage} />
               <Route path="monitoring" Component={MonitoringPage} />
+
+              {/* VALIDASI > KELUARGA */}
+              <Route path="keluarga" Component={KeluargaPage} />
+              <Route path="keluarga/detail-anak" Component={DetailAnakValidasiPage} />
+              <Route path="keluarga/detail-orangtua" Component={DetailOrangtuaValidasiPage} />
+              <Route path="keluarga/detail-pasangan" Component={DetailPasanganValidasiPage} />
 
               {/* VALIDASI > KEPEGAWAIAN */}
               <Route path="kepegawaian">
