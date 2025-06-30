@@ -172,6 +172,15 @@ const TesPage = lazy(() => import("./pages/admin/validasiData/kompetensi/tes"));
 const DetailTesValidasiPage = lazy(
   () => import("./pages/admin/validasiData/kompetensi/tes/detailTesValidasi")
 );
+const DiklatValidasiPage = lazy(
+  () => import("./pages/admin/validasiData/Kualifikasi/diklatValidasi")
+)
+const PendidikanFormalValidasiPage = lazy(
+  () => import("./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi")
+)
+const RiwayatPekerjaanValidasiPage = lazy(
+  () => import("./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi")
+)
 const BahanAjarPage = lazy(
   () => import("./pages/admin/validasiData/pelaksanaanPendidikan/bahanAjar")
 );
@@ -1768,6 +1777,13 @@ function App() {
                   path="tes/detail-tes"
                   Component={DetailTesValidasiPage}
                 />
+              </Route>
+
+              {/* VALIDASI > KUALIFIKASI */}
+              <Route path="kualifikasi">
+                <Route path="diklat" Component={DiklatValidasiPage} />
+                <Route path="pendidikan-formal" Component={PendidikanFormalValidasiPage} />
+                <Route path="riwayat-pekerjaan" Component={RiwayatPekerjaanValidasiPage} />
               </Route>
 
               {/* VALIDASI > PELAKSANAAN PENDIDIKAN */}

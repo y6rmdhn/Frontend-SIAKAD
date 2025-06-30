@@ -59,6 +59,24 @@ const validasiData: {
       },
     ],
   },
+  {
+    title: "Kualifikasi",
+    href: "",
+    childrenItems: [
+      {
+        title: "Pendidikan Formal",
+        href: "/admin/validasi-data/kualifikasi/pendidikan-formal",
+      },
+      {
+        title: "Diklat",
+        href: "/admin/validasi-data/kualifikasi/diklat",
+      },
+      {
+        title: "Riwayat Pekerjaan",
+        href: "/admin/validasi-data/kualifikasi/riwayat-pekerjaan",
+      },
+    ],
+  },
   // // {
   // //   title: "Pelaksanaan Pendidikan",
   // //   href: "",
