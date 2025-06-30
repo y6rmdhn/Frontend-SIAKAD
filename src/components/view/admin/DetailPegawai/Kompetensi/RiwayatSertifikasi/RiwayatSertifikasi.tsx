@@ -221,7 +221,7 @@ const RiwayatSertifikasi = () => {
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link
-                        to={`/admin/kepegawaian/sertifikasi/detail/${item.id}`}
+                        to={`/admin/validasi-data/kompetensi/sertifikasi/detail-sertifikasi/${item.id}`}
                       >
                         <Button
                           size="icon"

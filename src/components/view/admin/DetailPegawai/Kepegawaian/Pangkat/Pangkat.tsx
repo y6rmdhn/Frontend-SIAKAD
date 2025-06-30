@@ -208,7 +208,7 @@ const Pangkat = () => {
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link
-                        to={`/admin/operasional/kompensasi/pangkat/${item.id}`}
+                        to={`/admin/validasi-data/kepegawaian/pangkat/detail-pangkat/${item.id}`}
                       >
                         <Button
                           size="icon"

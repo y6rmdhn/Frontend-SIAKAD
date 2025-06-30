@@ -335,7 +335,7 @@ const Biodata = () => {
               ))}
             </div>
 
-            <div className="border-2 border-[#000]/20 rounded-lg w-full">
+            <div className="border-2 border-[#000]/20 rounded-lg w-full mt-5 lg:mt-0">
               {show === "kepegawaian" ? (
                   <div className="flex w-full p-4">
                     <DetailPegawai

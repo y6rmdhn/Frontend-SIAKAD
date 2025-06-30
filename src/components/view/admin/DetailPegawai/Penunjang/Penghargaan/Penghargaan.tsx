@@ -197,7 +197,7 @@ const Penghargaan = () => {
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link
-                        to={`/admin/kepegawaian/penghargaan/detail/${item.id}`}
+                        to={`/admin/operasional/kompensasi/detail-data-penghargaan/${item.id}`}
                       >
                         <Button
                           size="icon"

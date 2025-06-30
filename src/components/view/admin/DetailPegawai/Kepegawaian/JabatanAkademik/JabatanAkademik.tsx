@@ -210,7 +210,7 @@ const JabatanAkademik = () => {
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
                       <Link
-                        to={`/admin/operasional/jabatan-akademik/detail/${item.id}`}
+                        to={`/admin/validasi-data/kepegawaian/jabatan-akademik/detail-jabatan-akademik/${item.id}`}
                       >
                         <Button
                           size="icon"

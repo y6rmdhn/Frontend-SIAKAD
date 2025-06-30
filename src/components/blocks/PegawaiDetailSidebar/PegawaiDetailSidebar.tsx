@@ -303,7 +303,7 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         onMouseEnter={handleButtonMouseEnter} // Handler saat mouse masuk
         onMouseLeave={handleButtonMouseLeave} // Handler saat mouse keluar
-        className="min-[1013px]:hidden fixed left-0 top-1/2 -translate-y-1/2 z-[60] bg-[#169EF4] text-white px-1 py-3 rounded-r-md shadow-lg focus:outline-none"
+        className="min-[1180px]:hidden fixed left-0 top-1/2 -translate-y-1/2 z-[60] bg-[#169EF4] text-white px-1 py-3 rounded-r-md shadow-lg focus:outline-none"
         aria-label={isMobileMenuOpen ? "Tutup menu" : "Buka menu"}
       >
         {isMobileMenuOpen ? (
@@ -320,7 +320,7 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 z-40 min-[1013px]:hidden"
+            className="fixed inset-0 bg-black/30 z-40 min-[1180px]:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
           />
         )}
@@ -335,7 +335,7 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed top-0 left-0 h-full bg-[#F0F6FA] p-4 flex flex-col items-center w-72 shadow-lg z-75 overflow-y-auto min-[1013px]:hidden"
+            className="fixed top-0 left-0 h-full bg-[#F0F6FA] p-4 flex flex-col items-center w-72 shadow-lg z-75 overflow-y-auto min-[1180px]:hidden"
           >
             {sidebarContent(true)}
           </motion.div>
@@ -343,7 +343,7 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
       </AnimatePresence>
 
       {/* Sidebar for Desktop (Static) */}
-      <div className="hidden min-[1013px]:flex bg-[#F0F6FA] p-4 flex-col items-center rounded-lg w-64 lg:w-72 shadow-sm h-fit sticky top-4">
+      <div className="hidden min-[1180px]:flex bg-[#F0F6FA] p-4 flex-col items-center rounded-lg w-64 lg:w-72 shadow-sm h-fit sticky top-4">
         {sidebarContent()}
       </div>
     </>
