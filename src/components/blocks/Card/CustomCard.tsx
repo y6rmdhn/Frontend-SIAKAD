@@ -9,7 +9,7 @@ import React, { ReactNode } from "react";
 
 interface ICards {
   children?: ReactNode;
-  title?: string;
+  title?: React.ReactNode;
   actions?: ReactNode;
   cardStyle?: string;
   cardFooter?: ReactNode;

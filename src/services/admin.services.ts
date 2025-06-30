@@ -675,6 +675,22 @@ const adminServices = {
         search: search,
       },
     }),
+  getJabatanFungsionalDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datajabatanfungsionaladm/${id}`),
+  getJabatanStrukturalDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datajabatanstrukturaladm/${id}`),
+  getPangkatDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datapangkatadm/${id}`),
+  getSertifikasiDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datasertifikasiadm/${id}`),
+  getTesDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datariwayattesadm/${id}`),
+  getPenghargaanDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/validasi-penghargaan/${id}`),
+  getKemampuanBahasaDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datakemampuanbahasa/${id}`),
+  getOrganisasiDetailAdmin: (id?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/dataorganisasi/${id}`),
 };
 
 export default adminServices;

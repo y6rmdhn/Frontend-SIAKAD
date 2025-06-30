@@ -389,7 +389,9 @@ const KemampuanBahasa = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/detail-kemampuan-bahasa/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/pengembangan/detail-data-kemampuan-bahasa/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>

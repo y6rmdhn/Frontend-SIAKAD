@@ -1722,7 +1722,7 @@ function App() {
                   Component={HubunganKerjaKepegawaianPage}
                 />
                 <Route
-                  path="hubungan-kerja/detail-hubungan-kerja"
+                  path="hubungan-kerja/detail-hubungan-kerja/:id"
                   Component={DetailHubunganKerjaValidasiPage}
                 />
                 <Route
@@ -1730,7 +1730,7 @@ function App() {
                   Component={JabatanAkademikPage}
                 />
                 <Route
-                  path="jabatan-akademik/detail-jabatan-akademik"
+                  path="jabatan-akademik/detail-jabatan-akademik/:id"
                   Component={DetailJabatanAkademikValidasiPage}
                 />
                 <Route
@@ -1738,7 +1738,7 @@ function App() {
                   Component={JabatanFungionalPage}
                 />
                 <Route
-                  path="jabatan-fungsional/detail-jabatan-fungsional"
+                  path="jabatan-fungsional/detail-jabatan-fungsional/:id"
                   Component={DetailJabatanFungionalValidasiPage}
                 />
                 <Route
@@ -1746,12 +1746,12 @@ function App() {
                   Component={JabatanStrukturalPage}
                 />
                 <Route
-                  path="jabatan-struktural/detail-jabatan-struktural"
+                  path="jabatan-struktural/detail-jabatan-struktural/:id"
                   Component={DetailJabatanStrukturalValidasiPage}
                 />
                 <Route path="pangkat" Component={PangkatPage} />
                 <Route
-                  path="pangkat/detail-pangkat"
+                  path="pangkat/detail-pangkat/:id"
                   Component={DetailPangkatValidasiPage}
                 />
               </Route>
@@ -1760,12 +1760,12 @@ function App() {
               <Route path="kompetensi">
                 <Route path="sertifikasi" Component={SertifikasiPage} />
                 <Route
-                  path="sertifikasi/detail-sertifikasi"
+                  path="sertifikasi/detail-sertifikasi/:id"
                   Component={DetailSertifikasiValidasiPage}
                 />
                 <Route path="tes" Component={TesPage} />
                 <Route
-                  path="tes/detail-tes"
+                  path="tes/detail-tes/:id"
                   Component={DetailTesValidasiPage}
                 />
               </Route>
@@ -1802,13 +1802,13 @@ function App() {
                   Component={KemampuanBahasaPage}
                 />
                 <Route
-                path="detail-data-kemampuan-bahasa"
-                Component={DetailDataKemampuanBahasaKepegawaianPage}
+                  path="detail-data-kemampuan-bahasa/:id"
+                  Component={DetailDataKemampuanBahasaKepegawaianPage}
                 />
                 <Route path="organisasi" Component={OrganisasiPage} />
                 <Route
-                path="detail-data-organisasi"
-                Component={DetailDataOrganisasiKepegawaianPage}
+                  path="detail-data-organisasi/:id"
+                  Component={DetailDataOrganisasiKepegawaianPage}
                 />
               </Route>
 
@@ -1820,8 +1820,8 @@ function App() {
                   Component={PenghargaanPenunjangPage}
                 />
                 <Route
-                path="detail-data-penghargaan"
-                Component={DetailDataPenghargaanKepegawaianPage}
+                  path="detail-data-penghargaan/:id"
+                  Component={DetailDataPenghargaanKepegawaianPage}
                 />
                 <Route path="penunjang-lain" Component={PenunjangLainPage} />
               </Route>
