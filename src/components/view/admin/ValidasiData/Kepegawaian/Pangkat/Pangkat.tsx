@@ -385,7 +385,9 @@ const Pangkat = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/detail-pangkat/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/kepegawaian/pangkat/detail-pangkat/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>

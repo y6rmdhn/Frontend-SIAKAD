@@ -376,7 +376,9 @@ const Organisasi = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/detail-organisasi/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/pengembangan/detail-data-organisasi/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>

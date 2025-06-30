@@ -370,7 +370,9 @@ const PenghargaanPenunjang = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/detail-penghargaan/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/penunjang/penghargaan/detail-data-penghargaan/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>

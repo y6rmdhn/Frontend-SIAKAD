@@ -16,7 +16,8 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Zod validation schema
+// Zod validation schema for the form.
+// This validates the raw input from the form fields, which are typically strings.
 const fungsionalSchema = z.object({
   kode: z.string().min(1, { message: "Kode Jabatan is required" }),
   nama_jabatan_fungsional: z
@@ -31,13 +32,30 @@ const fungsionalSchema = z.object({
   keterangan: z.string().optional(),
 });
 
-// Infer the type from the schema
+// Infer the TypeScript type from the Zod schema for form values.
 type FungsionalSchema = z.infer<typeof fungsionalSchema>;
+
+// Define the type for the payload that will be sent to the API.
+// This matches the structure seen in your Postman request.
+type JabatanFungsionalPayload = {
+  kode: string;
+  nama_jabatan_fungsional: string;
+  jabatan_akademik_id: number;
+  pangkat_id: number;
+  angka_kredit: string; // This was a string in the Postman example "25"
+  usia_pensiun: number;
+  keterangan?: string;
+  // NOTE: Your Postman screenshot includes 'kode_jabatan_akademik' and 'pangkat'.
+  // If the API requires them, you must add them to this type
+  // and the payload object below.
+  kode_jabatan_akademik?: string;
+  pangkat?: string;
+};
 
 const DetailJabatanFungsional = () => {
   const navigate = useNavigate();
 
-  // Initialize react-hook-form with the zod resolver
+  // Initialize react-hook-form with the zod resolver.
   const form = useForm<FungsionalSchema>({
     resolver: zodResolver(fungsionalSchema),
     defaultValues: {
@@ -51,10 +69,12 @@ const DetailJabatanFungsional = () => {
     },
   });
 
+  // Setup the mutation hook. Note the type for the data passed to the
+  // mutation function is now `JabatanFungsionalPayload`.
   const { mutate: postAdd, isPending } = useMutation<
     any,
     AxiosError,
-    FungsionalSchema // Type for the data passed to mutationFn
+    JabatanFungsionalPayload // Use the correct payload type here
   >({
     mutationFn: (data) => potsReferensiServices.jabatanFungsional(data),
     onSuccess: () => {
@@ -67,9 +87,25 @@ const DetailJabatanFungsional = () => {
     },
   });
 
-  // The 'values' are now correctly typed based on the Zod schema
+  // This function now transforms the form data to match the API payload.
   const handleSubmitData = (values: FungsionalSchema) => {
-    postAdd(values);
+    // Create the payload object with the correct data types.
+    const payload: JabatanFungsionalPayload = {
+      ...values, // Spread the existing string values
+      jabatan_akademik_id: parseInt(values.jabatan_akademik_id, 10), // Convert to number
+      pangkat_id: parseInt(values.pangkat_id, 10), // Convert to number
+      usia_pensiun: parseInt(values.usia_pensiun, 10), // Convert to number
+      // angka_kredit remains a string as per the Postman example.
+    };
+
+    // IMPORTANT: The Postman image shows "kode_jabatan_akademik" and "pangkat".
+    // If you need to send these, you must get them from your form state
+    // (likely from the selected item in InfiniteScrollSelect) and add them
+    // to the payload object here. For example:
+    // payload.kode_jabatan_akademik = "JB"; // Get actual value
+    // payload.pangkat = "I/a"; // Get actual value
+
+    postAdd(payload);
   };
 
   return (

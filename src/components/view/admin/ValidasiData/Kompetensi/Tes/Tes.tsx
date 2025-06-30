@@ -381,7 +381,9 @@ const TesKompetensi = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/detail-tes/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/kompetensi/tes/detail-tes/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>

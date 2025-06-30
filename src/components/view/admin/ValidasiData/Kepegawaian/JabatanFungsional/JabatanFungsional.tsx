@@ -368,7 +368,7 @@ const JabatanFungsional = () => {
                 <TableCell>
                   <div className="flex justify-center items-center w-full h-full">
                     <Link
-                      to={`/admin/operasional/kompensasi/detail-dokumen-internal/${item.id}`}
+                      to={`/admin/validasi-data/kepegawaian/jabatan-fungsional/detail-jabatan-fungsional/${item.id}`}
                     >
                       <Button
                         size="icon"
