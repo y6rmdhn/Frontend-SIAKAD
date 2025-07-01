@@ -29,7 +29,8 @@ import potsReferensiServices from "@/services/create.admin.referensi";
 import { toast } from "sonner";
 
 // --- Konstanta ---
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -62,19 +63,28 @@ const beritaSchema = z.object({
     .any()
     .optional()
     .refine(
-      (file: File) => !file || file.size <= MAX_FILE_SIZE,
-      `Ukuran gambar maksimal 2MB.`
+      (files) => {
+        if (!files || files.length === 0) return true;
+        return files[0].size <= MAX_FILE_SIZE_BYTES;
+      },
+      `Ukuran file maksimal adalah ${MAX_FILE_SIZE_MB}MB.`
     )
     .refine(
-      (file: File) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Format gambar harus .jpg, .jpeg, .png, atau .webp."
+      (files) => {
+        if (!files || files.length === 0) return true;
+        return ACCEPTED_IMAGE_TYPES.includes(files[0].type);
+      },
+      "Format file yang diterima hanya PDF."
     ),
   file_berita: z
     .any()
     .optional()
     .refine(
-      (file: File) => !file || file.size <= MAX_FILE_SIZE,
-      `Ukuran file maksimal 2MB.`
+      (files) => {
+        if (!files || files.length === 0) return true;
+        return files[0].size <= MAX_FILE_SIZE_BYTES;
+      },
+      `Ukuran file maksimal adalah ${MAX_FILE_SIZE_MB}MB.`
     ),
   jabatan_akademik_id: z
     .array(z.object({ id: z.string().min(1, "Penerima harus dipilih.") }))
@@ -145,13 +155,6 @@ const DetailBerita = () => {
     formData.append("tgl_posting", values.tgl_posting);
     formData.append("tgl_expired", values.tgl_expired);
     formData.append("prioritas", values.prioritas ? "1" : "0");
-
-    if (values.gambar_berita) {
-      formData.append("gambar_berita", values.gambar_berita);
-    }
-    if (values.file_berita) {
-      formData.append("file_berita", values.file_berita);
-    }
 
     values.jabatan_akademik_id.forEach((jabatan) => {
       formData.append("jabatan_akademik_id[]", jabatan.id);
