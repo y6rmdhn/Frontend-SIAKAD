@@ -20,7 +20,8 @@ import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/I
 
 // --- START DEFINISI TIPE DATA ---
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
+const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const pelanggaranSchema = z.object({
   pegawai_id: z.string().min(1, "Pegawai harus diisi"),
@@ -30,11 +31,16 @@ const pelanggaranSchema = z.object({
   tgl_sk: z.string().optional(),
   keterangan: z.string().optional(),
   file_foto: z
-    .instanceof(File, { message: "Harap pilih sebuah file." })
+    .any()
     .optional() // Jadikan opsional agar tidak error jika tidak diisi
-    .refine((file) => !file || file.size <= MAX_FILE_SIZE, {
-      message: `Ukuran file maksimal adalah ${MAX_FILE_SIZE / 1024 / 1024} MB.`,
-    }),
+    .refine(
+    (files) => files instanceof FileList && files.length > 0,
+    { message: "Harap pilih sebuah file." }
+  )
+  .refine(
+    (files) => files[0].size <= MAX_FILE_SIZE_BYTES,
+    { message: `Ukuran file tidak boleh lebih dari ${MAX_FILE_SIZE_MB}MB.` }
+  )
 });
 
 type PelanggaranFormValue = z.infer<typeof pelanggaranSchema>;

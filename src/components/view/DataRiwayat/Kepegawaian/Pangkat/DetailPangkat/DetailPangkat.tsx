@@ -26,12 +26,18 @@ const fileSchema = z
   .any()
   .optional()
   .refine(
-    (file) => !file || file.size <= MAX_FILE_SIZE_BYTES,
-    `Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB.`
+    (files) => {
+      if (!files || files.length === 0) return true;
+      return files[0].size <= MAX_FILE_SIZE_BYTES;
+    },
+    `Ukuran file maksimal adalah ${MAX_FILE_SIZE_MB}MB.`
   )
   .refine(
-    (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
-    "Format file harus PDF."
+    (files) => {
+      if (!files || files.length === 0) return true;
+      return ACCEPTED_FILE_TYPES.includes(files[0].type);
+    },
+    "Format file yang diterima hanya PDF."
   );
 
 const pangkatSchema = z.object({

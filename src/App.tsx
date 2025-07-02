@@ -190,13 +190,31 @@ const DetailTesValidasiPage = lazy(
 const DiklatValidasiPage = lazy(
   () => import("./pages/admin/validasiData/Kualifikasi/diklatValidasi")
 );
+const DetailDiklatValidasiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/Kualifikasi/diklatValidasi/detaildiklatValidasi"
+    )
+);
 const PendidikanFormalValidasiPage = lazy(
   () =>
     import("./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi")
 );
+const DetailPendidikanFormalValidasiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi/detailpendidikanformalValidasi"
+    )
+);
 const RiwayatPekerjaanValidasiPage = lazy(
   () =>
     import("./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi")
+);
+const DetailRiwayatPekerjaanValidasiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi/detailriwayatpekerjaanValidasi"
+    )
 );
 const BahanAjarPage = lazy(
   () => import("./pages/admin/validasiData/pelaksanaanPendidikan/bahanAjar")
@@ -1817,12 +1835,24 @@ function App() {
               <Route path="kualifikasi">
                 <Route path="diklat" Component={DiklatValidasiPage} />
                 <Route
+                  path="diklat/detail-diklat"
+                  Component={DetailDiklatValidasiPage}
+                />
+                <Route
                   path="pendidikan-formal"
                   Component={PendidikanFormalValidasiPage}
                 />
                 <Route
+                  path="pendidikan-formal/detail-pendidikan-formal"
+                  Component={DetailPendidikanFormalValidasiPage}
+                />
+                <Route
                   path="riwayat-pekerjaan"
                   Component={RiwayatPekerjaanValidasiPage}
+                />
+                <Route
+                  path="riwayat-pekerjaan/detail-riwayat-pekerjaan"
+                  Component={DetailRiwayatPekerjaanValidasiPage}
                 />
               </Route>
 
