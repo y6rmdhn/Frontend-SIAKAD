@@ -25,19 +25,19 @@ const DaftarMonitoringKehadiran = () => {
   // get data
   const { data } = useQuery({
     queryKey: [
-      "monitoring-kehadiran",
+      "monitoring-presensi",
       searchParam.get("page"),
       searchParam.get("search"),
     ],
     queryFn: async () => {
       const page = searchParam.get("page") || "1";
       const search = searchParam.get("search") || "";
-      const response = await adminServices.getMonittoringKehadiran(
+      const response = await adminServices.getDataMonitoringPresensi(
         page,
         search
       );
-
-      return response.data.data;
+      console.log(response.data);
+      return response.data;
     },
   });
 
@@ -155,7 +155,7 @@ const DaftarMonitoringKehadiran = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.map((item: any) => (
+          {data?.data.map((item: any) => (
             <TableRow key={item.id} className=" even:bg-gray-100">
               <TableCell className="text-center text-xs sm:text-sm">
                 {item.nip}

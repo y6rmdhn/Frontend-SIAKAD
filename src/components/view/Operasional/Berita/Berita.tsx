@@ -181,7 +181,7 @@ const Berita = () => {
                 </TableCell>
                 <TableCell className="h-full">
                   <div className="flex justify-center items-center w-full h-full">
-                    <Link to="/operasional/detail-berita">
+                    <Link to={"/operasional/detail-berita/" + item.id}>
                       <Button
                         size="icon"
                         variant="ghost"

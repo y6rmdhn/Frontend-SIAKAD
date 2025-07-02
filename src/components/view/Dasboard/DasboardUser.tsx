@@ -70,13 +70,20 @@ const DasboardUser = () => {
     queryKey: ["dasboard-user", absenType],
     queryFn: async () => {
       const response = await dosenServices.getDasboardUser();
-
-      console.log(response.data);
       return response.data;
     },
   });
 
-  // get data status adbsen
+  // get dasboard user
+  const { data: dataGrafik, isLoading: isGrafikLoading } = useQuery({
+    queryKey: ["dasboard-user-grafik", absenType],
+    queryFn: async () => {
+      const response = await dosenServices.getDasboardGrafik();
+      return response.data;
+    },
+  });
+
+  // get data status absen
   const { data: statusAbsen, isLoading: isStatusLoading } =
     useQuery<StatusAbsen>({
       queryKey: ["status-absen"],
@@ -100,9 +107,7 @@ const DasboardUser = () => {
   const statistikKehadiranData = useMemo(() => {
     const grafik = data?.statistik_kehadiran?.grafik;
     if (!grafik) return [];
-
     const colors = ["#32A14C", "#FDBA74", "#FF8042", "#FFBB28"];
-
     return grafik.labels.map((label: string, index: number) => ({
       name: label,
       value: grafik.data[index],
@@ -198,7 +203,10 @@ const DasboardUser = () => {
         </div>
         <div className="w-auto">
           <h1 className="text-xl font-bold">Evaluasi Kerja</h1>
-          <ChartPegawai />
+          <ChartPegawai
+            chartData={dataGrafik?.data}
+            isLoading={isGrafikLoading}
+          />
         </div>
       </div>
 

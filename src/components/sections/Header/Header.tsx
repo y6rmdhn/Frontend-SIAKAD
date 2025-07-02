@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { BsGrid3X2GapFill, BsPersonFill } from "react-icons/bs";
 import { IoLogOutOutline } from "react-icons/io5";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import authServices from "@/services/auth.services";
 import { ILogout } from "@/types/auth";
 import { toast } from "sonner";
@@ -23,14 +23,39 @@ import { useNavigate, Link } from "react-router-dom";
 import { clearUserData } from "@/store/userSlice";
 import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
 import AvatarMobile from "@/components/blocks/AvatarMobile/AvatarMobile";
+import adminServices from "@/services/admin.services";
+import dosenServices from "@/services/dosen.services";
 
 const Header = () => {
-  const userSelector = useSelector((state: RootState) => state.user);
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userSelector = useSelector((state: RootState) => state.user);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [initials, setInitials] = useState<string>("");
+  const role = useSelector((state: RootState) => state.user.role);
+
+  const { data: profileData } = useQuery({
+    queryKey: ["profile-header-desktop"],
+    queryFn: async () => {
+      if (!accessToken) return null;
+
+      try {
+        let response;
+        if (role === "Admin") {
+          response = await adminServices.getProfileAdmin();
+        } else {
+          response = await dosenServices.getProfileUser();
+        }
+
+        return response.data.data;
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
+        toast.error("Gagal memuat data profil.");
+        return null;
+      }
+    },
+  });
 
   const { mutate } = useMutation({
     mutationFn: (data: ILogout) => authServices.logout(data),
@@ -137,11 +162,19 @@ const Header = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel className="flex flex-col justify-center items-center">
                 <div className="w-20 h-20 overflow-hidden rounded-full mt-2 border-4 border-black/10">
-                  <img
-                    src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-                    alt=""
-                    className="object-center"
-                  />
+                  {profileData?.file_foto ? (
+                    <img
+                      src={profileData?.file_foto}
+                      alt={profileData?.nama}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-green-uika flex items-center justify-center">
+                      <span className="text-white text-3xl font-bold">
+                        {initials}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="my-5 text-center">
@@ -153,9 +186,11 @@ const Header = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="flex gap-2">
-                <DropdownMenuItem>
-                  <BsPersonFill /> Profile
-                </DropdownMenuItem>
+                <Link to="/profil">
+                  <DropdownMenuItem>
+                    <BsPersonFill /> Profile
+                  </DropdownMenuItem>
+                </Link>
                 <Link to="/">
                   <DropdownMenuItem className="cursor-pointer">
                     <BsGrid3X2GapFill /> Menu

@@ -16,65 +16,60 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Zod validation schema for the form.
-// This validates the raw input from the form fields, which are typically strings.
 const fungsionalSchema = z.object({
   kode: z.string().min(1, { message: "Kode Jabatan is required" }),
   nama_jabatan_fungsional: z
     .string()
     .min(1, { message: "Nama Jabatan Fungsional is required" }),
+  kode_jabatan_akademik: z
+    .string()
+    .min(1, { message: "Kode Jabatan Akademik is required" }),
   jabatan_akademik_id: z
     .string()
     .min(1, { message: "Jabatan Akademik is required" }),
   pangkat_id: z.string().min(1, { message: "Golongan Pangkat is required" }),
+  pangkat: z.string().min(1, { message: "Pangkat is required" }),
   angka_kredit: z.string().min(1, { message: "Angka Kredit is required" }),
   usia_pensiun: z.string().min(1, { message: "Usia Pensiun is required" }),
   keterangan: z.string().optional(),
 });
 
-// Infer the TypeScript type from the Zod schema for form values.
 type FungsionalSchema = z.infer<typeof fungsionalSchema>;
 
-// Define the type for the payload that will be sent to the API.
-// This matches the structure seen in your Postman request.
 type JabatanFungsionalPayload = {
   kode: string;
   nama_jabatan_fungsional: string;
   jabatan_akademik_id: number;
   pangkat_id: number;
-  angka_kredit: string; // This was a string in the Postman example "25"
+  angka_kredit: string;
   usia_pensiun: number;
   keterangan?: string;
-  // NOTE: Your Postman screenshot includes 'kode_jabatan_akademik' and 'pangkat'.
-  // If the API requires them, you must add them to this type
-  // and the payload object below.
-  kode_jabatan_akademik?: string;
-  pangkat?: string;
+  kode_jabatan_akademik: string;
+  pangkat: string;
 };
 
 const DetailJabatanFungsional = () => {
   const navigate = useNavigate();
 
-  // Initialize react-hook-form with the zod resolver.
   const form = useForm<FungsionalSchema>({
     resolver: zodResolver(fungsionalSchema),
     defaultValues: {
       kode: "",
       nama_jabatan_fungsional: "",
+      kode_jabatan_akademik: "",
       jabatan_akademik_id: "",
       pangkat_id: "",
+      pangkat: "",
       angka_kredit: "",
       usia_pensiun: "",
       keterangan: "",
     },
   });
 
-  // Setup the mutation hook. Note the type for the data passed to the
-  // mutation function is now `JabatanFungsionalPayload`.
   const { mutate: postAdd, isPending } = useMutation<
     any,
     AxiosError,
-    JabatanFungsionalPayload // Use the correct payload type here
+    JabatanFungsionalPayload
   >({
     mutationFn: (data) => potsReferensiServices.jabatanFungsional(data),
     onSuccess: () => {
@@ -87,24 +82,13 @@ const DetailJabatanFungsional = () => {
     },
   });
 
-  // This function now transforms the form data to match the API payload.
   const handleSubmitData = (values: FungsionalSchema) => {
-    // Create the payload object with the correct data types.
     const payload: JabatanFungsionalPayload = {
-      ...values, // Spread the existing string values
-      jabatan_akademik_id: parseInt(values.jabatan_akademik_id, 10), // Convert to number
-      pangkat_id: parseInt(values.pangkat_id, 10), // Convert to number
-      usia_pensiun: parseInt(values.usia_pensiun, 10), // Convert to number
-      // angka_kredit remains a string as per the Postman example.
+      ...values,
+      jabatan_akademik_id: parseInt(values.jabatan_akademik_id, 10),
+      pangkat_id: parseInt(values.pangkat_id, 10),
+      usia_pensiun: parseInt(values.usia_pensiun, 10),
     };
-
-    // IMPORTANT: The Postman image shows "kode_jabatan_akademik" and "pangkat".
-    // If you need to send these, you must get them from your form state
-    // (likely from the selected item in InfiniteScrollSelect) and add them
-    // to the payload object here. For example:
-    // payload.kode_jabatan_akademik = "JB"; // Get actual value
-    // payload.pangkat = "I/a"; // Get actual value
-
     postAdd(payload);
   };
 
@@ -137,7 +121,7 @@ const DetailJabatanFungsional = () => {
             <div className="flex flex-col sm:grid sm:grid-rows-5 gap-5 sm:gap-y-0 sm:gap-x-4 grid-flow-col sm:items-center gap-x-4">
               <FormFieldInput
                 form={form}
-                label="Kode Jabatan"
+                label="Kode"
                 name="kode"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
@@ -146,6 +130,13 @@ const DetailJabatanFungsional = () => {
                 form={form}
                 label="Nama Jabatan Fungsional"
                 name="nama_jabatan_fungsional"
+                labelStyle="text-[#3F6FA9]"
+                required={true}
+              />
+              <FormFieldInput
+                form={form}
+                label="Kode Jabatan Akademik"
+                name="kode_jabatan_akademik"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
               />
@@ -172,6 +163,18 @@ const DetailJabatanFungsional = () => {
                 queryFn={adminServices.getMasterPangkatReferensi}
                 itemValue="id"
                 itemLabel="nama_golongan"
+              />
+              <InfiniteScrollSelect
+                form={form}
+                label="Pangkat"
+                name="pangkat"
+                labelStyle="text-[#3F6FA9]"
+                placeholder="--Pilih Pangkat--"
+                required={true}
+                queryKey="pangkat-select-referensi-pangkat"
+                queryFn={adminServices.getMasterPangkatReferensi}
+                itemValue="id"
+                itemLabel="pangkat"
               />
               <FormFieldInput
                 form={form}

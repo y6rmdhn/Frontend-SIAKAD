@@ -358,18 +358,11 @@ const HubunganKerjaKepegawaian = () => {
                 <TableCell className="text-center">
                   {item.tgl_disetujui_formatted}
                 </TableCell>
-                <TableCell className="text-center capitalize">
-                  <Button
-                    size="sm"
-                    variant={item.status_info?.color || "secondary"}
-                    className="cursor-default"
-                  >
-                    {item.status_pengajuan}
-                  </Button>
-                </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/path-to-detail/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/kepegawaian/hubungan-kerja/detail-hubungan-kerja/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>

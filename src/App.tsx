@@ -111,17 +111,20 @@ const SettingValidasiPage = lazy(
 );
 const KeluargaPage = lazy(() => import("./pages/admin/validasiData/keluarga"));
 const DetailAnakValidasiPage = lazy(
-  () =>
-    import("./pages/admin/validasiData/keluarga/anak/detailAnakValidasi")
-)
+  () => import("./pages/admin/validasiData/keluarga/anak/detailAnakValidasi")
+);
 const DetailOrangtuaValidasiPage = lazy(
   () =>
-    import("./pages/admin/validasiData/keluarga/orangtua/detailOrangtuaValidasi")
-)
+    import(
+      "./pages/admin/validasiData/keluarga/orangtua/detailOrangtuaValidasi"
+    )
+);
 const DetailPasanganValidasiPage = lazy(
   () =>
-    import("./pages/admin/validasiData/keluarga/pasangan/detailPasanganValidasi")
-)
+    import(
+      "./pages/admin/validasiData/keluarga/pasangan/detailPasanganValidasi"
+    )
+);
 const MonitoringPage = lazy(
   () => import("./pages/admin/validasiData/monitoring")
 );
@@ -186,13 +189,15 @@ const DetailTesValidasiPage = lazy(
 );
 const DiklatValidasiPage = lazy(
   () => import("./pages/admin/validasiData/Kualifikasi/diklatValidasi")
-)
+);
 const PendidikanFormalValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi")
-)
+  () =>
+    import("./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi")
+);
 const RiwayatPekerjaanValidasiPage = lazy(
-  () => import("./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi")
-)
+  () =>
+    import("./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi")
+);
 const BahanAjarPage = lazy(
   () => import("./pages/admin/validasiData/pelaksanaanPendidikan/bahanAjar")
 );
@@ -1031,7 +1036,10 @@ function App() {
           <Route path="/operasional">
             <Route path="berita" Component={BeritaOperasionalUserPage} />
             <Route path="tambah-berita" Component={DetailBeritaUserPage} />
-            <Route path="detail-berita" Component={DetailDataBeritaUserPage} />
+            <Route
+              path="detail-berita/:id"
+              Component={DetailDataBeritaUserPage}
+            />
 
             <Route
               path="detail-dokumen-internal"
@@ -1171,7 +1179,7 @@ function App() {
                 Component={DetailPendidikanFormalUserPage}
               />
               <Route
-                path="detail-data-pendidikan-formal"
+                path="detail-data-pendidikan-formal/:id"
                 Component={DetailDataPendidikanFormalUserPage}
               />
               <Route path="diklat" Component={DiklatUserPage} />
@@ -1189,7 +1197,7 @@ function App() {
                 Component={DetailRiwayatPekerjaanUserPage}
               />
               <Route
-                path="detail-data-riwayat-pekerjaan"
+                path="detail-data-riwayat-pekerjaan/:id"
                 Component={DetailDataRiwayatPekerjaanUserPage}
               />
             </Route>
@@ -1357,7 +1365,7 @@ function App() {
                 Component={DetailPenghargaanUserPage}
               />
               <Route
-                path="detail-data-penghargaan"
+                path="detail-data-penghargaan/:id"
                 Component={DetailDataPenghargaanUserPage}
               />
 
@@ -1736,9 +1744,18 @@ function App() {
 
               {/* VALIDASI > KELUARGA */}
               <Route path="keluarga" Component={KeluargaPage} />
-              <Route path="keluarga/detail-anak" Component={DetailAnakValidasiPage} />
-              <Route path="keluarga/detail-orangtua" Component={DetailOrangtuaValidasiPage} />
-              <Route path="keluarga/detail-pasangan" Component={DetailPasanganValidasiPage} />
+              <Route
+                path="keluarga/detail-anak"
+                Component={DetailAnakValidasiPage}
+              />
+              <Route
+                path="keluarga/detail-orangtua"
+                Component={DetailOrangtuaValidasiPage}
+              />
+              <Route
+                path="keluarga/detail-pasangan"
+                Component={DetailPasanganValidasiPage}
+              />
 
               {/* VALIDASI > KEPEGAWAIAN */}
               <Route path="kepegawaian">
@@ -1799,8 +1816,14 @@ function App() {
               {/* VALIDASI > KUALIFIKASI */}
               <Route path="kualifikasi">
                 <Route path="diklat" Component={DiklatValidasiPage} />
-                <Route path="pendidikan-formal" Component={PendidikanFormalValidasiPage} />
-                <Route path="riwayat-pekerjaan" Component={RiwayatPekerjaanValidasiPage} />
+                <Route
+                  path="pendidikan-formal"
+                  Component={PendidikanFormalValidasiPage}
+                />
+                <Route
+                  path="riwayat-pekerjaan"
+                  Component={RiwayatPekerjaanValidasiPage}
+                />
               </Route>
 
               {/* VALIDASI > PELAKSANAAN PENDIDIKAN */}
@@ -1930,7 +1953,7 @@ function App() {
                   Component={DetailDataJabatanFungsionalReferensiPage}
                 />
                 <Route
-                  path="jabatan-fungsional/detail-jabatan-fungsional/edit-jabatan-fungsional"
+                  path="jabatan-fungsional/detail-jabatan-fungsional/edit-jabatan-fungsional/:id"
                   Component={EditJabatanFungsionalReferensiPage}
                 />
                 <Route

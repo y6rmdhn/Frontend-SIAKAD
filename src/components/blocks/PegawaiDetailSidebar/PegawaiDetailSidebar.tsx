@@ -16,6 +16,12 @@ import {
 } from "@/components/ui/accordion";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { toast } from "sonner";
+import adminServices from "@/services/admin.services";
+import { useQuery } from "@tanstack/react-query";
+import dosenServices from "@/services/dosen.services";
 
 interface AccordionItemData {
   label: string;
@@ -53,6 +59,43 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
 
   const pegawaiIdForNavigation = currentPegawaiId || "";
   const sidebarWidth = "18rem";
+
+  const userSelector = useSelector((state: RootState) => state.user);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const [, setInitials] = useState<string>("");
+  const role = useSelector((state: RootState) => state.user.role);
+
+  const { data: profileData } = useQuery({
+    queryKey: ["profile-sidebar-pegawai"],
+    queryFn: async () => {
+      if (!accessToken) return null;
+
+      try {
+        let response;
+        if (role === "Admin") {
+          response = await adminServices.getProfileAdmin();
+        } else {
+          response = await dosenServices.getProfileUser();
+        }
+        console.log(response.data);
+        return response.data.data;
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
+        toast.error("Gagal memuat data profil.");
+        return null;
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (userSelector.name) {
+      const initials = userSelector.name
+        .split(" ")
+        .map((word) => word.charAt(0))
+        .join("");
+      setInitials(initials);
+    }
+  }, [userSelector.name]);
 
   useEffect(() => {
     let sectionToOpenBasedOnUrl: string | undefined = undefined;
@@ -186,7 +229,7 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
       <motion.div variants={itemVariants} className="mb-8 md:mb-10">
         <div className="w-36 h-36 md:w-44 md:h-44 overflow-hidden rounded-md border border-gray-200">
           <img
-            src="https://i.pinimg.com/736x/eb/76/a4/eb76a46ab920d056b02d203ca95e9a22.jpg"
+            src={profileData?.file_foto}
             className="object-cover w-full h-full"
             alt="profil-pegawai"
           />

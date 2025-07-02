@@ -370,15 +370,6 @@ const JabatanStruktural = () => {
                 <TableCell className="text-center">
                   {item.tgl_disetujui_formatted}
                 </TableCell>
-                <TableCell className="text-center capitalize">
-                  <Button
-                    size="sm"
-                    variant={item.status_info?.color || "secondary"}
-                    className="cursor-default"
-                  >
-                    {item.status_pengajuan}
-                  </Button>
-                </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
                     <Link

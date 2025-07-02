@@ -86,3 +86,27 @@ export interface OrganisasiParams {
   jabatan_fungsional?: string;
   status_pengajuan?: string;
 }
+
+export interface PendidikanFormalParams {
+  page?: string | number;
+  search?: string;
+  unit_kerja?: string;
+  jenjang_pendidikan?: string;
+  status_pengajuan?: string;
+}
+
+export interface DiklatParams {
+  page?: string | number;
+  search?: string;
+  unit_kerja?: string;
+  jenis_diklat?: string;
+  status_pengajuan?: string;
+}
+
+export interface RiwayatPekerjaanParams {
+  page?: string | number;
+  search?: string;
+  unit_kerja?: string;
+  jenis_pekerjaan?: string;
+  status_pengajuan?: string;
+}

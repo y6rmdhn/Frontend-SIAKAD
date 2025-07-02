@@ -64,7 +64,7 @@ const JabatanAkademik = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
-  // Ambil nilai filter langsung dari URL sebagai "single source of truth"
+  // Ambil nilai filter langsung dari URL
   const currentPage = searchParam.get("page") || "1";
   const unitKerjaFilter = searchParam.get("unit_kerja") || "";
   const jabatanAkademikFilter = searchParam.get("jabatan_akademik") || "";
@@ -106,7 +106,8 @@ const JabatanAkademik = () => {
 
   // Memoize filter options untuk optimasi
   const filterOptions = useMemo(() => {
-    const options = data?.filters?.original?.filter_options;
+    // DIUBAH: Menggunakan path 'filters' yang benar dari API, bukan 'filter_options'
+    const options = data?.filters?.original?.filters;
     if (!options) return {};
 
     const mapToOptions = (items: any[]) =>
@@ -121,7 +122,7 @@ const JabatanAkademik = () => {
 
   // --- Data Mutation (React Query) ---
   const handleSuccess = (action: ActionType) => {
-    toast.success(`Berhasil ${action} data pengajuan`);
+    toast.success(`Berhasil ${action} data pengajuan.`);
     setSelectedItem([]);
     setIsDialogOpen(false);
     queryClient.invalidateQueries({ queryKey: ["jabatan-akademik-validasi"] });
@@ -147,15 +148,9 @@ const JabatanAkademik = () => {
   // --- Event Handlers ---
   const handleUrlChange = (paramName: string, value: string) => {
     const newSearchParam = new URLSearchParams(searchParam);
-    if (value) {
-      newSearchParam.set(paramName, value);
-    } else {
-      newSearchParam.delete(paramName);
-    }
-
-    if (paramName !== "page") {
-      newSearchParam.set("page", "1");
-    }
+    if (value) newSearchParam.set(paramName, value);
+    else newSearchParam.delete(paramName);
+    if (paramName !== "page") newSearchParam.set("page", "1");
     setSearchParam(newSearchParam);
   };
 
@@ -323,7 +318,7 @@ const JabatanAkademik = () => {
           {tableData.data?.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={data?.table_columns?.length + 1 || 11}
+                colSpan={data?.table_columns?.length + 1 || 10}
                 className="text-center h-24"
               >
                 Data tidak ditemukan.
@@ -354,18 +349,11 @@ const JabatanAkademik = () => {
                 <TableCell className="text-center">
                   {item.tgl_disetujui_formatted}
                 </TableCell>
-                <TableCell className="text-center capitalize">
-                  <Button
-                    size="sm"
-                    variant={item.status_info?.color || "secondary"}
-                    className="cursor-default"
-                  >
-                    {item.status_pengajuan}
-                  </Button>
-                </TableCell>
                 <TableCell>
                   <div className="flex justify-center">
-                    <Link to={`/admin/detail-jabatan-akademik/${item.id}`}>
+                    <Link
+                      to={`/admin/validasi-data/kepegawaian/jabatan-akademik/detail-jabatan-akademik/${item.id}`}
+                    >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />
                       </Button>
@@ -380,9 +368,9 @@ const JabatanAkademik = () => {
 
       <CustomPagination
         currentPage={Number(currentPage)}
-        links={tableData?.links || []}
+        links={data?.data?.links || []}
         onPageChange={(p) => handleUrlChange("page", String(p))}
-        totalPages={tableData?.last_page}
+        totalPages={data?.data?.last_page}
       />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -424,14 +412,15 @@ const JabatanAkademik = () => {
             >
               Batal
             </Button>
-            {pendingAction === "approve" ? (
+            {pendingAction === "approve" && (
               <Button
                 onClick={() => approveMutation({ ids: selectedItem })}
                 className="bg-green-600 hover:bg-green-700"
               >
-                Ya, Konfirmasi
+                Ya, Setujui
               </Button>
-            ) : (
+            )}
+            {pendingAction === "reject" && (
               <Button type="submit" form="action-form" variant="destructive">
                 Ya, Tolak
               </Button>

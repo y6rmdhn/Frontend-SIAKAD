@@ -250,6 +250,19 @@ const dosenServices = {
         tgl_selesai: tgl_selesai,
       },
     }),
+  getDasboardGrafik: (
+    tgl_mulai?: string | undefined,
+    tgl_selesai?: string | undefined
+  ) =>
+    axiosInstance.get(
+      `${endpoint.DOSEN}/dosen-dashboard/evaluasi-kinerja-chart`,
+      {
+        params: {
+          tgl_mulai: tgl_mulai,
+          tgl_selesai: tgl_selesai,
+        },
+      }
+    ),
 
   getBiodataDosen: () => axiosInstance.get(`${endpoint.DOSEN}/biodata`),
 
@@ -282,7 +295,7 @@ const dosenServices = {
       },
     }),
   getJabatanStrukturalSelect: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenis-jabatan-struktural`, {
+    axiosInstance.get(`${endpoint.DOSEN}/jabatan-struktural`, {
       params: {
         page: page,
       },
@@ -336,6 +349,30 @@ const dosenServices = {
         page: page,
       },
     }),
+  getPengajuanCutiDosen: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/daftar-cuti`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getPengajuanIzinDosen: (page?: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-izin`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getProfileUser: () => axiosInstance.get(`${endpoint.DOSEN}/profiles`),
+  getLocation: () => axiosInstance.get(`${endpoint.DOSEN}/setting-kehadiran`),
+  getPendidikanFormalDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen/${id}`),
+  getRiwayatPekerjaanDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen/${id}`),
+  getPenghargaanDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
+  getBeritaDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
 };
 
 export default dosenServices;

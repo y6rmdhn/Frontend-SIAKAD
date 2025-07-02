@@ -66,6 +66,10 @@ const deleteReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/pegawai/destroy`, payload),
   deleteJabatanStruktural: (id: number) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jabatan-struktural/${id}`),
+  deleteJabatanFungsional: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/jabatan-fungsional/${id}`),
+  deleteRumpunBidangIlmu: (id: number) =>
+    axiosInstance.delete(`${endpoint.ADMIN}/rumpun-bidang-ilmu/${id}`),
 };
 
 export default deleteReferensiServices;

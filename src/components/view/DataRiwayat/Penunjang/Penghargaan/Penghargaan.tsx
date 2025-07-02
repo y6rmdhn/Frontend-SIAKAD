@@ -240,7 +240,12 @@ const Penghargaan = () => {
                 </TableCell>
                 <TableCell className="h-full">
                   <div className="flex justify-center items-center w-full h-full">
-                    <Link to="/data-riwayat/penunjang/detail-data-penghargaan">
+                    <Link
+                      to={
+                        "/data-riwayat/penunjang/detail-data-penghargaan/" +
+                        item.id
+                      }
+                    >
                       <Button
                         size="icon"
                         variant="ghost"

@@ -111,8 +111,10 @@ const Sertifikasi = () => {
     if (!options) return {};
     const mapToOptions = (items: any[]) =>
       items?.map((opt) => ({ value: String(opt.id), label: opt.nama })) || [];
+
     return {
-      unitKerja: mapToOptions(options.unit_kerja),
+      // ✅ PERBAIKAN: Mengambil data dari 'unit_kerja_options'
+      unitKerja: mapToOptions(options.unit_kerja_options),
       jenisSertifikasi: mapToOptions(options.jenis_sertifikasi),
       statusPengajuan: mapToOptions(options.status_pengajuan),
     };
@@ -127,7 +129,9 @@ const Sertifikasi = () => {
   };
 
   const handleError = (err: any) =>
-    toast.error(`Gagal: ${err?.message || "Terjadi kesalahan"}`);
+    toast.error(
+      `Gagal: ${err?.response?.data?.message || "Terjadi kesalahan"}`
+    );
 
   const { mutate: rejectMutation } = useMutation({
     mutationFn: (payload: { ids: number[]; keterangan: string }) =>
@@ -160,6 +164,7 @@ const Sertifikasi = () => {
   };
 
   useEffect(() => {
+    // Hanya trigger pencarian jika input lebih dari 2 karakter atau kosong
     if (debouncedInput.length >= 3 || debouncedInput.length === 0) {
       handleUrlChange("search", debouncedInput);
     }
@@ -306,13 +311,15 @@ const Sertifikasi = () => {
               onClick={() => handleOpenDialog("reject")}
               variant="destructive"
             >
-              <IoClose className="mr-2" /> Reject ({selectedItem.length})
+              <IoClose className="mr-2 text-xl" /> Reject ({selectedItem.length}
+              )
             </Button>
             <Button
               onClick={() => handleOpenDialog("draft")}
               className="bg-blue-500 hover:bg-blue-600"
             >
-              <MdPlayArrow className="mr-2" /> Draft ({selectedItem.length})
+              <MdPlayArrow className="mr-2 text-xl" /> Draft (
+              {selectedItem.length})
             </Button>
           </div>
         )}
@@ -320,7 +327,7 @@ const Sertifikasi = () => {
 
       <Table className="mt-5 text-xs lg:text-sm">
         <TableHeader>
-          <TableRow className="bg-gray-100">
+          <TableRow className="bg-gray-100 hover:bg-gray-100">
             <TableHead className="text-center w-10">
               <Checkbox
                 onCheckedChange={(c) => handleSelectAll(!!c)}
@@ -334,7 +341,10 @@ const Sertifikasi = () => {
               />
             </TableHead>
             {data?.table_columns?.map((col: any) => (
-              <TableHead key={col.field} className="text-center">
+              <TableHead
+                key={col.field}
+                className="text-center font-bold text-gray-800"
+              >
                 {col.label}
               </TableHead>
             ))}
@@ -389,10 +399,10 @@ const Sertifikasi = () => {
                 <TableCell>
                   <div className="flex justify-center">
                     <Link
-                      to={`/admin/validasi-data/kompetensi/sertifikasi/detail-sertifikasi/${item.id}`}
+                      to={`/admin/validasi-data/kompetensi/sertifikasi/detail/${item.id}`}
                     >
                       <Button size="icon" variant="ghost">
-                        <IoEyeOutline className="text-blue-500" />
+                        <IoEyeOutline className="text-blue-500 h-5 w-5" />
                       </Button>
                     </Link>
                   </div>

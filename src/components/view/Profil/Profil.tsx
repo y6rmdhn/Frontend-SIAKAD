@@ -1,34 +1,199 @@
 import { Button } from "@/components/ui/button";
-import React, { useState, useRef } from "react";
-import { MdOutlineViewModule } from "react-icons/md";
-import { HiX } from "react-icons/hi";
-import { MdOutlinePhotoLibrary } from "react-icons/md";
+import { useState, useEffect } from "react";
+import { MdOutlineViewModule, MdOutlinePhotoLibrary } from "react-icons/md";
 import { IoExit } from "react-icons/io5";
-import { Navigate, useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa6";
+
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { clearUserData } from "@/store/userSlice";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import authServices from "@/services/auth.services";
 import { toast } from "sonner";
 import { ILogout } from "@/types/auth";
-import { Link } from "react-router-dom";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { FaUser } from "react-icons/fa6";
+
+import dosenServices from "@/services/dosen.services";
+import adminServices from "@/services/admin.services";
+import potsReferensiServices from "@/services/create.admin.referensi";
+import postDosenServices from "@/services/create.dosen.services";
+
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
+import { fileSchemaNew } from "../DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
+
+// Skema untuk form ganti password
+const passwordChangeSchema = z
+  .object({
+    password_lama: z.string().min(1, "Password lama harus diisi."),
+    password_baru: z.string().min(6, "Password baru minimal 6 karakter."),
+    password_baru_confirmation: z
+      .string()
+      .min(1, "Konfirmasi password baru harus diisi."),
+  })
+  .refine((data) => data.password_baru === data.password_baru_confirmation, {
+    message: "Konfirmasi password baru tidak cocok.",
+    path: ["password_baru_confirmation"],
+  });
+
+// Skema untuk update profil
+const profileUpdateSchema = z.object({
+  email_pegawai: z
+    .string()
+    .email("Email tidak valid.")
+    .or(z.literal(""))
+    .optional(),
+  file_foto: fileSchemaNew.optional(),
+});
+
+interface UserProfile {
+  email: string;
+  name?: string;
+  photo_url?: string;
+  file_foto?: string;
+  email_pribadi?: string;
+}
 
 const Profil = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const role = useSelector((state: RootState) => state.user.role);
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const { mutate } = useMutation({
+  const [isChangePassword, setIsChangePassword] = useState(false);
+  const [isChangeProfileModalOpen, setIsChangeProfileModalOpen] =
+    useState(false);
+
+  // Form untuk ganti password
+  const passwordForm = useForm<z.infer<typeof passwordChangeSchema>>({
+    resolver: zodResolver(passwordChangeSchema),
+    defaultValues: {
+      password_lama: "",
+      password_baru: "",
+      password_baru_confirmation: "",
+    },
+  });
+
+  // Form untuk update profil
+  const profileForm = useForm<z.infer<typeof profileUpdateSchema>>({
+    resolver: zodResolver(profileUpdateSchema),
+    defaultValues: {
+      email_pegawai: "",
+      file_foto: undefined,
+    },
+  });
+
+  // Fetching data profil
+  const { data: profileData, isLoading: isProfileLoading } =
+    useQuery<UserProfile | null>({
+      queryKey: ["profile"],
+      queryFn: async () => {
+        if (!accessToken) return null;
+
+        try {
+          let response;
+          if (role === "Admin") {
+            response = await adminServices.getProfileAdmin();
+          } else {
+            response = await dosenServices.getProfileUser();
+          }
+          console.log(response.data);
+
+          return response.data.data;
+        } catch (error) {
+          console.error("Failed to fetch profile data:", error);
+          toast.error("Gagal memuat data profil.");
+          return null;
+        }
+      },
+    });
+
+  // Update form profil dengan data yang di-fetch
+  useEffect(() => {
+    if (profileData) {
+      profileForm.reset({
+        email_pegawai: profileData.email,
+        file_foto: undefined, // Menggunakan undefined saat reset
+      });
+    }
+  }, [profileData, profileForm]);
+
+  // Mutation untuk ganti password
+  const { mutate: changePasswordMutation, isPending: isChangingPassword } =
+    useMutation({
+      mutationFn: async (data: z.infer<typeof passwordChangeSchema>) => {
+        if (role === "admin") {
+          return potsReferensiServices.changePasswordAdmin(data);
+        } else if (role === "dosen") {
+          return postDosenServices.changePasswordUser(data);
+        }
+        throw new Error("Peran tidak valid untuk mengganti kata sandi.");
+      },
+      onSuccess: (response) => {
+        toast.success(response.data.message || "Kata sandi berhasil diubah.");
+        setIsChangePassword(false);
+        passwordForm.reset();
+      },
+      onError: (error: any) => {
+        toast.error(
+          error.response?.data?.message || "Gagal mengganti kata sandi."
+        );
+      },
+    });
+
+  // Mutation untuk update profil
+  const { mutate: updateProfileMutation, isPending: isUpdatingProfile } =
+    useMutation({
+      mutationFn: async (data: FormData) => {
+        if (role === "Admin") {
+          return potsReferensiServices.updateProfileAdmin(data);
+        } else {
+          return postDosenServices.updateProfileUser(data);
+        }
+      },
+      onSuccess: (response) => {
+        toast.success(response.data.message || "Profil berhasil diperbarui.");
+        setIsChangeProfileModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+      },
+      onError: (error: any) => {
+        toast.error(
+          error.response?.data?.message || "Gagal memperbarui profil."
+        );
+        console.log(error);
+      },
+    });
+
+  // Mutation untuk logout
+  const { mutate: logoutMutation, isPending: isLoggingOut } = useMutation({
     mutationFn: (data: ILogout) => authServices.logout(data),
     onSuccess: (response) => {
       localStorage.removeItem("user");
       dispatch(clearUserData());
       navigate("/login");
-      toast.success(response.data.message);
+      toast.success(response.data.message || "Berhasil keluar.");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Gagal keluar.");
     },
   });
 
@@ -36,36 +201,40 @@ const Profil = () => {
 
   const handleLogout = () => {
     if (!accessToken || typeof accessToken !== "string") {
-      toast.error("Please login again.");
+      toast.error("Token akses tidak valid. Silakan login kembali.");
       return;
     }
-
-    mutate({ accessToken });
+    logoutMutation({ accessToken });
   };
 
-  const [photo, setPhoto] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
+  const onSubmitPasswordChange = (
+    values: z.infer<typeof passwordChangeSchema>
+  ) => {
+    changePasswordMutation(values);
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (file) {
-      const photoURL = URL.createObjectURL(file);
-      if (photo) URL.revokeObjectURL(photo);
-      setPhoto(photoURL);
+  // Fungsi submit untuk update profil (FINAL)
+  const onSubmitProfileUpdate = (
+    values: z.infer<typeof profileUpdateSchema>
+  ) => {
+    const formData = new FormData();
+
+    if (values.email_pegawai) {
+      formData.append("email_pegawai", values.email_pegawai);
     }
-  };
 
-  const handlePhotoRemove = () => {
-    if (!photo) {
+    // Logika penanganan file yang aman
+    if (values.file_foto && values.file_foto.length > 0) {
+      formData.append("file_foto", values.file_foto[0]);
+    }
+
+    // Cek apakah FormData benar-benar kosong
+    if (!formData.entries().next().done) {
+      updateProfileMutation(formData);
+    } else {
+      toast.info("Tidak ada perubahan untuk disimpan.");
       return;
     }
-    URL.revokeObjectURL(photo);
-    setPhoto(null);
   };
 
   return (
@@ -74,12 +243,11 @@ const Profil = () => {
         <div className="bg-white md:m-5 rounded-lg overflow-hidden lg:max-h-auto">
           <div className="relative">
             <div className="h-44 md:h-36 flex overflow-hidden bg-[#FDA31A]" />
-
             <div className="absolute flex-col py-5 md:py-0 md:flex-row top-0 w-full h-full px-4 sm:px-10 flex justify-between items-center">
               <div className="flex gap-4 items-center">
                 <div className="bg-white p-2 rounded-2xl sm:rounded-3xl overflow-hidden">
                   <img
-                    src="/images/logo/logo-uika-login.webp"
+                    src="/images/logo/uika-logo.jpg"
                     alt="logo-uika"
                     className="w-10 md:w-14 lg:w-16"
                   />
@@ -91,24 +259,24 @@ const Profil = () => {
                   </Label>
                 </div>
               </div>
-
               <div className="flex gap-3 items-center md:flex-col md:items-end lg:flex-row lg:items-center">
                 <Link to={"/"}>
-                  <Button className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer">
+                  <Button className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer rounded-md px-4 py-2 flex items-center gap-2">
                     <MdOutlineViewModule className="text-2xl text-white" />{" "}
                     Daftar Modul
                   </Button>
                 </Link>
                 <Button
                   onClick={handleLogout}
-                  className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer"
+                  className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer rounded-md px-4 py-2 flex items-center gap-2"
+                  disabled={isLoggingOut}
                 >
-                  <IoExit className="text-2xl text-white" /> Keluar
+                  <IoExit className="text-2xl text-white" />{" "}
+                  {isLoggingOut ? "Keluar..." : "Keluar"}
                 </Button>
               </div>
             </div>
           </div>
-
           <div className="bg-[#F4F3F3] h-full">
             <div className="grid grid-rows px-4 sm:px-7 pb-8 lg:mb-0 lg:grid-cols h-full">
               <div className="w-full h-full pt-5 order-2 lg:order-1 flex flex-col gap-3">
@@ -116,41 +284,91 @@ const Profil = () => {
                   Foto Profile
                 </Label>
                 <div className="sm:px-7">
-                  <div className="ml-3 sm:ml-14 w-[120px] h-[120px] rounded-full bg-gray-300 flex items-center justify-center text-4xl text-white mb-3 overflow-hidden">
-                    {photo ? (
+                  <div className="ml-2 w-[120px] h-[120px] rounded-full bg-gray-300 flex items-center justify-center text-4xl text-white mb-3 overflow-hidden">
+                    {profileData?.file_foto ? (
                       <img
-                        src={photo}
+                        src={profileData.file_foto}
                         alt="Profile"
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "https://placehold.co/120x120/cccccc/333333?text=User";
+                          e.currentTarget.className =
+                            "w-full h-full object-cover";
+                        }}
                       />
                     ) : (
                       <FaUser className="w-15 h-15" />
                     )}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      className="hidden"
-                      onChange={handlePhotoChange}
-                    />
-
-                    <Button
-                      className="bg-[#3A6BF2] text-xs sm:text-sm"
-                      onClick={triggerFileInput}
+                    <Dialog
+                      open={isChangeProfileModalOpen}
+                      onOpenChange={setIsChangeProfileModalOpen}
                     >
-                      <MdOutlinePhotoLibrary />
-                      Ganti Foto
-                    </Button>
-
-                    <Button
-                      className="bg-[#E72D30] text-xs sm:text-sm"
-                      onClick={handlePhotoRemove}
-                    >
-                      <HiX />
-                      Hapus Foto
-                    </Button>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="bg-[#3A6BF2] text-xs sm:text-sm text-white hover:bg-[#3A6BF2]/90"
+                          onClick={() => {
+                            profileForm.reset({
+                              email_pegawai: profileData?.email || "",
+                              file_foto: undefined,
+                            });
+                          }}
+                        >
+                          <MdOutlinePhotoLibrary />
+                          Ganti Foto Profile
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Update Profile Photo</DialogTitle>
+                          <DialogDescription>
+                            Upload a new profile picture.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <Form {...profileForm}>
+                          <form
+                            onSubmit={profileForm.handleSubmit(
+                              onSubmitProfileUpdate
+                            )}
+                            className="grid gap-4 py-4"
+                          >
+                            <FormFieldInput
+                              inputStyle="w-full"
+                              position={true}
+                              label="Email Pegawai"
+                              placeholder="optional"
+                              form={profileForm}
+                              name="email_pegawai"
+                              required={false}
+                            />
+                            <FormFieldInputFile
+                              label="File Foto"
+                              name="file_foto"
+                              description="Masukan Foto"
+                            />
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button type="button" variant="outline">
+                                  Cancel
+                                </Button>
+                              </DialogClose>
+                              <Button
+                                type="submit"
+                                disabled={isUpdatingProfile}
+                                className="bg-[#00325B] hover:bg-[#00325B]/90 text-white"
+                              >
+                                {isUpdatingProfile
+                                  ? "Saving..."
+                                  : "Save changes"}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </Form>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
                 <Label className="font-semibold text-sm sm:text-base">
@@ -167,25 +385,82 @@ const Profil = () => {
                   <div className="flex flex-col w-full sm:w-70">
                     <Input
                       type="email"
-                      value="azkanyan@gmail.com"
+                      value={
+                        profileData?.email_pribadi ||
+                        (isProfileLoading ? "Memuat..." : "Tidak tersedia")
+                      }
                       readOnly
                       className="border border-gray-300 p-2 rounded focus:outline-none bg-gray-100 w-full sm:w-70 text-xs sm:text-sm"
                     />
-                    <Label className="text-[#11A60F] mt-1 text-xs sm:text-sm">
-                      Email sudah diverifikasi
-                    </Label>
+                    {profileData?.email_pribadi ? (
+                      <Label className="text-[#11A60F] mt-1 text-xs sm:text-sm">
+                        Email sudah diverifikasi
+                      </Label>
+                    ) : (
+                      <Label className="text-red-500 mt-1 text-xs sm:text-sm">
+                        Email belum diverifikasi
+                      </Label>
+                    )}
                   </div>
                 </div>
                 <div>
                   <Label className="text-base font-semibold text-sm sm:text-base">
                     Ganti Kata Sandi
                   </Label>
-                  <Link to="/forget-password">
-                    <Button className="bg-[#23CD0C] text-white px-4 py-2 rounded-md hover:bg-green-700 transition p-2 mt-2 text-xs sm:text-sm">
-                      ✔ Ganti Kata Sandi
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={() => setIsChangePassword(!isChangePassword)}
+                    className="bg-[#23CD0C] text-white px-4 py-2 rounded-md hover:bg-green-700 transition p-2 mt-2 text-xs sm:text-sm flex items-center gap-1"
+                  >
+                    ✔ Ganti Kata Sandi
+                  </Button>
                 </div>
+                {isChangePassword && (
+                  <Form {...passwordForm}>
+                    <form
+                      onSubmit={passwordForm.handleSubmit(
+                        onSubmitPasswordChange
+                      )}
+                      className="flex flex-col gap-4 mt-4"
+                    >
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        label="Password Lama"
+                        form={passwordForm}
+                        name="password_lama"
+                        type="password"
+                        required={true}
+                      />
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        label="Password Baru"
+                        form={passwordForm}
+                        name="password_baru"
+                        type="password"
+                        required={true}
+                      />
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        label="Konfirmasi Password Baru"
+                        form={passwordForm}
+                        name="password_baru_confirmation"
+                        type="password"
+                        required={true}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={isChangingPassword}
+                        className="bg-[#00325B] hover:bg-[#00325B]/90 text-white rounded-md px-4 py-2"
+                      >
+                        {isChangingPassword
+                          ? "Mengganti..."
+                          : "Simpan Kata Sandi"}
+                      </Button>
+                    </form>
+                  </Form>
+                )}
               </div>
             </div>
           </div>

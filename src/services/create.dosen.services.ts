@@ -48,6 +48,10 @@ const postDosenServices = {
     axiosInstance.post(`${endpoint.DOSEN}/datariwayattes`, payload),
   addDataPenghargaan: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/penghargaandosen`, payload),
+  updateProfileUser: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.DOSEN}/profiles/update`, payload),
+  changePasswordUser: (payload: any) =>
+    axiosInstance.post(`${endpoint.DOSEN}/profiles/change-password`, payload),
 };
 
 export default postDosenServices;

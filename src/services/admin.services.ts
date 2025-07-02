@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
+  DiklatParams,
   HubunganKerjaParams,
   JabatanAkademikParams,
   JabatanFungsionalParams,
@@ -8,7 +9,9 @@ import {
   KemampuanBahasaParams,
   OrganisasiParams,
   PangkatParams,
+  PendidikanFormalParams,
   PenghargaanParams,
+  RiwayatPekerjaanParams,
   SertifikasiParams,
   TesKompetensiParams,
 } from "@/types";
@@ -101,6 +104,8 @@ const adminServices = {
         search: search,
       },
     }),
+  getJabatanFungsionalSpesifik: (id?: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/jabatan-fungsional/${id}`),
   getMasterPangkatReferensi: (page?: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/master-pangkat`, {
       params: {
@@ -355,6 +360,20 @@ const adminServices = {
       params: cleanParams,
     });
   },
+  getPendidikanFormalValidasiData: (params: PendidikanFormalParams) => {
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+    if (params.search) cleanParams.search = params.search;
+    if (params.unit_kerja) cleanParams.unit_kerja = params.unit_kerja;
+    if (params.jenjang_pendidikan)
+      cleanParams.jenjang_pendidikan = params.jenjang_pendidikan;
+    if (params.status_pengajuan)
+      cleanParams.status_pengajuan = params.status_pengajuan;
+
+    return axiosInstance.get(`${endpoint.ADMIN}/datapendidikanformaladm`, {
+      params: cleanParams,
+    });
+  },
   getTesKompetensi: (params: TesKompetensiParams) => {
     const cleanParams: Record<string, any> = { page: params.page || 1 };
 
@@ -424,8 +443,36 @@ const adminServices = {
       params: cleanParams,
     });
   },
+  getRiwayatPekerjaanValidasiData: (params: RiwayatPekerjaanParams) => {
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+    if (params.search) cleanParams.search = params.search;
+    if (params.unit_kerja) cleanParams.unit_kerja = params.unit_kerja;
+    if (params.jenis_pekerjaan)
+      cleanParams.jenis_pekerjaan = params.jenis_pekerjaan;
+    if (params.status_pengajuan)
+      cleanParams.status_pengajuan = params.status_pengajuan;
+
+    return axiosInstance.get(`${endpoint.ADMIN}/datariwayatpekerjaanadm`, {
+      params: cleanParams,
+    });
+  },
   getJenisIzinReferensi: (page: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.ADMIN}/jenis-izin`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataMonitoringKegiatan: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/monitoring-kegiatan`, {
+      params: {
+        page: page,
+        search: search,
+      },
+    }),
+  getDataMonitoringPresensi: (page: any, search?: string | undefined) =>
+    axiosInstance.get(`${endpoint.ADMIN}/monitoring-presensi`, {
       params: {
         page: page,
         search: search,
@@ -441,6 +488,19 @@ const adminServices = {
       cleanParams.status_pengajuan = params.status_pengajuan;
 
     return axiosInstance.get(`${endpoint.ADMIN}/datakemampuanbahasa`, {
+      params: cleanParams,
+    });
+  },
+  getDiklatValidasiData: (params: DiklatParams) => {
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+    if (params.search) cleanParams.search = params.search;
+    if (params.unit_kerja) cleanParams.unit_kerja = params.unit_kerja;
+    if (params.jenis_diklat) cleanParams.jenis_diklat = params.jenis_diklat;
+    if (params.status_pengajuan)
+      cleanParams.status_pengajuan = params.status_pengajuan;
+
+    return axiosInstance.get(`${endpoint.ADMIN}/pegawai/riwayat-diklat`, {
       params: cleanParams,
     });
   },
@@ -691,6 +751,11 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/datakemampuanbahasa/${id}`),
   getOrganisasiDetailAdmin: (id?: string | undefined) =>
     axiosInstance.get(`${endpoint.ADMIN}/dataorganisasi/${id}`),
+  getProfileAdmin: () => axiosInstance.get(`${endpoint.ADMIN}/profiles`),
+  getHubunganKerjaDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datahubungankerjaadm/${id}`),
+  getJabatanAkademikDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datajabatanakademikadm/${id}`),
 };
 
 export default adminServices;

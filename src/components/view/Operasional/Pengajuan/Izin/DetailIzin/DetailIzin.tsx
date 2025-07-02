@@ -13,8 +13,9 @@ import postDosenServices from "@/services/create.dosen.services";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
+import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+import dosenServices from "@/services/dosen.services";
 
 export const izinSchema = z.object({
   jenis_izin_id: z.string().min(1, { message: "Jenis Izin harus diisi." }),
@@ -23,14 +24,7 @@ export const izinSchema = z.object({
   jumlah_izin: z.string().optional(),
   alasan_izin: z.string().optional(),
   submit_type: z.string().optional(),
-  file_pendukung: z
-    .any()
-    .optional()
-    .refine(
-      (files) =>
-        !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE,
-      `Ukuran file maksimal adalah 2 MB.`
-    ),
+  file_pendukung: fileSchemaNew,
 });
 
 export type IzinSchema = z.infer<typeof izinSchema>;
@@ -120,12 +114,17 @@ const DetailIzin = () => {
                   <div className="grid md:grid-cols-2 gap-4">
                     {/* Kolom Kiri */}
                     <div className="space-y-7">
-                      <FormFieldInput
+                      <InfiniteScrollSelect
                         form={form}
                         label="Jenis Izin"
                         name="jenis_izin_id"
                         labelStyle="text-[#3F6FA9]"
-                        required={true}
+                        placeholder="--Pilih Jenis Izin--"
+                        required
+                        queryKey="izin-dosen-select"
+                        queryFn={dosenServices.getPengajuanIzinDosen}
+                        itemValue="id"
+                        itemLabel="jenis_izin"
                       />
 
                       <FormFieldInput

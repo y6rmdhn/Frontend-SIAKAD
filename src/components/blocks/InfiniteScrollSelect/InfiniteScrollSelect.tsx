@@ -16,7 +16,6 @@ import {
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Definisikan tipe untuk props komponen
 type InfiniteScrollSelectProps = {
   form: any;
   name: string;
@@ -28,7 +27,6 @@ type InfiniteScrollSelectProps = {
   queryFn: (page: number) => Promise<any>;
   itemValue: string;
   itemLabel: string;
-  // TAMBAHKAN PROP OPSIONAL UNTUK DATA AWAL YANG TERPILIH
   initialSelectedItem?: Record<string, any> | null;
 };
 
@@ -43,7 +41,6 @@ export const InfiniteScrollSelect = ({
   queryFn,
   itemValue,
   itemLabel,
-  // Terima prop baru di sini
   initialSelectedItem,
 }: InfiniteScrollSelectProps) => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
@@ -55,7 +52,6 @@ export const InfiniteScrollSelect = ({
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        // Logika ini sudah bagus, bisa menangani berbagai struktur API
         const paginationSource =
           typeof lastPage?.current_page !== "undefined"
             ? lastPage
@@ -71,7 +67,6 @@ export const InfiniteScrollSelect = ({
       },
     });
 
-  // Logika untuk meratakan semua data dari semua halaman
   const options =
     data?.pages
       .flatMap((page) => {
@@ -85,29 +80,22 @@ export const InfiniteScrollSelect = ({
       })
       .filter(Boolean) ?? [];
 
-  // Gunakan 'let' agar bisa dimodifikasi
   let selectOptions = options.map((item) => ({
     label: item[itemLabel],
     value: item[itemValue].toString(),
   }));
 
-  // --- LOGIKA UTAMA: Menyuntikkan data awal ---
-  // Cek apakah ada data awal yang diberikan, dan apakah data tersebut
-  // belum ada di dalam daftar pilihan yang sudah di-fetch dari API.
   if (
     initialSelectedItem &&
     !selectOptions.some(
       (option) => option.value === initialSelectedItem[itemValue]?.toString()
     )
   ) {
-    // Jika belum ada, tambahkan data awal tersebut ke bagian paling atas
-    // dari daftar pilihan agar bisa ditampilkan.
     selectOptions.unshift({
       label: initialSelectedItem[itemLabel],
       value: initialSelectedItem[itemValue].toString(),
     });
   }
-  // --- Akhir dari Logika Utama ---
 
   return (
     <FormField

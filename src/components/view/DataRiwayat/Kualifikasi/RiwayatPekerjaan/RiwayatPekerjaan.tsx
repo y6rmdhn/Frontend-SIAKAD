@@ -340,7 +340,12 @@ const RiwayatPekerjaan = () => {
                 </TableCell>
                 <TableCell className="h-full">
                   <div className="flex justify-center items-center w-full h-full">
-                    <Link to="/data-riwayat/kualifikasi/detail-data-riwayat-pekerjaan">
+                    <Link
+                      to={
+                        "/data-riwayat/kualifikasi/detail-data-riwayat-pekerjaan/" +
+                        item.id
+                      }
+                    >
                       <Button
                         size="icon"
                         variant="ghost"

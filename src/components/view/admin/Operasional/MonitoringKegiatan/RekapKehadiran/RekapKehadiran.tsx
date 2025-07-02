@@ -33,9 +33,9 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
-import dosenServices from "@/services/dosen.services";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SearchInput from "@/components/blocks/SearchInput";
+import adminServices from "@/services/admin.services";
 
 const RekapKehadiran = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -51,7 +51,7 @@ const RekapKehadiran = () => {
     ],
     queryFn: async () => {
       const search = searchParam.get("search") || "";
-      const response = await dosenServices.getDataMonitoringKegiatan(
+      const response = await adminServices.getDataMonitoringKegiatan(
         searchParam.get("page"),
         search
       );
@@ -225,19 +225,7 @@ const RekapKehadiran = () => {
                 <TableCell className="whitespace-normal break-words max-w-40 align-top text-xs sm:text-sm">
                   {item.realisasi_pekerjaan}
                 </TableCell>
-                <TableCell className="h-full align-top text-center">
-                  {item.file ? (
-                    <a
-                      href={item.file}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Lihat
-                    </a>
-                  ) : (
-                    "-"
-                  )}
-                </TableCell>
+                <TableCell className="h-full align-top text-center"></TableCell>
                 <TableCell className="h-full align-top text-center">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -249,14 +237,14 @@ const RekapKehadiran = () => {
                         Lihat
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
+                    <AlertDialogContent className="flex items-center flex-col">
                       <AlertDialogHeader>
                         <AlertDialogTitle>Foto Masuk</AlertDialogTitle>
                         <AlertDialogDescription>
                           <img
                             src={item.foto_masuk}
                             alt="Foto Masuk"
-                            className="w-full h-auto"
+                            className="w-80 h-auto"
                           />
                         </AlertDialogDescription>
                       </AlertDialogHeader>
@@ -284,7 +272,7 @@ const RekapKehadiran = () => {
                           <img
                             src={item.foto_keluar}
                             alt="Foto Keluar"
-                            className="w-full h-auto"
+                            className="w-60 h-auto"
                           />
                         </AlertDialogDescription>
                       </AlertDialogHeader>

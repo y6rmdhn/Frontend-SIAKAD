@@ -13,14 +13,9 @@ import postDosenServices from "@/services/create.dosen.services";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
-const ACCEPTED_FILE_TYPES = [
-  "application/pdf",
-  "image/jpeg",
-  "image/png",
-  "image/jpg",
-];
+import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+import dosenServices from "@/services/dosen.services";
 
 const cutiSchema = z.object({
   jenis_cuti_id: z.string().min(1, { message: "Jenis cuti harus diisi." }),
@@ -31,21 +26,7 @@ const cutiSchema = z.object({
   alamat: z.string().optional(),
   no_telp: z.coerce.number().optional(),
   submit_type: z.string().optional(),
-  file_cuti: z
-    .any()
-    .optional()
-    .refine(
-      (files) =>
-        !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE,
-      `Ukuran file maksimal adalah 2MB.`
-    )
-    .refine(
-      (files) =>
-        !files ||
-        files.length === 0 ||
-        ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
-      "Format file tidak didukung. Gunakan PDF, JPG, JPEG, atau PNG."
-    ),
+  file_cuti: fileSchemaNew,
 });
 
 export type CutiSchema = z.infer<typeof cutiSchema>;
@@ -88,16 +69,16 @@ const DetailCuti = () => {
 
   const handleSubmitData = (values: CutiSchema) => {
     const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      if (key === "file_cuti" && value && value.length > 0) {
-        formData.append(key, value[0]);
-      } else if (
-        value !== undefined &&
-        value !== null &&
-        value !== "" &&
-        key !== "file_cuti"
-      ) {
-        formData.append(key, value as string);
+
+    const { file_cuti, ...otherValues } = values;
+
+    if (file_cuti && file_cuti.length > 0) {
+      formData.append("file_cuti", file_cuti[0]);
+    }
+
+    Object.entries(otherValues).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        formData.append(key, String(value));
       }
     });
 
@@ -141,14 +122,18 @@ const DetailCuti = () => {
                   <div className="grid md:grid-cols-2 gap-4">
                     {/* Kolom Kiri */}
                     <div className="space-y-7">
-                      <FormFieldInput
+                      <InfiniteScrollSelect
                         form={form}
                         label="Jenis Cuti"
                         name="jenis_cuti_id"
                         labelStyle="text-[#3F6FA9]"
-                        required={true}
+                        placeholder="--Pilih Jenis Cuti--"
+                        required
+                        queryKey="cuti-dosen-select"
+                        queryFn={dosenServices.getPengajuanCutiDosen}
+                        itemValue="id"
+                        itemLabel="nama_jenis_cuti"
                       />
-
                       <FormFieldInput
                         form={form}
                         label="Tagnggal Mulai"

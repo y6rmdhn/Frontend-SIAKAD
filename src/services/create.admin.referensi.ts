@@ -95,6 +95,14 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/jabatan-struktural`, payload),
   jabatanFungsional: (payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/jabatan-fungsional`, payload),
+  rumpunBidangIlmu: (payload: any) =>
+    axiosInstance.post(`${endpoint.ADMIN}/rumpun-bidang-ilmu`, payload),
+  updateProfileAdmin: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.ADMIN}/profiles/update`, payload),
+  changePasswordAdmin: (payload: any) =>
+    axiosInstance.post(`${endpoint.ADMIN}/profiles/change-password`, payload),
+  generatePayroll: (payload: any) =>
+    axiosInstance.post(`${endpoint.ADMIN}/payroll/generate`, payload),
 };
 
 export default potsReferensiServices;

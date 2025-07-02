@@ -1,4 +1,5 @@
 import CustomCard from "@/components/blocks/Card";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
@@ -14,32 +15,54 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import unitKerjaOptions from "@/constant/dummyFilter";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
 import adminServices from "@/services/admin.services";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
 const JabatanFungsional = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
+  const queryClient = useQueryClient();
 
-  // get data
+  // Get data
   const { data } = useQuery({
-    queryKey: ["pangkat", searchParam.get("page"), searchParam.get("search")],
+    queryKey: [
+      "jabatan-fungsional-referensi",
+      searchParam.get("page"),
+      searchParam.get("search"),
+    ],
     queryFn: async () => {
       const search = searchParam.get("search") || "";
-      const response = await adminServices.getJabatanFungsional(
-        searchParam.get("page"),
-        search
-      );
+      const page = searchParam.get("page");
 
-      return response.data.data;
+      const response = await adminServices.getJabatanFungsional(page, search);
+
+      return response.data;
     },
   });
+
+  // delete data
+  const { mutate: deleteData } = useMutation({
+    mutationFn: (id: number) =>
+      deleteReferensiServices.deleteJabatanFungsional(id),
+    onSuccess: () => {
+      toast.success("Data berhasil dihapus");
+      queryClient.invalidateQueries({
+        queryKey: ["jabatan-fungsional-referensi"],
+      });
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    deleteData(id);
+  };
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
@@ -141,7 +164,7 @@ const JabatanFungsional = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.map((item: any) => (
+          {data?.data?.map((item: any) => (
             <TableRow key={item.id} className=" even:bg-gray-100">
               <TableCell className="text-center text-xs sm:text-sm">
                 {item.kode}
@@ -160,7 +183,12 @@ const JabatanFungsional = () => {
               </TableCell>
               <TableCell className="h-full">
                 <div className="flex justify-center items-center w-full h-full">
-                  <Link to="">
+                  <Link
+                    to={
+                      "/admin/referensi/kepegawaian/jabatan-fungsional/detail-jabatan-fungsional/edit-jabatan-fungsional/" +
+                      item.id
+                    }
+                  >
                     <Button
                       size="icon"
                       variant="ghost"
@@ -169,13 +197,20 @@ const JabatanFungsional = () => {
                       <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                     </Button>
                   </Link>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="cursor-pointer"
+                  <ConfirmDialog
+                    title="Hapus Data?"
+                    description="Apakah Anda yakin ingin menghapus data ini?"
+                    onConfirm={() => handleDelete(item.id)}
                   >
-                    <FaRegTrashAlt className="text-red-500" />
-                  </Button>
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                      className="cursor-pointer"
+                    >
+                      <FaRegTrashAlt className="text-red-500" />
+                    </Button>
+                  </ConfirmDialog>
                 </div>
               </TableCell>
             </TableRow>

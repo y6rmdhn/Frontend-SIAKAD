@@ -164,6 +164,36 @@ const patchDataServices = {
       `${endpoint.ADMIN}/validasi-penghargaan/batch/reject`,
       payload
     ),
+  approveDataPendidikanFormal: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datapendidikanformaladm/batch/approve`,
+      payload
+    ),
+  rejectDataPendidikanFormal: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datapendidikanformaladm/batch/reject`,
+      payload
+    ),
+  approveDataDiklat: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datapendidikanformaladm/batch/approve`,
+      payload
+    ),
+  rejectDataDiklat: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datapendidikanformaladm/batch/reject`,
+      payload
+    ),
+  approveDataRiwayatPekerjaan: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datariwayatpekerjaanadm/batch/approve`,
+      payload
+    ),
+  rejectDataRiwayatPekerjaan: (payload: IPayloadWithArray) =>
+    axiosInstance.patch(
+      `${endpoint.ADMIN}/datariwayatpekerjaanadm/batch/reject`,
+      payload
+    ),
 };
 
 export default patchDataServices;

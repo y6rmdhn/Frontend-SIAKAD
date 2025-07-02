@@ -115,6 +115,10 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/unit-kerja/${id}`, payload),
   berita: (id: number, payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/berita/${id}`, payload),
+  jabatanFungsional: (id: number, payload: any) =>
+    axiosInstance.put(`${endpoint.ADMIN}/jabatan-fungsional/${id}`, payload),
+  rumpunBidangIlmu: (id: number, payload: any) =>
+    axiosInstance.put(`${endpoint.ADMIN}/rumpun-bidang-ilmu/${id}`, payload),
 };
 
 export default putReferensiServices;

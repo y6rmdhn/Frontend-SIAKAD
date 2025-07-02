@@ -183,7 +183,7 @@ const DetailJabatanStruktural = () => {
               queryKey="jenis_jabatan_struktural_datariwayat"
               queryFn={dosenServices.getJabatanStrukturalSelect}
               itemValue="id"
-              itemLabel="jenis_jabatan_struktural"
+              itemLabel="singkatan"
             />
 
             <FormFieldInput
