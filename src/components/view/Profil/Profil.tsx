@@ -39,8 +39,8 @@ import {
 } from "@/components/ui/dialog";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 import { fileSchemaNew } from "../DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
+import environment from "@/config/environments";
 
-// Skema untuk form ganti password
 const passwordChangeSchema = z
   .object({
     password_lama: z.string().min(1, "Password lama harus diisi."),
@@ -54,21 +54,20 @@ const passwordChangeSchema = z
     path: ["password_baru_confirmation"],
   });
 
-// Skema untuk update profil
 const profileUpdateSchema = z.object({
   email_pegawai: z
     .string()
     .email("Email tidak valid.")
     .or(z.literal(""))
     .optional(),
-  file_foto: fileSchemaNew.optional(),
+  file_foto_url: fileSchemaNew.optional(),
 });
-
 interface UserProfile {
   email: string;
   name?: string;
   photo_url?: string;
   file_foto?: string;
+  file_foto_url?: string;
   email_pribadi?: string;
 }
 
@@ -83,7 +82,6 @@ const Profil = () => {
   const [isChangeProfileModalOpen, setIsChangeProfileModalOpen] =
     useState(false);
 
-  // Form untuk ganti password
   const passwordForm = useForm<z.infer<typeof passwordChangeSchema>>({
     resolver: zodResolver(passwordChangeSchema),
     defaultValues: {
@@ -93,16 +91,14 @@ const Profil = () => {
     },
   });
 
-  // Form untuk update profil
   const profileForm = useForm<z.infer<typeof profileUpdateSchema>>({
     resolver: zodResolver(profileUpdateSchema),
     defaultValues: {
       email_pegawai: "",
-      file_foto: undefined,
+      file_foto_url: undefined,
     },
   });
 
-  // Fetching data profil
   const { data: profileData, isLoading: isProfileLoading } =
     useQuery<UserProfile | null>({
       queryKey: ["profile"],
@@ -127,12 +123,11 @@ const Profil = () => {
       },
     });
 
-  // Update form profil dengan data yang di-fetch
   useEffect(() => {
     if (profileData) {
       profileForm.reset({
         email_pegawai: profileData.email,
-        file_foto: undefined, // Menggunakan undefined saat reset
+        file_foto_url: undefined,
       });
     }
   }, [profileData, profileForm]);
@@ -174,6 +169,8 @@ const Profil = () => {
         toast.success(response.data.message || "Profil berhasil diperbarui.");
         setIsChangeProfileModalOpen(false);
         queryClient.invalidateQueries({ queryKey: ["profile"] });
+        queryClient.invalidateQueries({ queryKey: ["profile-header"] });
+        queryClient.invalidateQueries({ queryKey: ["profile-header-desktop"] });
       },
       onError: (error: any) => {
         toast.error(
@@ -213,7 +210,6 @@ const Profil = () => {
     changePasswordMutation(values);
   };
 
-  // Fungsi submit untuk update profil (FINAL)
   const onSubmitProfileUpdate = (
     values: z.infer<typeof profileUpdateSchema>
   ) => {
@@ -223,12 +219,10 @@ const Profil = () => {
       formData.append("email_pegawai", values.email_pegawai);
     }
 
-    // Logika penanganan file yang aman
-    if (values.file_foto && values.file_foto.length > 0) {
-      formData.append("file_foto", values.file_foto[0]);
+    if (values.file_foto_url && values.file_foto_url.length > 0) {
+      formData.append("file_foto", values.file_foto_url[0]);
     }
 
-    // Cek apakah FormData benar-benar kosong
     if (!formData.entries().next().done) {
       updateProfileMutation(formData);
     } else {
@@ -285,9 +279,11 @@ const Profil = () => {
                 </Label>
                 <div className="sm:px-7">
                   <div className="ml-2 w-[120px] h-[120px] rounded-full bg-gray-300 flex items-center justify-center text-4xl text-white mb-3 overflow-hidden">
-                    {profileData?.file_foto ? (
+                    {/* --- START: FIX 5 --- */}
+                    {/* Menggunakan file_foto_url dan pengecekan yang aman */}
+                    {profileData?.file_foto_url ? (
                       <img
-                        src={profileData.file_foto}
+                        src={`${environment.API_IMAGE_URL}${profileData.file_foto_url}`}
                         alt="Profile"
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -300,6 +296,7 @@ const Profil = () => {
                     ) : (
                       <FaUser className="w-15 h-15" />
                     )}
+                    {/* --- END: FIX 5 --- */}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Dialog
@@ -313,7 +310,7 @@ const Profil = () => {
                           onClick={() => {
                             profileForm.reset({
                               email_pegawai: profileData?.email || "",
-                              file_foto: undefined,
+                              file_foto_url: undefined,
                             });
                           }}
                         >
@@ -344,11 +341,14 @@ const Profil = () => {
                               name="email_pegawai"
                               required={false}
                             />
+                            {/* --- START: FIX 6 --- */}
+                            {/* Mengubah nama field menjadi file_foto_url */}
                             <FormFieldInputFile
                               label="File Foto"
-                              name="file_foto"
+                              name="file_foto_url"
                               description="Masukan Foto"
                             />
+                            {/* --- END: FIX 6 --- */}
                             <DialogFooter>
                               <DialogClose asChild>
                                 <Button type="button" variant="outline">

@@ -25,6 +25,7 @@ import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
 import AvatarMobile from "@/components/blocks/AvatarMobile/AvatarMobile";
 import adminServices from "@/services/admin.services";
 import dosenServices from "@/services/dosen.services";
+import environment from "@/config/environments";
 
 const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -162,10 +163,12 @@ const Header = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel className="flex flex-col justify-center items-center">
                 <div className="w-20 h-20 overflow-hidden rounded-full mt-2 border-4 border-black/10">
-                  {profileData?.file_foto ? (
+                  {/* --- START: FIX --- */}
+                  {/* Conditionally render the image only when the URL is available */}
+                  {profileData?.file_foto_url ? (
                     <img
-                      src={profileData?.file_foto}
-                      alt={profileData?.nama}
+                      src={`${environment.API_IMAGE_URL}${profileData.file_foto_url}`}
+                      alt={profileData?.nama || "User Profile"}
                       className="w-full h-full object-cover object-center"
                     />
                   ) : (
@@ -175,6 +178,7 @@ const Header = () => {
                       </span>
                     </div>
                   )}
+                  {/* --- END: FIX --- */}
                 </div>
 
                 <div className="my-5 text-center">

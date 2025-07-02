@@ -15,6 +15,7 @@ import adminServices from "@/services/admin.services";
 import dosenServices from "@/services/dosen.services";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import environment from "@/config/environments";
 
 interface AvatarMobileProps {
   initials: string;
@@ -73,7 +74,17 @@ const AvatarMobile = ({ initials, user, logout }: AvatarMobileProps) => {
         className="flex gap-2 hover:bg-gray-100/30"
       >
         <Avatar className="border-black/30 border-2">
-          <AvatarImage src={profileData?.file_foto} alt="@shadcn" />
+          {/* --- START: FIX --- */}
+          {/* Conditionally set the src only when profileData and its properties are available */}
+          <AvatarImage
+            src={
+              profileData?.file_foto_url
+                ? `${environment.API_IMAGE_URL}${profileData.file_foto_url}`
+                : undefined
+            }
+            alt="@shadcn"
+          />
+          {/* --- END: FIX --- */}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <IoMdArrowDropdown className="w-4 h-4 text-white" />
@@ -120,7 +131,14 @@ const AvatarMobile = ({ initials, user, logout }: AvatarMobileProps) => {
                 >
                   <div className="flex justify-start items-center">
                     <Avatar className="border-black/30 border-2 w-12 h-12">
-                      <AvatarImage src={profileData?.file_foto} alt="@shadcn" />
+                      <AvatarImage
+                        src={
+                          profileData?.file_foto_url
+                            ? `${environment.API_IMAGE_URL}${profileData.file_foto_url}`
+                            : undefined
+                        }
+                        alt="@shadcn"
+                      />
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
 
