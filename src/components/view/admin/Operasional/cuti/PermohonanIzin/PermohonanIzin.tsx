@@ -411,7 +411,9 @@ const PermohonanIzin = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-center">
-                      <Link to={`/admin/permohonan-izin/detail/${item.id}`}>
+                      <Link
+                        to={`/admin/operasional/cuti/detail-permohonan-izin/${item.id}`}
+                      >
                         <Button size="icon" variant="ghost">
                           <IoEyeOutline className="text-blue-500" />
                         </Button>

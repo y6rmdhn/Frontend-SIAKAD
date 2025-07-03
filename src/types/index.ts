@@ -177,3 +177,28 @@ export interface RekapKehadiranParams {
   tanggal_awal?: string;
   tanggal_akhir?: string;
 }
+
+export interface PegawaiParams {
+  page?: string;
+  search?: string;
+  unit_kerja_id?: string;
+  status_pegawai?: string;
+  jenis_pegawai?: string;
+}
+
+export interface InputKehadiranParams {
+  page?: string;
+  search?: string;
+  tanggal?: string;
+  unit_kerja_id?: string;
+  jenis_kehadiran_id?: string;
+  status_presensi?: string;
+}
+
+export interface PegawaiParams {
+  page?: string;
+  search?: string;
+  unit_kerja_id?: string;
+  status_aktif_id?: string;
+  hubungan_kerja_id?: string;
+}

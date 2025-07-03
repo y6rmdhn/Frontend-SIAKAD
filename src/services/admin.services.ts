@@ -3,6 +3,7 @@ import endpoint from "./endpoint.constant";
 import {
   DiklatParams,
   HubunganKerjaParams,
+  InputKehadiranParams,
   JabatanAkademikParams,
   JabatanFungsionalParams,
   JabatanStrukturalParams,
@@ -116,13 +117,20 @@ const adminServices = {
   getDasboardAdmin: () =>
     axiosInstance.get(`${endpoint.ADMIN}/dashboard?unit_kerja_id=041001`),
 
-  getPegawaiAdminPage: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/pegawai`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getPegawaiAdminPage: (params?: any) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    Object.keys(cleanParams).forEach((key) => {
+      const K = key;
+      if (!cleanParams[K] || cleanParams[K] === "semua") {
+        delete cleanParams[K];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/pegawai`, {
+      params: cleanParams,
+    });
+  },
   getJabatanStrukturalReferensi: (page: any, search: string | undefined) =>
     axiosInstance.get(`${endpoint.ADMIN}/jabatan-struktural`, {
       params: {
@@ -300,13 +308,20 @@ const adminServices = {
         search: search,
       },
     }),
-  getInputKehadiran: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/input-presensi`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getInputKehadiran: (params: InputKehadiranParams) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    Object.keys(cleanParams).forEach((key) => {
+      const K = key as keyof InputKehadiranParams;
+      if (!cleanParams[K] || cleanParams[K] === "semua") {
+        delete cleanParams[K];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/input-presensi`, {
+      params: cleanParams,
+    });
+  },
   getPengajuanIzinAdmin: (params: PengajuanIzinParams) => {
     const cleanParams: Record<string, any> = { ...params };
 
@@ -886,6 +901,10 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/datapendidikanformaladm/${id}`),
   getRiwayatPekerjaanDetail: (id: string) =>
     axiosInstance.get(`${endpoint.ADMIN}/datariwayatpekerjaanadm/${id}`),
+  getPermohonanCutiDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/validasi-cuti/${id}`),
+  getPermohonanIzinDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/validasi-izin/${id}`),
 };
 
 export default adminServices;

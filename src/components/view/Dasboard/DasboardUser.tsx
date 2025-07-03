@@ -1,25 +1,22 @@
-import { HiUserGroup } from "react-icons/hi2";
-import { BsArrowUpRightCircle } from "react-icons/bs";
-import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
-import { FaAddressCard } from "react-icons/fa";
-import { PiWarningCircle } from "react-icons/pi";
-import { ChartLingkaran } from "@/components/commons/Charts/PieChart/ChartLingkaran";
-import { ChartPegawai } from "@/components/commons/Charts/ChartPegawai/ChartPegawai";
-import { Button } from "@/components/ui/button";
 import { Key, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { Link } from "react-router-dom";
-import { AbsensiModal } from "@/components/blocks/AbsensiModal/AbsensiModal.tsx";
-import dosenServices from "@/services/dosen.services.ts";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { parseISO, format } from "date-fns";
+
+// UI Components
+import { HiUserGroup, HiOutlineClipboardDocumentList } from "react-icons/hi2";
+import { BsArrowUpRightCircle } from "react-icons/bs";
+import { FaAddressCard } from "react-icons/fa";
+import { PiWarningCircle } from "react-icons/pi";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog.tsx";
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -27,18 +24,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table.tsx";
-import { parseISO, format } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton.tsx";
+} from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { type ChartConfig } from "@/components/ui/chart";
 
-// Tipe data untuk status absen
+// Custom Components & Services
+import { ChartLingkaran } from "@/components/commons/Charts/PieChart/ChartLingkaran";
+import { ChartPegawai } from "@/components/commons/Charts/ChartPegawai/ChartPegawai";
+import { AbsensiModal } from "@/components/blocks/AbsensiModal/AbsensiModal";
+import { RootState } from "@/store/store";
+import dosenServices from "@/services/dosen.services.ts";
+
+// --- START DEFINISI TIPE DATA ---
 interface StatusAbsen {
   sudah_absen_masuk: boolean;
   sudah_absen_keluar: boolean;
 }
 
-// Tipe data untuk riwayat absen
 interface HistoryAbsenItem {
   id: Key;
   tanggal: string;
@@ -46,11 +48,17 @@ interface HistoryAbsenItem {
   jam_keluar: string;
 }
 
+interface SlipGaji {
+  id: number;
+  periode: { nama_periode: string };
+  total_pendapatan: string;
+  total_potongan: string;
+  gaji_bersih: string;
+}
+// --- END DEFINISI TIPE DATA ---
+
 export const kehadiranChartConfig = {
-  Hadir: {
-    label: "Hadir",
-    color: "hsl(var(--chart-2))",
-  },
+  Hadir: { label: "Hadir", color: "hsl(var(--chart-2))" },
   "Tidak Hadir (Izin, Sakit, Cuti, Alpa)": {
     label: "Tidak Hadir",
     color: "hsl(var(--chart-3))",
@@ -58,54 +66,50 @@ export const kehadiranChartConfig = {
 } satisfies ChartConfig;
 
 const DasboardUser = () => {
-  const [clkBtn, setClkBtn] = useState<string | null>(null);
-  const [_, setDetail] = useState<string | null>(null);
   const userSelector = useSelector((state: RootState) => state.user);
   const [isAbsenModalOpen, setIsAbsenModalOpen] = useState(false);
   const [absenType, setAbsenType] = useState<"masuk" | "keluar">("masuk");
   const queryClient = useQueryClient();
 
-  // get dasboard user
-  const { data } = useQuery({
-    queryKey: ["dasboard-user", absenType],
-    queryFn: async () => {
-      const response = await dosenServices.getDasboardUser();
-      return response.data;
-    },
+  // --- START QUERIES ---
+  const { data: dataDasbor } = useQuery({
+    queryKey: ["dasboard-user"],
+    queryFn: () => dosenServices.getDasboardUser().then((res) => res.data),
   });
 
-  // get dasboard user
   const { data: dataGrafik, isLoading: isGrafikLoading } = useQuery({
-    queryKey: ["dasboard-user-grafik", absenType],
-    queryFn: async () => {
-      const response = await dosenServices.getDasboardGrafik();
-      return response.data;
-    },
+    queryKey: ["dasboard-user-grafik"],
+    queryFn: () => dosenServices.getDasboardGrafik().then((res) => res.data),
   });
 
-  // get data status absen
   const { data: statusAbsen, isLoading: isStatusLoading } =
     useQuery<StatusAbsen>({
       queryKey: ["status-absen"],
-      queryFn: async () => {
-        const response = await dosenServices.getStatusAbsen();
-        return response.data.data;
-      },
+      queryFn: () =>
+        dosenServices.getStatusAbsen().then((res) => res.data.data),
     });
 
-  // get data history absensi
   const { data: historyAbsen, isLoading: isHistoryLoading } = useQuery<
     HistoryAbsenItem[]
   >({
-    queryKey: ["history-absen", absenType],
-    queryFn: async () => {
-      const response = await dosenServices.getHistoryAbsensi();
-      return response.data.data;
-    },
+    queryKey: ["history-absen"],
+    queryFn: () =>
+      dosenServices.getHistoryAbsensi().then((res) => res.data.data),
   });
 
+  // Query baru untuk mengambil data slip gaji
+  const { data: slipGajiData, isLoading: isGajiLoading } = useQuery<SlipGaji>({
+    queryKey: ["slip-gaji-terbaru"],
+    queryFn: async () => {
+      const response = await dosenServices.getSlipGaji();
+      // Mengambil data gaji pertama dari array
+      return response.data.data[0];
+    },
+  });
+  // --- END QUERIES ---
+
   const statistikKehadiranData = useMemo(() => {
-    const grafik = data?.statistik_kehadiran?.grafik;
+    const grafik = dataDasbor?.statistik_kehadiran?.grafik;
     if (!grafik) return [];
     const colors = ["#32A14C", "#FDBA74", "#FF8042", "#FFBB28"];
     return grafik.labels.map((label: string, index: number) => ({
@@ -113,14 +117,19 @@ const DasboardUser = () => {
       value: grafik.data[index],
       fill: colors[index % colors.length],
     }));
-  }, [data]);
+  }, [dataDasbor]);
 
-  const sudahMasuk = statusAbsen?.sudah_absen_masuk;
-  const sudahKeluar = statusAbsen?.sudah_absen_keluar;
+  const formatRupiah = (angka: string | number | undefined) => {
+    if (angka === undefined || angka === null) return "Rp 0";
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(Number(angka));
+  };
 
   const getGreeting = () => {
-    const now = new Date();
-    const hour = now.getHours();
+    const hour = new Date().getHours();
     if (hour >= 4 && hour < 12) return "Selamat Pagi";
     if (hour >= 12 && hour < 15) return "Selamat Siang";
     if (hour >= 15 && hour < 18) return "Selamat Sore";
@@ -151,7 +160,7 @@ const DasboardUser = () => {
           <div className="lg:w-[60%]">
             <ChartLingkaran
               title="Statistik Kehadiran"
-              subtitle={data?.statistik_kehadiran?.rentang_tanggal}
+              subtitle={dataDasbor?.statistik_kehadiran?.rentang_tanggal}
               data={statistikKehadiranData}
               dataKey="value"
               nameKey="name"
@@ -160,46 +169,62 @@ const DasboardUser = () => {
             />
           </div>
 
-          {/* Gaji */}
+          {/* === BAGIAN GAJI (TELAH DIPERBARUI) === */}
           <Link
-            to="/penggajian"
-            className="w-full  max-w-sm flex flex-col gap-4 cursor-pointer"
+            to={"/penggajian/" + slipGajiData?.id}
+            className="w-full max-w-sm flex flex-col gap-4 cursor-pointer"
           >
-            {/* Kartu Gaji */}
-            <div className=" h-full bg-gradient-to-r from-teal-600 to-green-600 rounded-xl text-white p-4 hover:brightness-110 transition">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm ">Total Gaji per bulan</p>
-                  <p className="text-2xl font-bold">Rp 2.000.000</p>
+            {isGajiLoading ? (
+              <>
+                <Skeleton className="h-[76px] w-full rounded-xl" />
+                <Skeleton className="h-[178px] w-full rounded-xl" />
+              </>
+            ) : (
+              <>
+                {/* Kartu Gaji */}
+                <div className="h-full bg-gradient-to-r from-teal-600 to-green-600 rounded-xl text-white p-4 hover:brightness-110 transition">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm ">
+                        {slipGajiData?.periode.nama_periode || "Gaji Bulan Ini"}
+                      </p>
+                      <p className="text-2xl font-bold">
+                        {formatRupiah(slipGajiData?.gaji_bersih)}
+                      </p>
+                    </div>
+                    <BsArrowUpRightCircle size={24} />
+                  </div>
                 </div>
-                <BsArrowUpRightCircle size={24} />
-              </div>
-            </div>
 
-            {/* Detail Gaji */}
-            <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
-              <h3 className="text-lg font-semibold mb-2">Detail Penggajian</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Gaji Pokok</span>
-                  <span>Rp 1.500.000</span>
+                {/* Detail Gaji */}
+                <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Detail Penggajian
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Total Pendapatan</span>
+                      <span>
+                        {formatRupiah(slipGajiData?.total_pendapatan)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-red-600">
+                      <span>Total Potongan</span>
+                      <span>
+                        - {formatRupiah(slipGajiData?.total_potongan)}
+                      </span>
+                    </div>
+                    <hr />
+                    <div className="flex justify-between font-bold text-base pt-2">
+                      <span>Gaji Bersih</span>
+                      <span>{formatRupiah(slipGajiData?.gaji_bersih)}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Tunjangan</span>
-                  <span>Rp 700.000</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Potongan</span>
-                  <span>- Rp 200.000</span>
-                </div>
-                <hr />
-                <div className="flex justify-between font-bold text-base pt-2">
-                  <span>Total Gaji</span>
-                  <span>Rp 2.000.000</span>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
           </Link>
+          {/* === END BAGIAN GAJI === */}
         </div>
         <div className="w-auto">
           <h1 className="text-xl font-bold">Evaluasi Kerja</h1>
@@ -215,21 +240,21 @@ const DasboardUser = () => {
           <div className="flex flex-col lg:flex-row w-full gap-5 md:gap-2">
             {isStatusLoading ? (
               <Skeleton className="h-10 flex-1" />
-            ) : !sudahMasuk ? (
+            ) : !statusAbsen?.sudah_absen_masuk ? (
               <Button
                 onClick={() => handleBukaModal("masuk")}
-                className="flex-1 bg-[#106D63] hover:bg-[#106D63] text-white flex items-center justify-center gap-2"
+                className="flex-1 bg-[#106D63] hover:bg-[#0c524a] text-white"
               >
-                <HiOutlineClipboardDocumentList className="text-lg" />
+                <HiOutlineClipboardDocumentList className="mr-2 text-lg" />{" "}
                 Absen Masuk
               </Button>
-            ) : sudahMasuk && !sudahKeluar ? (
+            ) : statusAbsen?.sudah_absen_masuk &&
+              !statusAbsen?.sudah_absen_keluar ? (
               <Button
                 onClick={() => handleBukaModal("keluar")}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
               >
-                <FaAddressCard className="text-lg" />
-                Absen Keluar
+                <FaAddressCard className="mr-2 text-lg" /> Absen Keluar
               </Button>
             ) : (
               <Button disabled className="flex-1">
@@ -239,38 +264,26 @@ const DasboardUser = () => {
 
             <Dialog>
               <DialogTrigger asChild>
-                <Button
-                  onClick={() => setClkBtn("riwayat")}
-                  className={
-                    clkBtn === "riwayat"
-                      ? "w-full lg:w-40 bg-[#106D63] text-white hover:bg-[#106D63] hover:text-white cursor-pointer flex items-center justify-center gap-2"
-                      : "w-full lg:w-40 bg-white border-1 border-[#106D63] text-[#106D63] hover:bg-white cursor-pointer flex items-center justify-center gap-2"
-                  }
-                >
-                  <FaAddressCard className="text-lg" />
-                  Riwayat Absen
+                <Button variant="outline" className="flex-1">
+                  <FaAddressCard className="mr-2 text-lg" /> Riwayat Absen
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle className="text-center text-sm">
-                    Riwayat Hadir
+                  <DialogTitle className="text-center text-lg">
+                    Riwayat Kehadiran
                   </DialogTitle>
-                  <Table className="table-auto text-xs lg:text-sm">
+                  <Table>
                     <TableHeader>
-                      <TableRow className="bg-[#002E5A] ">
-                        <TableHead className="text-center text-white border">
-                          Tanggal
-                        </TableHead>
-                        <TableHead className="text-center text-white border">
-                          Jam Masuk
-                        </TableHead>
-                        <TableHead className="text-center text-white border">
+                      <TableRow>
+                        <TableHead className="text-center">Tanggal</TableHead>
+                        <TableHead className="text-center">Jam Masuk</TableHead>
+                        <TableHead className="text-center">
                           Jam Keluar
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    <TableBody className="divide-y divide-gray-200">
+                    <TableBody>
                       {isHistoryLoading
                         ? [...Array(3)].map((_, i) => (
                             <TableRow key={i}>
@@ -280,10 +293,7 @@ const DasboardUser = () => {
                             </TableRow>
                           ))
                         : historyAbsen?.map((item) => (
-                            <TableRow
-                              key={item.id}
-                              className=" even:bg-gray-100"
-                            >
+                            <TableRow key={item.id}>
                               <TableCell className="text-center">
                                 {format(parseISO(item.tanggal), "dd-MM-yyyy")}
                               </TableCell>
@@ -304,7 +314,7 @@ const DasboardUser = () => {
 
           <div className="drop-shadow-md bg-white p-4 rounded-lg">
             <h1 className="text-xl font-semibold mb-2">Informasi dan Status</h1>
-            <div className=" p-4">
+            <div className="p-4">
               <div className="grid grid-cols-3 gap-4 mb-3 text-sm font-medium">
                 <span>Hari</span>
                 <span>Tanggal</span>
@@ -313,7 +323,7 @@ const DasboardUser = () => {
               <div className="flex items-center justify-center gap-2 border-t-2">
                 <PiWarningCircle className="bg-orange-400 text-white w-4 h-4 rounded-full" />
                 <p className="text-center text-xs py-4 text-gray-500">
-                  {data?.status_hari_ini}
+                  {dataDasbor?.status_hari_ini}
                 </p>
               </div>
             </div>
@@ -321,17 +331,14 @@ const DasboardUser = () => {
 
           <div className="drop-shadow-md bg-white p-4 rounded-lg">
             <h1 className="text-xl font-semibold mb-2">Data Riwayat</h1>
-            <div className="flex items-center justify-center text-center border-t-2 gap-2">
-              {!data?.persentase_riwayat.is_lengkap && (
-                <div className="w-full flex gap-2 mt-4">
-                  <p className="text-gray-500 text-sm">
-                    {data?.persentase_riwayat.pesan}
+            <div className="border-t-2 pt-4">
+              {!dataDasbor?.persentase_riwayat.is_lengkap && (
+                <div className="w-full flex gap-2 items-center">
+                  <p className="text-gray-500 text-sm flex-1">
+                    {dataDasbor?.persentase_riwayat.pesan}
                   </p>
                   <Link to="/tahapan-data-riwayat">
-                    <Button
-                      onClick={() => setDetail("absen")}
-                      className="bg-[#106D63] cursor-pointer"
-                    >
+                    <Button className="bg-[#106D63] hover:bg-[#0c524a] cursor-pointer">
                       Lihat Detail
                     </Button>
                   </Link>
@@ -345,19 +352,21 @@ const DasboardUser = () => {
               Berita & Pemberitahuan
             </h1>
             <div className="border-t-2">
-              {data?.berita_dan_pemberitahuan.map((item: any, index: any) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col gap-2 p-4 border-b last:border-b-0"
-                >
-                  <p className="text-sm">
-                    {index + 1}. {item.judul}
-                  </p>
-                  <p className="text-muted-foreground text-xs">
-                    {item.tanggal}
-                  </p>
-                </div>
-              ))}
+              {dataDasbor?.berita_dan_pemberitahuan.map(
+                (item: any, index: any) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-col gap-2 p-4 border-b last:border-b-0"
+                  >
+                    <p className="text-sm">
+                      {index + 1}. {item.judul}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {item.tanggal}
+                    </p>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>

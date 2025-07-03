@@ -373,6 +373,10 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
   getBeritaDetail: (id: string) =>
     axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
+  getSlipGaji: () => axiosInstance.get(`${endpoint.DOSEN}/payroll/slips`),
+  getSlipGajiDetail: (id: string) => {
+    return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips/${id}`);
+  },
 };
 
 export default dosenServices;

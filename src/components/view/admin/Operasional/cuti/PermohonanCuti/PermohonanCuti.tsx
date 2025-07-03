@@ -394,7 +394,9 @@ const PermohonanCuti = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-center">
-                      <Link to={`/admin/permohonan-cuti/detail/${item.id}`}>
+                      <Link
+                        to={`/admin/operasional/cuti/detail-permohonan-cuti/${item.id}`}
+                      >
                         <Button size="icon" variant="ghost">
                           <IoEyeOutline className="text-blue-500" />
                         </Button>
@@ -435,13 +437,6 @@ const PermohonanCuti = () => {
                 onSubmit={form.handleSubmit(handleSubmitReject)}
               >
                 <div className="py-4">
-                  {/*
-                    FIXME: The 'isTextarea' prop caused an error.
-                    This means the FormFieldInput component does not accept a prop with that name.
-                    Check the definition of your custom FormFieldInput component
-                    and replace 'isTextarea' with the correct prop to render a textarea,
-                    for example: `type="textarea"` or `as="textarea"`.
-                  */}
                   <FormFieldInput
                     form={form}
                     name="keterangan_admin"

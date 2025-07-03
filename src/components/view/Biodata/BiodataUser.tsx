@@ -88,6 +88,8 @@ const BiodataUser = () => {
     queryKey: ["biodata-dosen"],
     queryFn: async () => {
       const response = await dosenServices.getBiodataDosen();
+
+      console.log(response.data.data);
       return response.data.data;
     },
   });

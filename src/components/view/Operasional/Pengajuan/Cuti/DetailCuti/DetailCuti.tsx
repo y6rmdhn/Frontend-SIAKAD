@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import dosenServices from "@/services/dosen.services";
+import { useEffect } from "react"; // Import useEffect
 
 const cutiSchema = z.object({
   jenis_cuti_id: z.string().min(1, { message: "Jenis cuti harus diisi." }),
@@ -49,6 +50,34 @@ const DetailCuti = () => {
     },
   });
 
+  // Get watch and setValue from form to manage field values dynamically
+  const { watch, setValue } = form;
+  const tglMulai = watch("tgl_mulai");
+  const tglSelesai = watch("tgl_selesai");
+
+  // Effect to calculate leave duration when dates change
+  useEffect(() => {
+    if (tglMulai && tglSelesai) {
+      const startDate = new Date(tglMulai);
+      const endDate = new Date(tglSelesai);
+
+      // Ensure dates are valid and end date is not before start date
+      if (
+        !isNaN(startDate.getTime()) &&
+        !isNaN(endDate.getTime()) &&
+        endDate >= startDate
+      ) {
+        const diffTime = endDate.getTime() - startDate.getTime();
+        // Calculate days and add 1 for inclusive count
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        setValue("jumlah_cuti", String(diffDays));
+      } else {
+        // Clear the value if dates are invalid
+        setValue("jumlah_cuti", "");
+      }
+    }
+  }, [tglMulai, tglSelesai, setValue]);
+
   // add data
   const { mutate } = useMutation({
     mutationFn: (formData: FormData) =>
@@ -69,7 +98,6 @@ const DetailCuti = () => {
 
   const handleSubmitData = (values: CutiSchema) => {
     const formData = new FormData();
-
     const { file_cuti, ...otherValues } = values;
 
     if (file_cuti && file_cuti.length > 0) {
@@ -136,7 +164,7 @@ const DetailCuti = () => {
                       />
                       <FormFieldInput
                         form={form}
-                        label="Tagnggal Mulai"
+                        label="Tanggal Mulai" // Typo fixed
                         name="tgl_mulai"
                         type="date"
                         labelStyle="text-[#3F6FA9]"
@@ -152,13 +180,14 @@ const DetailCuti = () => {
                         required={true}
                       />
 
+                      {/* Changed to be disabled (read-only) */}
                       <FormFieldInput
                         form={form}
                         label="Jumlah Cuti"
                         name="jumlah_cuti"
                         type="number"
                         labelStyle="text-[#3F6FA9]"
-                        required={false}
+                        readOnly
                       />
                     </div>
 

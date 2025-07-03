@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 // UI & Custom Components
-import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -20,13 +23,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Form } from "@/components/ui/form";
+import CustomCard from "@/components/blocks/Card";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { Form } from "@/components/ui/form";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
+import Title from "@/components/blocks/Title";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Icons
 import { MdEdit } from "react-icons/md";
@@ -34,58 +40,34 @@ import { FaFileImport, FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { IoSaveOutline } from "react-icons/io5";
 import { RiResetLeftFill } from "react-icons/ri";
 
-// Services & Constants
+// Services
 import adminServices from "@/services/admin.services";
 import potsReferensiServices from "@/services/create.admin.referensi";
 import deleteReferensiServices from "@/services/admin.delete.referensi";
 import putReferensiServices from "@/services/put.admin.referensi";
-import unitKerjaOptions from "@/constant/dummyFilter";
 
+// --- START ZOD SCHEMA & TYPES ---
 const timeFormatRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 export const inputPresensiSchema = z
   .object({
     id: z.number().optional(),
-    pegawai_id: z.coerce
-      .number({
-        required_error: "Pegawai harus dipilih.",
-        invalid_type_error: "Pegawai harus dipilih.",
-      })
-      .min(1, { message: "Pegawai harus dipilih." }),
-
-    tanggal_absensi: z
-      .string({
-        required_error: "Tanggal absensi harus diisi.",
-      })
-      .nonempty("Tanggal absensi tidak boleh kosong."),
-
+    pegawai_id: z.coerce.number().min(1, "Pegawai harus dipilih."),
+    tanggal_absensi: z.string().nonempty("Tanggal absensi harus diisi."),
     jenis_kehadiran_id: z.coerce
-      .number({
-        required_error: "Status kehadiran harus dipilih.",
-        invalid_type_error: "Status kehadiran harus dipilih.",
-      })
-      .min(1, { message: "Status kehadiran harus dipilih." }),
-
+      .number()
+      .min(1, "Status kehadiran harus dipilih."),
     jam_masuk: z
       .string()
-      .regex(timeFormatRegex, {
-        message: "Format jam harus HH:MM (contoh: 08:00).",
-      })
+      .regex(timeFormatRegex, "Format jam harus HH:MM.")
       .optional()
       .or(z.literal("")),
-
     jam_keluar: z
       .string()
-      .regex(timeFormatRegex, {
-        message: "Format jam harus HH:MM (contoh: 17:00).",
-      })
+      .regex(timeFormatRegex, "Format jam harus HH:MM.")
       .optional()
       .or(z.literal("")),
-
-    keterangan: z
-      .string()
-      .max(255, "Keterangan tidak boleh lebih dari 255 karakter.")
-      .optional(),
+    keterangan: z.string().max(255, "Keterangan maks 255 karakter.").optional(),
   })
   .refine(
     (data) => {
@@ -94,138 +76,163 @@ export const inputPresensiSchema = z
       }
       return true;
     },
-    {
-      message: "Jam keluar harus setelah jam masuk.",
-      path: ["jam_keluar"],
-    }
+    { message: "Jam keluar harus setelah jam masuk.", path: ["jam_keluar"] }
   );
 
 export type InputPresensiFormValue = z.infer<typeof inputPresensiSchema>;
 
-// Tipe data untuk satu item presensi dari API
 interface PresensiData {
   id: number;
   nip: string;
   pegawai_id: number;
   nama_pegawai: string;
   status: string;
-  jenis_kehadiran: {
-    id: number;
-    nama_jenis: string;
-  };
+  jenis_kehadiran: { id: number; nama_jenis: string };
   tanggal_absensi: string;
   jam_masuk: string;
   jam_keluar: string;
   keterangan: string;
 }
 
-// Tipe data untuk seluruh respons API yang dipaginasi
-interface PaginatedPresensiResponse {
+interface PaginatedData {
   data: PresensiData[];
-  last_page: number;
-  filters_applied: {
-    tanggal: string;
+  pagination: {
+    current_page: number;
+    last_page: number;
   };
+  table_columns: any[];
+  filters_applied: { tanggal: string };
+  filter_options: any;
 }
+// --- END ZOD SCHEMA & TYPES ---
 
 const InputKehadiran = () => {
   const [searchParam, setSearchParam] = useSearchParams();
-  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
-  const [debouncedInput] = useDebounce(searchData, 500);
-
   const queryClient = useQueryClient();
+
+  // --- State & URL Params ---
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedSearch] = useDebounce(searchData, 500);
   const [isAddData, setIsAddData] = useState<boolean>(false);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(
-    Number(searchParam.get("page") || 1)
-  );
+
+  const currentPage = searchParam.get("page") || "1";
+  const tanggalFilter = searchParam.get("tanggal") || "";
+  const unitKerjaFilter = searchParam.get("unit_kerja_id") || "";
+  const jenisKehadiranFilter = searchParam.get("jenis_kehadiran_id") || "";
+  const statusPresensiFilter = searchParam.get("status_presensi") || "";
 
   const form = useForm<InputPresensiFormValue>({
     resolver: zodResolver(inputPresensiSchema),
     defaultValues: {
-      pegawai_id: undefined,
-      tanggal_absensi: "",
-      jenis_kehadiran_id: undefined,
-      jam_masuk: "",
-      jam_keluar: "",
-      keterangan: "",
+      tanggal_absensi: new Date().toISOString().split("T")[0],
     },
   });
 
-  // Mengambil data
-  const { data } = useQuery<PaginatedPresensiResponse>({
+  // --- Data Fetching ---
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: [
-      "input-presensi-operasional",
-      searchParam.get("page"),
-      searchParam.get("search"),
+      "input-presensi",
+      currentPage,
+      debouncedSearch,
+      tanggalFilter,
+      unitKerjaFilter,
+      jenisKehadiranFilter,
+      statusPresensiFilter,
     ],
     queryFn: async () => {
-      const page = searchParam.get("page") || "1";
-      const search = searchParam.get("search") || "";
-      const response = await adminServices.getInputKehadiran(page, search);
-      return response.data;
+      const response = await adminServices.getInputKehadiran({
+        page: currentPage,
+        search: debouncedSearch,
+        tanggal: tanggalFilter,
+        unit_kerja_id: unitKerjaFilter,
+        jenis_kehadiran_id: jenisKehadiranFilter,
+        status_presensi: statusPresensiFilter,
+      });
+      return response.data as PaginatedData;
     },
+    placeholderData: keepPreviousData,
   });
 
-  // Menambah data
+  // --- Memoize Filter Options ---
+  const filterOptions = useMemo(() => {
+    const options = data?.filter_options || {};
+    return {
+      unitKerja:
+        options.unit_kerja?.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.label,
+        })) || [],
+      jenisKehadiran:
+        options.jenis_kehadiran?.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.label,
+        })) || [],
+      statusPresensi:
+        options.status_presensi?.map((opt: any) => ({
+          value: opt.value,
+          label: opt.label,
+        })) || [],
+    };
+  }, [data]);
+
+  // --- Data Mutations ---
   const { mutate: postData } = useMutation({
     mutationFn: (data: InputPresensiFormValue) =>
       potsReferensiServices.inputPresensi(data),
     onSuccess: () => {
-      form.reset();
       toast.success("Berhasil menambahkan data");
-      setIsAddData(false);
-      queryClient.invalidateQueries({
-        queryKey: ["input-presensi-operasional"],
-      });
+      handleCancel();
+      queryClient.invalidateQueries({ queryKey: ["input-presensi"] });
     },
+    onError: (err: any) =>
+      toast.error(
+        `Gagal: ${err.response?.data?.message || "Terjadi kesalahan"}`
+      ),
   });
 
-  // Mengedit data
   const { mutate: putData } = useMutation({
     mutationFn: (data: InputPresensiFormValue) =>
       putReferensiServices.inputPresensi(data.id!, data),
     onSuccess: () => {
       toast.success("Data berhasil diedit");
-      setIsEditMode(false);
-      setIsAddData(false);
-      setEditingItemId(null);
-      form.reset();
-      queryClient.invalidateQueries({
-        queryKey: ["input-presensi-operasional"],
-      });
+      handleCancel();
+      queryClient.invalidateQueries({ queryKey: ["input-presensi"] });
     },
+    onError: (err: any) =>
+      toast.error(
+        `Gagal: ${err.response?.data?.message || "Terjadi kesalahan"}`
+      ),
   });
 
-  // Menghapus data
-  const { mutate: deleteEselon } = useMutation({
+  const { mutate: deleteMutation } = useMutation({
     mutationFn: (id: number) =>
       deleteReferensiServices.deteleDataInputPresensi(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
-      queryClient.invalidateQueries({
-        queryKey: ["input-presensi-operasional"],
-      });
-      if (editingItemId) {
-        form.reset();
-        setEditingItemId(null);
-        setIsEditMode(false);
-        setIsAddData(false);
-      }
+      handleCancel();
+      queryClient.invalidateQueries({ queryKey: ["input-presensi"] });
     },
+    onError: (err: any) =>
+      toast.error(
+        `Gagal: ${err.response?.data?.message || "Terjadi kesalahan"}`
+      ),
   });
 
-  const handleDelete = (id: number) => {
-    deleteEselon(id);
+  // --- Event Handlers ---
+  const handleUrlChange = (paramName: string, value: string) => {
+    const newSearchParams = new URLSearchParams(searchParam);
+    if (value) {
+      newSearchParams.set(paramName, value);
+    } else {
+      newSearchParams.delete(paramName);
+    }
+    if (paramName !== "page") newSearchParams.set("page", "1");
+    setSearchParam(newSearchParams);
   };
 
   const handleSubmitData = (values: InputPresensiFormValue) => {
-    if (isEditMode && editingItemId) {
-      putData(values);
-    } else {
-      postData(values);
-    }
+    editingItemId ? putData(values) : postData(values);
   };
 
   const handleEditItem = (item: PresensiData) => {
@@ -238,340 +245,288 @@ const InputKehadiran = () => {
       jam_keluar: item.jam_keluar,
       keterangan: item.keterangan,
     });
-    setIsEditMode(true);
-    setEditingItemId(item.id ?? null);
+    setEditingItemId(item.id);
     setIsAddData(true);
-    if (Number(searchParam.get("page")) !== 1) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleCancel = () => {
-    form.reset();
-    setIsEditMode(false);
+    form.reset({
+      tanggal_absensi: tanggalFilter || new Date().toISOString().split("T")[0],
+    });
     setEditingItemId(null);
     setIsAddData(false);
   };
 
+  // --- Effects ---
   useEffect(() => {
-    const newSearchParam = new URLSearchParams(searchParam);
-    if (debouncedInput.length > 3) {
-      newSearchParam.set("search", debouncedInput);
-      newSearchParam.set("page", "1");
-    } else {
-      newSearchParam.delete("search");
-    }
-    if (searchParam.toString() !== newSearchParam.toString()) {
-      setSearchParam(newSearchParam);
-    }
-  }, [debouncedInput, searchParam, setSearchParam]);
-
-  useEffect(() => {
-    const page = Number(searchParam.get("page") || 1);
-    if (page !== currentPage) {
-      setCurrentPage(page);
-    }
-  }, [searchParam, currentPage]);
+    handleUrlChange("search", debouncedSearch);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     if (!searchParam.get("page")) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", "1");
-      setSearchParam(newSearchParam);
+      handleUrlChange("page", "1");
     }
-  }, [searchParam, setSearchParam]);
+    if (!tanggalFilter && data?.filters_applied?.tanggal) {
+      handleUrlChange("tanggal", data.filters_applied.tanggal);
+    }
+  }, [data]);
 
-  useEffect(() => {
-    if (Number(searchParam.get("page")) < 1) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", "1");
-      setSearchParam(newSearchParam);
-    }
-  }, [searchParam, setSearchParam]);
+  // --- Loading & Error State ---
+  if (isLoading && !data) {
+    return (
+      <div className="mt-10 mb-20 space-y-6">
+        <Title
+          title="Input Presensi"
+          subTitle="Manajemen Input Presensi Harian"
+        />
+        <div className="p-6 border rounded-lg mt-6">
+          <Skeleton className="h-24 w-full" />
+        </div>
+        <div className="mt-10 space-y-2">
+          {[...Array(10)].map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
-    ) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", data.last_page.toString());
-      setSearchParam(newSearchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
+  if (isError)
+    return (
+      <div className="text-center mt-20 text-red-500">
+        Gagal memuat data: {(error as Error).message}
+      </div>
+    );
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-lg sm:text-2xl font-normal">Input Presensi</h1>
+      <Title
+        title="Input Presensi"
+        subTitle="Manajemen Input Presensi Harian"
+      />
+
+      {/* Filter Card */}
       <CustomCard
+        title="Filter Data"
         actions={
-          <div className="grid grid-rows-3 md:grid-rows-2 grid-flow-col gap-6">
-            <div className="flex md:flex-col flex-col lg:flex-row">
-              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
-              <SelectFilter
-                classname="w-full md:w-32 "
-                options={unitKerjaOptions}
-                placeholder="--Semua--"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex flex-col gap-2">
+              <Input
+                type="date"
+                value={tanggalFilter}
+                onChange={(e) => handleUrlChange("tanggal", e.target.value)}
               />
             </div>
-            <div className="flex md:flex-col flex-col lg:flex-row">
-              <Label className="w-full text-[#FDA31A]">Tanggal</Label>
-              <Input type="date" className="w-60 sm:w-full" />
-            </div>
-            <div className="flex md:flex-col flex-col lg:flex-row">
-              <Label className="w-full text-[#FDA31A]">Tanggal</Label>
-              <SelectFilter
-                classname="w-full md:w-32 "
-                options={unitKerjaOptions}
-                placeholder="--Semua--"
-              />
-            </div>
+            <SelectFilter
+              label="Unit Kerja"
+              placeholder="-- Semua Unit --"
+              options={filterOptions.unitKerja}
+              value={unitKerjaFilter}
+              onValueChange={(v) => handleUrlChange("unit_kerja_id", v)}
+            />
+            <SelectFilter
+              label="Jenis Kehadiran"
+              placeholder="-- Semua Jenis --"
+              options={filterOptions.jenisKehadiran}
+              value={jenisKehadiranFilter}
+              onValueChange={(v) => handleUrlChange("jenis_kehadiran_id", v)}
+            />
+            <SelectFilter
+              label="Status Presensi"
+              placeholder="-- Semua Status --"
+              options={filterOptions.statusPresensi}
+              value={statusPresensiFilter}
+              onValueChange={(v) => handleUrlChange("status_presensi", v)}
+            />
           </div>
         }
       />
+
+      {/* Form Tambah/Edit */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitData)}>
-          <div className="w-full flex flex-col lg:flex-row justify-between mt-6">
-            <div className="mt-10 grid grid-rows-2 sm:flex gap-4">
-              <SelectFilter
-                classname="w-full md:w-80"
-                options={unitKerjaOptions}
-                placeholder="--Semua--"
-              />
-              <SearchInput
-                value={searchData}
-                onChange={(e) => setSearchData(e.target.value)}
-              />
-            </div>
-            <div className="w-full grid sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:flex lg:w-auto">
-              <div className="w-full lg:w-auto">
-                <Button
-                  type="button"
-                  onClick={() => {
-                    if (!isEditMode) {
-                      form.reset({
-                        id: 0,
-                        pegawai_id: undefined,
-                        tanggal_absensi: "",
-                        jenis_kehadiran_id: undefined,
-                        jam_masuk: "",
-                        jam_keluar: "",
-                        keterangan: "",
-                      });
-                      setSearchParam(searchParam);
-                      setIsAddData(true);
-                      searchParam.set("page", "1");
-                    }
-                  }}
-                  className={`cursor-pointer ${
-                    isEditMode
-                      ? "bg-gray-400"
-                      : "bg-green-light-uika hover:bg-[#329C59]"
-                  }`}
-                  disabled={isEditMode}
-                >
-                  <FaPlus className="w-4! h-4! text-white" />
-                  Tambah
+          {isAddData && (
+            <CustomCard
+              title={
+                editingItemId ? "Edit Data Presensi" : "Tambah Data Presensi"
+              }
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <InfiniteScrollSelect
+                  form={form}
+                  name="pegawai_id"
+                  label="Pegawai"
+                  placeholder="--Pilih Pegawai--"
+                  queryKey="pegawai-select"
+                  queryFn={adminServices.getPegawaiAdminPage}
+                  itemValue="id"
+                  itemLabel="nama_pegawai"
+                  required
+                />
+                <FormFieldInput
+                  form={form}
+                  name="tanggal_absensi"
+                  label="Tanggal Absensi"
+                  type="date"
+                  required
+                />
+                <InfiniteScrollSelect
+                  form={form}
+                  name="jenis_kehadiran_id"
+                  label="Status Kehadiran"
+                  placeholder="--Pilih Status--"
+                  queryKey="jenis-kehadiran-select"
+                  queryFn={adminServices.getJenisKehadiran}
+                  itemValue="id"
+                  itemLabel="nama_jenis"
+                  required
+                />
+                <FormFieldInput
+                  form={form}
+                  name="jam_masuk"
+                  label="Jam Masuk"
+                  placeholder="HH:MM"
+                />
+                <FormFieldInput
+                  form={form}
+                  name="jam_keluar"
+                  label="Jam Keluar"
+                  placeholder="HH:MM"
+                />
+                <FormFieldInput
+                  form={form}
+                  name="keterangan"
+                  label="Keterangan"
+                />
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <Button type="button" variant="ghost" onClick={handleCancel}>
+                  <RiResetLeftFill className="mr-2" /> Batal
+                </Button>
+                <Button type="submit">
+                  <IoSaveOutline className="mr-2" />{" "}
+                  {editingItemId ? "Simpan Perubahan" : "Simpan"}
                 </Button>
               </div>
-              <div className="w-full lg:w-auto">
-                <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
-                  <FaFileImport /> Import
-                </Button>
-              </div>
+            </CustomCard>
+          )}
+
+          {/* Tombol Aksi Utama */}
+          <div className="flex flex-col md:flex-row justify-between mt-6 gap-4">
+            <SearchInput
+              value={searchData}
+              onChange={(e) => setSearchData(e.target.value)}
+              placeholder="Cari Pegawai..."
+              className="w-full md:w-80"
+            />
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={() => !editingItemId && setIsAddData((prev) => !prev)}
+                className={`bg-green-light-uika hover:bg-[#329C59] ${
+                  isAddData && !editingItemId ? "hidden" : "flex"
+                }`}
+                disabled={editingItemId !== null}
+              >
+                <FaPlus className="mr-2" /> Tambah
+              </Button>
+              <Button type="button" className="bg-blue-500 hover:bg-blue-600">
+                <FaFileImport className="mr-2" /> Import
+              </Button>
             </div>
           </div>
 
-          <Table className="mt-10 table-auto">
-            <TableHeader>
-              <TableRow className="bg-gray-100">
-                <TableHead className="text-center text-xs sm:text-sm">
-                  NIP
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Pegawai
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Status
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Tanggal Absensi
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Jam Datang
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Jam Pulang
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Keterangan
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Aksi
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="divide-y divide-gray-200">
-              {(isAddData || isEditMode) && currentPage === 1 && (
-                <TableRow className=" even:bg-gray-100">
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    -
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    <InfiniteScrollSelect
-                      form={form}
-                      name="pegawai_id"
-                      placeholder="--Pilih Pegawai--"
-                      required={false}
-                      queryKey="pegawai-select-operasional"
-                      queryFn={adminServices.getPegawaiAdminPage}
-                      itemValue="id"
-                      itemLabel="nama_pegawai"
-                    />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <InfiniteScrollSelect
-                      form={form}
-                      name="jenis_kehadiran_id"
-                      placeholder="--Pilih Status--"
-                      required={false}
-                      queryKey="jenis-kehadiran-select"
-                      queryFn={adminServices.getJenisKehadiran}
-                      itemValue="id"
-                      itemLabel="nama_jenis"
-                    />
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    <FormFieldInput
-                      inputStyle="w-full"
-                      position={true}
-                      form={form}
-                      type="date"
-                      name="tanggal_absensi"
-                      required={false}
-                    />
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    <FormFieldInput
-                      inputStyle="w-full"
-                      position={true}
-                      form={form}
-                      placeholder="HH:MI"
-                      name="jam_masuk"
-                      required={false}
-                    />
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    <FormFieldInput
-                      inputStyle="w-full"
-                      position={true}
-                      placeholder="HH:MI"
-                      form={form}
-                      name="jam_keluar"
-                      required={false}
-                    />
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    <FormFieldInput
-                      inputStyle="w-full"
-                      position={true}
-                      form={form}
-                      name="keterangan"
-                      required={false}
-                    />
-                  </TableCell>
-                  <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                      <Button
-                        type="submit"
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <IoSaveOutline className="w-5! h-5!" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        type="button"
-                        variant="ghost"
-                        className="cursor-pointer"
-                        onClick={handleCancel}
-                      >
-                        <RiResetLeftFill className="text-yellow-uika" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          {/* Tabel Data */}
+          <div className="mt-5 border rounded-lg">
+            <Table className="text-xs lg:text-sm">
+              <TableHeader>
+                <TableRow className="bg-gray-100 hover:bg-gray-100">
+                  {data?.table_columns?.map((col: any) => (
+                    <TableHead key={col.field} className="text-center">
+                      {col.label}
+                    </TableHead>
+                  ))}
                 </TableRow>
-              )}
-              {data?.data.map((item) => (
-                <TableRow key={item.id} className=" even:bg-gray-100">
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.nip}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.nama_pegawai}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.jenis_kehadiran.nama_jenis}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {data?.filters_applied.tanggal}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.jam_masuk || "-"}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.jam_keluar || "-"}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.keterangan || "-"}
-                  </TableCell>
-                  <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                      <Button
-                        size="icon"
-                        type="button"
-                        variant="ghost"
-                        className="cursor-pointer"
-                        onClick={() => handleEditItem(item)}
-                        disabled={isEditMode && editingItemId !== item.id}
-                      >
-                        <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                      </Button>
-                      <ConfirmDialog
-                        title="Hapus Data?"
-                        description="Apakah Anda yakin ingin menghapus data ini?"
-                        onConfirm={() => handleDelete(item.id)}
-                      >
-                        <Button
-                          size="icon"
-                          type="button"
-                          variant="ghost"
-                          className="cursor-pointer"
-                        >
-                          <FaRegTrashAlt className="text-red-500" />
-                        </Button>
-                      </ConfirmDialog>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          <CustomPagination
-            currentPage={Number(searchParam.get("page") || 1)}
-            data={data}
-            onPageChange={(page) => {
-              const newSearchParam = new URLSearchParams(searchParam);
-              newSearchParam.set("page", page.toString());
-              setSearchParam(newSearchParam);
-            }}
-          />
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  [...Array(10)].map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell colSpan={7}>
+                        <Skeleton className="h-6 w-full" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : data?.data.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={data?.table_columns?.length || 7}
+                      className="text-center h-48"
+                    >
+                      Data tidak ditemukan.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  data?.data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="text-center">{item.nip}</TableCell>
+                      <TableCell>{item.nama_pegawai}</TableCell>
+                      <TableCell className="text-center">
+                        {item.status}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {item.jam_masuk || "-"}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {item.jam_keluar || "-"}
+                      </TableCell>
+                      <TableCell>{item.keterangan || "-"}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-center items-center">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handleEditItem(item)}
+                            disabled={editingItemId === item.id}
+                          >
+                            <MdEdit
+                              className={`w-5 h-5 ${
+                                editingItemId === item.id
+                                  ? "text-gray-400"
+                                  : "text-yellow-500"
+                              }`}
+                            />
+                          </Button>
+                          <ConfirmDialog
+                            title="Hapus Data?"
+                            description={`Yakin ingin menghapus presensi untuk ${item.nama_pegawai}?`}
+                            onConfirm={() => deleteMutation(item.id)}
+                          >
+                            <Button size="icon" variant="ghost">
+                              <FaRegTrashAlt className="text-red-500" />
+                            </Button>
+                          </ConfirmDialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </form>
       </Form>
+
+      {data?.data && data.data.length > 0 && (
+        <CustomPagination
+          currentPage={data.pagination.current_page}
+          totalPages={data.pagination.last_page}
+          onPageChange={(page) => handleUrlChange("page", String(page))}
+          hasNextPage={data.pagination.current_page < data.pagination.last_page}
+          hasPrevPage={data.pagination.current_page > 1}
+        />
+      )}
     </div>
   );
 };

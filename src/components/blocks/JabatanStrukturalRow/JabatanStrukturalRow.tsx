@@ -16,7 +16,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { JabatanStrukturalNode } from "@/components/view/admin/Referensi/Kepegawaian/JabatanStruktural/JabatanStruktural";
-// Import the Node type from the parent component to ensure they are in sync
 
 // The props now expect the clean JabatanStrukturalNode type
 interface JabatanStrukturalRowProps {
@@ -64,8 +63,9 @@ const JabatanStrukturalRow: React.FC<JabatanStrukturalRowProps> = ({
         <TableCell className="text-center text-xs sm:text-sm">
           {node.kode}
         </TableCell>
+        {/* Changed to display singkatan */}
         <TableCell className="text-left text-xs sm:text-sm">
-          {node.nama_jabatan}
+          {node.singkatan}
         </TableCell>
         <TableCell className="text-center text-xs sm:text-sm">
           {node.parent_jabatan_nama}
@@ -99,11 +99,12 @@ const JabatanStrukturalRow: React.FC<JabatanStrukturalRowProps> = ({
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Konfirmasi Penghapusan</DialogTitle>
+                  {/* Changed to display singkatan in dialog */}
                   <DialogDescription>
                     Apakah Anda yakin ingin menghapus jabatan
                     <strong className="text-red-600">
                       {" "}
-                      "{node.nama_jabatan}"
+                      "{node.singkatan}"
                     </strong>
                     ? Tindakan ini tidak dapat dibatalkan.
                   </DialogDescription>

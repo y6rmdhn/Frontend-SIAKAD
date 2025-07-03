@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import adminServices from "@/services/admin.services";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
+import environment from "@/config/environments";
 
 interface AccordionItemData {
   label: string;
@@ -229,7 +230,7 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
       <motion.div variants={itemVariants} className="mb-8 md:mb-10">
         <div className="w-36 h-36 md:w-44 md:h-44 overflow-hidden rounded-md border border-gray-200">
           <img
-            src={profileData?.file_foto}
+            src={`${environment.API_IMAGE_URL_SECOND}${profileData?.file_foto_url}`}
             className="object-cover w-full h-full"
             alt="profil-pegawai"
           />

@@ -38,11 +38,19 @@ const MonitoringSisaCutiPage = lazy(
 const PermohonanIzinPage = lazy(
   () => import("./pages/admin/operasional/cuti/permohonanIzin")
 );
+const DetailPermohonanIzinPage = lazy(
+  () =>
+    import("./pages/admin/operasional/cuti/permohonanIzin/detailPermohonanizin")
+);
 const PeriodeCutiPage = lazy(
   () => import("./pages/admin/operasional/cuti/periodeCuti")
 );
 const PermohonanCutiPage = lazy(
   () => import("./pages/admin/operasional/cuti/permohonanCuti")
+);
+const DetailPermohonanCutiPage = lazy(
+  () =>
+    import("./pages/admin/operasional/cuti/permohonanCuti/detailPermohonanCuti")
 );
 const PelanggaranPage = lazy(
   () => import("./pages/admin/operasional/kompensasi/pelanggaran")
@@ -1045,10 +1053,11 @@ function App() {
           </Route>
 
           {/* PENGGAJIAN */}
-          <Route path="/penggajian">
-            <Route path="" Component={penggajianUserPage} />
-            <Route path="printpenggajian" Component={printpenggajian} />
-          </Route>
+          <Route path="penggajian/:id" Component={penggajianUserPage} />
+          <Route
+            path="penggajian/printpenggajian"
+            Component={printpenggajian}
+          />
 
           {/* OPERASIONAL */}
           <Route path="/operasional">
@@ -1704,8 +1713,16 @@ function App() {
                   Component={MonitoringSisaCutiPage}
                 />
                 <Route path="permohonan-izin" Component={PermohonanIzinPage} />
+                <Route
+                  path="detail-permohonan-izin/:id"
+                  Component={DetailPermohonanIzinPage}
+                />
                 <Route path="periode-cuti" Component={PeriodeCutiPage} />
                 <Route path="permohonan-cuti" Component={PermohonanCutiPage} />
+                <Route
+                  path="detail-permohonan-cuti/:id"
+                  Component={DetailPermohonanCutiPage}
+                />
               </Route>
 
               {/* OPERASIONAL > KOMPENSASI */}

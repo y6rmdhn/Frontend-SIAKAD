@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import dosenServices from "@/services/dosen.services";
+import { useEffect } from "react"; // Import useEffect
 
 export const izinSchema = z.object({
   jenis_izin_id: z.string().min(1, { message: "Jenis Izin harus diisi." }),
@@ -44,6 +45,34 @@ const DetailIzin = () => {
       file_pendukung: undefined,
     },
   });
+
+  // Get watch and setValue to manage fields dynamically
+  const { watch, setValue } = form;
+  const tglMulai = watch("tgl_mulai");
+  const tglSelesai = watch("tgl_selesai");
+
+  // Effect to calculate permit duration when dates change
+  useEffect(() => {
+    if (tglMulai && tglSelesai) {
+      const startDate = new Date(tglMulai);
+      const endDate = new Date(tglSelesai);
+
+      // Ensure dates are valid and end date is not before start date
+      if (
+        !isNaN(startDate.getTime()) &&
+        !isNaN(endDate.getTime()) &&
+        endDate >= startDate
+      ) {
+        const diffTime = endDate.getTime() - startDate.getTime();
+        // Calculate days and add 1 for inclusive count
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        setValue("jumlah_izin", String(diffDays));
+      } else {
+        // Clear the value if dates are invalid
+        setValue("jumlah_izin", "");
+      }
+    }
+  }, [tglMulai, tglSelesai, setValue]);
 
   // add data
   const { mutate } = useMutation({
@@ -148,13 +177,14 @@ const DetailIzin = () => {
 
                     {/* Kolom Kanan */}
                     <div className="space-y-7 md:mt-0.5 lg:mt-0">
+                      {/* Changed to be disabled (read-only) */}
                       <FormFieldInput
                         form={form}
                         label="Jumlah Izin"
                         name="jumlah_izin"
                         type="number"
                         labelStyle="text-[#3F6FA9]"
-                        required={false}
+                        readOnly
                       />
                       <FormFieldInput
                         form={form}

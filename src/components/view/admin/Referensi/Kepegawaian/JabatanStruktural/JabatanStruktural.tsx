@@ -25,12 +25,12 @@ import JabatanStrukturalRow from "@/components/blocks/JabatanStrukturalRow/Jabat
 import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
-// Rename the row component to be more specific to its new purpose
 
 // Interface for the raw data item from the API
 interface JabatanStrukturalItem {
   id: number;
   kode: string;
+  singkatan: string; // Added singkatan here
   parent_jabatan: string | null;
   jenis_jabatan_struktural: {
     jenis_jabatan_struktural: string;
@@ -38,16 +38,14 @@ interface JabatanStrukturalItem {
   unit_kerja: {
     nama_unit: string;
   };
-  // You can add other properties from the API if needed
   [key: string]: any;
 }
 
-// This is the clean, flattened node structure we'll use for rendering
-// It's what the JabatanStrukturalRow component will expect
+// Updated the node structure to use 'singkatan'
 export interface JabatanStrukturalNode {
   id: number;
   kode: string;
-  nama_jabatan: string;
+  singkatan: string; // Changed from nama_jabatan
   parent_jabatan_nama: string | null;
   unit_kerja_nama: string;
   children: JabatanStrukturalNode[];
@@ -69,10 +67,10 @@ function buildTree(items: JabatanStrukturalItem[]): JabatanStrukturalNode[] {
   const itemMap: { [key: string]: JabatanStrukturalNode } = {};
   const roots: JabatanStrukturalNode[] = [];
 
-  // First pass: Create a map of all items and their names for easy lookup
+  // First pass: Create a map of all items and their abbreviations (singkatan)
   const nameMap: { [key: string]: string } = {};
   items.forEach((item) => {
-    nameMap[item.kode] = item.jenis_jabatan_struktural.jenis_jabatan_struktural;
+    nameMap[item.kode] = item.singkatan;
   });
 
   // Second pass: Create the nodes with all necessary data flattened
@@ -80,8 +78,8 @@ function buildTree(items: JabatanStrukturalItem[]): JabatanStrukturalNode[] {
     itemMap[item.kode] = {
       id: item.id,
       kode: item.kode,
-      nama_jabatan: item.jenis_jabatan_struktural.jenis_jabatan_struktural,
-      // Look up the parent's name using the map we created
+      singkatan: item.singkatan, // Use singkatan
+      // Look up the parent's abbreviation (singkatan) using the map
       parent_jabatan_nama: item.parent_jabatan
         ? nameMap[item.parent_jabatan] || item.parent_jabatan
         : "-",
@@ -235,8 +233,9 @@ const JabatanStruktural = () => {
             <TableHead className="text-center text-xs sm:text-sm">
               Kode
             </TableHead>
+            {/* Changed Table Head Name */}
             <TableHead className="text-center text-xs sm:text-sm">
-              Nama Jabatan Struktural
+              Singkatan
             </TableHead>
             <TableHead className="text-center text-xs sm:text-sm">
               Parent Jabatan Struktural
