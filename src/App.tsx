@@ -1843,7 +1843,7 @@ function App() {
                   Component={PendidikanFormalValidasiPage}
                 />
                 <Route
-                  path="pendidikan-formal/detail-pendidikan-formal"
+                  path="pendidikan-formal/detail-pendidikan-formal/:id"
                   Component={DetailPendidikanFormalValidasiPage}
                 />
                 <Route
@@ -1851,7 +1851,7 @@ function App() {
                   Component={RiwayatPekerjaanValidasiPage}
                 />
                 <Route
-                  path="riwayat-pekerjaan/detail-riwayat-pekerjaan"
+                  path="riwayat-pekerjaan/detail-riwayat-pekerjaan/:id"
                   Component={DetailRiwayatPekerjaanValidasiPage}
                 />
               </Route>

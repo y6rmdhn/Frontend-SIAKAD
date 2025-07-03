@@ -26,7 +26,7 @@ const penghargaanSchema = z.object({
   // Field Wajib
   pegawai_id: z.string().min(1, "Pegawai wajib diisi."),
   tanggal_penghargaan: z.string().min(1, "Tanggal penghargaan wajib diisi."),
-  jenis_penghargaan: z.string().min(1, "Jenis penghargaan wajib dipilih."),
+  jenis_penghargaan_id: z.string().min(1, "Jenis penghargaan wajib dipilih."),
 
   // Field Opsional
   nama_penghargaan: z.string().optional(),
@@ -64,7 +64,7 @@ const DetailPenghargaan = () => {
     defaultValues: {
       pegawai_id: "",
       tanggal_penghargaan: "",
-      jenis_penghargaan: "",
+      jenis_penghargaan_id: "",
       nama_penghargaan: "",
       no_sk: "",
       tanggal_sk: "",
@@ -84,20 +84,22 @@ const DetailPenghargaan = () => {
       toast.success("Data berhasil ditambahkan");
       navigate("/admin/operasional/kompensasi/penghargaan");
     },
-    onError: (error: any) => {
-      console.error("Mutation error:", error);
-      const errorMessage =
-        error.response?.data?.message || "Gagal menambahkan data.";
-      toast.error(errorMessage);
-    },
   });
 
   const handleSubmitData = (values: PenghargaanSchema) => {
     const formData = new FormData();
 
-    Object.keys(values).forEach((key) => {
-      const valueKey = key as keyof PenghargaanSchema;
-      const value = values[valueKey];
+    const valuesToSubmit: Record<string, any> = { ...values };
+
+    if (valuesToSubmit.jenis_penghargaan_id) {
+      valuesToSubmit.jenis_penghargaan_id = parseInt(
+        valuesToSubmit.jenis_penghargaan_id,
+        10
+      );
+    }
+
+    Object.keys(valuesToSubmit).forEach((key) => {
+      const value = valuesToSubmit[key];
 
       if (key === "file_penghargaan") {
         if (value instanceof FileList && value.length > 0) {
@@ -105,10 +107,11 @@ const DetailPenghargaan = () => {
         }
       } else {
         if (value !== null && value !== undefined && value !== "") {
-          formData.append(key, value as string);
+          formData.append(key, value);
         }
       }
     });
+
     mutate(formData);
   };
 
@@ -184,14 +187,14 @@ const DetailPenghargaan = () => {
               />
               <InfiniteScrollSelect
                 form={form}
-                name="jenis_penghargaan"
+                name="jenis_penghargaan_id"
                 placeholder="--Pilih Jenis--"
                 label="Jenis Penghargaan"
                 labelStyle="text-[#3F6FA9]"
                 required={false}
                 queryKey="jenis-penghargaan-kompensasi-select"
                 queryFn={adminServices.getJenisPenghargaanAktifitas}
-                itemValue="nama"
+                itemValue="id"
                 itemLabel="nama"
               />
               <FormFieldInput

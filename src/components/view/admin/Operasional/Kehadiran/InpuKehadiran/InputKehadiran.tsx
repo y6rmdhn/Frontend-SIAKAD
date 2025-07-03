@@ -1,3 +1,13 @@
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
+// UI & Custom Components
 import CustomCard from "@/components/blocks/Card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,30 +20,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MdEdit } from "react-icons/md";
-import { FaFileImport, FaPlus, FaRegTrashAlt } from "react-icons/fa";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
-import adminServices from "@/services/admin.services";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SelectFilter from "@/components/blocks/SelectFilter";
-import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
-import potsReferensiServices from "@/services/create.admin.referensi";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { IoSaveOutline } from "react-icons/io5";
-import { RiResetLeftFill } from "react-icons/ri";
 import { Form } from "@/components/ui/form";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
+
+// Icons
+import { MdEdit } from "react-icons/md";
+import { FaFileImport, FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { IoSaveOutline } from "react-icons/io5";
+import { RiResetLeftFill } from "react-icons/ri";
+
+// Services & Constants
+import adminServices from "@/services/admin.services";
+import potsReferensiServices from "@/services/create.admin.referensi";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
 import putReferensiServices from "@/services/put.admin.referensi";
+import unitKerjaOptions from "@/constant/dummyFilter";
 
 const timeFormatRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -96,6 +102,32 @@ export const inputPresensiSchema = z
 
 export type InputPresensiFormValue = z.infer<typeof inputPresensiSchema>;
 
+// Tipe data untuk satu item presensi dari API
+interface PresensiData {
+  id: number;
+  nip: string;
+  pegawai_id: number;
+  nama_pegawai: string;
+  status: string;
+  jenis_kehadiran: {
+    id: number;
+    nama_jenis: string;
+  };
+  tanggal_absensi: string;
+  jam_masuk: string;
+  jam_keluar: string;
+  keterangan: string;
+}
+
+// Tipe data untuk seluruh respons API yang dipaginasi
+interface PaginatedPresensiResponse {
+  data: PresensiData[];
+  last_page: number;
+  filters_applied: {
+    tanggal: string;
+  };
+}
+
 const InputKehadiran = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
@@ -121,8 +153,8 @@ const InputKehadiran = () => {
     },
   });
 
-  // get data
-  const { data } = useQuery({
+  // Mengambil data
+  const { data } = useQuery<PaginatedPresensiResponse>({
     queryKey: [
       "input-presensi-operasional",
       searchParam.get("page"),
@@ -132,13 +164,11 @@ const InputKehadiran = () => {
       const page = searchParam.get("page") || "1";
       const search = searchParam.get("search") || "";
       const response = await adminServices.getInputKehadiran(page, search);
-
-      console.log(response.data);
       return response.data;
     },
   });
 
-  // tambah data
+  // Menambah data
   const { mutate: postData } = useMutation({
     mutationFn: (data: InputPresensiFormValue) =>
       potsReferensiServices.inputPresensi(data),
@@ -152,26 +182,23 @@ const InputKehadiran = () => {
     },
   });
 
-  // edit data
+  // Mengedit data
   const { mutate: putData } = useMutation({
     mutationFn: (data: InputPresensiFormValue) =>
       putReferensiServices.inputPresensi(data.id!, data),
     onSuccess: () => {
       toast.success("Data berhasil diedit");
-
       setIsEditMode(false);
       setIsAddData(false);
       setEditingItemId(null);
-
       form.reset();
-
       queryClient.invalidateQueries({
         queryKey: ["input-presensi-operasional"],
       });
     },
   });
 
-  // hapus data
+  // Menghapus data
   const { mutate: deleteEselon } = useMutation({
     mutationFn: (id: number) =>
       deleteReferensiServices.deteleDataInputPresensi(id),
@@ -180,7 +207,6 @@ const InputKehadiran = () => {
       queryClient.invalidateQueries({
         queryKey: ["input-presensi-operasional"],
       });
-
       if (editingItemId) {
         form.reset();
         setEditingItemId(null);
@@ -202,22 +228,19 @@ const InputKehadiran = () => {
     }
   };
 
-  const handleEditItem = (item: InputPresensiFormValue) => {
-    console.log({ item });
+  const handleEditItem = (item: PresensiData) => {
     form.reset({
       id: item.id,
       pegawai_id: item.pegawai_id,
       tanggal_absensi: item.tanggal_absensi,
-      jenis_kehadiran_id: item.jenis_kehadiran_id,
+      jenis_kehadiran_id: item.jenis_kehadiran.id,
       jam_masuk: item.jam_masuk,
       jam_keluar: item.jam_keluar,
       keterangan: item.keterangan,
     });
-
     setIsEditMode(true);
     setEditingItemId(item.id ?? null);
     setIsAddData(true);
-
     if (Number(searchParam.get("page")) !== 1) {
       searchParam.set("page", "1");
       setSearchParam(searchParam);
@@ -233,14 +256,12 @@ const InputKehadiran = () => {
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
-
     if (debouncedInput.length > 3) {
       newSearchParam.set("search", debouncedInput);
       newSearchParam.set("page", "1");
     } else {
       newSearchParam.delete("search");
     }
-
     if (searchParam.toString() !== newSearchParam.toString()) {
       setSearchParam(newSearchParam);
     }
@@ -251,7 +272,7 @@ const InputKehadiran = () => {
     if (page !== currentPage) {
       setCurrentPage(page);
     }
-  }, [searchParam]);
+  }, [searchParam, currentPage]);
 
   useEffect(() => {
     if (!searchParam.get("page")) {
@@ -295,12 +316,10 @@ const InputKehadiran = () => {
                 placeholder="--Semua--"
               />
             </div>
-
             <div className="flex md:flex-col flex-col lg:flex-row">
               <Label className="w-full text-[#FDA31A]">Tanggal</Label>
               <Input type="date" className="w-60 sm:w-full" />
             </div>
-
             <div className="flex md:flex-col flex-col lg:flex-row">
               <Label className="w-full text-[#FDA31A]">Tanggal</Label>
               <SelectFilter
@@ -326,7 +345,6 @@ const InputKehadiran = () => {
                 onChange={(e) => setSearchData(e.target.value)}
               />
             </div>
-
             <div className="w-full grid sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:flex lg:w-auto">
               <div className="w-full lg:w-auto">
                 <Button
@@ -342,7 +360,6 @@ const InputKehadiran = () => {
                         jam_keluar: "",
                         keterangan: "",
                       });
-
                       setSearchParam(searchParam);
                       setIsAddData(true);
                       searchParam.set("page", "1");
@@ -359,7 +376,6 @@ const InputKehadiran = () => {
                   Tambah
                 </Button>
               </div>
-
               <div className="w-full lg:w-auto">
                 <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
                   <FaFileImport /> Import
@@ -489,7 +505,7 @@ const InputKehadiran = () => {
                   </TableCell>
                 </TableRow>
               )}
-              {data?.data.map((item: any) => (
+              {data?.data.map((item) => (
                 <TableRow key={item.id} className=" even:bg-gray-100">
                   <TableCell className="text-center text-xs sm:text-sm">
                     {item.nip}
@@ -498,19 +514,19 @@ const InputKehadiran = () => {
                     {item.nama_pegawai}
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
-                    {item.status}
+                    {item.jenis_kehadiran.nama_jenis}
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
                     {data?.filters_applied.tanggal}
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
-                    {item.jam_datang === "" ? "-" : item.jam_datang}
+                    {item.jam_masuk || "-"}
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
-                    {item.jam_pulang === "" ? "-" : item.jam_pulang}
+                    {item.jam_keluar || "-"}
                   </TableCell>
                   <TableCell className="text-center text-xs sm:text-sm">
-                    {item.keterangan === "" ? "-" : item.keterangan}
+                    {item.keterangan || "-"}
                   </TableCell>
                   <TableCell className="h-full">
                     <div className="flex justify-center items-center w-full h-full">
@@ -524,7 +540,6 @@ const InputKehadiran = () => {
                       >
                         <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                       </Button>
-
                       <ConfirmDialog
                         title="Hapus Data?"
                         description="Apakah Anda yakin ingin menghapus data ini?"

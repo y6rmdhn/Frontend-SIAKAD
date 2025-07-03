@@ -16,18 +16,18 @@ export interface KeluargaValidasiParams {
 }
 
 export interface HubunganKerjaParams {
-  page?: string | number;
+  page?: string;
   search?: string;
-  unit_kerja?: string;
-  jabatan_fungsional?: string;
+  unit_kerja_id?: string;
+  jabatan_fungsional_id?: string;
   status_pengajuan?: string;
 }
 
 export interface JabatanAkademikParams {
-  page?: string | number;
+  page?: string;
   search?: string;
-  unit_kerja?: string;
-  jabatan_akademik?: string;
+  unit_kerja_id?: string;
+  jabatan_akademik_id?: string;
   status_pengajuan?: string;
 }
 
@@ -109,4 +109,71 @@ export interface RiwayatPekerjaanParams {
   unit_kerja?: string;
   jenis_pekerjaan?: string;
   status_pengajuan?: string;
+}
+
+export interface PenghargaanParams {
+  page?: string | number;
+  unit_kerja_id?: string;
+  search?: string;
+  jabatan_fungsional_id?: string;
+  jenis_penghargaan?: string;
+}
+
+export interface UnitKerjaItem {
+  id: number;
+  nama_unit: string;
+}
+
+export interface PaginatedUnitKerjaResponse {
+  data: {
+    data: UnitKerjaItem[];
+    next_page_url: string | null;
+  };
+}
+
+export interface PelanggaranParams {
+  page?: string | number;
+  search?: string;
+  unit_kerja?: string;
+  jabatan_fungsional?: string;
+  jenis_pelanggaran?: string;
+}
+
+export interface PengajuanCutiParams {
+  page: string;
+  search?: string;
+  unit_kerja?: string;
+  jenis_cuti?: string;
+  status?: string;
+}
+
+export interface PengajuanIzinParams {
+  page: string;
+  search?: string;
+  unit_kerja?: string;
+  periode_izin?: string;
+  status?: string;
+  jenis_izin?: string;
+}
+
+export interface MonitoringKegiatanParams {
+  page?: string;
+  search?: string;
+  unit_kerja?: string;
+  tanggal?: string;
+}
+
+export interface MonitoringPresensiParams {
+  page?: string;
+  search?: string;
+  unit_kerja?: string;
+  status_presensi?: string;
+}
+
+export interface RekapKehadiranParams {
+  page?: string;
+  search?: string;
+  unit_kerja_id?: string;
+  tanggal_awal?: string;
+  tanggal_akhir?: string;
 }

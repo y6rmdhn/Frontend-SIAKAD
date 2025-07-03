@@ -4,11 +4,20 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdEdit } from "react-icons/md";
-import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import SearchInput from "@/components/blocks/SearchInput";
 import { useQuery } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const DetailDataPenghargaan = () => {
   const params = useParams();
@@ -79,11 +88,6 @@ const DetailDataPenghargaan = () => {
                     </Button>
                   </Link>
                 </div>
-                <div>
-                  <Button className="bg-[#F56954] w-full xl:w-auto hover:bg-[#d45d4b] text-white text-xs sm:text-sm">
-                    <FaRegTrashAlt /> Hapus
-                  </Button>
-                </div>
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5">
@@ -153,20 +157,62 @@ const DetailDataPenghargaan = () => {
                   <Label className="text-[#2572BE] text-xs sm:text-sm w-35 shrink-0">
                     File Penghargaan
                   </Label>
-                  {data?.data.file_penghargaan ? (
-                    <a
-                      href={data.data.file_penghargaan}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs sm:text-sm text-left flex-1 text-blue-600 hover:underline"
-                    >
-                      Lihat File
-                    </a>
-                  ) : (
-                    <Label className="text-xs sm:text-sm text-left flex-1">
-                      {data?.data.file_penghargaan_formatted || "-"}
-                    </Label>
-                  )}
+                  <Label className="text-xs sm:text-sm text-left flex-1">
+                    {data?.data.file_penghargaan_url ? (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="link"
+                            className="p-0 h-auto text-blue-600 hover:underline hover:text-blue-800"
+                          >
+                            Lihat File
+                          </Button>
+                        </DialogTrigger>
+
+                        <DialogContent className="sm:max-w-[600px]">
+                          <DialogHeader>
+                            <DialogTitle>Pratinjau File</DialogTitle>
+                          </DialogHeader>
+
+                          <div className="py-4">
+                            {/\.(jpeg|jpg|png|gif)$/i.test(
+                              data.data.file_penghargaan || ""
+                            ) ? (
+                              <img
+                                src={data?.data.file_penghargaan_url}
+                                alt="Pratinjau File"
+                                className="w-full h-auto rounded-md object-contain max-h-[70vh]"
+                              />
+                            ) : (
+                              <div className="text-center">
+                                <p className="mb-4">
+                                  Pratinjau tidak tersedia untuk tipe file ini.
+                                  Silakan buka di tab baru.
+                                </p>
+                                <a
+                                  href={data?.data.file_penghargaan_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <Button>Buka File</Button>
+                                </a>
+                              </div>
+                            )}
+                          </div>
+
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button type="button" variant="secondary">
+                                Tutup
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <span>-</span>
+                    )}
+                  </Label>
                 </div>
               </div>
             </div>

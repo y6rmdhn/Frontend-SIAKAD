@@ -370,7 +370,7 @@ const RiwayatPekerjaanValidasi = () => {
                 <TableCell>
                   <div className="flex justify-center">
                     <Link
-                      to={`/admin/validasi-data/pengalaman/riwayat-pekerjaan/detail-riwayat-pekerjaan/${item.id}`}
+                      to={`/admin/validasi-data/kualifikasi/riwayat-pekerjaan/detail-riwayat-pekerjaan/${item.id}`}
                     >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500" />

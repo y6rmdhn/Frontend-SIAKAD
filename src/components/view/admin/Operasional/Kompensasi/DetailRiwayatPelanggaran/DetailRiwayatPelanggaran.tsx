@@ -32,15 +32,12 @@ const pelanggaranSchema = z.object({
   keterangan: z.string().optional(),
   file_foto: z
     .any()
-    .optional() // Jadikan opsional agar tidak error jika tidak diisi
-    .refine(
-    (files) => files instanceof FileList && files.length > 0,
-    { message: "Harap pilih sebuah file." }
-  )
-  .refine(
-    (files) => files[0].size <= MAX_FILE_SIZE_BYTES,
-    { message: `Ukuran file tidak boleh lebih dari ${MAX_FILE_SIZE_MB}MB.` }
-  )
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Harap pilih sebuah file.",
+    })
+    .refine((files) => files[0].size <= MAX_FILE_SIZE_BYTES, {
+      message: `Ukuran file tidak boleh lebih dari ${MAX_FILE_SIZE_MB}MB.`,
+    }),
 });
 
 type PelanggaranFormValue = z.infer<typeof pelanggaranSchema>;
@@ -85,12 +82,16 @@ const DetailRiwayatPelanggaran = () => {
 
     Object.entries(values).forEach(([key, value]) => {
       if (key === "file_foto") {
-        if (value instanceof File) {
-          formData.append(key, value);
+        if (value instanceof FileList && value.length > 0) {
+          formData.append(key, value[0]);
         }
       } else if (value !== null && value !== undefined) {
         formData.append(key, value as string);
       }
+    });
+
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
     });
 
     mutate(formData);
@@ -193,6 +194,7 @@ const DetailRiwayatPelanggaran = () => {
               <FormFieldInputFile
                 label="File Keterangan"
                 name="file_foto"
+                description="jpeg, jpg, png."
                 required={false}
                 labelStyle="text-[#3F6FA9]"
               />

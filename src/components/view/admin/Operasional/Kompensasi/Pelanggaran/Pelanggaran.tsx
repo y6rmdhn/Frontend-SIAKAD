@@ -1,19 +1,17 @@
-import CustomCard from "@/components/blocks/Card";
-import CustomPagination from "@/components/blocks/CustomPagination";
-import SelectFilter from "@/components/blocks/SelectFilter";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { Link, useSearchParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { IoEyeOutline } from "react-icons/io5";
+import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+
+// UI Components
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -22,322 +20,319 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import adminServices from "@/services/admin.services";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
-import { IoEyeOutline } from "react-icons/io5";
-import { MdEdit } from "react-icons/md";
-import { Link, useSearchParams } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton"; // Impor untuk loading state
-import deleteReferensiServices from "@/services/admin.delete.referensi";
-import { toast } from "sonner";
+
+// Custom Components
+import CustomCard from "@/components/blocks/Card";
+import CustomPagination from "@/components/blocks/CustomPagination";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import Title from "@/components/blocks/Title";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
-// --- START DEFINISI TIPE DATA ---
+// Services
+import adminServices from "@/services/admin.services";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
 
-// Tipe untuk opsi filter dari API
-interface FilterOption {
-  id: number | string;
-  nama: string;
-}
-
-// Tipe untuk item data pelanggaran di dalam tabel
-interface PelanggaranItem {
-  id: number;
-  nama_pegawai: string;
-  tgl_pelanggaran_formatted: string;
-  jenis_pelanggaran: string;
-}
-
-// Tipe untuk link pagination
-interface PaginationLink {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
-
-// Tipe utama untuk keseluruhan respons API
-interface PelanggaranApiResponse {
-  data: {
-    data: PelanggaranItem[];
-  };
-  filters: {
-    unit_kerja: FilterOption[];
-    jabatan_fungsional: FilterOption[];
-    jenis_pelanggaran: FilterOption[];
-  };
-  links: PaginationLink[];
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
-}
-
-// --- END DEFINISI TIPE DATA ---
-
+// --- Component Definition ---
 const Pelanggaran = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const queryClient = useQueryClient();
 
-  // FIX: Menambahkan tipe generik pada useQuery
-  const { data, isLoading } = useQuery<PelanggaranApiResponse>({
-    queryKey: ["jenis-pelanggaran-kompensasi", searchParam.get("page")],
+  // --- State Management ---
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+
+  // Get filter values directly from the URL with new ID suffixes
+  const currentPage = searchParam.get("page") || "1";
+  const unitKerjaFilter = searchParam.get("unit_kerja_id") || "";
+  const jabatanFungsionalFilter =
+    searchParam.get("jabatan_fungsional_id") || "";
+  const jenisPelanggaranFilter = searchParam.get("jenis_pelanggaran_id") || "";
+
+  // --- Data Fetching (React Query) ---
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: [
+      "pelanggaran-data",
+      currentPage,
+      debouncedInput,
+      unitKerjaFilter,
+      jabatanFungsionalFilter,
+      jenisPelanggaranFilter,
+    ],
     queryFn: async () => {
-      const page = searchParam.get("page") || "1";
-      const response = await adminServices.getPelanggaran(page);
+      const params = {
+        page: currentPage,
+        search: debouncedInput,
+        unit_kerja: unitKerjaFilter,
+        jabatan_fungsional: jabatanFungsionalFilter,
+        jenis_pelanggaran: jenisPelanggaranFilter,
+      };
+      const response = await adminServices.getPelanggaran(params);
       return response.data;
     },
   });
 
-  // hapus data
+  // Memoize filter options for optimization
+  const filterOptions = useMemo(() => {
+    const filters = data?.filters;
+    if (!filters) return {};
+    const mapToOptions = (items: any[]) =>
+      items?.map((opt) => ({ value: String(opt.id), label: opt.nama })) || [];
+    return {
+      unitKerja: mapToOptions(filters.unit_kerja),
+      jabatanFungsional: mapToOptions(filters.jabatan_fungsional),
+      jenisPelanggaran: mapToOptions(filters.jenis_pelanggaran),
+    };
+  }, [data]);
+
+  // --- Data Mutation (Delete) ---
   const { mutate: deleteData } = useMutation({
     mutationFn: (id: number) =>
       deleteReferensiServices.deteleDataPelanggaran(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
-      queryClient.invalidateQueries({
-        queryKey: ["jenis-pelanggaran-kompensasi"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["pelanggaran-data"] });
+      setSelectedItem([]);
+    },
+    onError: (err: any) => {
+      toast.error(`Gagal menghapus data: ${err.message}`);
     },
   });
 
-  const handleDelete = (id: number) => {
-    deleteData(id);
+  // --- Event Handlers ---
+  const handleUrlChange = (paramName: string, value: string) => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      newSearchParam.set(paramName, value);
+    } else {
+      newSearchParam.delete(paramName);
+    }
+    if (paramName !== "page") {
+      newSearchParam.set("page", "1");
+    }
+    setSearchParam(newSearchParam);
   };
 
-  // `unitKerja`, `item` sekarang memiliki tipe yang benar secara otomatis
-  const unitKerjaOptions =
-    data?.filters?.unit_kerja?.map((unitKerja) => ({
-      label: unitKerja.nama,
-      value: String(unitKerja.id),
-    })) || [];
-
-  const jabatanFungsionalOptions =
-    data?.filters?.jabatan_fungsional?.map((item) => ({
-      label: item.nama,
-      value: String(item.id),
-    })) || [];
-
-  const jabatanPelanggaranOptions =
-    data?.filters?.jenis_pelanggaran?.map((item) => ({
-      label: item.nama,
-      value: String(item.id),
-    })) || [];
-
   useEffect(() => {
-    if (!searchParam.get("page")) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
+    if (debouncedInput.length >= 3 || debouncedInput.length === 0) {
+      handleUrlChange("search", debouncedInput);
     }
-  }, [searchParam, setSearchParam]);
+  }, [debouncedInput]);
 
-  useEffect(() => {
-    if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, setSearchParam]);
+  // --- Table Selection Logic ---
+  const tableData = data?.data || [];
+  const pageIds = tableData.data?.map((item: any) => item.id) || [];
+  const isAllSelectedOnPage =
+    pageIds.length > 0 && pageIds.every((id: any) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: any) =>
+    selectedItem.includes(id)
+  );
 
-  useEffect(() => {
-    if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
-    ) {
-      searchParam.set("page", data.last_page.toString());
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
+  const handleSelectedItemId = (id: number, checked: boolean) =>
+    setSelectedItem((prev) =>
+      checked ? [...prev, id] : prev.filter((i) => i !== id)
+    );
+  const handleSelectAll = (checked: boolean) =>
+    setSelectedItem(
+      checked
+        ? [...new Set([...selectedItem, ...pageIds])]
+        : selectedItem.filter((id) => !pageIds.includes(id))
+    );
+
+  // --- Loading and Error States ---
+  if (isLoading) {
+    return (
+      <div className="mt-10 mb-20">
+        <Title title="Riwayat Pelanggaran" subTitle="Daftar Pelanggaran" />
+        <div className="p-6 border rounded-lg mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-10 space-y-2">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="mt-10 mb-20 text-center">
+        <Title title="Riwayat Pelanggaran" subTitle="Daftar Pelanggaran" />
+        <div className="mt-10 p-4 border-l-4 border-red-500 bg-red-50 rounded-md">
+          <p className="font-semibold text-red-600">Gagal Memuat Data</p>
+          <p className="text-sm text-red-500">{(error as Error).message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-lg sm:text-2xl font-normal">
-        Riwayat Pelanggaran{" "}
-        <span className="text-muted-foreground font-normal text-[12px] sm:text-[16px]">
-          Daftar Pelanggaran
-        </span>
-      </h1>
-
+      <Title title="Riwayat Pelanggaran" subTitle="Daftar Pelanggaran" />
       <CustomCard
+        title="Filter Data"
         actions={
-          <div className="grid grid-rows-3 lg:grid-rows-2 grid-flow-col gap-5 lg:gap-10">
-            <div className="flex flex-col sm:flex-row">
-              <Label className="w-full text-[#FDA31A]">Unit Kerja</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-2">
+              <Label>Unit Kerja</Label>
               <SelectFilter
-                classname="w-full md:w-80"
-                options={unitKerjaOptions}
-                placeholder="--Semua Pengajuan--"
+                placeholder="--Semua Unit Kerja--"
+                options={filterOptions.unitKerja || []}
+                value={unitKerjaFilter}
+                onValueChange={(v) => handleUrlChange("unit_kerja_id", v)}
               />
             </div>
-            <div className="flex flex-col sm:flex-row">
-              <Label className="w-full text-[#FDA31A]">Jenis Pelanggaran</Label>
+            <div className="flex flex-col gap-2">
+              <Label>Jenis Pelanggaran</Label>
               <SelectFilter
-                classname="w-full md:w-80"
-                options={jabatanPelanggaranOptions}
-                placeholder="--Semua Pengajuan--"
+                placeholder="--Semua Jenis--"
+                options={filterOptions.jenisPelanggaran || []}
+                value={jenisPelanggaranFilter}
+                onValueChange={(v) =>
+                  handleUrlChange("jenis_pelanggaran_id", v)
+                }
               />
             </div>
-            <div className="flex flex-col sm:flex-row">
-              <Label className="w-full text-[#FDA31A]">
-                Jabatan Fungsional
-              </Label>
+            <div className="flex flex-col gap-2">
+              <Label>Jabatan Fungsional</Label>
               <SelectFilter
-                classname="w-full md:w-80"
-                options={jabatanFungsionalOptions}
-                placeholder="--Semua Pengajuan--"
+                placeholder="--Semua Jabatan--"
+                options={filterOptions.jabatanFungsional || []}
+                value={jabatanFungsionalFilter}
+                onValueChange={(v) =>
+                  handleUrlChange("jabatan_fungsional_id", v)
+                }
               />
             </div>
           </div>
         }
       />
 
-      <div className="w-full flex flex-col lg:flex-row justify-between mt-6">
-        <div className="w-full grid sm:grid-cols-2 gap-4 lg:flex lg:w-full">
-          <div className="w-full lg:w-32">
-            <Select>
-              <SelectTrigger className="w-full lg:w-32 text-xs sm:text-sm">
-                <SelectValue placeholder="--Semua--" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Unit Kerja</SelectLabel>
-                  {unitKerjaOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="w-full relative lg:w-90">
-            <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
-            <Input
-              placeholder="Search"
-              className="w-full pr-8 lg:w-90 text-xs sm:text-sm"
-            />
-          </div>
-        </div>
-
-        <div className="w-full grid sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:flex lg:w-auto">
-          <div className="w-full lg:w-auto">
-            <Link to="/admin/operasional/kompensasi/detail-riwayat-pelanggaran">
-              <Button className="cursor-pointer bg-green-light-uika hover:bg-[#329C59] w-full lg:w-auto text-xs sm:text-sm">
-                <FaPlus /> Tambah
+      <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
+        <SearchInput
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+          className="w-full md:w-80"
+          placeholder="Cari NIP atau nama pegawai..."
+        />
+        <div className="flex flex-col md:flex-row gap-2">
+          {selectedItem.length > 0 && (
+            <ConfirmDialog
+              title="Hapus Data Terpilih?"
+              description={`Apakah Anda yakin ingin menghapus ${selectedItem.length} data pelanggaran ini?`}
+              onConfirm={() =>
+                toast.info("Fungsi hapus batch belum diimplementasikan.")
+              } // Ganti dengan mutasi batch delete jika ada
+            >
+              <Button variant="destructive">
+                <FaRegTrashAlt className="mr-2" /> Hapus ({selectedItem.length})
               </Button>
-            </Link>
-          </div>
+            </ConfirmDialog>
+          )}
+          <Link to="/admin/operasional/kompensasi/detail-riwayat-pelanggaran">
+            <Button className="bg-green-600 hover:bg-green-700 w-full">
+              <FaPlus className="mr-2" /> Tambah Data
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="mt-10 space-y-4">
-          <Skeleton className="h-12 w-full" />
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-10 w-full" />
-          ))}
-        </div>
-      ) : (
-        <>
-          <Table className="mt-10 table-auto">
-            <TableHeader>
-              <TableRow className="bg-gray-100">
-                <TableHead className="text-center"></TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Nama Pegawai
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Tanggal Pelanggaran
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Jenis Pelanggaran
-                </TableHead>
-                <TableHead className="text-center text-xs sm:text-sm">
-                  Aksi
-                </TableHead>
+      <Table className="mt-5 text-xs lg:text-sm">
+        <TableHeader>
+          <TableRow className="bg-gray-100">
+            <TableHead className="text-center w-10">
+              <Checkbox
+                onCheckedChange={(c) => handleSelectAll(!!c)}
+                checked={
+                  isAllSelectedOnPage
+                    ? true
+                    : isSomeSelectedOnPage
+                    ? "indeterminate"
+                    : false
+                }
+              />
+            </TableHead>
+            {data?.table_columns?.map((col: any) => (
+              <TableHead key={col.field} className="text-center">
+                {col.label}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tableData.data?.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={data?.table_columns?.length + 2 || 7}
+                className="text-center h-24"
+              >
+                Data tidak ditemukan.
+              </TableCell>
+            </TableRow>
+          ) : (
+            tableData.data.map((item: any) => (
+              <TableRow key={item.id} className="even:bg-gray-50">
+                <TableCell className="text-center">
+                  <Checkbox
+                    checked={selectedItem.includes(item.id)}
+                    onCheckedChange={(c) => handleSelectedItemId(item.id, !!c)}
+                  />
+                </TableCell>
+                <TableCell className="text-center">{item.nip}</TableCell>
+                <TableCell>{item.nama_pegawai}</TableCell>
+                <TableCell className="text-center">
+                  {item.tgl_pelanggaran_formatted}
+                </TableCell>
+                <TableCell>{item.jenis_pelanggaran}</TableCell>
+                <TableCell>
+                  <div className="flex justify-center items-center">
+                    <Link
+                      to={`/admin/operasional/kompensasi/detail-data-pelanggaran/${item.id}`}
+                    >
+                      <Button size="icon" variant="ghost">
+                        <IoEyeOutline className="text-blue-500" />
+                      </Button>
+                    </Link>
+                    <Link
+                      to={`/admin/operasional/kompensasi/edit-data-pelanggaran/${item.id}`}
+                    >
+                      <Button size="icon" variant="ghost">
+                        <MdEdit className="text-yellow-500" />
+                      </Button>
+                    </Link>
+                    <ConfirmDialog
+                      title="Hapus Data?"
+                      description={`Apakah Anda yakin ingin menghapus data pelanggaran "${item.jenis_pelanggaran}"?`}
+                      onConfirm={() => deleteData(item.id)}
+                    >
+                      <Button size="icon" variant="ghost">
+                        <FaRegTrashAlt className="text-red-500" />
+                      </Button>
+                    </ConfirmDialog>
+                  </div>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody className="divide-y divide-gray-200">
-              {data?.data?.data?.map((item) => (
-                <TableRow key={item.id} className=" even:bg-gray-100">
-                  <TableCell className="text-center">
-                    <Checkbox className="bg-gray-100 border-gray-300 data-[state=checked]:bg-green-light-uika data-[state=checked]:border-green-light-uika cursor-pointer" />
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.nama_pegawai}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.tgl_pelanggaran_formatted}
-                  </TableCell>
-                  <TableCell className="text-center text-xs sm:text-sm">
-                    {item.jenis_pelanggaran}
-                  </TableCell>
-                  <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                      <Link
-                        to={
-                          "/admin/operasional/kompensasi/detail-data-pelanggaran/" +
-                          item.id
-                        }
-                      >
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="cursor-pointer"
-                        >
-                          <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                        </Button>
-                      </Link>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
-                      <Link
-                        to={
-                          "/admin/operasional/kompensasi/edit-data-pelanggaran/" +
-                          item.id
-                        }
-                      >
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="cursor-pointer"
-                        >
-                          <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                        </Button>
-                      </Link>
-
-                      <ConfirmDialog
-                        title="Hapus Data?"
-                        description="Apakah Anda yakin ingin menghapus data ini?"
-                        onConfirm={() => handleDelete(item.id)}
-                      >
-                        <Button
-                          size="icon"
-                          type="button"
-                          variant="ghost"
-                          className="cursor-pointer"
-                        >
-                          <FaRegTrashAlt className="text-red-500" />
-                        </Button>
-                      </ConfirmDialog>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          <CustomPagination
-            currentPage={Number(searchParam.get("page") || 1)}
-            data={data}
-            onPageChange={(page) => {
-              const newSearchParam = new URLSearchParams(searchParam);
-              newSearchParam.set("page", page.toString());
-              setSearchParam(newSearchParam);
-            }}
-          />
-        </>
-      )}
+      <CustomPagination
+        currentPage={Number(currentPage)}
+        links={data?.data?.links || []}
+        onPageChange={(p) => handleUrlChange("page", String(p))}
+        totalPages={data?.data?.last_page}
+      />
     </div>
   );
 };

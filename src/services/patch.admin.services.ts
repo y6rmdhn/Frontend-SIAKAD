@@ -23,15 +23,12 @@ const patchDataServices = {
       payload
     ),
   aprovePengajuanCuti: (payload: IPayloadWithArrayKeteranganAdmin) =>
-    axiosInstance.patch(
+    axiosInstance.post(
       `${endpoint.ADMIN}/validasi-cuti/batch/approve`,
       payload
     ),
   tolakPengajuanCuti: (payload: IPayloadWithArray) =>
-    axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-cuti/batch/reject`,
-      payload
-    ),
+    axiosInstance.post(`${endpoint.ADMIN}/validasi-cuti/batch/reject`, payload),
   tolakDataKeluarga: (payload: IPayloadWithArray) =>
     axiosInstance.post(`${endpoint.ADMIN}/data-keluarga/batch-reject`, payload),
   approveDataKeluarga: (payload: IPayloadWithArray) =>

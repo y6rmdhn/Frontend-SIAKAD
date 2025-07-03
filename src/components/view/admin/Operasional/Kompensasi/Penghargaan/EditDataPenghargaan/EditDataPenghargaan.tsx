@@ -8,8 +8,6 @@ import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoSaveSharp } from "react-icons/io5";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { BiRefresh } from "react-icons/bi";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile.tsx";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -128,19 +126,6 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
                 >
                   <IoSaveSharp /> {isPending ? "Menyimpan..." : "Simpan"}
                 </Button>
-                <Button
-                  type="button"
-                  onClick={() => form.reset()}
-                  className="bg-[#3ABC67] w-full xl:w-auto hover:bg-[#329C59] text-white text-xs sm:text-sm"
-                >
-                  <BiRefresh className="bg-[#FDA31A] rounded-full" /> Batal
-                </Button>
-                <Button
-                  type="button"
-                  className="bg-[#F56954] w-full xl:w-auto hover:bg-[#d45d4b] text-white text-xs sm:text-sm"
-                >
-                  <FaRegTrashAlt /> Hapus
-                </Button>
               </div>
             </div>
           }
@@ -193,19 +178,9 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
                 type="textarea"
               />
               <FormFieldInputFile
-                label="File Penghargaan"
+                label="Ganti File Penghargaan"
                 name="file_penghargaan"
               />
-              {initialData.file_penghargaan && (
-                <a
-                  href={initialData.file_penghargaan}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 text-sm hover:underline"
-                >
-                  Lihat File Saat Ini
-                </a>
-              )}
             </div>
           </div>
         </CustomCard>

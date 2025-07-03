@@ -7,13 +7,21 @@ import {
   JabatanFungsionalParams,
   JabatanStrukturalParams,
   KemampuanBahasaParams,
+  MonitoringKegiatanParams,
+  MonitoringPresensiParams,
   OrganisasiParams,
+  PaginatedUnitKerjaResponse,
   PangkatParams,
+  PelanggaranParams,
   PendidikanFormalParams,
+  PengajuanCutiParams,
+  PengajuanIzinParams,
   PenghargaanParams,
+  RekapKehadiranParams,
   RiwayatPekerjaanParams,
   SertifikasiParams,
   TesKompetensiParams,
+  UnitKerjaItem,
 } from "@/types";
 
 const adminServices = {
@@ -66,13 +74,38 @@ const adminServices = {
       },
     }),
   getJenisHari: () => axiosInstance.get(`${endpoint.ADMIN}/jenis-hari`),
-  getBerita: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/berita`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getSemuaUnitKerja: async (): Promise<UnitKerjaItem[]> => {
+    let allUnits: UnitKerjaItem[] = [];
+    let url: string | null = `${endpoint.ADMIN}/unit-kerja`;
+
+    while (url) {
+      const response: PaginatedUnitKerjaResponse = await axiosInstance.get(url);
+
+      const unitsOnPage = response.data.data;
+      allUnits = [...allUnits, ...unitsOnPage];
+
+      url = response.data.next_page_url;
+    }
+
+    return allUnits;
+  },
+  getBerita: async (params: {
+    page: string;
+    search?: string;
+    unitKerjaId?: string;
+  }) => {
+    const queryParams: Record<string, string> = { page: params.page };
+    if (params.search) {
+      queryParams.search = params.search;
+    }
+    if (params.unitKerjaId) {
+      queryParams.unit_kerja_id = params.unitKerjaId;
+    }
+
+    return axiosInstance.get(`${endpoint.ADMIN}/berita`, {
+      params: queryParams,
+    });
+  },
   getJenisKehadiran: (page?: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/jenis-kehadiran`, {
       params: {
@@ -169,19 +202,52 @@ const adminServices = {
     }),
   getSettingKehadiran: () =>
     axiosInstance.get(`${endpoint.ADMIN}/setting-kehadiran`),
-  getPenghargaan: (page: any) =>
-    axiosInstance.get(`${endpoint.ADMIN}/datapenghargaan`, {
-      params: {
-        page: page,
-      },
-    }),
+  getPenghargaan: (params: PenghargaanParams) => {
+    const cleanParams: Record<string, any> = {
+      page: params.page || 1,
+    };
 
-  getPelanggaran: (page: any) =>
-    axiosInstance.get(`${endpoint.ADMIN}/datapelanggaran`, {
-      params: {
-        page: page,
-      },
-    }),
+    if (params.search) {
+      cleanParams.search = params.search;
+    }
+    if (params.unit_kerja_id && params.unit_kerja_id !== "semua") {
+      cleanParams.unit_kerja_id = params.unit_kerja_id;
+    }
+    if (
+      params.jabatan_fungsional_id &&
+      params.jabatan_fungsional_id !== "semua"
+    ) {
+      cleanParams.jabatan_fungsional_id = params.jabatan_fungsional_id;
+    }
+    if (params.jenis_penghargaan && params.jenis_penghargaan !== "semua") {
+      cleanParams.jenis_penghargaan = params.jenis_penghargaan;
+    }
+
+    return axiosInstance.get(`${endpoint.ADMIN}/datapenghargaan`, {
+      params: cleanParams,
+    });
+  },
+
+  getPelanggaran: (params: PelanggaranParams) => {
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+    if (params.search) {
+      cleanParams.search = params.search;
+    }
+    if (params.unit_kerja && params.unit_kerja !== "semua") {
+      cleanParams.unit_kerja_id = params.unit_kerja;
+    }
+    if (params.jabatan_fungsional && params.jabatan_fungsional !== "semua") {
+      cleanParams.jabatan_fungsional_id = params.jabatan_fungsional;
+    }
+    if (params.jenis_pelanggaran && params.jenis_pelanggaran !== "semua") {
+      cleanParams.jenis_pelanggaran_id = params.jenis_pelanggaran;
+    }
+
+    return axiosInstance.get(`${endpoint.ADMIN}/datapelanggaran`, {
+      params: cleanParams,
+    });
+  },
 
   getJenisPenghargaanAktifitas: (page: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/jenis-penghargaan`, {
@@ -241,20 +307,40 @@ const adminServices = {
         search: search,
       },
     }),
-  getPengajuanIzinAdmin: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/validasi-izin`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
-  getPengajuanCutiAdmin: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/validasi-cuti`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getPengajuanIzinAdmin: (params: PengajuanIzinParams) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    Object.keys(cleanParams).forEach((key) => {
+      if (
+        cleanParams[key] === "" ||
+        cleanParams[key] === "semua" ||
+        cleanParams[key] === null
+      ) {
+        delete cleanParams[key];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/validasi-izin`, {
+      params: cleanParams,
+    });
+  },
+  getPengajuanCutiAdmin: (params: PengajuanCutiParams) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    Object.keys(cleanParams).forEach((key) => {
+      if (
+        cleanParams[key] === "" ||
+        cleanParams[key] === "semua" ||
+        cleanParams[key] === null
+      ) {
+        delete cleanParams[key];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/validasi-cuti`, {
+      params: cleanParams,
+    });
+  },
 
   getRumpunBidangIlmu: (page: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.ADMIN}/rumpun-bidang-ilmu`, {
@@ -347,14 +433,19 @@ const adminServices = {
     });
   },
   getJabatanAkademikValidasiData: (params: JabatanAkademikParams) => {
-    const cleanParams: Record<string, any> = { page: params.page || 1 };
+    const cleanParams: Record<string, any> = { page: params.page || "1" };
 
     if (params.search) cleanParams.search = params.search;
-    if (params.unit_kerja) cleanParams.unit_kerja = params.unit_kerja;
-    if (params.jabatan_akademik)
-      cleanParams.jabatan_akademik = params.jabatan_akademik;
-    if (params.status_pengajuan)
+
+    if (params.unit_kerja_id) {
+      cleanParams.unit_kerja_id = params.unit_kerja_id;
+    }
+    if (params.jabatan_akademik_id) {
+      cleanParams.jabatan_akademik_id = params.jabatan_akademik_id;
+    }
+    if (params.status_pengajuan) {
       cleanParams.status_pengajuan = params.status_pengajuan;
+    }
 
     return axiosInstance.get(`${endpoint.ADMIN}/datajabatanakademikadm`, {
       params: cleanParams,
@@ -416,14 +507,19 @@ const adminServices = {
     });
   },
   getHubunganKerjaValidasiData: (params: HubunganKerjaParams) => {
-    const cleanParams: Record<string, any> = { page: params.page || 1 };
+    const cleanParams: Record<string, any> = { page: params.page || "1" };
 
     if (params.search) cleanParams.search = params.search;
-    if (params.unit_kerja) cleanParams.unit_kerja = params.unit_kerja;
-    if (params.jabatan_fungsional)
-      cleanParams.jabatan_fungsional = params.jabatan_fungsional;
-    if (params.status_pengajuan)
+
+    if (params.unit_kerja_id) {
+      cleanParams.unit_kerja_id = params.unit_kerja_id;
+    }
+    if (params.jabatan_fungsional_id) {
+      cleanParams.jabatan_fungsional_id = params.jabatan_fungsional_id;
+    }
+    if (params.status_pengajuan) {
       cleanParams.status_pengajuan = params.status_pengajuan;
+    }
 
     return axiosInstance.get(`${endpoint.ADMIN}/datahubungankerjaadm`, {
       params: cleanParams,
@@ -464,20 +560,50 @@ const adminServices = {
         search: search,
       },
     }),
-  getDataMonitoringKegiatan: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/monitoring-kegiatan`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
-  getDataMonitoringPresensi: (page: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.ADMIN}/monitoring-presensi`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getDataMonitoringKegiatan: (params: MonitoringKegiatanParams) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    Object.keys(cleanParams).forEach((key) => {
+      const K = key as keyof MonitoringKegiatanParams;
+      if (!cleanParams[K]) {
+        delete cleanParams[K];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/monitoring-kegiatan`, {
+      params: cleanParams,
+    });
+  },
+  getDataMonitoringPresensi: (params: MonitoringPresensiParams) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    Object.keys(cleanParams).forEach((key) => {
+      const K = key as keyof MonitoringPresensiParams;
+      if (!cleanParams[K]) {
+        delete cleanParams[K];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/monitoring-presensi`, {
+      params: cleanParams,
+    });
+  },
+  getRekapKehadiran: (params: RekapKehadiranParams) => {
+    // Salin parameter untuk menghindari modifikasi objek asli
+    const cleanParams: Record<string, any> = { ...params };
+
+    // Hapus parameter yang kosong atau null agar tidak dikirim ke API
+    Object.keys(cleanParams).forEach((key) => {
+      const K = key as keyof RekapKehadiranParams;
+      if (!cleanParams[K]) {
+        delete cleanParams[K];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/rekapitulasi/kehadiran`, {
+      params: cleanParams,
+    });
+  },
   getKemampuanBahasa: (params: KemampuanBahasaParams) => {
     const cleanParams: Record<string, any> = { page: params.page || 1 };
 
@@ -756,6 +882,10 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/datahubungankerjaadm/${id}`),
   getJabatanAkademikDetail: (id: string) =>
     axiosInstance.get(`${endpoint.ADMIN}/datajabatanakademikadm/${id}`),
+  getPendidikanFormalDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datapendidikanformaladm/${id}`),
+  getRiwayatPekerjaanDetail: (id: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/datariwayatpekerjaanadm/${id}`),
 };
 
 export default adminServices;
