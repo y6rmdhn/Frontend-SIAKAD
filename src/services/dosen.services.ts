@@ -1,5 +1,6 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
+import { BeritaParams, CutiParams, OrangtuaParams } from "@/types";
 
 const dosenServices = {
   //   keluarga
@@ -14,12 +15,26 @@ const dosenServices = {
   getDataAnakDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
 
-  getDataOrangtua: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
-      params: {
-        page: page,
-      },
-    }),
+  getDataOrangtua: (params: OrangtuaParams) => {
+  const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+  if (params.search) {
+    cleanParams.search = params.search;
+  }
+  if (params.status_pengajuan && params.status_pengajuan !== "semua") {
+    cleanParams.status_pengajuan = params.status_pengajuan;
+  }
+  if (params.status_orangtua && params.status_orangtua !== "semua") {
+    // Sesuaikan nama parameter jika backend mengharapkan nama lain
+    // contoh: cleanParams.status_orang_tua = params.status_orangtua;
+    cleanParams.status_orangtua = params.status_orangtua;
+  }
+
+  return axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
+    params: cleanParams,
+  });
+},
+
   getDataOrangtuaWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua`),
 
@@ -198,20 +213,45 @@ const dosenServices = {
   getDataIzinWithoutParams: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/pengajuan-izin-dosen/` + id),
 
-  getDataCuti: (page: any, search: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
-  getDataBeritaUser: (page: any, search: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/berita-pegawai`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getDataCuti: (params: CutiParams) => {
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+    if (params.search) {
+      cleanParams.search = params.search;
+    }
+    if (params.jenis_cuti && params.jenis_cuti !== "semua") {
+      cleanParams.jenis_cuti_id = params.jenis_cuti;
+    }
+    if (params.jumlah_cuti && params.jumlah_cuti !== "semua") {
+      cleanParams.jumlah_cuti = params.jumlah_cuti;
+    }
+    if (params.status_pengajuan && params.status_pengajuan !== "semua") {
+      cleanParams.status_pengajuan = params.status_pengajuan;
+    }
+
+    return axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, {
+      params: cleanParams,
+    });
+  },
+
+  getDataBeritaUser: (params: BeritaParams) => {
+    // 1. Buat objek parameter yang bersih, dengan default page = 1
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+    // 2. Tambahkan parameter lain hanya jika ada nilainya (tidak kosong atau undefined)
+    if (params.search) {
+      cleanParams.search = params.search;
+    }
+
+    if (params.unit_kerja && params.unit_kerja !== "semua") {
+      cleanParams.unit_kerja = params.unit_kerja;
+    }
+
+    // 3. Lakukan panggilan API dengan parameter yang sudah bersih
+    return axiosInstance.get(`${endpoint.DOSEN}/berita-pegawai`, {
+      params: cleanParams,
+    });
+  },
   getDataPendidikanFormalUser: (page?: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen`, {
       params: {
@@ -226,11 +266,18 @@ const dosenServices = {
         search: search,
       },
     }),
-  getDataKegiatanHarian: (page?: any, search?: string | undefined) =>
+  getDataKegiatanHarian: (
+    page?: any,
+    search?: string | undefined,
+    bulan?: number, // <-- Tambahkan parameter bulan
+    tahun?: number  // <-- Tambahkan parameter tahun
+  ) =>
     axiosInstance.get(`${endpoint.DOSEN}/kegiatanhariandosen`, {
       params: {
         page: page,
         search: search,
+        bulan: bulan, // <-- Kirim sebagai query param
+        tahun: tahun, // <-- Kirim sebagai query param
       },
     }),
   getDataMonitoringKegiatan: (page?: any, search?: string | undefined) =>

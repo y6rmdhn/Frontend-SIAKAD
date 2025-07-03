@@ -177,3 +177,24 @@ export interface RekapKehadiranParams {
   tanggal_awal?: string;
   tanggal_akhir?: string;
 }
+
+export interface BeritaParams {
+  page?: any;
+  search?: string | null; // Sekarang menerima string | null | undefined
+  unit_kerja?: string | null; // Sekarang menerima string | null | undefined
+}
+
+export interface CutiParams {
+  page?: any;
+  search?: string | null;
+  jenis_cuti?: string | null;
+  jumlah_cuti?: string | null; // Kita akan kirim sebagai string
+  status_pengajuan?: string | null;
+}
+
+export interface OrangtuaParams {
+  page?: any;
+  search?: string | null;
+  status_pengajuan?: string | null;
+  status_orangtua?: string | null;
+}

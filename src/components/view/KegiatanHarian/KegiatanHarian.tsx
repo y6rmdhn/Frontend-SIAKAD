@@ -20,10 +20,36 @@ import CustomPagination from "@/components/blocks/CustomPagination";
 import { FaCheck } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
+/// DIUBAH: value diubah menjadi string
+const opsiBulan = [
+  { label: "Januari", value: "1" }, { label: "Februari", value: "2" },
+  { label: "Maret", value: "3" }, { label: "April", value: "4" },
+  { label: "Mei", value: "5" }, { label: "Juni", value: "6" },
+  { label: "Juli", value: "7" }, { label: "Agustus", value: "8" },
+  { label: "September", value: "9" }, { label: "Oktober", value: "10" },
+  { label: "November", value: "11" }, { label: "Desember", value: "12" },
+];
+
+const generateOpsiTahun = () => {
+  const tahunSekarang = new Date().getFullYear();
+  const tahunMulai = 2005;
+  const opsi = [];
+  for (let tahun = tahunSekarang; tahun >= tahunMulai; tahun--) {
+    // DIUBAH: value diubah menjadi string
+    opsi.push({ label: String(tahun), value: String(tahun) });
+  }
+  return opsi;
+};
+const opsiTahun = generateOpsiTahun();
+
 const KegiatanHarian = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
+  const bulan = searchParam.get("bulan") || (new Date().getMonth() + 1).toString();
+  const tahun = searchParam.get("tahun") || (new Date().getFullYear()).toString();
+
+  
 
   // get data
   const { data } = useQuery({
@@ -31,17 +57,41 @@ const KegiatanHarian = () => {
       "kegiatan-harian",
       searchParam.get("page"),
       searchParam.get("search"),
+      searchParam.get("bulan"),
+      searchParam.get("tahun"),
     ],
     queryFn: async () => {
       const search = searchParam.get("search") || "";
       const response = await dosenServices.getDataKegiatanHarian(
         searchParam.get("page"),
-        search
+        search,
+        Number(bulan), // <-- Kirim bulan
+        Number(tahun)  // <-- Kirim tahun
       );
       console.log(response.data);
       return response.data;
     },
   });
+
+  const handleFilterChange = (key: string, value: string) => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    newSearchParam.set(key, value);
+    newSearchParam.set("page", "1");
+    setSearchParam(newSearchParam);
+  };
+
+  useEffect(() => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    if (debouncedInput) {
+      newSearchParam.set("search", debouncedInput);
+      newSearchParam.set("page", "1");
+    } else {
+      newSearchParam.delete("search");
+    }
+    if (searchParam.toString() !== newSearchParam.toString()) {
+      setSearchParam(newSearchParam);
+    }
+  }, [debouncedInput, searchParam, setSearchParam]);
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
@@ -94,25 +144,21 @@ const KegiatanHarian = () => {
         actions={
           <div className="grid md:grid-rows-1 md:grid-flow-col grid-rows-2 gap-6">
             <div className="flex flex-col md:flex-row gap-4">
-              <Label className="w-full text-[#FDA31A]">Bulan</Label>
+              <Label className="text-[#FDA31A]">Bulan</Label>
               <SelectFilter
-                placeholder="Maret"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
-                ]}
+                placeholder="Pilih Bulan"
+                options={opsiBulan} // Sekarang sudah cocok tipenya
+                value={bulan}
+                onValueChange={(value: string) => handleFilterChange("bulan", value)}
               />
             </div>
             <div className="flex flex-col md:flex-row gap-4">
-              <Label className="w-full text-[#FDA31A]">Tahun</Label>
+              <Label className="text-[#FDA31A]">Tahun</Label>
               <SelectFilter
-                placeholder="2025"
-                options={[
-                  { label: "Admin", value: "admin" },
-                  { label: "User", value: "user" },
-                  { label: "Guest", value: "guest" },
-                ]}
+                placeholder="Pilih Tahun"
+                options={opsiTahun} // Sekarang sudah cocok tipenya
+                value={tahun}
+                onValueChange={(value: string) => handleFilterChange("tahun", value)}
               />
             </div>
           </div>
