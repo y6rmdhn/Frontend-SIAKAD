@@ -13,12 +13,13 @@ import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { Link, useSearchParams } from "react-router-dom";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import SearchInput from "@/components/blocks/SearchInput";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { FaCheck } from "react-icons/fa";
+import { BeritaParams } from "@/types";
 
 const Berita = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -26,26 +27,54 @@ const Berita = () => {
   const [debouncedInput] = useDebounce(searchData, 500);
 
   // get data
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "berita-user",
       searchParam.get("page"),
       searchParam.get("search"),
+      searchParam.get("unit_kerja"),
     ],
     queryFn: async () => {
-      const response = await dosenServices.getDataBeritaUser(
-        searchParam.get("page") || 1,
-        searchParam.get("search") || ""
-      );
+      // Kumpulkan semua parameter ke dalam satu objek
+      const params: BeritaParams = {
+        page: searchParam.get("page"),
+        search: searchParam.get("search") ?? undefined, // Konversi null -> undefined
+        unit_kerja: searchParam.get("unit_kerja") ?? undefined, // Konversi null -> undefined
+      };
 
-      return response.data.data;
+      // Kirim satu objek tersebut ke service
+      const response = await dosenServices.getDataBeritaUser(params);
+      return response.data;
     },
   });
+
+  console.log("Struktur data dari useQuery:", data);
+
+  const unitKerjaOptions = useMemo(() => {
+    if (!data?.filter_options?.unit_kerja) {
+      return [{ label: "Memuat...", value: "" }];
+    }
+    return data.filter_options.unit_kerja.map((item: any) => ({
+      label: item.nama,
+      value: item.id,
+    }));
+  }, [data]);
+
+  const handleUnitKerjaChange = (value: string) => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      newSearchParam.set("unit_kerja", value);
+    } else {
+      newSearchParam.delete("unit_kerja");
+    }
+    newSearchParam.set("page", "1"); // Reset ke halaman 1 setiap kali filter berubah
+    setSearchParam(newSearchParam);
+  };
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
 
-    if (debouncedInput.length > 3) {
+    if (debouncedInput.length > 3) { // UBAH: biarkan search berjalan walau kurang dari 3 char
       newSearchParam.set("search", debouncedInput);
       newSearchParam.set("page", "1");
     } else {
@@ -73,18 +102,6 @@ const Berita = () => {
     }
   }, [searchParam, setSearchParam]);
 
-  useEffect(() => {
-    if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
-    ) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", data.last_page.toString());
-      setSearchParam(newSearchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
-
   return (
     <div className="mt-10 mb-20">
       <h1 className="text-2xl font-normal">
@@ -99,13 +116,11 @@ const Berita = () => {
           <div className="flex flex-col md:flex-row justify-start gap-4">
             <Label className=" text-[#FDA31A] md:pr-30">Unit Kerja</Label>
             <SelectFilter
-              placeholder="041001 - Universitas Ibn Khaldun"
+              placeholder="Pilih Unit Kerja"
               classname="w-full md:w-80"
-              options={[
-                { label: "Admin", value: "admin" },
-                { label: "User", value: "user" },
-                { label: "Guest", value: "guest" },
-              ]}
+              options={unitKerjaOptions}
+              value={searchParam.get("unit_kerja") || "semua"}
+              onValueChange={handleUnitKerjaChange}
             />
           </div>
         }
@@ -118,14 +133,6 @@ const Berita = () => {
             <div className="flex justify-between flex-col min-[870px]:flex-row gap-4">
               <div className="flex gap-2 order-2 w-full md:w-auto">
                 <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto">
-                  <SelectFilter
-                    classname="w-full md:w-30"
-                    options={[
-                      { label: "Admin", value: "admin" },
-                      { label: "User", value: "user" },
-                      { label: "Guest", value: "guest" },
-                    ]}
-                  />
 
                   <SearchInput
                     value={searchData}
@@ -157,43 +164,54 @@ const Berita = () => {
             </TableRow>
           </TableHeader>
 
+
           <TableBody className="divide-y divide-gray-200">
-            {data?.data.map((item: any) => (
-              <TableRow key={item.id} className=" even:bg-gray-100">
-                <TableCell className="text-center">
-                  <TableCell className="text-center">
-                    {item.unit_kerja_id.join(", ")}
-                  </TableCell>
-                </TableCell>
-                <TableCell className="text-center">{item.judul}</TableCell>
-                <TableCell className="text-center">
-                  {item.tgl_posting_formatted}
-                </TableCell>
-                <TableCell className="text-center">
-                  {item.tgl_expired_formatted}
-                </TableCell>
-                <TableCell className="text-center flex justify-center mt-2">
-                  {item.prioritas ? (
-                    <FaCheck className="text-green-500 w-5! h-5!" />
-                  ) : (
-                    <IoClose className="text-red-500 w-5! h-5!" />
-                  )}
-                </TableCell>
-                <TableCell className="h-full">
-                  <div className="flex justify-center items-center w-full h-full">
-                    <Link to={"/operasional/detail-berita/" + item.id}>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                      </Button>
-                    </Link>
-                  </div>
-                </TableCell>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">Memuat data...</TableCell>
               </TableRow>
-            ))}
+            ) : data?.data?.data.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">Data tidak ditemukan.</TableCell>
+              </TableRow>
+            ) : (
+              data?.data.data.map((item: any) => (
+                <TableRow key={item.id} className=" even:bg-gray-100">
+                  <TableCell className="text-center">
+                    <TableCell className="text-center">
+                      {item.unit_kerja_id.join(", ")}
+                    </TableCell>
+                  </TableCell>
+                  <TableCell className="text-center">{item.judul}</TableCell>
+                  <TableCell className="text-center">
+                    {item.tgl_posting_formatted}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {item.tgl_expired_formatted}
+                  </TableCell>
+                  <TableCell className="text-center flex justify-center mt-2">
+                    {item.prioritas ? (
+                      <FaCheck className="text-green-500 w-5! h-5!" />
+                    ) : (
+                      <IoClose className="text-red-500 w-5! h-5!" />
+                    )}
+                  </TableCell>
+                  <TableCell className="h-full">
+                    <div className="flex justify-center items-center w-full h-full">
+                      <Link to={"/operasional/detail-berita/" + item.id}>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
 
