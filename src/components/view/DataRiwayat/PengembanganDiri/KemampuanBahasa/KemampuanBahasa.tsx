@@ -24,8 +24,6 @@ import {
   ReactPortal,
   useEffect,
 } from "react";
-import SelectFilter from "../../../../blocks/SelectFilter";
-import unitKerjaOptions from "../../../../../constant/dummyFilter";
 import SearchInput from "../../../../blocks/SearchInput";
 
 const KemampuanBahasa = () => {
@@ -103,11 +101,6 @@ const KemampuanBahasa = () => {
       />
 
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SelectFilter
-          classname="w-full md:w-32 "
-          options={unitKerjaOptions}
-          placeholder="--Semua--"
-        />
         <SearchInput />
       </div>
 

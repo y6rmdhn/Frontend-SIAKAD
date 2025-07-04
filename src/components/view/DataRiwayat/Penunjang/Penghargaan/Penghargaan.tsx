@@ -2,15 +2,6 @@ import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -136,21 +127,6 @@ const Penghargaan = () => {
       />
       <InfoList items={infoItems} />
       <div className="gap-5 w-full flex flex-col sm:flex-row mt-5">
-        <Select>
-          <SelectTrigger className="w-full sm:w-32">
-            <SelectValue placeholder="--Semua--" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Unit Kerja</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
 
         <SearchInput
           value={searchData}

@@ -13,8 +13,6 @@ import { FaPlus } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link, useSearchParams } from "react-router-dom";
 import InfoList from "@/components/blocks/InfoList";
-import SelectFilter from "@/components/blocks/SelectFilter";
-import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "../../../../../services/dosen.services";
@@ -129,15 +127,10 @@ const RiwayatPekerjaan = () => {
       />
 
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SelectFilter
-          classname="w-full md:w-32 "
-          options={unitKerjaOptions}
-          placeholder="--Semua--"
-        />
         <SearchInput
           value={searchData}
           onChange={(e) => setSearchData(e.target.value)}
-          className="w-full md:w-1/2"
+          className="w-full"
         />
       </div>
 

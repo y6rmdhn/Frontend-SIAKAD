@@ -23,8 +23,6 @@ import {
   useEffect,
 } from "react";
 import CustomPagination from "../../../../blocks/CustomPagination";
-import SelectFilter from "../../../../blocks/SelectFilter";
-import unitKerjaOptions from "../../../../../constant/dummyFilter";
 import SearchInput from "../../../../blocks/SearchInput";
 import { format, parseISO } from "date-fns";
 
@@ -101,11 +99,6 @@ const Organisasi = () => {
         ]}
       />
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SelectFilter
-          classname="w-full md:w-32 "
-          options={unitKerjaOptions}
-          placeholder="--Semua--"
-        />
         <SearchInput />
       </div>
       <Table className="mt-10 table-auto text-xs md:text-sm">

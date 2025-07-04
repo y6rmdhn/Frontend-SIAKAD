@@ -180,14 +180,6 @@ const Izin = () => {
 
       <div className="flex mt-4 flex-col min-[864px]:flex-row justify-between gap-5 mb-5">
         <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto order-2 md:order-1">
-          <SelectFilter
-            classname="w-full md:w-30"
-            options={[
-              { label: "Admin", value: "admin" },
-              { label: "User", value: "user" },
-              { label: "Guest", value: "guest" },
-            ]}
-          />
           <SearchInput
             value={searchData}
             onChange={(e) => setSearchData(e.target.value)}

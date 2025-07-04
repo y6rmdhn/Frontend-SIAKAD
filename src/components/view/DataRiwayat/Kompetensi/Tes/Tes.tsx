@@ -13,8 +13,6 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import SearchInput from "@/components/blocks/SearchInput";
-import unitKerjaOptions from "@/constant/dummyFilter";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import InfoList from "@/components/blocks/InfoList";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
@@ -131,11 +129,6 @@ const Tes = () => {
       />
 
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SelectFilter
-          classname="w-full md:w-32 "
-          options={unitKerjaOptions}
-          placeholder="--Semua--"
-        />
         <SearchInput
           value={searchData}
           onChange={(e) => setSearchData(e.target.value)}

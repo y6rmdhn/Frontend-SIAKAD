@@ -263,3 +263,29 @@ export interface GelarAkademikParams {
   page?: string;
   search?: string;
 }
+
+export interface GetDashboardParams {
+  unit_kerja_id?: string;
+}
+
+export interface EvaluasiKinerjaParams {
+  page?: string;
+  search?: string;
+}
+
+export interface GelarAkademikParams {
+  page?: string;
+  search?: string;
+}
+
+export interface AnakParams {
+  page?: any;
+  search?: string | null;
+  status_pengajuan?: string | null;
+}
+
+export interface PasanganParams {
+  page?: any;
+  search?: string | null;
+  status_pengajuan?: string | null;
+}

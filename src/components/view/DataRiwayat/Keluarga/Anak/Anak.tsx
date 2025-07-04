@@ -25,21 +25,50 @@ import {
   ReactElement,
   ReactNode,
   ReactPortal,
-  useEffect,
+  useEffect, useMemo
 } from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
+import { AnakParams } from "@/types";
 
 const Anak = () => {
   const [searchParam, setSearchParam] = useSearchParams();
 
   // get data
-  const { data } = useQuery({
-    queryKey: ["anak-dosen", searchParam.get("page")],
+  const { data, isLoading } = useQuery({
+    queryKey: [
+      "anak-dosen",
+      searchParam.get("page"),
+      searchParam.get("search"),
+      searchParam.get("status_pengajuan"),
+    ],
     queryFn: async () => {
-      const response = await dosenServices.getDataAnak(searchParam.get("page"));
+      const params: AnakParams = {
+        page: searchParam.get("page"),
+        search: searchParam.get("search"),
+        status_pengajuan: searchParam.get("status_pengajuan"),
+      };
+      const response = await dosenServices.getDataAnak(params);
       return response.data;
     },
   });
+
+  const statusPengajuanOptions = useMemo(() => {
+    return data?.filters?.status_pengajuan?.map((item: any) => ({
+      label: item.nama,
+      value: item.id,
+    })) || [];
+  }, [data]);
+
+  const handleFilterChange = (filterName: string, value: string) => {
+    const newSearchParam = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      newSearchParam.set(filterName, value);
+    } else {
+      newSearchParam.delete(filterName);
+    }
+    newSearchParam.set("page", "1");
+    setSearchParam(newSearchParam);
+  };
 
   useEffect(() => {
     if (!searchParam.get("page")) {
@@ -107,26 +136,15 @@ const Anak = () => {
             <SelectFilter
               classname="w-full md:w-64"
               placeholder="--Semua Pengajuan--"
-              options={[
-                { label: "Admin", value: "admin" },
-                { label: "User", value: "user" },
-                { label: "Guest", value: "guest" },
-              ]}
+              value={searchParam.get("status_pengajuan") || "semua"}
+              options={statusPengajuanOptions}
+              onValueChange={(value) => handleFilterChange("status_pengajuan", value)}
             />
           </div>
         }
       />
 
       <div className="md:gap-5 gap-2 flex mt-5 flex-col sm:flex-row ">
-        <SelectFilter
-          placeholder="--Semua--"
-          classname="w-full sm:w-32"
-          options={[
-            { label: "Admin", value: "admin" },
-            { label: "User", value: "user" },
-            { label: "Guest", value: "guest" },
-          ]}
-        />
 
         <SearchInput />
       </div>
@@ -169,7 +187,12 @@ const Anak = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.data.map(
+        {isLoading ? (
+              <TableRow><TableCell colSpan={8} className="text-center h-24">Memuat data anak...</TableCell></TableRow>
+            ) : data?.data?.data?.length === 0 ? (
+              <TableRow><TableCell colSpan={8} className="text-center h-24">Data tidak ditemukan.</TableCell></TableRow>
+            ) : (
+          data?.data.data.map(
             (item: {
               id: Key | null | undefined;
               nama:
@@ -353,7 +376,7 @@ const Anak = () => {
                   </div>
                 </TableCell>
               </TableRow>
-            )
+            ))
           )}
         </TableBody>
       </Table>

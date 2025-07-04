@@ -1,7 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import InfoList from "@/components/blocks/InfoList";
 import SearchInput from "@/components/blocks/SearchInput";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import unitKerjaOptions from "@/constant/dummyFilter";
 import { FaPlus } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link, useSearchParams } from "react-router-dom";
@@ -102,7 +100,6 @@ const Pangkat = () => {
       />
 
       <div className="lg:gap-5 gap-2 flex flex-col md:flex-row mt-5">
-        <SelectFilter classname="md:w-32" options={unitKerjaOptions} />
         <SearchInput />
       </div>
 
