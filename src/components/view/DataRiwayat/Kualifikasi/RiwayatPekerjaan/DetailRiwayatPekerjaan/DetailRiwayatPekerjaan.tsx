@@ -218,13 +218,11 @@ const DetailRiwayatPekerjaan = () => {
               </div>
               <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
                 {/* Menggunakan FormField dari file lain */}
-                <FormFieldSelect
+                <FormFieldInput
                   name="bidang_usaha"
                   label="Bidang Usaha"
                   form={form}
                   required
-                  placeholder="Pilih Bidang Usaha"
-                  options={[{ value: "tes", label: "tes" }]}
                 />
                 <FormFieldInput
                   name="instansi"
@@ -233,13 +231,11 @@ const DetailRiwayatPekerjaan = () => {
                   required
                   placeholder="Nama Instansi"
                 />
-                <FormFieldSelect
+                <FormFieldInput
                   name="jenis_pekerjaan"
                   label="Jenis Pekerjaan"
                   form={form}
                   required
-                  placeholder="Pilih Jenis Pekerjaan"
-                  options={[{ value: "tes", label: "tes" }]}
                 />
                 <FormFieldInput
                   name="jabatan"
