@@ -248,3 +248,15 @@ export interface OrangtuaParams {
   status_pengajuan?: string | null;
   status_orangtua?: string | null;
 }
+
+export interface AnakParams {
+  page?: any;
+  search?: string | null;
+  status_pengajuan?: string | null;
+}
+
+export interface PasanganParams {
+  page?: any;
+  search?: string | null;
+  status_pengajuan?: string | null;
+}

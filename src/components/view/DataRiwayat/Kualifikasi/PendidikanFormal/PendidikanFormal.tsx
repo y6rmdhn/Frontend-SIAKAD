@@ -1,7 +1,6 @@
 import CustomCard from "@/components/blocks/Card";
 import InfoList from "@/components/blocks/InfoList";
 import SearchInput from "@/components/blocks/SearchInput";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,16 +54,6 @@ const PendidikanFormal = () => {
     },
   });
 
-  const handleFilterChange = (filterName: any, value: any) => {
-    const newSearchParam = new URLSearchParams(searchParam);
-    if (value && value !== "semua") {
-      newSearchParam.set(filterName, value);
-    } else {
-      newSearchParam.delete(filterName);
-    }
-    newSearchParam.set("page", "1");
-    setSearchParam(newSearchParam);
-  };
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
@@ -145,24 +134,10 @@ const PendidikanFormal = () => {
       )}
 
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SelectFilter
-          classname="w-full md:w-1/4 "
-          options={
-            data?.filters?.status_pengajuan?.map((item: any) => ({
-              value: item.id,
-              label: item.nama,
-            })) || []
-          }
-          placeholder="--Semua Status--"
-          value={searchParam.get("status_pengajuan") || "semua"}
-          onValueChange={(value: any) =>
-            handleFilterChange("status_pengajuan", value)
-          }
-        />
         <SearchInput
           value={searchData}
           onChange={(e) => setSearchData(e.target.value)}
-          className="w-full md:w-1/2"
+          className="w-full"
         />
       </div>
 

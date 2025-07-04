@@ -1,15 +1,29 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
-import { BeritaParams, CutiParams, OrangtuaParams } from "@/types";
+import { AnakParams, BeritaParams, CutiParams, OrangtuaParams, PasanganParams } from "@/types";
 
 const dosenServices = {
   //   keluarga
-  getDataAnak: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/anak`, {
-      params: {
-        page: page,
-      },
-    }),
+  getDataAnak: (params: AnakParams) => {
+  const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+  if (params.search) {
+    cleanParams.search = params.search;
+  }
+  if (params.status_pengajuan && params.status_pengajuan !== "semua") {
+    cleanParams.status_pengajuan = params.status_pengajuan;
+  }
+
+  return axiosInstance.get(`${endpoint.DOSEN}/anak`, {
+    params: cleanParams,
+  });
+},
+
+// Pastikan Anda juga memiliki service untuk mengambil info pegawai
+getPegawaiInfo: () => {
+    // Ganti dengan endpoint yang benar untuk mengambil detail profil pegawai
+    return axiosInstance.get(`${endpoint.DOSEN}/profil-pegawai`);
+},
   getDataAnakWithoutParam: () => axiosInstance.get(`${endpoint.DOSEN}/anak`),
 
   getDataAnakDetail: (id: number | string) =>
@@ -41,12 +55,20 @@ const dosenServices = {
   getDataOrangtuaDetail: (id: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua/` + id),
 
-  getDataPasangan: (page: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pasangan`, {
-      params: {
-        page: page,
-      },
-    }),
+  getDataPasangan: (params: PasanganParams) => {
+  const cleanParams: Record<string, any> = { page: params.page || 1 };
+
+  if (params.search) {
+    cleanParams.search = params.search;
+  }
+  if (params.status_pengajuan && params.status_pengajuan !== "semua") {
+    cleanParams.status_pengajuan = params.status_pengajuan;
+  }
+
+  return axiosInstance.get(`${endpoint.DOSEN}/pasangan`, {
+    params: cleanParams,
+  });
+},
   getDataPasanganWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/pasangan`),
   getDataPasanganDetail: (id: number | string) =>

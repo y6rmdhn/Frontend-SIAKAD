@@ -2,7 +2,6 @@ import {Link, useNavigate} from "react-router-dom";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { FaPlus } from "react-icons/fa";
 import InfoList from "@/components/blocks/InfoList";
 import { Form } from "@/components/ui/form";
@@ -212,14 +211,6 @@ const DetailAnak = () => {
                   />
 
                   {/* Kolom Kanan */}
-                  <div className="flex md:w-80 w-full flex-col gap-2 bg-white shadow-md p-3 sm:flex-row sm:gap-14 sm:p-4">
-                    <Label className="font-bold w-full text-[#2572BE] sm:w-50">
-                      Tanggal Input
-                    </Label>
-                    <Label className="w-full sm:w-50 text-[#2572BE]">
-                      26 Maret 2026
-                    </Label>
-                  </div>
                 </div>
               </div>
             }

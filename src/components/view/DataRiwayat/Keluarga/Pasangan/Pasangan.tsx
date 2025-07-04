@@ -18,13 +18,14 @@ import SelectFilter from "@/components/blocks/SelectFilter";
 import InfoList from "@/components/blocks/InfoList";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { parseISO, format } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 import deleteDataDosenServices from "@/services/dosen.delete.services.ts";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PasanganParams } from "@/types";
 
 // --- START DEFINISI TIPE ---
 
@@ -59,9 +60,17 @@ interface PaginationLink {
     active: boolean;
 }
 
+interface FilterOption {
+    id: string;
+    nama: string;
+}
+
 interface PasanganApiResponse {
     pegawai_info: PegawaiInfo;
     table_columns: TableColumn[];
+    filters: {
+        status_pengajuan: FilterOption[];
+    };
     data: {
         data: PasanganItem[];
     };
@@ -78,13 +87,41 @@ const Pasangan = () => {
     const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery<PasanganApiResponse>({
-        queryKey: ["pasangan-dosen", searchParam.get("page")],
+        queryKey: [
+            "pasangan-dosen",
+            searchParam.get("page"),
+            searchParam.get("search"),
+            searchParam.get("status_pengajuan"),
+        ],
         queryFn: async () => {
-            const page = searchParam.get("page") || "1";
-            const response = await dosenServices.getDataPasangan(page);
+            const params: PasanganParams = {
+                page: searchParam.get("page"),
+                search: searchParam.get("search"),
+                status_pengajuan: searchParam.get("status_pengajuan"),
+            };
+            const response = await dosenServices.getDataPasangan(params);
             return response.data;
         },
     });
+
+    const statusPengajuanOptions = useMemo(() => {
+        return data?.filters?.status_pengajuan?.map((item) => ({
+            label: item.nama,
+            value: item.id,
+        })) || [];
+    }, [data]);
+
+    // Handler dan Mutasi
+    const handleFilterChange = (filterName: string, value: string) => {
+        const newSearchParam = new URLSearchParams(searchParam);
+        if (value && value !== "semua") {
+            newSearchParam.set(filterName, value);
+        } else {
+            newSearchParam.delete(filterName);
+        }
+        newSearchParam.set("page", "1");
+        setSearchParam(newSearchParam);
+    };
 
     const { mutate: deleteData } = useMutation({
         mutationFn: (id: number) =>
@@ -166,25 +203,15 @@ const Pasangan = () => {
                         <SelectFilter
                             classname="w-full md:w-64"
                             placeholder="--Semua Pengajuan--"
-                            options={[
-                                { label: "Diajukan", value: "diajukan" },
-                                { label: "Disetujui", value: "disetujui" },
-                                { label: "Ditolak", value: "ditolak" },
-                            ]}
+                            value={searchParam.get("status_pengajuan") || "semua"}
+                            options={statusPengajuanOptions}
+                            onValueChange={(value) => handleFilterChange("status_pengajuan", value)}
                         />
                     </div>
                 }
             />
 
             <div className="md:gap-5 gap-2 flex mt-5 flex-col sm:flex-row ">
-                <SelectFilter
-                    placeholder="--Semua--"
-                    classname="w-full sm:w-32"
-                    options={[
-                        { label: "NIP", value: "nip" },
-                        { label: "Nama", value: "nama" },
-                    ]}
-                />
 
                 <SearchInput />
             </div>
@@ -210,55 +237,63 @@ const Pasangan = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody className="divide-y divide-gray-200">
-                            {data?.data.data.map((item: PasanganItem, index: number) => (
-                                <TableRow key={item.id} className=" even:bg-gray-100">
-                                    <TableCell className="text-center">{index + 1}</TableCell>
-                                    <TableCell className="text-center">{item.nama_pasangan}</TableCell>
-                                    <TableCell className="text-center">{item.tempat_lahir}</TableCell>
-                                    <TableCell className="text-center">
-                                        {item.tgl_lahir ? format(parseISO(item.tgl_lahir), "dd MMMM yyyy") : "-"}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        {item.jenis_pekerjaan || "-"}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        {item.status_kepegawaian || "-"}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Button
-                                            size="sm"
-                                            className={`w-full text-xs lg:text-sm text-black
-                                            ${
-                                                item.status_pengajuan === "draf" ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
-                                                    : item.status_pengajuan === "diajukan" ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
-                                                        : item.status_pengajuan === "disetujui" ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
-                                                            : item.status_pengajuan === "ditolak" ? "bg-red-500 hover:bg-red-500 text-white"
-                                                                : "bg-slate-300 hover:bg-slate-300"
-                                            }`}
-                                        >
-                                            {item.status_pengajuan}
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell className="h-full">
-                                        <div className="flex justify-center items-center w-full h-full">
-                                            <Link to={`/data-riwayat/keluarga/detail-data-pasangan/${item.id}`}>
-                                                <Button size="icon" variant="ghost" className="cursor-pointer">
-                                                    <IoEyeOutline className="w-5 h-5 text-[#26A1F4]"/>
-                                                </Button>
-                                            </Link>
-                                            <ConfirmDialog
-                                                title="Hapus Data?"
-                                                description="Apakah Anda yakin ingin menghapus data ini?"
-                                                onConfirm={() => handleDeleteData(item.id)}
+                            {isLoading ? (
+                                <div className="mt-10 space-y-4">
+                                    <Skeleton className="h-12 w-full" />
+                                    {[...Array(5)].map((_, i) => (
+                                        <Skeleton key={i} className="h-10 w-full" />
+                                    ))}
+                                </div>
+                            ) : (
+                                data?.data.data.map((item: PasanganItem, index: number) => (
+                                    <TableRow key={item.id} className=" even:bg-gray-100">
+                                        <TableCell className="text-center">{index + 1}</TableCell>
+                                        <TableCell className="text-center">{item.nama_pasangan}</TableCell>
+                                        <TableCell className="text-center">{item.tempat_lahir}</TableCell>
+                                        <TableCell className="text-center">
+                                            {item.tgl_lahir ? format(parseISO(item.tgl_lahir), "dd MMMM yyyy") : "-"}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            {item.jenis_pekerjaan || "-"}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            {item.status_kepegawaian || "-"}
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Button
+                                                size="sm"
+                                                className={`w-full text-xs lg:text-sm text-black
+                                            ${item.status_pengajuan === "draf" ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
+                                                        : item.status_pengajuan === "diajukan" ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
+                                                            : item.status_pengajuan === "disetujui" ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
+                                                                : item.status_pengajuan === "ditolak" ? "bg-red-500 hover:bg-red-500 text-white"
+                                                                    : "bg-slate-300 hover:bg-slate-300"
+                                                    }`}
                                             >
-                                                <Button size="icon" type="button" variant="ghost" className="cursor-pointer">
-                                                    <FaRegTrashAlt className="text-[#FDA31A]"/>
-                                                </Button>
-                                            </ConfirmDialog>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                                                {item.status_pengajuan}
+                                            </Button>
+                                        </TableCell>
+                                        <TableCell className="h-full">
+                                            <div className="flex justify-center items-center w-full h-full">
+                                                <Link to={`/data-riwayat/keluarga/detail-data-pasangan/${item.id}`}>
+                                                    <Button size="icon" variant="ghost" className="cursor-pointer">
+                                                        <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
+                                                    </Button>
+                                                </Link>
+                                                <ConfirmDialog
+                                                    title="Hapus Data?"
+                                                    description="Apakah Anda yakin ingin menghapus data ini?"
+                                                    onConfirm={() => handleDeleteData(item.id)}
+                                                >
+                                                    <Button size="icon" type="button" variant="ghost" className="cursor-pointer">
+                                                        <FaRegTrashAlt className="text-[#FDA31A]" />
+                                                    </Button>
+                                                </ConfirmDialog>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
 

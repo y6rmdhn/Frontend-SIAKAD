@@ -166,15 +166,6 @@ const KegiatanHarian = () => {
       />
 
       <div className="flex flex-col sm:flex-row gap-4 mt-10 w-full">
-        <SelectFilter
-          placeholder="--Semua--"
-          classname="w-full sm:w-32"
-          options={[
-            { label: "Admin", value: "admin" },
-            { label: "User", value: "user" },
-            { label: "Guest", value: "guest" },
-          ]}
-        />
 
         <SearchInput
           value={searchData}

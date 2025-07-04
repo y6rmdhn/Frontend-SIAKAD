@@ -11,8 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { IoEyeOutline } from "react-icons/io5";
-import SelectFilter from "@/components/blocks/SelectFilter";
-import unitKerjaOptions from "@/constant/dummyFilter";
 import SearchInput from "@/components/blocks/SearchInput";
 import { useEffect, useState } from "react";
 import dosenServices from "@/services/dosen.services";
@@ -107,11 +105,6 @@ const Pelanggaran = () => {
         ]}
       />
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SelectFilter
-          classname="w-full md:w-32 "
-          options={unitKerjaOptions}
-          placeholder="--Semua--"
-        />
         <SearchInput
           value={searchData}
           onChange={(e) => setSearchData(e.target.value)}
