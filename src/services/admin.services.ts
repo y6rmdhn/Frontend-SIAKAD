@@ -2,6 +2,7 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import {
   DiklatParams,
+  GelarAkademikParams,
   HubunganKerjaParams,
   InputKehadiranParams,
   JabatanAkademikParams,
@@ -11,7 +12,6 @@ import {
   MonitoringKegiatanParams,
   MonitoringPresensiParams,
   OrganisasiParams,
-  PaginatedUnitKerjaResponse,
   PangkatParams,
   PelanggaranParams,
   PendidikanFormalParams,
@@ -25,6 +25,15 @@ import {
   UnitKerjaItem,
 } from "@/types";
 
+type HubunganKerjaMonitoringParams = {
+  page?: string;
+  search?: string;
+  unit_kerja?: string; // Diperbaiki: Tanpa _id
+  hubungan_kerja?: string; // Diperbaiki: Tanpa _id
+  status_masa_kerja?: string;
+  level?: string; // Menambahkan parameter 'level' sesuai screenshot
+};
+
 const adminServices = {
   getStatusAktif: (page?: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/status-aktif`, {
@@ -32,6 +41,21 @@ const adminServices = {
         page: page,
       },
     }),
+  getHubunganKerjaMonitoring: (params: HubunganKerjaMonitoringParams) => {
+    const cleanParams: Record<string, any> = { ...params };
+
+    // Hapus parameter yang kosong, null, atau "semua"
+    Object.keys(cleanParams).forEach((key) => {
+      const K = key as keyof HubunganKerjaMonitoringParams;
+      if (!cleanParams[K] || cleanParams[K] === "semua") {
+        delete cleanParams[K];
+      }
+    });
+
+    return axiosInstance.get(`${endpoint.ADMIN}/monitoring/hubungan-kerja`, {
+      params: cleanParams,
+    });
+  },
   getUnitKerja: (page?: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/unit-kerja`, {
       params: {
@@ -79,13 +103,24 @@ const adminServices = {
     let allUnits: UnitKerjaItem[] = [];
     let url: string | null = `${endpoint.ADMIN}/unit-kerja`;
 
-    while (url) {
-      const response: PaginatedUnitKerjaResponse = await axiosInstance.get(url);
+    try {
+      while (url) {
+        const response: any = await axiosInstance.get(url);
 
-      const unitsOnPage = response.data.data;
-      allUnits = [...allUnits, ...unitsOnPage];
+        const unitsOnPage = response.data.data.data;
 
-      url = response.data.next_page_url;
+        url = response.data.data.next_page_url;
+
+        if (Array.isArray(unitsOnPage)) {
+          allUnits = [...allUnits, ...unitsOnPage];
+        } else {
+          console.warn("Data yang diterima bukan array, loop dihentikan.");
+          break;
+        }
+      }
+    } catch (error) {
+      console.error("Gagal mengambil data Unit Kerja:", error);
+      return [];
     }
 
     return allUnits;
@@ -114,8 +149,17 @@ const adminServices = {
       },
     }),
 
-  getDasboardAdmin: () =>
-    axiosInstance.get(`${endpoint.ADMIN}/dashboard?unit_kerja_id=041001`),
+  getDasboardAdmin: (params: any = {}) => {
+    const { unit_kerja_id } = params;
+
+    const final_unit_id = unit_kerja_id || "041001";
+
+    return axiosInstance.get(`${endpoint.ADMIN}/dashboard`, {
+      params: {
+        unit_kerja_id: final_unit_id,
+      },
+    });
+  },
 
   getPegawaiAdminPage: (params?: any) => {
     const cleanParams: Record<string, any> = { ...params };
@@ -905,6 +949,14 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/validasi-cuti/${id}`),
   getPermohonanIzinDetail: (id: string) =>
     axiosInstance.get(`${endpoint.ADMIN}/validasi-izin/${id}`),
+  getDiklatDetailAdmin: (id: string) => {
+    return axiosInstance.get(`${endpoint.ADMIN}/pegawai/riwayat-diklat/${id}`);
+  },
+  getGelarAkademik: (params: GelarAkademikParams) => {
+    return axiosInstance.get(`${endpoint.ADMIN}/gelar-akademik`, {
+      params,
+    });
+  },
 };
 
 export default adminServices;

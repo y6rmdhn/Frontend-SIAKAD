@@ -173,12 +173,12 @@ const patchDataServices = {
     ),
   approveDataDiklat: (payload: IPayloadWithArray) =>
     axiosInstance.patch(
-      `${endpoint.ADMIN}/datapendidikanformaladm/batch/approve`,
+      `${endpoint.ADMIN}/pegawai/riwayat-diklat/batch/approve`,
       payload
     ),
   rejectDataDiklat: (payload: IPayloadWithArray) =>
     axiosInstance.patch(
-      `${endpoint.ADMIN}/datapendidikanformaladm/batch/reject`,
+      `${endpoint.ADMIN}/pegawai/riwayat-diklat/batch/reject`,
       payload
     ),
   approveDataRiwayatPekerjaan: (payload: IPayloadWithArray) =>

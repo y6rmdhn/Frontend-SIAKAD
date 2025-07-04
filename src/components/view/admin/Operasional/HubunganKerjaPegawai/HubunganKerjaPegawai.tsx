@@ -1,16 +1,13 @@
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
+
+// UI & Custom Components
+import Title from "@/components/blocks/Title";
 import CustomCard from "@/components/blocks/Card";
-import MonitoringInput from "@/components/blocks/MonitoringInput";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { FiSearch } from "react-icons/fi";
+import SearchInput from "@/components/blocks/SearchInput";
+import SelectFilter from "@/components/blocks/SelectFilter";
 import {
   Table,
   TableBody,
@@ -19,137 +16,293 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import CustomPagination from "@/components/blocks/CustomPagination";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Icons
 import { MdEdit } from "react-icons/md";
 
+// Services
+import adminServices from "@/services/admin.services";
+
+// --- Tipe Data ---
+interface PegawaiItem {
+  id: number;
+  nip: string;
+  nama_pegawai: string;
+  unit_kerja: string;
+  hubungan_kerja: string;
+  jabatan_fungsional: string;
+  usia_pensiun: string;
+  tanggal_lahir: string;
+  tanggal_efektif: string;
+  tanggal_berakhir: string;
+  aksi: {
+    detail_url: string;
+  };
+}
+
+interface ApiResponse {
+  data: PegawaiItem[];
+  pagination: {
+    current_page: number;
+    last_page: number;
+  };
+  filter_options: {
+    unit_kerja: any[];
+    hubungan_kerja: any[];
+    status_masa_kerja: any[];
+    level_filter: any[]; // Menambahkan level filter
+  };
+  summary: {
+    total_pegawai: number;
+    hampir_berakhir_kontrak: number;
+    hampir_pensiun_usia: number;
+  };
+  table_columns: any[];
+}
+
+// --- Komponen Utama ---
 const HubunganKerjaPegawai = () => {
-  return (
-    <div className="mt-10 mb-10">
-      <h1 className="text-lg sm:text-2xl font-normal">
-        Monitoring{" "}
-        <span className="text-muted-foreground text-[12px] sm:text-[16px] font-normal">
-          hubungan kerja
-        </span>
-      </h1>
+  const [searchParam, setSearchParam] = useSearchParams();
 
-      <CustomCard>
-        <MonitoringInput />
-      </CustomCard>
+  // --- State & URL Params ---
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedSearch] = useDebounce(searchData, 500);
 
-      <div className="grid grid-rows-2 sm:flex gap-4 w-full mt-5 mb-10">
-        <Select>
-          <SelectTrigger className="w-full sm:w-32 text-xs sm:text-sm">
-            <SelectValue placeholder="--Semua--" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Unit Kerja</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+  const currentPage = searchParam.get("page") || "1";
+  const unitKerjaFilter = searchParam.get("unit_kerja") || "";
+  const hubunganKerjaFilter = searchParam.get("hubungan_kerja") || "";
+  const statusMasaKerjaFilter = searchParam.get("status_masa_kerja") || "";
+  const levelFilter = searchParam.get("level") || "seuniv"; // Default ke 'seuniv'
 
-        <div className="relative w-full md:w-80">
-          <Input
-            placeholder="Search"
-            className="w-full pr-10 text-xs sm:text-sm"
-          />
-          <FiSearch className="absolute top-1/2 right-3 transform -translate-y-1/2" />
+  // --- Data Fetching ---
+  const { data, isLoading, isError, error } = useQuery<ApiResponse>({
+    queryKey: [
+      "monitoring-hubungan-kerja",
+      currentPage,
+      debouncedSearch,
+      unitKerjaFilter,
+      hubunganKerjaFilter,
+      statusMasaKerjaFilter,
+      levelFilter,
+    ],
+    queryFn: async () => {
+      const response = await adminServices.getHubunganKerjaMonitoring({
+        page: currentPage,
+        search: debouncedSearch,
+        unit_kerja: unitKerjaFilter,
+        hubungan_kerja: hubunganKerjaFilter,
+        status_masa_kerja: statusMasaKerjaFilter,
+        level: levelFilter,
+      });
+      return response.data;
+    },
+    // @ts-ignore
+    keepPreviousData: true,
+  });
+
+  // --- Memos & Event Handlers ---
+  const filterOptions = useMemo(() => {
+    // @ts-ignore
+    const filters = data?.filter_options || {};
+    return {
+      unitKerja:
+        filters.unit_kerja?.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama,
+        })) || [],
+      hubunganKerja:
+        // @ts-ignore
+        filters.hubungan_kerja?.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama,
+        })) || [],
+      statusMasaKerja:
+        // @ts-ignore
+        filters.status_masa_kerja?.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama,
+        })) || [],
+      levelFilter:
+        // @ts-ignore
+        filters.level_filter?.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama,
+        })) || [],
+    };
+  }, [data]);
+
+  const handleUrlChange = (paramName: string, value: string) => {
+    const newSearchParams = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      newSearchParams.set(paramName, value);
+    } else {
+      newSearchParams.delete(paramName);
+    }
+    if (paramName !== "page") newSearchParams.set("page", "1");
+    setSearchParam(newSearchParams);
+  };
+
+  useEffect(() => {
+    handleUrlChange("search", debouncedSearch);
+  }, [debouncedSearch]);
+
+  if (isLoading && !data) {
+    return (
+      <div className="mt-10 mb-20 space-y-6">
+        <Title title="Monitoring Hubungan Kerja" />
+        <Skeleton className="h-24 w-full" />
+        <div className="mt-10 space-y-2">
+          <Skeleton className="h-10 w-full" />
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
         </div>
       </div>
+    );
+  }
 
-      <Table className="mt-3 table-auto">
-        <TableHeader>
-          <TableRow className="bg-gray-100">
-            <TableHead className="text-center text-xs sm:text-sm">Pegawai</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Hubungan Kerja</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Fungsional</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Usia Pensiun</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tgl Lahir</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tgl Efektif</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Tgl Berakhir</TableHead>
-            <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody className="divide-y divide-gray-200">
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center flex flex-col text-xs sm:text-sm">
-              <span className="text-green-light-uika">0006027004</span>
-              Dr. KURMATI, S.pd., M.Si.Pendidikan Matematika
-            </TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">PNS/DPK</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">Guru Besar</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">70</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">2 Jun 1969</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">1 Feb 2023</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-          <TableRow className=" even:bg-gray-100">
-            <TableCell className="text-center flex flex-col">
-              <span className="text-green-light-uika">0006027004</span>
-              Dr. KURMATI, S.pd., M.Si.Pendidikan Matematika
-            </TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">PNS/DPK</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">Guru Besar</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">70</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">2 Jun 1969</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">1 Feb 2023</TableCell>
-            <TableCell className="text-center text-xs sm:text-sm">-</TableCell>
-            <TableCell className="h-full">
-              <div className="flex justify-center items-center w-full h-full">
-                <Button size="icon" variant="ghost" className="cursor-pointer">
-                  <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+  if (isError) {
+    return (
+      <div className="text-center mt-20 text-red-500">
+        Gagal memuat data: {(error as Error).message}
+      </div>
+    );
+  }
 
-      <Pagination className="mt-8 flex justify-end">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+  return (
+    <div className="mt-10 mb-10">
+      <Title title="Monitoring Hubungan Kerja" />
+      <CustomCard title="Filter Data">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <SelectFilter
+            label="Level"
+            placeholder="--Pilih Level--"
+            options={filterOptions.levelFilter}
+            value={levelFilter}
+            onValueChange={(v) => handleUrlChange("level", v)}
+          />
+          <SelectFilter
+            label="Unit Kerja"
+            placeholder="--Semua Unit Kerja--"
+            options={filterOptions.unitKerja}
+            value={unitKerjaFilter}
+            onValueChange={(v) => handleUrlChange("unit_kerja", v)}
+          />
+          <SelectFilter
+            label="Hubungan Kerja"
+            placeholder="--Semua Hubungan Kerja--"
+            options={filterOptions.hubunganKerja}
+            value={hubunganKerjaFilter}
+            onValueChange={(v) => handleUrlChange("hubungan_kerja", v)}
+          />
+          <SelectFilter
+            label="Status Masa Kerja"
+            placeholder="--Semua Status--"
+            options={filterOptions.statusMasaKerja}
+            value={statusMasaKerjaFilter}
+            onValueChange={(v) => handleUrlChange("status_masa_kerja", v)}
+          />
+        </div>
+      </CustomCard>
+      <div className="w-full md:w-80 my-6">
+        <SearchInput
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+          placeholder="Cari NIP atau Nama Pegawai..."
+        />
+      </div>
+      <div className="border rounded-lg">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-100 hover:bg-gray-100">
+              {
+                // @ts-ignore
+                data?.table_columns?.map((col: any) => (
+                  <TableHead key={col.field} className="text-center">
+                    {col.label}
+                  </TableHead>
+                ))
+              }
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {
+              // @ts-ignore
+              data?.data.length > 0 ? (
+                // @ts-ignore
+                data.data.map((item: any) => (
+                  <TableRow key={item.id} className="even:bg-gray-50">
+                    <TableCell className="text-left align-top">
+                      <p className="font-semibold text-blue-600">{item.nip}</p>
+                      <p>{item.nama_pegawai}</p>
+                      <p className="text-xs text-gray-500">{item.unit_kerja}</p>
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      {item.hubungan_kerja}
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      {item.jabatan_fungsional}
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      {item.usia_pensiun}
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      {item.tanggal_lahir}
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      {item.tanggal_efektif}
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      {item.tanggal_berakhir}
+                    </TableCell>
+                    <TableCell className="text-center align-middle">
+                      <Link to={item.aksi.detail_url}>
+                        <Button size="icon" variant="ghost">
+                          <MdEdit className="w-5 h-5 text-yellow-500" />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    // @ts-ignore
+                    colSpan={data?.table_columns?.length || 8}
+                    className="text-center h-48"
+                  >
+                    Tidak ada data untuk ditampilkan.
+                  </TableCell>
+                </TableRow>
+              )
+            }
+          </TableBody>
+        </Table>
+      </div>
+      // @ts-ignore
+      {
+        // @ts-ignore
+        data?.data && data.data.length > 0 && (
+          <CustomPagination
+            // @ts-ignore
+            currentPage={data.pagination.current_page}
+            // @ts-ignore
+            totalPages={data.pagination.last_page}
+            // @ts-ignore
+            onPageChange={(page) => handleUrlChange("page", String(page))}
+            // @ts-ignore
+            hasNextPage={
+              // @ts-ignore
+              data.pagination.current_page < data.pagination.last_page
+            }
+            // @ts-ignore
+            hasPrevPage={data.pagination.current_page > 1}
+          />
+        )
+      }
     </div>
   );
 };

@@ -1,6 +1,11 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
-import { BeritaParams, CutiParams, OrangtuaParams } from "@/types";
+import {
+  BeritaParams,
+  CutiParams,
+  EvaluasiKinerjaParams,
+  OrangtuaParams,
+} from "@/types";
 
 const dosenServices = {
   //   keluarga
@@ -16,24 +21,24 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/anak/` + id),
 
   getDataOrangtua: (params: OrangtuaParams) => {
-  const cleanParams: Record<string, any> = { page: params.page || 1 };
+    const cleanParams: Record<string, any> = { page: params.page || 1 };
 
-  if (params.search) {
-    cleanParams.search = params.search;
-  }
-  if (params.status_pengajuan && params.status_pengajuan !== "semua") {
-    cleanParams.status_pengajuan = params.status_pengajuan;
-  }
-  if (params.status_orangtua && params.status_orangtua !== "semua") {
-    // Sesuaikan nama parameter jika backend mengharapkan nama lain
-    // contoh: cleanParams.status_orang_tua = params.status_orangtua;
-    cleanParams.status_orangtua = params.status_orangtua;
-  }
+    if (params.search) {
+      cleanParams.search = params.search;
+    }
+    if (params.status_pengajuan && params.status_pengajuan !== "semua") {
+      cleanParams.status_pengajuan = params.status_pengajuan;
+    }
+    if (params.status_orangtua && params.status_orangtua !== "semua") {
+      // Sesuaikan nama parameter jika backend mengharapkan nama lain
+      // contoh: cleanParams.status_orang_tua = params.status_orangtua;
+      cleanParams.status_orangtua = params.status_orangtua;
+    }
 
-  return axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
-    params: cleanParams,
-  });
-},
+    return axiosInstance.get(`${endpoint.DOSEN}/orangtua`, {
+      params: cleanParams,
+    });
+  },
 
   getDataOrangtuaWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/orangtua`),
@@ -270,7 +275,7 @@ const dosenServices = {
     page?: any,
     search?: string | undefined,
     bulan?: number, // <-- Tambahkan parameter bulan
-    tahun?: number  // <-- Tambahkan parameter tahun
+    tahun?: number // <-- Tambahkan parameter tahun
   ) =>
     axiosInstance.get(`${endpoint.DOSEN}/kegiatanhariandosen`, {
       params: {
@@ -423,6 +428,11 @@ const dosenServices = {
   getSlipGaji: () => axiosInstance.get(`${endpoint.DOSEN}/payroll/slips`),
   getSlipGajiDetail: (id: string) => {
     return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips/${id}`);
+  },
+  getEvaluasiKinerja: (params: EvaluasiKinerjaParams) => {
+    return axiosInstance.get(`${endpoint.DOSEN}/evaluasi-kinerja`, {
+      params,
+    });
   },
 };
 

@@ -1,35 +1,11 @@
-// File: Dasboard.tsx
-
-import CustomCard from "@/components/blocks/Card";
-import {
-  FaGraduationCap,
-  FaBirthdayCake,
-  FaFileInvoiceDollar,
-} from "react-icons/fa";
-import { IoPersonOutline } from "react-icons/io5";
-import { FaUserGroup } from "react-icons/fa6";
-import { MdOutlinePersonRemove } from "react-icons/md";
-import { Label } from "@/components/ui/label";
-import { RiErrorWarningLine } from "react-icons/ri";
-import { HiSpeakerphone } from "react-icons/hi";
-import Title from "@/components/blocks/Title";
-import CardStatistikPegawai from "@/components/blocks/CardStatistikPegawai/CardStatistikPegawai";
-import SelectFilter from "@/components/blocks/SelectFilter";
-import unitKerjaOptions from "@/constant/dummyFilter";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import adminServices from "@/services/admin.services";
+import { useState, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import LoadingStateDasbordAdmin from "@/components/blocks/LoadingStateDasboradAdmin/LoadingStateDasbordAdmin.tsx";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "sonner";
 
-// --- START: Impor untuk Modal, Form, dan Validasi ---
-import { useState } from "react";
+// --- UI & Custom Components ---
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,6 +16,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -47,12 +25,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import potsReferensiServices from "@/services/create.admin.referensi"; // Pastikan path ini benar
-import { toast } from "sonner";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Form,
   FormControl,
@@ -61,23 +41,45 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// --- END: Impor ---
+import CustomCard from "@/components/blocks/Card";
+import Title from "@/components/blocks/Title";
+import SelectFilter from "@/components/blocks/SelectFilter";
+import CardStatistikPegawai from "@/components/blocks/CardStatistikPegawai/CardStatistikPegawai";
+import LoadingStateDasbordAdmin from "@/components/blocks/LoadingStateDasboradAdmin/LoadingStateDasbordAdmin";
 
-// --- START: Definisi Tipe Data ---
+// --- Ikon ---
+import {
+  FaGraduationCap,
+  FaBirthdayCake,
+  FaFileInvoiceDollar,
+} from "react-icons/fa";
+import { IoPersonOutline } from "react-icons/io5";
+import { FaUserGroup } from "react-icons/fa6";
+import { MdOutlinePersonRemove } from "react-icons/md";
+import { RiErrorWarningLine } from "react-icons/ri";
+import { HiSpeakerphone } from "react-icons/hi";
+
+// --- Services ---
+import adminServices from "@/services/admin.services";
+import potsReferensiServices from "@/services/create.admin.referensi";
+
 interface ChartData {
   labels: string[];
   datasets: { label: string; data: number[] }[];
 }
+
 interface TableData<T> {
   headers: string[];
   rows: T[];
   total?: number | string;
 }
+
 interface NewsItem {
   id: number | string;
   judul: string;
   ringkasan: string;
 }
+
 interface BirthdayItem {
   id: number;
   nip: string;
@@ -85,6 +87,7 @@ interface BirthdayItem {
   tanggal_lahir: string;
   unit_kerja_nama: string;
 }
+
 interface DashboardData {
   staff_summary: {
     active_employees: number;
@@ -99,6 +102,7 @@ interface DashboardData {
   news: NewsItem[];
   birthdays: BirthdayItem[];
 }
+
 const generateGajiSchema = z.object({
   bulan: z
     .string({ required_error: "Bulan wajib dipilih." })
@@ -106,10 +110,43 @@ const generateGajiSchema = z.object({
   tahun: z.string().min(4, { message: "Tahun harus terdiri dari 4 digit." }),
 });
 
+// =================================================================================
+// --- Komponen Dashboard ---
+// =================================================================================
 const Dasboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState(""); // Nilai awal "" akan memicu default di service
   const queryClient = useQueryClient();
 
+  // --- Fetch Data Dashboard (Reaktif terhadap Filter) ---
+  const { data: dashboardData, isLoading: isDashboardLoading } =
+    useQuery<DashboardData>({
+      queryKey: ["dasboard-admin", selectedUnit],
+      queryFn: async () => {
+        const response = await adminServices.getDasboardAdmin({
+          unit_kerja_id: selectedUnit,
+        });
+        return response.data.data;
+      },
+    });
+
+  const { data: unitKerjaList } = useQuery({
+    queryKey: ["all-unit-kerja-dropdown-dasboard"],
+    queryFn: () => adminServices.getSemuaUnitKerja(),
+    staleTime: Infinity,
+  });
+
+  const unitKerjaOptions = useMemo(() => {
+    if (!unitKerjaList) return [];
+    const allUnitsOption = { value: "", label: "Semua Unit Kerja" };
+    const options = unitKerjaList.map((unit) => ({
+      value: String(unit.kode_unit), // Using `kode_unit` as the value
+      label: `${unit.kode_unit} - ${unit.nama_unit}`,
+    }));
+    return [allUnitsOption, ...options];
+  }, [unitKerjaList]);
+
+  // --- Form & Mutasi untuk Generate Gaji ---
   const form = useForm<z.infer<typeof generateGajiSchema>>({
     resolver: zodResolver(generateGajiSchema),
     defaultValues: {
@@ -118,44 +155,9 @@ const Dasboard = () => {
     },
   });
 
-  const { data } = useQuery<DashboardData>({
-    queryKey: ["dasboard-admin"],
-    queryFn: async () => {
-      const response = await adminServices.getDasboardAdmin();
-      return response.data.data;
-    },
-  });
-
-  const months = [
-    { value: "1", name: "Januari" },
-    { value: "2", name: "Februari" },
-    { value: "3", name: "Maret" },
-    { value: "4", name: "April" },
-    { value: "5", name: "Mei" },
-    { value: "6", name: "Juni" },
-    { value: "7", name: "Juli" },
-    { value: "8", name: "Agustus" },
-    { value: "9", name: "September" },
-    { value: "10", name: "Oktober" },
-    { value: "11", name: "November" },
-    { value: "12", name: "Desember" },
-  ];
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "long",
-    });
-  };
-
   const { mutate: mutateGenerateGaji, isPending } = useMutation({
-    mutationFn: (data: z.infer<typeof generateGajiSchema>) => {
-      return potsReferensiServices.generatePayroll(data);
-    },
-    // --- START: FIX ---
-    // The first parameter is the response from the server ('_response' - unused).
-    // The second parameter is the variables submitted to the mutation ('variables').
+    mutationFn: (data: z.infer<typeof generateGajiSchema>) =>
+      potsReferensiServices.generatePayroll(data),
     onSuccess: (_response, variables) => {
       const monthName =
         months.find((m) => m.value === variables.bulan)?.name ||
@@ -172,13 +174,38 @@ const Dasboard = () => {
         error.response?.data?.message || error.message || "Terjadi kesalahan";
       toast.error(`Gagal memulai proses: ${errorMessage}`);
     },
-    // --- END: FIX ---
   });
 
   const handleSubmitData = (values: z.infer<typeof generateGajiSchema>) => {
     mutateGenerateGaji(values);
   };
 
+  // --- Data & Fungsi Helper ---
+  const months = [
+    { value: "1", name: "Januari" },
+    { value: "2", name: "Februari" },
+    { value: "3", name: "Maret" },
+    { value: "4", name: "April" },
+    { value: "5", name: "Mei" },
+    { value: "6", name: "Juni" },
+    { value: "7", name: "Juli" },
+    { value: "8", name: "Agustus" },
+    { value: "9", name: "September" },
+    { value: "10", name: "Oktober" },
+    { value: "11", name: "November" },
+    { value: "12", name: "Desember" },
+  ];
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+    });
+  };
+
+  // --- Render JSX ---
   return (
     <div className="mt-10 mb-20">
       <div className="flex justify-between items-center mb-4">
@@ -275,16 +302,29 @@ const Dasboard = () => {
         actions={
           <div className="h-0 flex gap-5 lg:gap-30 md:gap-10 sm:gap-5 sm:h-0 items-center">
             <Label className="text-[#FFAC07] sm:text-sm">Unit Kerja</Label>
+            {/* 🚨 NOTE: For the `disabled` prop to work here, you must update your
+              `SelectFilter` component to accept it. 
+              
+              Example `SelectFilter` props interface:
+              interface SelectFilterProps {
+                // ... your other props
+                disabled?: boolean;
+              }
+            */}
             <SelectFilter
               options={unitKerjaOptions}
+              value={selectedUnit}
+              onValueChange={setSelectedUnit}
               classname="w-40 sm:w-80 md:w-80 lg:w-80 xl:w-80 2xl:w-80 hidden md:flex"
-              placeholder="041001 - Universitas Ibn Khaldun"
+              placeholder="Pilih Unit Kerja"
             />
           </div>
         }
       />
 
-      {data ? (
+      {isDashboardLoading ? (
+        <LoadingStateDasbordAdmin />
+      ) : dashboardData ? (
         <>
           <div className="grid grid-rows-4 sm:grid-rows-1 md:grid-rows-1 gap-4 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-2 lg:gap-10 mt-6 sm:gap-3 xl:gap-10 2xl:gap-10">
             <div className="bg-gradient-to-r from-[#1C8C88] to-[#28BCB7] h-20 xl:h-40 2xl:h-40 lg:h-40 rounded-xl text-white flex items-center justify-center relative sm:h-30 md:h-35">
@@ -292,7 +332,7 @@ const Dasboard = () => {
                 <h1 className="text-xs lg:text-lg font-semibold text-center flex flex-col items-center sm:text-xs md:text-sm md:mx-1 xl:text-lg 2xl:text-lg">
                   Jumlah Pegawai Aktif
                   <p className="xl:text-4xl 2xl:text-4xl lg:text-4xl font-semibold mt-3 sm:text-lg md:text-2xl">
-                    {data.staff_summary.active_employees}
+                    {dashboardData.staff_summary.active_employees}
                   </p>
                 </h1>
                 <IoPersonOutline className="xl:w-14 xl:h-14 2xl:w-14 2xl:h-14 lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7 md:w-8 md:h-8" />
@@ -304,7 +344,7 @@ const Dasboard = () => {
                 <h1 className="text-xs lg:text-lg text-center font-semibold flex flex-col items-center sm:text-xs sm:mx-1 md:text-sm xl:text-lg 2xl:text-lg">
                   Jumlah Pegawai Pendidik (Akademik)
                   <p className="lg:text-4xl font-semibold mt-1 sm:text-lg md:text-2xl">
-                    {data.staff_summary.academic_staff}
+                    {dashboardData.staff_summary.academic_staff}
                   </p>
                 </h1>
                 <FaGraduationCap className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7" />
@@ -316,7 +356,7 @@ const Dasboard = () => {
                 <h1 className="text-xs lg:text-lg text-center font-semibold flex flex-col items-center sm:text-xs sm:items-center sm:flex sm:flex-col md:text-sm xl:text-lg 2xl:text-lg">
                   Jumlah Pegawai Kependidikan (Non Akademik)
                   <p className="lg:text-4xl font-semibold mt-1 sm:text-lg md:text-2xl">
-                    {data.staff_summary.non_academic_staff}
+                    {dashboardData.staff_summary.non_academic_staff}
                   </p>
                 </h1>
                 <FaUserGroup className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7" />
@@ -328,7 +368,7 @@ const Dasboard = () => {
                 <h1 className="text-xs lg:text-lg text-center font-semibold flex flex-col items-center sm:text-xs sm:items-center sm:flex sm:flex-col md:text-sm xl:text-lg 2xl:text-lg">
                   Jumlah Pegawai Pensiun
                   <p className="lg:text-4xl font-semibold mt-1 sm:text-lg md:text-2xl">
-                    {data.staff_summary.inactive_employees}
+                    {dashboardData.staff_summary.inactive_employees}
                   </p>
                 </h1>
                 <MdOutlinePersonRemove className="lg:w-14 lg:h-14 absolute bottom-0 left-1 sm:w-6 sm:h-7" />
@@ -339,10 +379,10 @@ const Dasboard = () => {
           <div className="lg:grid lg:grid-cols-2 xl:grid xl:grid-cols-2 2xl:grid grid-cols-1 md:2xl:grid-cols-2 gap-5 mt-10">
             <div className="min-w-0">
               <CardStatistikPegawai
-                academicEducation={data.academic_education}
-                nonAcademicEducation={data.non_academic_education}
-                staffDistribution={data.staff_distribution}
-                workRelationships={data.work_relationships}
+                academicEducation={dashboardData.academic_education}
+                nonAcademicEducation={dashboardData.non_academic_education}
+                staffDistribution={dashboardData.staff_distribution}
+                workRelationships={dashboardData.work_relationships}
               />
             </div>
 
@@ -356,13 +396,13 @@ const Dasboard = () => {
                 }
                 cardStyle="border-t-[#DA2A21] border-t-2"
               >
-                {data.news.length > 0 && (
+                {dashboardData.news.length > 0 && (
                   <div className="min-w-0">
                     <h1 className="truncate font-semibold">
-                      {data.news[0].judul}
+                      {dashboardData.news[0].judul}
                     </h1>
                     <p className="text-xs text-muted-foreground truncate">
-                      {data.news[0].ringkasan}
+                      {dashboardData.news[0].ringkasan}
                     </p>
                   </div>
                 )}
@@ -379,7 +419,7 @@ const Dasboard = () => {
                 cardStyle="border-t-[#106D63] border-t-2"
               >
                 <div className="flex flex-col gap-5 overflow-hidden">
-                  {data.news.map((item) => (
+                  {dashboardData.news.map((item) => (
                     <div key={item.id} className="min-w-0">
                       <h1 className="truncate font-semibold">{item.judul}</h1>
                       <p className="text-xs text-muted-foreground truncate">
@@ -419,7 +459,7 @@ const Dasboard = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody className="divide-y divide-gray-200">
-                      {data.birthdays.map((birthday) => (
+                      {dashboardData.birthdays.map((birthday) => (
                         <TableRow
                           key={birthday.id}
                           className="even:bg-gray-100"
@@ -446,7 +486,8 @@ const Dasboard = () => {
           </div>
         </>
       ) : (
-        <LoadingStateDasbordAdmin />
+        // Ditampilkan jika tidak ada data sama sekali (setelah loading selesai)
+        <div>Data tidak ditemukan.</div>
       )}
     </div>
   );

@@ -1098,11 +1098,11 @@ function App() {
             <Route path="evaluasi-kerja" Component={EvaluasiKerjaUserPage} />
             <Route path="evaluasi-kerja">
               <Route
-                path="form-evaluasi-kerja-dosen"
+                path="form-evaluasi-kerja-dosen/:id"
                 Component={DetailEvaluasiKerjaUserPage}
               />
               <Route
-                path="form-evaluasi-kerja-pegawai"
+                path="form-evaluasi-kerja-pegawai/:id"
                 Component={DetailEvaluasiKerjaPegawaiUserPage}
               />
             </Route>
@@ -1852,7 +1852,7 @@ function App() {
               <Route path="kualifikasi">
                 <Route path="diklat" Component={DiklatValidasiPage} />
                 <Route
-                  path="diklat/detail-diklat"
+                  path="diklat/detail-diklat/:id"
                   Component={DetailDiklatValidasiPage}
                 />
                 <Route

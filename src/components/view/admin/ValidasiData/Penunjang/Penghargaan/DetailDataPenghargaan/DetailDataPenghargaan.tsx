@@ -78,12 +78,8 @@ const DetailDataPenghargaanAdmin = () => {
       <CustomCard
         title={
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-bold">
-              {data?.pegawai_info_detail?.nama}
-            </h2>
-            <p className="text-sm text-gray-500">
-              NIP: {data?.pegawai_info_detail?.nip}
-            </p>
+            <h2 className="text-xl font-bold">{data?.data.nama_pegawai}</h2>
+            <p className="text-sm text-gray-500">NIP: {data?.data.nip}</p>
           </div>
         }
         actions={
@@ -138,7 +134,7 @@ const DetailDataPenghargaanAdmin = () => {
                     Tanggal Penghargaan
                   </Label>
                   <Label className="text-xs sm:text-sm font-semibold text-right">
-                    {data?.data?.tgl_penghargaan_formatted || "-"}
+                    {data?.data?.tanggal_penghargaan_formatted || "-"}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">

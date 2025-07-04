@@ -76,7 +76,11 @@ const Berita = () => {
 
   const { data: unitKerjaList } = useQuery({
     queryKey: ["all-unit-kerja-dropdown"],
-    queryFn: () => adminServices.getSemuaUnitKerja(),
+    queryFn: async () => {
+      const data = await adminServices.getSemuaUnitKerja();
+      console.log("Data Unit Kerja:", data);
+      return data;
+    },
     staleTime: Infinity,
   });
 
@@ -90,6 +94,7 @@ const Berita = () => {
 
   const unitKerjaOptions = useMemo(() => {
     if (!unitKerjaList) return [];
+
     return unitKerjaList.map((unit) => ({
       value: String(unit.id),
       label: unit.nama_unit,

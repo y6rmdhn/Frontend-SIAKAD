@@ -1,6 +1,8 @@
 import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 import { IOrangtuaPost } from "@/types/create.dosen.ts";
+import { EvaluasiKerjaFormValues } from "@/components/view/Operasional/EvaluasiKerja/DetailEvaluasiKerja/DetailEvaluasiKerja";
+import { EvaluasiKerjaPegawaiFormValues } from "@/components/view/Operasional/EvaluasiKerja/DetailEvaluasiKerjaPegawai/DetailEvaluasiKerjaPegawai";
 
 const postDosenServices = {
   addDataAnak: (payload: FormData) =>
@@ -52,6 +54,11 @@ const postDosenServices = {
     axiosInstance.post(`${endpoint.DOSEN}/profiles/update`, payload),
   changePasswordUser: (payload: any) =>
     axiosInstance.post(`${endpoint.DOSEN}/profiles/change-password`, payload),
+  postEvaluasiKinerja: (
+    data: EvaluasiKerjaFormValues | EvaluasiKerjaPegawaiFormValues
+  ) => {
+    return axiosInstance.post(`${endpoint.DOSEN}/evaluasi-kinerja`, data);
+  },
 };
 
 export default postDosenServices;

@@ -399,7 +399,7 @@ const Sertifikasi = () => {
                 <TableCell>
                   <div className="flex justify-center">
                     <Link
-                      to={`/admin/validasi-data/kompetensi/sertifikasi/detail/${item.id}`}
+                      to={`/admin/validasi-data/kompetensi/sertifikasi/detail-sertifikasi/${item.id}`}
                     >
                       <Button size="icon" variant="ghost">
                         <IoEyeOutline className="text-blue-500 h-5 w-5" />

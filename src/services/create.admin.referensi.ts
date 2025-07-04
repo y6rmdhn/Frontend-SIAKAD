@@ -103,6 +103,9 @@ const potsReferensiServices = {
     axiosInstance.post(`${endpoint.ADMIN}/profiles/change-password`, payload),
   generatePayroll: (payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/payroll/generate`, payload),
+  postGelarAkademik: (data: any) => {
+    return axiosInstance.post(`${endpoint.ADMIN}/gelar-akademik`, data);
+  },
 };
 
 export default potsReferensiServices;

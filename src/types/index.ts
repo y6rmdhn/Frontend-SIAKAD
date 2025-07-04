@@ -122,6 +122,7 @@ export interface PenghargaanParams {
 export interface UnitKerjaItem {
   id: number;
   nama_unit: string;
+  kode_unit?: string;
 }
 
 export interface PaginatedUnitKerjaResponse {
@@ -247,4 +248,18 @@ export interface OrangtuaParams {
   search?: string | null;
   status_pengajuan?: string | null;
   status_orangtua?: string | null;
+}
+
+export interface GetDashboardParams {
+  unit_kerja_id?: string;
+}
+
+export interface EvaluasiKinerjaParams {
+  page?: string;
+  search?: string;
+}
+
+export interface GelarAkademikParams {
+  page?: string;
+  search?: string;
 }

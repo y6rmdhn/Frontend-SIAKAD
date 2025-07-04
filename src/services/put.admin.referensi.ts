@@ -119,6 +119,9 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/jabatan-fungsional/${id}`, payload),
   rumpunBidangIlmu: (id: number, payload: any) =>
     axiosInstance.put(`${endpoint.ADMIN}/rumpun-bidang-ilmu/${id}`, payload),
+  putGelarAkademik: (id: number, data: any) => {
+    return axiosInstance.put(`${endpoint.ADMIN}/gelar-akademik/${id}`, data);
+  },
 };
 
 export default putReferensiServices;
