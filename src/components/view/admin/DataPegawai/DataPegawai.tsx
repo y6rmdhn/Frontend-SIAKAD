@@ -185,7 +185,7 @@ export type DataPegawaiSchema = z.infer<typeof dataPegawaiSchema>;
 
 interface WilayahItem {
   name: string;
-  code?: string;
+  id?: string;
 }
 
 interface FormDataPegawaiProps {
@@ -270,20 +270,23 @@ const DataPegawai = () => {
   });
 
   const provinceOptions =
-    provincesData?.data?.map((prov: WilayahItem) => ({
+    provincesData?.map((prov: { id: string; name: string }) => ({ // FIX 2: Gunakan 'id'
       label: prov.name,
-      value: prov.code,
+      value: prov.id,
     })) || [];
+
   const cityOptions =
-    citiesData?.data?.map((city: WilayahItem) => ({
+    citiesData?.map((city: { id: string; name: string }) => ({ // FIX 2: Gunakan 'id'
       label: city.name,
-      value: city.code,
+      value: city.id, 
     })) || [];
+
   const kecamatanOptions =
-    kecamatanData?.data?.map((kec: WilayahItem) => ({
+    kecamatanData?.map((kec: { id:string; name: string }) => ({ // FIX 2: Gunakan 'id'
       label: kec.name,
-      value: kec.code,
+      value: kec.id, 
     })) || [];
+    
 
   const { mutate: postDataPegawai, isPending } = useMutation({
     mutationFn: (data: FormData) => postPegawaiServices.dataPegawai(data),
