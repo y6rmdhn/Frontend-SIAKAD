@@ -270,21 +270,21 @@ const DataPegawai = () => {
   });
 
   const provinceOptions =
-    provincesData?.map((prov: { id: string; name: string }) => ({ // FIX 2: Gunakan 'id'
+    provincesData?.map((prov: WilayahItem) => ({
       label: prov.name,
       value: prov.id,
     })) || [];
 
   const cityOptions =
-    citiesData?.map((city: { id: string; name: string }) => ({ // FIX 2: Gunakan 'id'
+    citiesData?.map((city: WilayahItem) => ({
       label: city.name,
-      value: city.id, 
+      value: city.id,
     })) || [];
 
   const kecamatanOptions =
-    kecamatanData?.map((kec: { id:string; name: string }) => ({ // FIX 2: Gunakan 'id'
+    kecamatanData?.map((kec: WilayahItem) => ({
       label: kec.name,
-      value: kec.id, 
+      value: kec.id,
     })) || [];
     
 
