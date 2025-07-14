@@ -18,7 +18,7 @@ const wilayahIdServices = {
 
     getKecamatan: async (kotaCode: string) => {
         if (!kotaCode) return []; // Kembalikan array kosong jika tidak ada kode
-        const response = await wilayahApi.get('kecamatan'{
+        const response = await wilayahApi.get('kecamatan',{
             params:{
                 id_kabupaten: kotaCode
             }
