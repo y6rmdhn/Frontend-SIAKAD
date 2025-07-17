@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 // dengan semua komponen anak.
 // Ganti path ini jika lokasi file Anda berbeda.
 import { type DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
+import { Link } from "react-router-dom";
+import { MdEdit } from "react-icons/md";
 // ====================================================================
 
 interface FormDataPegawaiProps {
@@ -174,17 +176,27 @@ const BiodataUser = () => {
     <div className="mt-10 mb-10">
       <Title title="Data Pegawai" />
       <Form {...form}>
+     
+          <div className="flex justify-end">
+            <Link to="/editBiodata">
+              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:auto">
+                <MdEdit /> Edit
+              </Button>
+            </Link>
+          </div>
+        
         <form>
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardContent className="mt-10">
               <div className="flex flex-col md:grid md:grid-rows-6 md:grid-flow-col gap-5">
                 {/* PERBAIKAN KUNCI (4): Tambahkan 'readOnly' atau 'disabled' pada semua field */}
-                <FormFieldInput
+                <FormFieldInput 
                   form={form}
                   label="NIP"
                   name="nip"
                   labelStyle="text-[#3F6FA9]"
                   readOnly
+                  
                 />
                 <FormFieldInput
                   form={form}
@@ -224,6 +236,7 @@ const BiodataUser = () => {
                     { label: "Perempuan", value: "Perempuan" },
                   ]}
                   labelStyle="text-[#3F6FA9]"
+                  readOnly
                 />
                 <FormFieldInput
                   form={form}
