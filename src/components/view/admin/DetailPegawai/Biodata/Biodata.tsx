@@ -81,9 +81,9 @@ interface Suku {
 }
 
 interface UnitKerja{
-  id: String;
-  kode_unit: String;
-  nama_unit: String;
+  id: string;
+  kode_unit:string;
+  nama_unit: string;
 }
 
 // --- END DEFINISI TIPE ---
@@ -149,8 +149,6 @@ const Biodata = () => {
       : "-",
   ];
 
-  //unit kerja dan status aktif
-  const unitKerja =  || "-";
 
   // kepegawaian
   const dataKepegawaianLeft = [
