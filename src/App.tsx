@@ -74,6 +74,8 @@ const DasboardPageUser = lazy(() => import("./pages/dasboard")); // Asumsi ini u
 const RiwayatKehadiranPage = lazy(() => import("./pages/riwayatKehadiran")); // Asumsi ini untuk user
 const ModulePage = lazy(() => import("./pages/module"));
 const ProfilPage = lazy(() => import("./pages/profil"));
+const EditBiodataPageUser = lazy(() => import("./pages/biodata/editBiodata")); // Asumsi ini untuk user
+
 const RiwayatPenghargaanPage = lazy(
   () =>
     import(
@@ -1041,6 +1043,7 @@ function App() {
           {/* USER PAGES */}
           <Route path="/dasboard" Component={DasboardPageUser} />
           <Route path="/biodata" Component={BiodataPageUser} />
+          <Route path="/editBiodata" Component={EditBiodataPageUser} />
           <Route
             path="/tahapan-data-riwayat"
             Component={TahapanDataRiwayatPageUser}

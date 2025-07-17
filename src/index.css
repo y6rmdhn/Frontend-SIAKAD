@@ -182,4 +182,21 @@
     content: '.';
     animation: dots 1s steps(4, jump-none) infinite;
   }
+  /* Semua input & textarea readonly */
+input[readonly],
+textarea[readonly],
+select[disabled] {
+  background-color: #f3f4f6; /* abu-abu muda */
+  color: #6b7280; /* teks abu-abu */
+  border-color: #d1d5db; /* border soft */
+  cursor: not-allowed; /* kursor 🚫 */
+}
+
+/* Radio & Checkbox disabled */
+input[type="radio"]:disabled,
+input[type="checkbox"]:disabled {
+  opacity: 0.5; /* transparan biar kelihatan mati */
+  cursor: not-allowed;
+}
+
 }
