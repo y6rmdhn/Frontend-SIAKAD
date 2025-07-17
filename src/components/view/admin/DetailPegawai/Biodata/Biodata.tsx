@@ -26,7 +26,7 @@ interface PegawaiDetail {
   tempat_lahir: string;
   tanggal_lahir: string; // ISO string date
   kode_status_pernikahan: number;
-  unit_kerja: string;
+  unit_kerja: UnitKerja;
   status_aktif: boolean;
   hubungan_kerja: string;
   email_pt: string;
@@ -78,6 +78,12 @@ interface PegawaiDetail {
 // Tipe untuk data suku
 interface Suku {
   nama_suku: string;
+}
+
+interface UnitKerja{
+  id: String;
+  kode_unit: String;
+  nama_unit: String;
 }
 
 // --- END DEFINISI TIPE ---
@@ -148,7 +154,7 @@ const Biodata = () => {
 
   // kepegawaian
   const dataKepegawaianLeft = [
-    data?.unit_kerja || "-",
+    data?.unit_kerja?.nama_unit || "-",
     data?.status_aktif ? "Aktif" : "Tidak Aktif",
     data?.hubungan_kerja || "-",
     data?.email_pt || "-",
