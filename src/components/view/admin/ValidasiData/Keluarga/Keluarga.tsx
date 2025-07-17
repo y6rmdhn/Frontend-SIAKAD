@@ -330,7 +330,7 @@ const Keluarga = () => {
               />
             </TableHead>
             {data?.table_columns?.map((col: any) => (
-              <TableHead key={col.field} className="text-center">
+              <TableHead key={col.field} className="text-center ">
                 {col.label}
               </TableHead>
             ))}
@@ -339,7 +339,7 @@ const Keluarga = () => {
         <TableBody className="divide-y divide-gray-200">
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={10} className="text-center py-10">
+              <TableCell colSpan={10} className="text-center py-10 ">
                 Memuat data...
               </TableCell>
             </TableRow>
@@ -360,7 +360,7 @@ const Keluarga = () => {
                     }
                   />
                 </TableCell>
-                <TableCell className="text-center">{item.nip}</TableCell>
+                <TableCell className="text-center rounded-tl-lg">{item.nip}</TableCell>
                 <TableCell>{item.nama_pegawai}</TableCell>
                 <TableCell>{item.nama_keluarga}</TableCell>
                 <TableCell className="text-center">{item.hubungan}</TableCell>
@@ -371,7 +371,7 @@ const Keluarga = () => {
                 <TableCell className="text-center">
                   {item.tgl_diajukan}
                 </TableCell>
-                <TableCell className="text-center capitalize">
+                <TableCell className="text-center capitalize rounded-tr-lg">
                   <Button
                     size="sm"
                     variant={item.status_info?.color || "secondary"}

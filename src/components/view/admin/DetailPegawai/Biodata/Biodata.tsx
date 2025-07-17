@@ -143,6 +143,9 @@ const Biodata = () => {
       : "-",
   ];
 
+  //unit kerja dan status aktif
+  const unitKerja =  || "-";
+
   // kepegawaian
   const dataKepegawaianLeft = [
     data?.unit_kerja || "-",

@@ -228,8 +228,8 @@ const SettingKehadiran = () => {
           </CustomCard>
 
           <Table className="mt-10 table-auto">
-            <TableHeader>
-              <TableRow className="bg-gray-100">
+            <TableHeader >
+              <TableRow className="bg-blue-500">
                 <TableHead className="text-center text-xs sm:text-sm">
                   Nama Gedung
                 </TableHead>

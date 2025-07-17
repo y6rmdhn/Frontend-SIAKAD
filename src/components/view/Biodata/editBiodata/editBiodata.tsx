@@ -23,8 +23,7 @@ import wilayahIdServices from "@/services/binderByte.services.ts";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import putReferensiServices from "@/services/put.admin.referensi";
 import { toast } from "sonner";
-import EditBiodataPageUser from "@/pages/biodata/editBiodata";
-
+// import EditBiodataPageUser from "@/pages/biodata/editBiodata/index.tsx";
 // --- Skema Validasi dan Tipe Data ---
 
 const MAX_FILE_SIZE_MB = 2;
@@ -181,7 +180,7 @@ interface FormDataPegawaiProps {
 
 // --- Komponen Utama ---
 
-const EditBiodataPageUser = () => {
+const EditBiodataPageUserComponent = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState<string>("kepegawaian");
   const params = useParams();
@@ -531,4 +530,4 @@ const EditBiodataPageUser = () => {
   );
 };
 
-export default EditBiodataPageUser;
+export default EditBiodataPageUserComponent;
