@@ -102,7 +102,7 @@ const DetailOrangtua = () => {
                                         className="w-full md:w-auto"
                                         to="/data-riwayat/keluarga/orangtua"
                                     >
-                                        <Button type="button" className="bg-[#002E5A] w-full md:w-auto hover:bg-hover-blue-200">
+                                        <Button type="button" className="bg-green-light-uika w-full md:w-auto hover:bg-hover-blue-200">
                                             <IoIosArrowBack/> Kembali ke Daftar
                                         </Button>
                                     </Link>

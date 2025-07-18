@@ -3,7 +3,7 @@ interface PropsType {
 }
 
 const PageHead = (props: PropsType) => {
-  const { title = "SIAKAD UIKA" } = props;
+  const { title = "SIMPEG UIKA" } = props;
 
   return (
     <head>

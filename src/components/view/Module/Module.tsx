@@ -92,46 +92,19 @@ const Module = () => {
 
           <div className="bg-[#F4F3F3] h-full">
             {userSelector.role === "Admin" ? (
+              // ======================================================================
+              // Tampilan untuk ADMIN
+              // ======================================================================
               <div className="grid grid-rows-[auto_auto] mb-10 lg:mb-0 lg:grid-cols-[60%_40%] h-full">
                 <div className="w-full h-full pt-5 order-2 lg:order-1">
                   <h1 className="font-medium text-xl pl-8">Daftar Modul</h1>
-
                   <div className="gap-5 mt-3 grid grid-rows-3 grid-flow-col lg:grid-cols-3 lg:grid-flow-row md:grid-cols-2 md:grid-flow-row px-8">
-                    <div
-                      onMouseEnter={() => setHovered("adminEnterMouse")}
-                      onMouseLeave={() => setHovered("adminLeaveMouse")}
-                      onClick={() => {
-                        setRole("admin");
-                        setSelected("admin");
-                      }}
-                      className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${
-                        selected === "admin" ? "!bg-[#cfd6db]" : ""
-                      }`}
-                    >
-                      <div
-                        className={`bg-white/50 w-full h-full rounded-xl ${
-                          hovered === "adminEnterMouse"
-                            ? "scale-110 transition-transform duration-500"
-                            : "scale-100 transition-transform duration-300"
-                        }`}
-                      >
-                        <div className="flex flex-col items-center justify-center p-5 h-full">
-                          <img
-                            src="/images/logo/image 10 (1).png"
-                            alt="background-header"
-                            className="w-10 h-10 mb-2"
-                          />
-                          <h1 className="text-[#585858] font-medium text-sm text-center leading-snug min-h-[32px]">
-                            Administrasi Aplikasi
-                          </h1>
-                        </div>
-                      </div>
-                    </div>
-
+                    {/* --- HANYA MODUL KEPEGAWAIAN YANG TAMPIL --- */}
                     <div
                       onMouseEnter={() => setHovered("kepegawaianEnterMouse")}
                       onMouseLeave={() => setHovered("kepegawaianLeaveMouse")}
                       onClick={() => {
+                        // Klik ini akan menjadi pemicu untuk menampilkan semua role Admin
                         setRole("kepegawaian");
                         setSelected("kepegawaian");
                       }}
@@ -161,48 +134,57 @@ const Module = () => {
                   </div>
                 </div>
 
+                {/* --- PANEL KANAN UNTUK ADMIN --- */}
                 <div
                   className={`${
+                    // Panel ini hanya akan muncul jika 'role' sudah di-set (setelah klik modul)
                     role ? "flex flex-col" : "hidden lg:flex lg:flex-col"
                   } w-full lg:h-[1000px] pt-5 px-8 bg-[#EEEEEE] order-1 lg:order-2`}
                 >
+                  {/* Cek jika 'role' ada, maka tampilkan semua role untuk admin */}
                   {role && (
-                    <div>
-                      <h1 className="font-medium text-xl">Daftar Role</h1>
-                      <p className="text-sm">
-                        {role === "admin"
-                          ? "Administrasi Aplikasi"
-                          : "SIM Kepegawaian"}{" "}
-                      </p>
-                    </div>
-                  )}
+                    <>
+                      <div>
+                        <h1 className="font-medium text-xl">Daftar Role</h1>
+                        <p className="text-sm">SIM Kepegawaian</p>
+                      </div>
 
-                  {role && (
-                    <div
-                      onClick={() =>
-                        role === "admin"
-                          ? navigate("/admin/dasboard")
-                          : navigate("/dasboard")
-                      }
-                      className="group bg-white p-3 rounded-md mt-6 cursor-pointer shadow-sm hover:bg-[#00325B] transition-all duration-300"
-                    >
-                      <h1 className="font-semibold text-[#004680] group-hover:text-white transition-all duration-500">
-                        {role === "admin"
-                          ? "Administrasi Aplikasi"
-                          : "Kepegawaian"}
-                      </h1>
-                      <p className="text-muted-foreground font-semibold text-sm group-hover:text-white transition-all duration-700">
-                        UIKA
-                      </p>
-                    </div>
+                      {/* Role Administrasi Aplikasi */}
+                      <div
+                        onClick={() => navigate("/admin/dasboard")}
+                        className="group bg-white p-3 rounded-md mt-6 cursor-pointer shadow-sm hover:bg-[#00325B] transition-all duration-300"
+                      >
+                        <h1 className="font-semibold text-[#004680] group-hover:text-white transition-all duration-500">
+                          Administrasi Aplikasi
+                        </h1>
+                        <p className="text-muted-foreground font-semibold text-sm group-hover:text-white transition-all duration-700">
+                          UIKA
+                        </p>
+                      </div>
+
+                      {/* Role Kepegawaian */}
+                      <div
+                        onClick={() => navigate("/dasboard")}
+                        className="group bg-white p-3 rounded-md mt-4 cursor-pointer shadow-sm hover:bg-[#00325B] transition-all duration-300"
+                      >
+                        <h1 className="font-semibold text-[#004680] group-hover:text-white transition-all duration-500">
+                          Kepegawaian
+                        </h1>
+                        <p className="text-muted-foreground font-semibold text-sm group-hover:text-white transition-all duration-700">
+                          UIKA
+                        </p>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
             ) : (
+              // ======================================================================
+              // Tampilan untuk NON-ADMIN (tidak berubah)
+              // ======================================================================
               <div className="grid grid-rows-[auto_auto] mb-10 lg:mb-0 lg:grid-cols-[60%_40%] h-full">
                 <div className="w-full h-full pt-5 order-2 lg:order-1">
                   <h1 className="font-medium text-xl pl-8">Daftar Modul</h1>
-
                   <div className="gap-5 mt-3 grid grid-rows-3 grid-flow-col lg:grid-cols-3 lg:grid-flow-row md:grid-cols-2 md:grid-flow-row px-8">
                     <div
                       onMouseEnter={() => setHovered("kepegawaianEnterMouse")}
@@ -236,7 +218,6 @@ const Module = () => {
                     </div>
                   </div>
                 </div>
-
                 <div
                   className={`${
                     role ? "flex flex-col" : "hidden lg:flex lg:flex-col"
@@ -248,7 +229,6 @@ const Module = () => {
                       <p className="text-sm">SIM Kepegawaian</p>
                     </div>
                   )}
-
                   {role && (
                     <div
                       onClick={() => navigate("/dasboard")}

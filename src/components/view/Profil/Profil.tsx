@@ -404,7 +404,7 @@ const Profil = () => {
                   </div>
                 </div>
                 <div>
-                  <Label className="text-base font-semibold text-sm sm:text-base">
+                  <Label className=" font-semibold text-sm sm:text-base">
                     Ganti Kata Sandi
                   </Label>
                   <Button

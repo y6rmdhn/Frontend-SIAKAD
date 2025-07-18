@@ -85,7 +85,7 @@ const DetailDataAnak = () => {
             <div className="flex flex-col md:flex-row justify-between gap-2">
                 <Title title="Data Anak" subTitle="Detail Anak" />
                 <Link className="w-full md:w-auto" to="/data-riwayat/keluarga/anak">
-                    <Button className="bg-[#00C0EF] w-full md:w-auto hover:bg-hover-blue-200">
+                    <Button className="bg-green-light-uika w-full md:w-auto hover:bg-hover-blue-200">
                         <IoIosArrowBack /> Kembali ke Daftar
                     </Button>
                 </Link>

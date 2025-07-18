@@ -87,7 +87,7 @@ const DetailDataPasangan = () => {
                     className="w-full md:w-auto"
                     to="/data-riwayat/keluarga/pasangan"
                 >
-                    <Button className="bg-[#00C0EF] w-full md:w-auto hover:bg-hover-blue-200">
+                    <Button className="bg-green-light-uika w-full md:w-auto hover:bg-hover-blue-200">
                         <IoIosArrowBack /> Kembali ke Daftar
                     </Button>
                 </Link>
