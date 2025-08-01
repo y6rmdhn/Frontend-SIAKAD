@@ -45,6 +45,7 @@ interface PegawaiItem {
   nidn: string | null;
   nama_pegawai: string;
   unit_kerja: string;
+  pendidikan_terakhir: string; // Optional field for education
   status: string;
 }
 
@@ -73,6 +74,7 @@ const Pegawai = () => {
 
   const currentPage = searchParam.get("page") || "1";
   const unitKerjaFilter = searchParam.get("unit_kerja_id") || "";
+  const pendidikanTerakhirFilter = searchParam.get("hubungan_kerja_id") || "";
   const statusAktifFilter = searchParam.get("status_aktif_id") || "";
   const hubunganKerjaFilter = searchParam.get("hubungan_kerja_id") || "";
 
@@ -84,6 +86,7 @@ const Pegawai = () => {
       currentPage,
       debouncedSearch,
       unitKerjaFilter,
+      pendidikanTerakhirFilter,
       statusAktifFilter,
       hubunganKerjaFilter,
     ],
@@ -300,6 +303,7 @@ const Pegawai = () => {
               <TableHead>NIDN</TableHead>
               <TableHead>Nama Pegawai</TableHead>
               <TableHead>Unit Kerja</TableHead>
+              <TableHead>Pendidikan Terakhir</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Aksi</TableHead>
             </TableRow>
@@ -321,6 +325,7 @@ const Pegawai = () => {
                   <TableCell>{item.nidn || "-"}</TableCell>
                   <TableCell>{item.nama_pegawai}</TableCell>
                   <TableCell>{item.unit_kerja}</TableCell>
+                  <TableCell className="text-center">{item.pendidikan_terakhir}</TableCell>
                   <TableCell className="text-center">{item.status}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex justify-center items-center">

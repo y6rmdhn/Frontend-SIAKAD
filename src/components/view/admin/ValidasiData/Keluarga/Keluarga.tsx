@@ -41,6 +41,7 @@ import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormIn
 // Services
 import adminServices from "@/services/admin.services";
 import patchDataServices from "@/services/patch.admin.services";
+import { FaPlus } from "react-icons/fa";
 
 // --- Type and Schema Definitions ---
 type ActionType = "approve" | "reject" | "draft";
@@ -241,6 +242,7 @@ const Keluarga = () => {
         Validasi Data Keluarga
       </h1>
 
+
       <CustomCard
         title="Filter Data"
         actions={
@@ -288,31 +290,44 @@ const Keluarga = () => {
       />
 
       <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
-        <SearchInput
-          placeholder="Cari NIP atau nama pegawai..."
-          value={searchData}
-          onChange={(e) => setSearchData(e.target.value)}
-          className="w-full md:w-80"
-        />
-        {selectedItem.length > 0 && (
-          <div className="flex md:flex-row flex-col gap-2">
-            <Button
-              type="button"
-              onClick={() => handleOpenDialog("approve")}
-              className="bg-green-light-uika hover:bg-[#329C59]"
-            >
-              <FaCheck className="mr-2" /> Approve ({selectedItem.length})
-            </Button>
-            <Button
-              type="button"
-              onClick={() => handleOpenDialog("reject")}
-              variant="destructive"
-            >
-              <IoClose className="mr-2" /> Reject ({selectedItem.length})
-            </Button>
-          </div>
-        )}
-      </div>
+  {/* Search Input */}
+  <SearchInput
+    placeholder="Cari NIP atau nama pegawai..."
+    value={searchData}
+    onChange={(e) => setSearchData(e.target.value)}
+    className="w-full md:w-80"
+  />
+
+  {/* Tombol Aksi */}
+  <div className="flex flex-wrap md:flex-row gap-2 justify-end">
+    {selectedItem.length > 0 && (
+      <>
+        <Button
+          type="button"
+          onClick={() => handleOpenDialog("approve")}
+          className="bg-green-light-uika hover:bg-[#329C59]"
+        >
+          <FaCheck className="mr-2" /> Approve ({selectedItem.length})
+        </Button>
+        <Button
+          type="button"
+          onClick={() => handleOpenDialog("reject")}
+          variant="destructive"
+        >
+          <IoClose className="mr-2" /> Reject ({selectedItem.length})
+        </Button>
+      </>
+    )}
+
+    {/* Tombol Tambah Data selalu muncul */}
+    <Link to="/admin/operasional/kompensasi/detail-riwayat-pelanggaran">
+      <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+        <FaPlus className="mr-2" /> Tambah Data
+      </Button>
+    </Link>
+  </div>
+</div>
+
 
       <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
