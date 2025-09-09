@@ -298,34 +298,34 @@ const Keluarga = () => {
     className="w-full md:w-80"
   />
 
-  {/* Tombol Aksi */}
-  <div className="flex flex-wrap md:flex-row gap-2 justify-end">
-    {selectedItem.length > 0 && (
-      <>
-        <Button
-          type="button"
-          onClick={() => handleOpenDialog("approve")}
-          className="bg-green-light-uika hover:bg-[#329C59]"
-        >
-          <FaCheck className="mr-2" /> Approve ({selectedItem.length})
-        </Button>
-        <Button
-          type="button"
-          onClick={() => handleOpenDialog("reject")}
-          variant="destructive"
-        >
-          <IoClose className="mr-2" /> Reject ({selectedItem.length})
-        </Button>
-      </>
-    )}
+    {/* Tombol Aksi */}
+    <div className="flex flex-wrap md:flex-row gap-2 justify-end">
+      {selectedItem.length > 0 && (
+        <>
+          <Button
+            type="button"
+            onClick={() => handleOpenDialog("approve")}
+            className="bg-green-light-uika hover:bg-[#329C59]"
+          >
+            <FaCheck className="mr-2" /> Approve ({selectedItem.length})
+          </Button>
+          <Button
+            type="button"
+            onClick={() => handleOpenDialog("reject")}
+            variant="destructive"
+          >
+            <IoClose className="mr-2" /> Reject ({selectedItem.length})
+          </Button>
+        </>
+      )}
 
-    {/* Tombol Tambah Data selalu muncul */}
-    <Link to="/admin/operasional/kompensasi/detail-riwayat-pelanggaran">
-      <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-        <FaPlus className="mr-2" /> Tambah Data
-      </Button>
-    </Link>
-  </div>
+      {/* Tombol Tambah Data selalu muncul */}
+      <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+        <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+          <FaPlus className="mr-2" /> Tambah Data
+        </Button>
+      </Link>
+    </div>
 </div>
 
 

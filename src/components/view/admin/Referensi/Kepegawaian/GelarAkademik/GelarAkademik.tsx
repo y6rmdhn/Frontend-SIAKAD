@@ -53,7 +53,7 @@ const gelarSchema = z.object({
 type GelarFormValues = z.infer<typeof gelarSchema>;
 
 interface GelarItem {
-  id: number;
+  id: string;
   gelar: string;
   nama_gelar: string;
 }

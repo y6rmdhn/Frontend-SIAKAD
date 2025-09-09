@@ -82,12 +82,12 @@ export const inputPresensiSchema = z
 export type InputPresensiFormValue = z.infer<typeof inputPresensiSchema>;
 
 interface PresensiData {
-  id: number;
+  id: string;
   nip: string;
   pegawai_id: number;
   nama_pegawai: string;
   status: string;
-  jenis_kehadiran: { id: number; nama_jenis: string };
+  jenis_kehadiran: { id: string; nama_jenis: string };
   tanggal_absensi: string;
   jam_masuk: string;
   jam_keluar: string;

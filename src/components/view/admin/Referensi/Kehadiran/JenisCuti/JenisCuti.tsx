@@ -32,7 +32,7 @@ import { AxiosError } from "axios";
 
 // Define interface for the data item
 interface JenisCutiItem {
-  id: number;
+  id: string;
   kode: string;
   nama_jenis_cuti: string;
   standar_cuti: number | string; // API bisa mengembalikan string atau number

@@ -28,7 +28,7 @@ import { useDebounce } from "use-debounce";
 
 // Interface for the raw data item from the API
 interface JabatanStrukturalItem {
-  id: number;
+  id: string;
   kode: string;
   singkatan: string; // Added singkatan here
   parent_jabatan: string | null;
@@ -43,7 +43,7 @@ interface JabatanStrukturalItem {
 
 // Updated the node structure to use 'singkatan'
 export interface JabatanStrukturalNode {
-  id: number;
+  id: string;
   kode: string;
   singkatan: string; // Changed from nama_jabatan
   parent_jabatan_nama: string | null;

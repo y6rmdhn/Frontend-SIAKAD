@@ -40,7 +40,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 
 // Tipe Data
 interface PegawaiItem {
-  id: number;
+  id: string;
   nip: string;
   nidn: string | null;
   nama_pegawai: string;

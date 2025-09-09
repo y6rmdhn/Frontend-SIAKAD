@@ -14,7 +14,7 @@ import { Link, useParams } from "react-router-dom";
 // --- START DEFINISI TIPE ---
 // Interface ini sudah disesuaikan dengan semua data dari API response
 interface DetailUnitKerja {
-  id: number;
+  id: string;
   kode_unit: string;
   nama_unit: string;
   parent_unit_id: string | null;

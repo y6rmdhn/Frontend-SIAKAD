@@ -28,7 +28,7 @@ import adminServices from "@/services/admin.services";
 
 // --- Tipe Data ---
 interface PegawaiItem {
-  id: number;
+  id: string;
   nip: string;
   nama_pegawai: string;
   unit_kerja: string;

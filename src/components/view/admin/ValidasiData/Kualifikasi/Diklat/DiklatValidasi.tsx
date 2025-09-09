@@ -49,7 +49,7 @@ import patchDataServices from "@/services/patch.admin.services";
 type ActionType = "approve" | "reject";
 
 interface DiklatItem {
-  id: number;
+  id: string;
   nip: string;
   nama_pegawai: string;
   nama_diklat: string;

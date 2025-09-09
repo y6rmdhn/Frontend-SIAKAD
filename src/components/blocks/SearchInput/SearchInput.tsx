@@ -7,12 +7,14 @@ interface SearchInputProps {
   className?: string;
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  additionalClassName?: string;
 }
 
 function SearchInput({
   placeholder = "Search",
   className = "",
   value,
+  additionalClassName = "",
   onChange,
 }: SearchInputProps) {
   return (
@@ -21,7 +23,7 @@ function SearchInput({
         <FiSearch className="absolute top-1/2 -translate-y-1/2 right-2" />
         <Input
           placeholder={placeholder}
-          className="pr-8 text-xs md:text-sm"
+          className={`pr-8 text-xs md:text-sm ${additionalClassName}`}
           value={value}
           onChange={onChange}
         />

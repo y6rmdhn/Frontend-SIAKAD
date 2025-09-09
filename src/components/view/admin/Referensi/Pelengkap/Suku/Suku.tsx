@@ -34,7 +34,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 interface sukuItem {
-  id: number;
+  id: string;
   nama_suku: string;
   // Add other properties as needed
 }

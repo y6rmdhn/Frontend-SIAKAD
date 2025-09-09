@@ -46,7 +46,7 @@ export const rumpunSchema = z.object({
 export type RumpunFormValues = z.infer<typeof rumpunSchema>;
 
 interface RumpunItem {
-  id: number;
+  id: string;
   kode: string;
   nama_bidang: string;
   parent_category: string;

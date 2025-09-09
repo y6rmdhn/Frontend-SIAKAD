@@ -41,7 +41,7 @@ type OutputPenelitianFormValues = z.infer<typeof outputPenelitianSchema>;
 
 // Tipe untuk item dan response
 interface OutputPenelitianItem {
-  id: number;
+  id: string;
   kode: string;
   output_penelitian: string;
 }

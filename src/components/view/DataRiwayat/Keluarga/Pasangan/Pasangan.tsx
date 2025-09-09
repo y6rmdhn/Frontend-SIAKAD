@@ -45,7 +45,7 @@ interface TableColumn {
 }
 
 interface PasanganItem {
-    id: number;
+    id: string;
     nama_pasangan: string;
     tempat_lahir: string;
     tgl_lahir: string; // ISO string date

@@ -81,7 +81,7 @@ interface NewsItem {
 }
 
 interface BirthdayItem {
-  id: number;
+  id: string;
   nip: string;
   nama: string;
   tanggal_lahir: string;

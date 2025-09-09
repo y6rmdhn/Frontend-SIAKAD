@@ -32,7 +32,7 @@ import { AxiosError } from "axios";
 // --- START DEFINISI TIPE ---
 
 interface JenisPelanggaranItem {
-  id: number;
+  id: string;
   kode: string;
   nama_pelanggaran: string;
 }

@@ -34,7 +34,7 @@ import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx
 
 // Define interface for the data item
 interface StatusKeaktifanItem {
-    id: number;
+    id: string;
     kode: string;
     nama_status_aktif: string;
     status_keluar: boolean;

@@ -32,7 +32,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 
 interface elesonItem {
-  id: number;
+  id: string;
   kode: string;
   nama_eselon: string;
   status: boolean;

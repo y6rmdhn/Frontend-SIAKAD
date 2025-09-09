@@ -135,6 +135,10 @@ const DetailPasanganValidasiPage = lazy(
       "./pages/admin/validasiData/keluarga/pasangan/detailPasanganValidasi"
     )
 );
+
+const TambahKeluargaPage = lazy(
+  () => import("./pages/admin/validasiData/keluarga/tambahKeluarga/tambahKeluarga")
+);
 const MonitoringPage = lazy(
   () => import("./pages/admin/validasiData/monitoring")
 );
@@ -1793,6 +1797,10 @@ function App() {
               <Route
                 path="keluarga/detail-pasangan"
                 Component={DetailPasanganValidasiPage}
+              />
+              <Route
+                path="keluarga/tambah-keluarga"
+                Component={TambahKeluargaPage}
               />
 
               {/* VALIDASI > KEPEGAWAIAN */}

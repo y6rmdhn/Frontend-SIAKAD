@@ -42,7 +42,7 @@ import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormIn
 
 // Icons
 import { IoClose, IoEyeOutline } from "react-icons/io5";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaPlus } from "react-icons/fa";
 
 // Services
 import adminServices from "@/services/admin.services";
@@ -61,7 +61,7 @@ const rejectActionSchema = z.object({
 type ActionSchema = z.infer<typeof rejectActionSchema>;
 
 interface HubunganKerjaItem {
-  id: number;
+  id: string;
   nip_pegawai: string;
   nama_pegawai: string;
   tgl_mulai_formatted: string;
@@ -81,7 +81,7 @@ interface PaginatedData {
 }
 
 interface FilterOption {
-  id: number | string;
+  id: string;
   nama: string;
 }
 
@@ -359,7 +359,14 @@ const HubunganKerjaKepegawaian = () => {
             </Button>
           </div>
         )}
+
+         <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+              <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+                <FaPlus className="mr-2" /> Tambah Data
+              </Button>
+            </Link>
       </div>
+
       <div className="mt-5 border rounded-lg">
         <Table className="text-xs lg:text-sm">
           <TableHeader>

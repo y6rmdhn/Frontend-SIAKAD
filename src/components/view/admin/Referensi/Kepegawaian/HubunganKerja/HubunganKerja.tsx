@@ -34,7 +34,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 interface hubunganKerjaItem {
-  id: number;
+  id: string;
   kode: string;
   nama_hub_kerja: string;
   status_aktif: boolean;

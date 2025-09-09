@@ -24,7 +24,7 @@ import adminServices from "@/services/admin.services";
 
 // --- Type Definitions ---
 interface MonitoringItem {
-  id: number;
+  id: string;
   nip: string;
   nama_pegawai: string;
   unit_kerja: string;

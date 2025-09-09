@@ -49,7 +49,7 @@ interface HistoryAbsenItem {
 }
 
 interface SlipGaji {
-  id: number;
+  id: string;
   periode: { nama_periode: string };
   total_pendapatan: string;
   total_potongan: string;

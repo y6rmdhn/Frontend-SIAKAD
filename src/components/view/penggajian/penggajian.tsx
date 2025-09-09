@@ -22,7 +22,7 @@ import dosenServices from "@/services/dosen.services";
 
 // Tipe Data
 interface GajiKomponen {
-  id: number;
+  id: string;
   kode_komponen: string;
   deskripsi: string;
   nominal: string;

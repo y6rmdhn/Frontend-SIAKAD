@@ -26,7 +26,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { toast } from "sonner";
 
 interface UnitKerjaItem {
-  id: number;
+  id: string;
   kode_unit: string;
   nama_unit: string;
   parent_unit_id: string | null;

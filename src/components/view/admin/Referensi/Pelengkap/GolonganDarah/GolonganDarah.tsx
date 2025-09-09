@@ -31,7 +31,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 interface golonganDarahItem {
-  id: number;
+  id: string;
   golongan_darah: string;
   // Add other properties as needed
 }

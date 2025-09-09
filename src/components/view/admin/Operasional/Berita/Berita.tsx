@@ -34,12 +34,12 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 
 // Interfaces
 interface BeritaItem {
-  id: string | number;
+  id: string ;
   judul: string;
   tgl_posting: string;
   tgl_expired: string;
   prioritas: boolean;
-  unit_kerja: { id: number; nama: string }[];
+  unit_kerja: { id: string; nama: string }[];
 }
 
 interface PaginatedBeritaResponse {

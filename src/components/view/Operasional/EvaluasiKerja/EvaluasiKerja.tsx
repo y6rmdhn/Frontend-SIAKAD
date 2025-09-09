@@ -37,7 +37,7 @@ interface Evaluator {
 }
 
 interface EvaluasiItem {
-  id: number;
+  id: string;
   nip: string;
   nama_pegawai: string;
   unit_kerja: string;
@@ -46,7 +46,7 @@ interface EvaluasiItem {
     add: boolean;
     edit: boolean;
     delete: boolean;
-    evaluation_id: number | null;
+    evaluation_id: string | null;
   };
 }
 

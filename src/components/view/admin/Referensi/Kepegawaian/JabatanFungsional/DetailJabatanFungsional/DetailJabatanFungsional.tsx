@@ -39,8 +39,8 @@ type FungsionalSchema = z.infer<typeof fungsionalSchema>;
 type JabatanFungsionalPayload = {
   kode: string;
   nama_jabatan_fungsional: string;
-  jabatan_akademik_id: number;
-  pangkat_id: number;
+  jabatan_akademik_id: string;
+  pangkat_id: string;
   angka_kredit: string;
   usia_pensiun: number;
   keterangan?: string;

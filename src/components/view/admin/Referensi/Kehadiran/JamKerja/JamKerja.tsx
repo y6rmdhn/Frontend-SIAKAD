@@ -31,7 +31,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 
 interface jamKerjaItem {
-  id: number;
+  id: string;
   jenis_jam_kerja: string;
   jam_normal: boolean;
   jam_datang: string;

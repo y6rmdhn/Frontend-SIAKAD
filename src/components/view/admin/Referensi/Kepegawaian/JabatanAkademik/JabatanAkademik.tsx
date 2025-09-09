@@ -37,7 +37,7 @@ import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/I
 
 // Define interface for the data item
 interface JabatanAkademikItem {
-  id: number;
+  id: string;
   kode: string;
   jabatan_akademik: string;
   role_id: number;

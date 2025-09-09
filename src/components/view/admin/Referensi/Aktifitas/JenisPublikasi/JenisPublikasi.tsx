@@ -31,7 +31,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
 
 // Define interface for the data item
 interface JenisPublikasiItem {
-  id: number;
+  id: string;
   kode: string;
   jenis_publikasi: string;
   // Add other properties as needed

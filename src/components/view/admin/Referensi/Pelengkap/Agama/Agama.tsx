@@ -31,7 +31,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 import CustomPagination from "@/components/blocks/CustomPagination";
 
 interface agamaItem {
-  id: number;
+  id: string;
   kode: string;
   nama_agama: string;
   // Add other properties as needed

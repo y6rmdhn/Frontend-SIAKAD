@@ -56,7 +56,7 @@ type RejectActionSchema = z.infer<typeof rejectActionSchema>;
 
 // FIX: Define the full shape of the API response
 interface CutiItem {
-  id: number;
+  id: string;
   nama_pegawai: string;
   unit_kerja: string;
   jenis_cuti: string;

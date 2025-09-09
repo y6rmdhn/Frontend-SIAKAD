@@ -49,7 +49,7 @@ interface RekapItem {
 
 // Defines the structure for filter options provided by the API
 interface UnitKerjaOption {
-  id: number;
+  id: string;
   nama_unit: string;
 }
 

@@ -33,7 +33,7 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.t
 
 // Define interface for the data item
 interface JenisSKItem {
-  id: number;
+  id: string;
   kode: string;
   jenis_sk: string;
   // Add other properties as needed

@@ -31,7 +31,7 @@ import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx
 
 // Define a type for an item in the data array
 interface JenisTesItem {
-  id: number;
+  id: string;
   kode: string;
   jenis_tes: string;
   nilai_minimal: number;

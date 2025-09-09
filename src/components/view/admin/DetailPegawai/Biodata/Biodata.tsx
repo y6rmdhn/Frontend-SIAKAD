@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Tipe untuk data detail pegawai dari API
 interface PegawaiDetail {
-  id: number;
+  id: string;
   nip: string;
   nuptk: string;
   nama: string;
@@ -60,7 +60,7 @@ interface PegawaiDetail {
   no_kk: string;
   warga_negara: string;
   alamat_kependudukan: string;
-  suku_id: number;
+  suku_id: string;
   file_ktp: string | null;
   file_kk: string | null;
   nama_bank: string;

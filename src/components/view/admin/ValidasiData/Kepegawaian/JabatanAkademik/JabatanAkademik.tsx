@@ -42,7 +42,7 @@ import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormIn
 
 // Icons
 import { IoClose, IoEyeOutline } from "react-icons/io5";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaPlus } from "react-icons/fa";
 
 // Services
 import adminServices from "@/services/admin.services";
@@ -59,7 +59,7 @@ const rejectActionSchema = z.object({
 type RejectActionSchema = z.infer<typeof rejectActionSchema>;
 
 interface JabatanAkademikItem {
-  id: number;
+  id: string;
   nip_pegawai: string;
   nama_pegawai: string;
   tmt_jabatan_formatted: string;
@@ -78,7 +78,7 @@ interface PaginatedData {
 }
 
 interface FilterOption {
-  id: string | number;
+  id: string;
   nama: string;
 }
 
@@ -324,32 +324,44 @@ const JabatanAkademik = () => {
           </div>
         }
       />
-      <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
-        <SearchInput
-          value={searchData}
-          onChange={(e) => setSearchData(e.target.value)}
-          className="w-full md:w-80"
-          placeholder="Cari NIP atau nama pegawai..."
-        />
-        {selectedItem.length > 0 && (
-          <div className="flex flex-col md:flex-row gap-2">
-            <Button
-              onClick={() => handleOpenDialog("approve")}
-              className="bg-green-600 hover:bg-green-700"
-              disabled={isApproving || isRejecting}
-            >
-              <FaCheck className="mr-2" /> Setujui ({selectedItem.length})
-            </Button>
-            <Button
-              onClick={() => handleOpenDialog("reject")}
-              variant="destructive"
-              disabled={isApproving || isRejecting}
-            >
-              <IoClose className="mr-2" /> Tolak ({selectedItem.length})
-            </Button>
-          </div>
-        )}
-      </div>
+     <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
+  {/* Search Input */}
+  <SearchInput
+    placeholder="Cari NIP atau nama pegawai..."
+    value={searchData}
+    onChange={(e) => setSearchData(e.target.value)}
+    className="w-full md:w-80"
+  />
+
+    {/* Tombol Aksi */}
+    <div className="flex flex-wrap md:flex-row gap-2 justify-end">
+      {selectedItem.length > 0 && (
+        <>
+          <Button
+            type="button"
+            onClick={() => handleOpenDialog("approve")}
+            className="bg-green-light-uika hover:bg-[#329C59]"
+          >
+            <FaCheck className="mr-2" /> Approve ({selectedItem.length})
+          </Button>
+          <Button
+            type="button"
+            onClick={() => handleOpenDialog("reject")}
+            variant="destructive"
+          >
+            <IoClose className="mr-2" /> Reject ({selectedItem.length})
+          </Button>
+        </>
+      )}
+
+      {/* Tombol Tambah Data selalu muncul */}
+      <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+        <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+          <FaPlus className="mr-2" /> Tambah Data
+        </Button>
+      </Link>
+    </div>
+</div>
       <div className="mt-5 border rounded-lg">
         <Table className="text-xs lg:text-sm">
           <TableHeader>

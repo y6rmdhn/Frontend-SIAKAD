@@ -57,7 +57,7 @@ const rejectActionSchema = z.object({
 type ActionSchema = z.infer<typeof rejectActionSchema>;
 
 interface IzinItem {
-  id: number;
+  id: string;
   nama_pegawai: string;
   jenis_izin: string;
   lama_izin: string;
@@ -65,7 +65,7 @@ interface IzinItem {
 }
 
 interface FilterOption {
-  id?: number;
+  id?: string;
   value?: string | number;
   nama?: string;
   label?: string;

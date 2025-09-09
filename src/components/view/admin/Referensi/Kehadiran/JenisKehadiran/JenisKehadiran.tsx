@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 interface jenisKehadiranItem {
-  id: number;
+  id: string;
   kode_jenis: string;
   nama_jenis: string;
   warna: string;

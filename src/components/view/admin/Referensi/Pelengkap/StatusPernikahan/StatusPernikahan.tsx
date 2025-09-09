@@ -26,7 +26,7 @@ import putReferensiServices from "@/services/put.admin.referensi";
 import { toast } from "sonner";
 
 interface statusPernikahanItem {
-  id: number;
+  id: string;
   kode_status: string;
   nama_status: string;
   // Add other properties as needed

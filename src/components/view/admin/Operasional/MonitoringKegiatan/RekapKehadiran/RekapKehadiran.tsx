@@ -57,7 +57,7 @@ interface KegiatanItem {
 
 // Tipe untuk opsi filter unit kerja
 interface UnitKerjaOption {
-  id: number;
+  id: string;
   nama_unit: string;
 }
 

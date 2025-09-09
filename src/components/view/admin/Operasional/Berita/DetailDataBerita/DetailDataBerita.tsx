@@ -14,12 +14,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // --- START DEFINISI TIPE ---
 interface JabatanAkademik {
-  id: number;
+  id: string;
   jabatan_akademik: string;
 }
 
 interface DetailBerita {
-  id: number;
+  id: string;
   unit_kerja_id: string; // Berupa string array JSON
   judul: string;
   konten: string;

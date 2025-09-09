@@ -31,7 +31,7 @@ import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx
 
 // Define interface for the data item
 interface JenisLuaranItem {
-    id: number;
+    id: string;
     kode: string;
     jenis_luaran: string;
     // Add other properties as needed

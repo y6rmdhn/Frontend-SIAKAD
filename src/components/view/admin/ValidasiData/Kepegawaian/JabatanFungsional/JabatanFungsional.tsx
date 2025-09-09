@@ -26,7 +26,7 @@ import adminServices from "@/services/admin.services";
 import patchDataServices from "@/services/patch.admin.services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaPlus } from "react-icons/fa";
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -270,34 +270,44 @@ const JabatanFungsional = () => {
         }
       />
 
-      <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
-        <div className="flex flex-col md:flex-row gap-2 lg:gap-4">
-          <SearchInput
-            value={searchData}
-            onChange={(e) => setSearchData(e.target.value)}
-          />
-        </div>
-        {selectedItem.length > 0 && (
-          <div className="flex md:flex-row flex-col gap-2">
-            <Button
-              type="button"
-              onClick={() => handleOpenDialog("approve")}
-              className="bg-green-light-uika hover:bg-[#329C59]"
-            >
-              <FaCheck className="w-5! h-5! text-white mr-2" />
-              Approve {selectedItem.length} data
-            </Button>
-            <Button
-              type="button"
-              onClick={() => handleOpenDialog("reject")}
-              variant="destructive"
-            >
-              <IoClose className="w-5! h-5! text-white mr-2" />
-              Reject {selectedItem.length} data
-            </Button>
-          </div>
-        )}
-      </div>
+     <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
+  {/* Search Input */}
+  <SearchInput
+    placeholder="Cari NIP atau nama pegawai..."
+    value={searchData}
+    onChange={(e) => setSearchData(e.target.value)}
+    className="w-full md:w-80"
+  />
+
+    {/* Tombol Aksi */}
+    <div className="flex flex-wrap md:flex-row gap-2 justify-end">
+      {selectedItem.length > 0 && (
+        <>
+          <Button
+            type="button"
+            onClick={() => handleOpenDialog("approve")}
+            className="bg-green-light-uika hover:bg-[#329C59]"
+          >
+            <FaCheck className="mr-2" /> Approve ({selectedItem.length})
+          </Button>
+          <Button
+            type="button"
+            onClick={() => handleOpenDialog("reject")}
+            variant="destructive"
+          >
+            <IoClose className="mr-2" /> Reject ({selectedItem.length})
+          </Button>
+        </>
+      )}
+
+      {/* Tombol Tambah Data selalu muncul */}
+      <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+        <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+          <FaPlus className="mr-2" /> Tambah Data
+        </Button>
+      </Link>
+    </div>
+</div>
 
       <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>

@@ -31,7 +31,7 @@ import { z } from "zod";
 
 // Define interface for the data item
 interface JenisPenghargaanItem {
-  id: number;
+  id: string;
   kode: string;
   nama: string;
 }

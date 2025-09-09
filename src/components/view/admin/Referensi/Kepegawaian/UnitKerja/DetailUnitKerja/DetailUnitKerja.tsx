@@ -24,9 +24,9 @@ import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/I
 interface UnitKerja {
   kode_unit: string;
   nama_unit: string;
-  jenis_unit_id?: number;
-  tk_pendidikan_id: number;
-  akreditasi_id: number;
+  jenis_unit_id?: string;
+  tk_pendidikan_id: string;
+  akreditasi_id: string;
   parent_unit_id?: string;
   alamat?: string;
   telepon?: string;

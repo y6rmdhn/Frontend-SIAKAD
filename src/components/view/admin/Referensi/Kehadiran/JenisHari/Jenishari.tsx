@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 interface jenishariItem {
-  id: number;
+  id: string;
   kode: string;
   nama_hari: string;
   jenis_hari: boolean;
