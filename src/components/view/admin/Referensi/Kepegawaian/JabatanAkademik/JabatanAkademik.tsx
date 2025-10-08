@@ -54,7 +54,7 @@ interface JabatanAkademikResponse {
 }
 
 const jabatanAkademikSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
   jabatan_akademik: z.string().min(1, "Jabatan Akademik tidak boleh kosong"),
   role_id: z.string().min(1, "Jenis Jabatan harus dipilih"),
@@ -75,7 +75,7 @@ const JabatanAkademik = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -146,7 +146,7 @@ const JabatanAkademik = () => {
 
   // hapus data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       deleteReferensiServices.deteleJabatanAkademik(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
@@ -161,7 +161,7 @@ const JabatanAkademik = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteData(id);
   };
 
@@ -193,6 +193,7 @@ const JabatanAkademik = () => {
       // @ts-ignore
       putData(dataUntukApi);
     } else {
+      // @ts-ignore
       postData(dataUntukApi);
     }
   };
@@ -270,7 +271,7 @@ const JabatanAkademik = () => {
                 onClick={() => {
                   if (!isEditMode) {
                     form.reset({
-                      id: 0,
+                      id: "",
                       role_id: "",
                       kode: "",
                       jabatan_akademik: "",

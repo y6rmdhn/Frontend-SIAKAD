@@ -2,12 +2,12 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 
 interface IPayloadWithArray {
-  ids: number[];
+  ids: string[];
   keterangan?: string;
 }
 
 interface IPayloadWithArrayKeteranganAdmin {
-  ids: number[];
+  ids: string[];
   keterangan_admin?: string;
 }
 

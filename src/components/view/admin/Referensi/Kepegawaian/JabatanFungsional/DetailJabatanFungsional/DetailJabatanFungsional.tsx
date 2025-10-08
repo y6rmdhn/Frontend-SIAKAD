@@ -85,8 +85,8 @@ const DetailJabatanFungsional = () => {
   const handleSubmitData = (values: FungsionalSchema) => {
     const payload: JabatanFungsionalPayload = {
       ...values,
-      jabatan_akademik_id: parseInt(values.jabatan_akademik_id, 10),
-      pangkat_id: parseInt(values.pangkat_id, 10),
+      jabatan_akademik_id: values.jabatan_akademik_id,
+      pangkat_id: values.pangkat_id,
       usia_pensiun: parseInt(values.usia_pensiun, 10),
     };
     postAdd(payload);
@@ -173,7 +173,7 @@ const DetailJabatanFungsional = () => {
                 required={true}
                 queryKey="pangkat-select-referensi-pangkat"
                 queryFn={adminServices.getMasterPangkatReferensi}
-                itemValue="id"
+                itemValue="pangkat"
                 itemLabel="pangkat"
               />
               <FormFieldInput

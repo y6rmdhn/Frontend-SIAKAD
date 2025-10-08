@@ -13,7 +13,7 @@ import {
 import { useForm } from "react-hook-form";
 import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
 import { useEffect, useState } from "react";
@@ -30,25 +30,22 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 export const jenjangPendidikanSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(), // ✅ DIUBAH: number -> string
   jenjang_singkatan: z
     .string({
       required_error: "Jenjang singkatan tidak boleh kosong.",
     })
     .min(1, "Jenjang singkatan tidak boleh kosong."),
-
   jenjang_pendidikan: z
     .string({
       required_error: "Nama jenjang tidak boleh kosong.",
     })
     .min(3, "Nama jenjang harus memiliki minimal 3 karakter."),
-
   nama_jenjang_pendidikan_eng: z
     .string({
       required_error: "Nama jenjang (EN) tidak boleh kosong.",
     })
     .min(3, "Nama jenjang (EN) harus memiliki minimal 3 karakter."),
-
   urutan_jenjang_pendidikan: z.coerce
     .number({
       required_error: "Urutan jenjang tidak boleh kosong.",
@@ -56,7 +53,6 @@ export const jenjangPendidikanSchema = z.object({
     })
     .int("Urutan harus bilangan bulat.")
     .positive("Urutan harus lebih dari 0."),
-
   perguruan_tinggi: z.boolean().default(false),
   pasca_sarjana: z.boolean().default(false),
 });
@@ -68,7 +64,7 @@ const JenjangPendidikan = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null); // ✅ DIUBAH: number -> string
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -76,6 +72,7 @@ const JenjangPendidikan = () => {
   const form = useForm<JenjangPendidikanSchema>({
     resolver: zodResolver(jenjangPendidikanSchema),
     defaultValues: {
+      id: "", // ✅ DIUBAH: undefined -> string kosong
       jenjang_singkatan: "",
       jenjang_pendidikan: "",
       nama_jenjang_pendidikan_eng: "",
@@ -92,43 +89,54 @@ const JenjangPendidikan = () => {
       const response = await adminServices.getJenjangPendidikan(
         searchParam.get("page")
       );
-
+      console.log("📋 Data jenjang pendidikan:", response.data.data);
       return response.data.data;
     },
   });
 
   // tambah data
   const { mutate: postData } = useMutation({
-    mutationFn: (data: JenjangPendidikanSchema) =>
-      potsReferensiServices.jenjangPendidikan(data),
+    mutationFn: (data: JenjangPendidikanSchema) => {
+      const { id, ...createData } = data; // Hapus id untuk create
+      return potsReferensiServices.jenjangPendidikan(createData);
+    },
     onSuccess: () => {
       form.reset();
       toast.success("Berhasil menambahkan data");
       setIsAddData(false);
       queryClient.invalidateQueries({ queryKey: ["jenjang-pendidikan"] });
     },
+    onError: (error) => {
+      toast.error(`Gagal menambah data: ${error.message}`);
+    },
   });
 
   // edit data
   const { mutate: putData } = useMutation({
-    mutationFn: (data: JenjangPendidikanSchema) =>
-      putReferensiServices.jenjangPendidikan(data.id!, data),
+    mutationFn: (data: JenjangPendidikanSchema) => {
+      if (!data.id) {
+        throw new Error("ID diperlukan untuk edit data");
+      }
+      return putReferensiServices.jenjangPendidikan(data.id, data);
+    },
     onSuccess: () => {
       toast.success("Data berhasil diedit");
-
       setIsEditMode(false);
       setIsAddData(false);
       setEditingItemId(null);
-
       form.reset();
-
       queryClient.invalidateQueries({ queryKey: ["jenjang-pendidikan"] });
+    },
+    onError: (error) => {
+      toast.error(`Gagal mengedit data: ${error.message}`);
     },
   });
 
   // hapus data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.jenjangPendidikan(id),
+    mutationFn: (
+      id: string // ✅ DIUBAH: number -> string
+    ) => deleteReferensiServices.jenjangPendidikan(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["jenjang-pendidikan"] });
@@ -140,13 +148,18 @@ const JenjangPendidikan = () => {
         setIsAddData(false);
       }
     },
+    onError: (error) => {
+      toast.error(`Gagal menghapus data: ${error.message}`);
+    },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
+    // ✅ DIUBAH: number -> string
     deleteData(id);
   };
 
   const handleSubmitData = (values: JenjangPendidikanSchema) => {
+    console.log("📤 Submit data:", values);
     if (isEditMode && editingItemId) {
       putData(values);
     } else {
@@ -155,6 +168,8 @@ const JenjangPendidikan = () => {
   };
 
   const handleEditItem = (item: JenjangPendidikanSchema) => {
+    console.log("📝 Edit item:", item);
+
     form.reset({
       id: item.id,
       jenjang_singkatan: item.jenjang_singkatan,
@@ -228,7 +243,7 @@ const JenjangPendidikan = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: 0,
+                          id: "", // ✅ DIUBAH: 0 -> string kosong
                           jenjang_singkatan: "",
                           jenjang_pendidikan: "",
                           nama_jenjang_pendidikan_eng: "",
@@ -236,10 +251,9 @@ const JenjangPendidikan = () => {
                           perguruan_tinggi: false,
                           pasca_sarjana: false,
                         });
-
-                        setSearchParam(searchParam);
                         setIsAddData(true);
                         searchParam.set("page", "1");
+                        setSearchParam(searchParam);
                       }
                     }}
                     className={`cursor-pointer ${
@@ -386,18 +400,16 @@ const JenjangPendidikan = () => {
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">
-                        <Link to="">
-                          <Button
-                            size="icon"
-                            type="button"
-                            variant="ghost"
-                            className="cursor-pointer"
-                            onClick={() => handleEditItem(item)}
-                            disabled={isEditMode && editingItemId !== item.id}
-                          >
-                            <MdEdit className="w-5! h-5! text-[#26A1F4]" />
-                          </Button>
-                        </Link>
+                        <Button
+                          size="icon"
+                          type="button"
+                          variant="ghost"
+                          className="cursor-pointer"
+                          onClick={() => handleEditItem(item)}
+                          disabled={isEditMode && editingItemId !== item.id}
+                        >
+                          <MdEdit className="w-5! h-5! text-[#26A1F4]" />
+                        </Button>
                         <ConfirmDialog
                           title="Hapus Data?"
                           description="Apakah Anda yakin ingin menghapus data ini?"
@@ -422,6 +434,10 @@ const JenjangPendidikan = () => {
               currentPage={Number(searchParam.get("page") || 1)}
               links={data?.links || []}
               onPageChange={(page) => {
+                if (isEditMode) {
+                  toast.warning("Selesaikan edit data terlebih dahulu");
+                  return;
+                }
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}

@@ -49,7 +49,7 @@ interface JenisSKResponse {
 }
 
 const jenisSkSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
   jenis_sk: z.string().min(1, "Jenis SK tidak boleh kosong"),
 });
@@ -67,7 +67,7 @@ const JenisSk = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -110,7 +110,7 @@ const JenisSk = () => {
 
   // hapus data
   const { mutate: deleteJenisSk } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleJenisSk(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleJenisSk(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["jenis-sk"] });
@@ -124,7 +124,7 @@ const JenisSk = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteJenisSk(id);
   };
 

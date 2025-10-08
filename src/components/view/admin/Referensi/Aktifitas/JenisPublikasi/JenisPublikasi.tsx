@@ -47,7 +47,7 @@ interface JenisPublikasiResponse {
 }
 
 const jenisPublikasiSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
   jenis_publikasi: z.string().min(1, "Jenis publikasi tidak boleh kosong"),
 });
@@ -66,7 +66,7 @@ const JenisPublikasi = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -112,7 +112,7 @@ const JenisPublikasi = () => {
 
   // hapus data
   const { mutate: deleteJenisPengabdian } = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       deleteReferensiServices.deteleJenisPublikasi(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
@@ -127,7 +127,7 @@ const JenisPublikasi = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteJenisPengabdian(id);
   };
 

@@ -48,14 +48,11 @@ export const InfiniteScrollSelect = ({
       queryKey: [queryKey],
       queryFn: async ({ pageParam = 1 }) => {
         const response = await queryFn(pageParam);
-        return response.data;
+        return response.data.data;
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        const paginationSource =
-          typeof lastPage?.current_page !== "undefined"
-            ? lastPage
-            : lastPage?.data;
+        const paginationSource = lastPage;
 
         if (
           !paginationSource ||
@@ -70,11 +67,16 @@ export const InfiniteScrollSelect = ({
   const options =
     data?.pages
       .flatMap((page) => {
-        if (Array.isArray(page?.data)) {
+        console.log("Page structure:", page); // Untuk debugging
+
+        if (page?.data && Array.isArray(page.data)) {
           return page.data;
         }
-        if (Array.isArray(page?.data?.data)) {
+        if (page?.data?.data && Array.isArray(page.data.data)) {
           return page.data.data;
+        }
+        if (Array.isArray(page)) {
+          return page;
         }
         return [];
       })

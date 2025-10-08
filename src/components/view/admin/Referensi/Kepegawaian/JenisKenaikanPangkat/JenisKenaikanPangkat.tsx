@@ -31,13 +31,12 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 export const jenisKenaikanPangkatSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(), // ✅ DIUBAH: number -> string
   kode: z
     .string({
       required_error: "Kode tidak boleh kosong.",
     })
     .min(1, "Kode tidak boleh kosong."),
-
   jenis_pangkat: z
     .string({
       required_error: "Jenis pangkat tidak boleh kosong.",
@@ -54,7 +53,7 @@ const JenisKenaikanPangkat = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null); // ✅ DIUBAH: number -> string
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -62,6 +61,7 @@ const JenisKenaikanPangkat = () => {
   const form = useForm<JenisKenaikanPangkatSchema>({
     resolver: zodResolver(jenisKenaikanPangkatSchema),
     defaultValues: {
+      id: "", // ✅ DIUBAH: 0 -> string kosong
       kode: "",
       jenis_pangkat: "",
     },
@@ -74,15 +74,18 @@ const JenisKenaikanPangkat = () => {
       const response = await adminServices.getJenisKenaikanPangkat(
         searchParam.get("page")
       );
-
+      console.log("📋 Data dari API:", response.data.data); // Debug
       return response.data.data;
     },
   });
 
   // tambah data
   const { mutate: postData } = useMutation({
-    mutationFn: (data: JenisKenaikanPangkatSchema) =>
-      potsReferensiServices.jenisKenaikanPangkat(data),
+    mutationFn: (data: JenisKenaikanPangkatSchema) => {
+      // Untuk create, hapus id dari payload
+      const { id, ...createData } = data;
+      return potsReferensiServices.jenisKenaikanPangkat(createData);
+    },
     onSuccess: () => {
       form.reset();
       toast.success("Berhasil menambahkan data");
@@ -91,28 +94,36 @@ const JenisKenaikanPangkat = () => {
         queryKey: ["jenis-kenaikan-pangkat-referensi"],
       });
     },
+    onError: (error) => {
+      toast.error(`Gagal menambah data: ${error.message}`);
+    },
   });
 
   // edit data
   const { mutate: putData } = useMutation({
-    mutationFn: (data: JenisKenaikanPangkatSchema) =>
-      putReferensiServices.jenisKenaikanPangkat(data.id!, data),
+    mutationFn: (data: JenisKenaikanPangkatSchema) => {
+      if (!data.id) {
+        throw new Error("ID diperlukan untuk edit data");
+      }
+      return putReferensiServices.jenisKenaikanPangkat(data.id, data);
+    },
     onSuccess: () => {
       toast.success("Data berhasil diedit");
-
       setIsEditMode(false);
       setIsAddData(false);
       setEditingItemId(null);
-
       form.reset();
-
       queryClient.invalidateQueries({
         queryKey: ["jenis-kenaikan-pangkat-referensi"],
       });
     },
+    onError: (error) => {
+      toast.error(`Gagal mengedit data: ${error.message}`);
+    },
   });
 
   const handleSubmitData = (values: JenisKenaikanPangkatSchema) => {
+    console.log("📤 Submit data:", values); // Debug
     if (isEditMode && editingItemId) {
       putData(values);
     } else {
@@ -122,11 +133,14 @@ const JenisKenaikanPangkat = () => {
 
   // hapus data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) =>
-      deleteReferensiServices.deleteJenisKenaikanPangkat(id),
+    mutationFn: (
+      id: string // ✅ DIUBAH: number -> string
+    ) => deleteReferensiServices.deleteJenisKenaikanPangkat(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
-      queryClient.invalidateQueries({ queryKey: ["jenis-kenaikan-pangkat"] });
+      queryClient.invalidateQueries({
+        queryKey: ["jenis-kenaikan-pangkat-referensi"],
+      });
 
       if (editingItemId) {
         form.reset();
@@ -135,13 +149,19 @@ const JenisKenaikanPangkat = () => {
         setIsAddData(false);
       }
     },
+    onError: (error) => {
+      toast.error(`Gagal menghapus data: ${error.message}`);
+    },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
+    // ✅ DIUBAH: number -> string
     deleteData(id);
   };
 
   const handleEditItem = (item: JenisKenaikanPangkatSchema) => {
+    console.log("📝 Edit item:", item);
+
     form.reset({
       id: item.id,
       kode: item.kode,
@@ -211,14 +231,13 @@ const JenisKenaikanPangkat = () => {
                   onClick={() => {
                     if (!isEditMode) {
                       form.reset({
-                        id: 0,
+                        id: "", // ✅ DIUBAH: 0 -> string kosong
                         kode: "",
                         jenis_pangkat: "",
                       });
-
-                      setSearchParam(searchParam);
                       setIsAddData(true);
                       searchParam.set("page", "1");
+                      setSearchParam(searchParam);
                     }
                   }}
                   className={`cursor-pointer ${
@@ -337,6 +356,10 @@ const JenisKenaikanPangkat = () => {
               currentPage={Number(searchParam.get("page") || 1)}
               links={data?.links || []}
               onPageChange={(page) => {
+                if (isEditMode) {
+                  toast.warning("Selesaikan edit data terlebih dahulu");
+                  return;
+                }
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}

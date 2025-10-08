@@ -137,7 +137,8 @@ const DetailPasanganValidasiPage = lazy(
 );
 
 const TambahKeluargaPage = lazy(
-  () => import("./pages/admin/validasiData/keluarga/tambahKeluarga/tambahKeluarga")
+  () =>
+    import("./pages/admin/validasiData/keluarga/tambahKeluarga/tambahKeluarga")
 );
 const MonitoringPage = lazy(
   () => import("./pages/admin/validasiData/monitoring")
@@ -1047,7 +1048,7 @@ function App() {
           {/* USER PAGES */}
           <Route path="/dasboard" Component={DasboardPageUser} />
           <Route path="/biodata" Component={BiodataPageUser} />
-          <Route path="/editBiodata" Component={EditBiodataPageUser} />
+          <Route path="/editBiodata/:id" Component={EditBiodataPageUser} />
           <Route
             path="/tahapan-data-riwayat"
             Component={TahapanDataRiwayatPageUser}

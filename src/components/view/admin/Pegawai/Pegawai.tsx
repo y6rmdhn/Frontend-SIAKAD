@@ -45,7 +45,7 @@ interface PegawaiItem {
   nidn: string | null;
   nama_pegawai: string;
   unit_kerja: string;
-  pendidikan_terakhir: string; // Optional field for education
+  pendidikan_terakhir: string;
   status: string;
 }
 
@@ -70,7 +70,7 @@ const Pegawai = () => {
   // --- State & URL Params ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedSearch] = useDebounce(searchData, 500);
-  const [selectedPegawaiId, setSelectedPegawaiId] = useState<number[]>([]);
+  const [selectedPegawaiId, setSelectedPegawaiId] = useState<string[]>([]);
 
   const currentPage = searchParam.get("page") || "1";
   const unitKerjaFilter = searchParam.get("unit_kerja_id") || "";
@@ -80,7 +80,6 @@ const Pegawai = () => {
 
   // --- Data Fetching ---
   const { data, isLoading, isError, error } = useQuery<PegawaiApiResponse>({
-    // FIX 1: Explicitly type the useQuery hook
     queryKey: [
       "pegawai",
       currentPage,
@@ -98,14 +97,13 @@ const Pegawai = () => {
         status_aktif_id: statusAktifFilter,
         hubungan_kerja_id: hubunganKerjaFilter,
       });
-      return response.data; // Type assertion is no longer needed here
+      return response.data;
     },
     placeholderData: keepPreviousData,
   });
 
   // --- Memos & Event Handlers ---
   const filterOptions = useMemo(() => {
-    // FIX 2: Check if data and data.filters exist before mapping
     const filters = data?.filters;
     return {
       unitKerja:
@@ -139,7 +137,7 @@ const Pegawai = () => {
     setSearchParam(newSearchParams);
   };
 
-  const handleSelectedPegawaiId = (pegawaiId: number, checked: boolean) => {
+  const handleSelectedPegawaiId = (pegawaiId: string, checked: boolean) => {
     setSelectedPegawaiId((prev) =>
       checked ? [...prev, pegawaiId] : prev.filter((id) => id !== pegawaiId)
     );
@@ -147,7 +145,7 @@ const Pegawai = () => {
 
   // --- Data Mutation (Delete) ---
   const { mutate: deleteData } = useMutation({
-    mutationFn: (payload: { pegawai_ids: number[] }) =>
+    mutationFn: (payload: { pegawai_ids: string[] }) =>
       deleteReferensiServices.deletePegawai(payload.pegawai_ids),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
@@ -167,7 +165,7 @@ const Pegawai = () => {
     }
   };
 
-  const handleDeleteSingle = (id: number) => {
+  const handleDeleteSingle = (id: string) => {
     deleteData({ pegawai_ids: [id] });
   };
 
@@ -206,11 +204,9 @@ const Pegawai = () => {
       </div>
     );
 
-  // FIX 3: Define tableData more safely
   const tableData = data?.data;
 
   // --- Select All Logic ---
-  // FIX 4: Safely access tableData and its nested data property
   const currentPageIds = tableData?.data?.map((item) => item.id) || [];
   const isAllSelected =
     currentPageIds.length > 0 &&
@@ -309,7 +305,6 @@ const Pegawai = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* FIX 5: Check tableData and its length before mapping */}
             {tableData?.data && tableData.data.length > 0 ? (
               tableData.data.map((item) => (
                 <TableRow key={item.id} className="even:bg-gray-50">
@@ -325,7 +320,7 @@ const Pegawai = () => {
                   <TableCell>{item.nidn || "-"}</TableCell>
                   <TableCell>{item.nama_pegawai}</TableCell>
                   <TableCell>{item.unit_kerja}</TableCell>
-                  <TableCell className="text-center">{item.pendidikan_terakhir}</TableCell>
+                  <TableCell>{item.pendidikan_terakhir}</TableCell>
                   <TableCell className="text-center">{item.status}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex justify-center items-center">
@@ -354,7 +349,7 @@ const Pegawai = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center h-48">
+                <TableCell colSpan={8} className="text-center h-48">
                   Data pegawai tidak ditemukan.
                 </TableCell>
               </TableRow>
@@ -363,7 +358,6 @@ const Pegawai = () => {
         </Table>
       </div>
 
-      {/* FIX 6: Add a guard clause for the entire pagination block */}
       {tableData && tableData.data.length > 0 && (
         <CustomPagination
           currentPage={tableData.current_page}

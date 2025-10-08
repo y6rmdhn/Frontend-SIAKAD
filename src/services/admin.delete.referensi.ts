@@ -2,75 +2,77 @@ import axiosInstance from "@/lib/axios/axiosInstance";
 import endpoint from "./endpoint.constant";
 
 const deleteReferensiServices = {
-  deteleJenisSertifikasi: (id: number) =>
+  deteleJenisSertifikasi: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/master-jenis-sertifikasi/${id}`),
-  deteleJenistest: (id: number) =>
+  deteleJenistest: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-test/${id}`),
-  deteleOutputPenelitian: (id: number) =>
+  deteleOutputPenelitian: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/output-penelitian/${id}`),
-  deteleJamKerja: (id: number) =>
+  deteleJamKerja: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jam-kerja/${id}`),
-  deteleJenisCuti: (id: number) =>
+  deteleJenisCuti: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/daftar-cuti/${id}`),
-  deteleEselon: (id: number) =>
+  deteleEselon: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/eselon/${id}`),
-  deteleJenisSk: (id: number) =>
+  deteleJenisSk: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-sk/${id}`),
-  deteleMasterPangkat: (id: number) =>
+  deteleMasterPangkat: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/master-pangkat/${id}`),
-  deteleStatusAktif: (id: number) =>
+  deteleStatusAktif: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/status-aktif/${id}`),
-  deteleJenisLuaran: (id: number) =>
+  deteleJenisLuaran: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-luaran/${id}`),
-  deteleJenisPengabdian: (id: number) =>
+  deteleJenisPengabdian: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-pkm/${id}`),
-  deteleJenisPublikasi: (id: number) =>
+  deteleJenisPublikasi: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-publikasi/${id}`),
-  deteleJenisPelanggaran: (id: number) =>
+  deteleJenisPelanggaran: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-pelanggaran/${id}`),
-  deteleJenisPenghargaan: (id: number) =>
+  deteleJenisPenghargaan: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-penghargaan/${id}`),
-  deteleUnitKerja: (id: number) =>
+  deteleUnitKerja: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/unit-kerja/${id}`),
-  deteleJenisHari: (id: number) =>
+  deteleJenisHari: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-hari/${id}`),
-  deteleHubunganKerja: (id: number) =>
+  deteleHubunganKerja: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/hubungan-kerja/${id}`),
-  deteleJabatanAkademik: (id: number) =>
+  deteleJabatanAkademik: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jabatan-akademik/${id}`),
-  deteleDataAgama: (id: number) =>
+  deteleDataAgama: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/agama/${id}`),
-  deteleDataSuku: (id: number) =>
+  deteleDataSuku: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/suku/${id}`),
-  deteleDataGolonganDarah: (id: number) =>
+  deteleDataGolonganDarah: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/golongan-darah/${id}`),
-  deteleDataBerita: (id: number) =>
+  deteleDataBerita: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/berita/${id}`),
-  deteleDataJenisKehadiran: (id: number) =>
+  deteleDataJenisKehadiran: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-kehadiran/${id}`),
-  deteleDataInputPresensi: (id: number) =>
+  deteleDataInputPresensi: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/input-presensi/${id}`),
-  deteleDataPenghargaan: (id: number) =>
+  deteleDataPenghargaan: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/datapenghargaan/${id}`),
-  deteleDataPelanggaran: (id: number) =>
+  deteleDataPelanggaran: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/datapelanggaran/${id}`),
-  jenjangPendidikan: (id: number) =>
+  jenjangPendidikan: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenjang-pendidikan/${id}`),
-  deleteJenisKenaikanPangkat: (id: number) =>
+  deleteJenisKenaikanPangkat: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-kenaikan-pangkat/${id}`),
-  deleteBank: (id: number) =>
+  deleteBank: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/bank/${id}`),
-  deleteJenisIzin: (id: number) =>
+  deleteJenisIzin: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jenis-izin/${id}`),
-  deletePegawai: (payload: number[]) =>
-    axiosInstance.post(`${endpoint.ADMIN}/pegawai/destroy`, payload),
-  deleteJabatanStruktural: (id: number) =>
+  deletePegawai: (payload: string[]) =>
+    axiosInstance.post(`${endpoint.ADMIN}/pegawai/destroy`, {
+      pegawai_ids: payload,
+    }),
+  deleteJabatanStruktural: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jabatan-struktural/${id}`),
-  deleteJabatanFungsional: (id: number) =>
+  deleteJabatanFungsional: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/jabatan-fungsional/${id}`),
-  deleteRumpunBidangIlmu: (id: number) =>
+  deleteRumpunBidangIlmu: (id: string) =>
     axiosInstance.delete(`${endpoint.ADMIN}/rumpun-bidang-ilmu/${id}`),
-  deleteGelarAkademik: (id: number) => {
+  deleteGelarAkademik: (id: string) => {
     return axiosInstance.delete(`${endpoint.ADMIN}/gelar-akademik/${id}`);
   },
 };

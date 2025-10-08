@@ -51,11 +51,11 @@ const timeFormatRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 export const inputPresensiSchema = z
   .object({
-    id: z.number().optional(),
+    id: z.string().optional(),
     pegawai_id: z.coerce.number().min(1, "Pegawai harus dipilih."),
     tanggal_absensi: z.string().nonempty("Tanggal absensi harus diisi."),
     jenis_kehadiran_id: z.coerce
-      .number()
+      .string()
       .min(1, "Status kehadiran harus dipilih."),
     jam_masuk: z
       .string()
@@ -114,7 +114,7 @@ const InputKehadiran = () => {
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedSearch] = useDebounce(searchData, 500);
   const [isAddData, setIsAddData] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
   const currentPage = searchParam.get("page") || "1";
   const tanggalFilter = searchParam.get("tanggal") || "";
@@ -206,7 +206,7 @@ const InputKehadiran = () => {
   });
 
   const { mutate: deleteMutation } = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       deleteReferensiServices.deteleDataInputPresensi(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");

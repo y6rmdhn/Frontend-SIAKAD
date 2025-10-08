@@ -5,7 +5,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { FaCheck, FaPlus } from "react-icons/fa";
-import { MdPlayArrow } from "react-icons/md";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -51,7 +50,7 @@ const JabatanStruktural = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // Changed to string[]
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -115,22 +114,25 @@ const JabatanStruktural = () => {
     toast.error(`Gagal: ${err?.message || "Terjadi kesalahan"}`);
 
   const { mutate: rejectMutation } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.rejectDataJabatanStruktural(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.rejectDataJabatanStruktural(payload),
     onSuccess: () => handleSuccess("reject"),
     onError: handleError,
   });
 
   const { mutate: approveMutation } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.approveDataJabatanStruktural(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.approveDataJabatanStruktural(payload),
     onSuccess: () => handleSuccess("approve"),
     onError: handleError,
   });
 
   const { mutate: draftMutation } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.draftDataJabatanStruktural(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.draftDataJabatanStruktural(payload),
     onSuccess: () => handleSuccess("draft"),
     onError: handleError,
   });
@@ -157,7 +159,7 @@ const JabatanStruktural = () => {
   }, [debouncedInput]);
 
   const handleSubmitAction = () => {
-    const payload = { ids: selectedItem };
+    const payload = { ids: selectedItem }; // Already string[]
     if (pendingAction === "approve") approveMutation(payload);
     else if (pendingAction === "reject") rejectMutation(payload);
     else if (pendingAction === "draft") draftMutation(payload);
@@ -175,14 +177,18 @@ const JabatanStruktural = () => {
 
   // --- Table Selection Logic ---
   const tableData = data?.data || [];
-  const pageIds = tableData.data?.map((item: any) => item.id) || [];
+  const pageIds = tableData.data?.map((item: any) => String(item.id)) || []; // Convert to string
   const isAllSelectedOnPage =
-    pageIds.length > 0 && pageIds.every((id: any) => selectedItem.includes(id));
-  const isSomeSelectedOnPage = pageIds.some((id: any) =>
+    pageIds.length > 0 &&
+    pageIds.every((id: string) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: string) =>
     selectedItem.includes(id)
   );
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (
+    id: string,
+    checked: boolean // Changed to string
+  ) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );
@@ -285,43 +291,43 @@ const JabatanStruktural = () => {
         }
       />
       <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
-  {/* Search Input */}
-  <SearchInput
-    placeholder="Cari NIP atau nama pegawai..."
-    value={searchData}
-    onChange={(e) => setSearchData(e.target.value)}
-    className="w-full md:w-80"
-  />
+        {/* Search Input */}
+        <SearchInput
+          placeholder="Cari NIP atau nama pegawai..."
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+          className="w-full md:w-80"
+        />
 
-    {/* Tombol Aksi */}
-    <div className="flex flex-wrap md:flex-row gap-2 justify-end">
-      {selectedItem.length > 0 && (
-        <>
-          <Button
-            type="button"
-            onClick={() => handleOpenDialog("approve")}
-            className="bg-green-light-uika hover:bg-[#329C59]"
-          >
-            <FaCheck className="mr-2" /> Approve ({selectedItem.length})
-          </Button>
-          <Button
-            type="button"
-            onClick={() => handleOpenDialog("reject")}
-            variant="destructive"
-          >
-            <IoClose className="mr-2" /> Reject ({selectedItem.length})
-          </Button>
-        </>
-      )}
+        {/* Tombol Aksi */}
+        <div className="flex flex-wrap md:flex-row gap-2 justify-end">
+          {selectedItem.length > 0 && (
+            <>
+              <Button
+                type="button"
+                onClick={() => handleOpenDialog("approve")}
+                className="bg-green-light-uika hover:bg-[#329C59]"
+              >
+                <FaCheck className="mr-2" /> Approve ({selectedItem.length})
+              </Button>
+              <Button
+                type="button"
+                onClick={() => handleOpenDialog("reject")}
+                variant="destructive"
+              >
+                <IoClose className="mr-2" /> Reject ({selectedItem.length})
+              </Button>
+            </>
+          )}
 
-      {/* Tombol Tambah Data selalu muncul */}
-      <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
-        <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-          <FaPlus className="mr-2" /> Tambah Data
-        </Button>
-      </Link>
-    </div>
-</div>
+          {/* Tombol Tambah Data selalu muncul */}
+          <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+            <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+              <FaPlus className="mr-2" /> Tambah Data
+            </Button>
+          </Link>
+        </div>
+      </div>
       <Table className="mt-5 text-xs lg:text-sm">
         <TableHeader>
           <TableRow className="bg-gray-100">
@@ -359,8 +365,10 @@ const JabatanStruktural = () => {
               <TableRow key={item.id} className="even:bg-gray-50">
                 <TableCell className="text-center">
                   <Checkbox
-                    checked={selectedItem.includes(item.id)}
-                    onCheckedChange={(c) => handleSelectedItemId(item.id, !!c)}
+                    checked={selectedItem.includes(String(item.id))} // Convert to string
+                    onCheckedChange={(c) =>
+                      handleSelectedItemId(String(item.id), !!c)
+                    } // Convert to string
                   />
                 </TableCell>
                 <TableCell className="text-center">

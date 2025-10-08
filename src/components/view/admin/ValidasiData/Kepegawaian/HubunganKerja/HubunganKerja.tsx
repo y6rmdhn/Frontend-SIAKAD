@@ -112,7 +112,7 @@ const HubunganKerjaKepegawaian = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -188,14 +188,14 @@ const HubunganKerjaKepegawaian = () => {
     );
 
   const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
-    mutationFn: (payload: { ids: number[]; keterangan_penolakan: string }) =>
+    mutationFn: (payload: { ids: string[]; keterangan_penolakan: string }) =>
       patchDataServices.rejectDataRiwayatHubunganKerja(payload),
     onSuccess: () => handleSuccess("menolak"),
     onError: handleError,
   });
 
   const { mutate: approveMutation, isPending: isApproving } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
+    mutationFn: (payload: { ids: string[] }) =>
       patchDataServices.approveDataRiwayatHubunganKerja(payload),
     onSuccess: () => handleSuccess("menyetujui"),
     onError: handleError,
@@ -247,7 +247,7 @@ const HubunganKerjaKepegawaian = () => {
   const isSomeSelectedOnPage =
     !isAllSelectedOnPage && pageIds.some((id) => selectedItem.includes(id));
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (id: string, checked: boolean) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );
@@ -360,11 +360,11 @@ const HubunganKerjaKepegawaian = () => {
           </div>
         )}
 
-         <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
-              <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-                <FaPlus className="mr-2" /> Tambah Data
-              </Button>
-            </Link>
+        <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+          <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+            <FaPlus className="mr-2" /> Tambah Data
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-5 border rounded-lg">

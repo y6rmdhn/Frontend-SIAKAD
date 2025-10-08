@@ -57,7 +57,7 @@ const rejectActionSchema = z.object({
 type ActionSchema = z.infer<typeof rejectActionSchema>;
 
 interface IzinItem {
-  id: string;
+  id: string; // ✅ ID sebagai string
   nama_pegawai: string;
   jenis_izin: string;
   lama_izin: string;
@@ -93,7 +93,7 @@ const PermohonanIzin = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // ✅ DIUBAH: number[] -> string[]
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -154,7 +154,7 @@ const PermohonanIzin = () => {
     const mapToOptions = (items: FilterOption[] = []) =>
       items.map((opt) => ({
         value: String(opt.value ?? opt.id),
-        label: opt.label ?? opt.nama ?? "", // FIX: Fallback to empty string
+        label: opt.label ?? opt.nama ?? "",
       }));
 
     return {
@@ -181,15 +181,17 @@ const PermohonanIzin = () => {
     );
 
   const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
-    mutationFn: (payload: { ids: number[]; keterangan: string }) =>
-      patchDataServices.tolakPengajuanIzin(payload),
+    mutationFn: (
+      payload: { ids: string[]; keterangan: string } // ✅ DIUBAH: number[] -> string[]
+    ) => patchDataServices.tolakPengajuanIzin(payload),
     onSuccess: () => handleMutationSuccess("menolak"),
     onError: handleMutationError,
   });
 
   const { mutate: approveMutation, isPending: isApproving } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.aprovePengajuanIzin(payload),
+    mutationFn: (
+      payload: { ids: string[] } // ✅ DIUBAH: number[] -> string[]
+    ) => patchDataServices.aprovePengajuanIzin(payload),
     onSuccess: () => handleMutationSuccess("menyetujui"),
     onError: handleMutationError,
   });
@@ -238,7 +240,10 @@ const PermohonanIzin = () => {
   const isSomeSelectedOnPage =
     !isAllSelectedOnPage && pageIds.some((id) => selectedItem.includes(id));
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (
+    id: string,
+    checked: boolean // ✅ DIUBAH: number -> string
+  ) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );

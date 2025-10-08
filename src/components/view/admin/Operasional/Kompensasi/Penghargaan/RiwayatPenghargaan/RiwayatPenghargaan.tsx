@@ -129,7 +129,7 @@ const RiwayatPenghargaan = () => {
 
   // --- Penghapusan Data ---
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       deleteReferensiServices.deteleDataPenghargaan(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
@@ -416,7 +416,7 @@ const RiwayatPenghargaan = () => {
                       <ConfirmDialog
                         title="Hapus Data?"
                         description={`Apakah Anda yakin ingin menghapus data penghargaan "${item.nama_penghargaan}"?`}
-                        onConfirm={() => deleteData(item.id)}
+                        onConfirm={() => deleteData(String(item.id))}
                       >
                         <Button
                           size="icon"

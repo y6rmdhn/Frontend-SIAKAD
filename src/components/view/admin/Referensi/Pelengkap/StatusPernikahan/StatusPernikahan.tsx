@@ -42,7 +42,7 @@ interface statusPernikahanResponse {
 }
 
 const statusPernikahanSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode_status: z.string().min(1, "Kode status tidak boleh kosong"),
   nama_status: z.string().min(1, "Nama status tidak boleh kosong"),
 });
@@ -54,7 +54,7 @@ const StatusPernikahan = () => {
   const queryClient = useQueryClient();
   const [, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage] = useState<number>(Number(searchParam.get("page") || 1));
 
   const form = useForm({

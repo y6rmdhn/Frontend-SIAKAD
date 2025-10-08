@@ -23,7 +23,6 @@ import potsReferensiServices from "@/services/create.admin.referensi.ts";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IStatusPangkat } from "@/types/create.referensi.ts";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput.tsx";
@@ -35,24 +34,23 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.t
 
 // Define interface for the data item
 interface pangkatItem {
-  id: number;
+  id: string; // ✅ DIUBAH: number -> string
   pangkat: string;
   nama_golongan: string;
   tunjangan: string;
-  // Add other properties as needed
 }
 
 // Define interface for the API response
 interface pangkatResponse {
   data: pangkatItem[];
-  links: any[]; // You might want to define a more specific type
+  links: any[];
   next_page_url: string | null;
   prev_page_url: string | null;
   last_page: number;
 }
 
 const pangkatSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(), // ✅ DIUBAH: number -> string
   pangkat: z.string().min(1, "Pangkat tidak boleh kosong"),
   nama_golongan: z.string().min(1, "Nama Golongan tidak boleh kosong"),
   tunjangan: z.string().min(1, "Tunjangan tidak boleh kosong"),
@@ -65,12 +63,14 @@ const Pangkat = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null); // ✅ DIUBAH: number -> string
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
-  const form = useForm({
+
+  const form = useForm<pangkatFormvalue>({
     defaultValues: {
+      id: "", // ✅ DIUBAH: 0 -> string kosong
       pangkat: "",
       nama_golongan: "",
       tunjangan: "",
@@ -85,42 +85,54 @@ const Pangkat = () => {
       const response = await adminServices.getMasterPangkatReferensi(
         searchParam.get("page")
       );
-
+      console.log("📋 Data pangkat dari API:", response.data.data);
       return response.data.data;
     },
   });
 
   // tambah data
   const { mutate: postPangkat } = useMutation({
-    mutationFn: (data: IStatusPangkat) => potsReferensiServices.pangkat(data),
+    mutationFn: (data: pangkatFormvalue) => {
+      const { id, ...createData } = data; // Hapus id untuk create
+      return potsReferensiServices.pangkat(createData);
+    },
     onSuccess: () => {
       form.reset();
       toast.success("Berhasil menambahkan data");
       setIsAddData(false);
       queryClient.invalidateQueries({ queryKey: ["pangkat"] });
     },
+    onError: (error) => {
+      toast.error(`Gagal menambah data: ${error.message}`);
+    },
   });
 
   // edit data
   const { mutate: putPangkat } = useMutation({
-    mutationFn: (data: pangkatFormvalue) =>
-      putReferensiServices.pangkat(data.id!, data),
+    mutationFn: (data: pangkatFormvalue) => {
+      if (!data.id) {
+        throw new Error("ID diperlukan untuk edit data");
+      }
+      return putReferensiServices.pangkat(data.id, data);
+    },
     onSuccess: () => {
       toast.success("Data berhasil diedit");
-
       setIsEditMode(false);
       setIsAddData(false);
       setEditingItemId(null);
-
       form.reset();
-
       queryClient.invalidateQueries({ queryKey: ["pangkat"] });
+    },
+    onError: (error) => {
+      toast.error(`Gagal mengedit data: ${error.message}`);
     },
   });
 
   // hapus data
   const { mutate: deletePangkat } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleMasterPangkat(id),
+    mutationFn: (
+      id: string // ✅ DIUBAH: number -> string
+    ) => deleteReferensiServices.deteleMasterPangkat(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["pangkat"] });
@@ -132,13 +144,18 @@ const Pangkat = () => {
         setIsAddData(false);
       }
     },
+    onError: (error) => {
+      toast.error(`Gagal menghapus data: ${error.message}`);
+    },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
+    // ✅ DIUBAH: number -> string
     deletePangkat(id);
   };
 
   const handlePangkatSubmit = (values: pangkatFormvalue) => {
+    console.log("📤 Submit data:", values);
     if (isEditMode && editingItemId) {
       putPangkat(values);
     } else {
@@ -147,6 +164,8 @@ const Pangkat = () => {
   };
 
   const handleEditItem = (item: pangkatItem) => {
+    console.log("📝 Edit item:", item);
+
     form.reset({
       id: item.id,
       pangkat: item.pangkat,
@@ -225,15 +244,14 @@ const Pangkat = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: 0,
+                          id: "", // ✅ DIUBAH: 0 -> string kosong
                           pangkat: "",
                           nama_golongan: "",
                           tunjangan: "",
                         });
-
-                        setSearchParam(searchParam);
                         setIsAddData(true);
                         searchParam.set("page", "1");
+                        setSearchParam(searchParam);
                       }
                     }}
                     className={`cursor-pointer w-full md:w-auto text-xs sm:text-sm ${
@@ -371,7 +389,6 @@ const Pangkat = () => {
                   toast.warning("Selesaikan edit data terlebih dahulu");
                   return;
                 }
-
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}

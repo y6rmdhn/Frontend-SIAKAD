@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { FaSave } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,6 @@ import SearchInput from "@/components/blocks/SearchInput";
 import Title from "@/components/blocks/Title";
 import { useState } from "react";
 import adminServices from "../../../../services/admin.services";
-import wilayahIdServices from "@/services/binderByte.services.ts";
 import { AxiosError } from "axios";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
@@ -60,10 +59,7 @@ const dataPegawaiSchema = z.object({
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
   nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
-  gelar_depan: z
-    .string()
-    .max(20, "Gelar depan maksimal 20 karakter")
-    .optional(),
+  gelar_depan: z.string().max(5, "Gelar depan maksimal 20 karakter").optional(),
   gelar_belakang: z
     .string()
     .max(20, "Gelar belakang maksimal 20 karakter")
@@ -179,14 +175,10 @@ const dataPegawaiSchema = z.object({
     .positive("Berat badan harus positif")
     .max(500, "Berat badan tidak wajar")
     .optional(),
+  role_id: z.string().min(1, "Role ID wajib ada"),
 });
 
 export type DataPegawaiSchema = z.infer<typeof dataPegawaiSchema>;
-
-interface WilayahItem {
-  name: string;
-  id?: string;
-}
 
 interface FormDataPegawaiProps {
   show: string;
@@ -246,47 +238,9 @@ const DataPegawai = () => {
       file_bpjs: undefined,
       file_bpjs_ketenagakerjaan: undefined,
       file_tanda_tangan: undefined,
+      role_id: "",
     },
   });
-
-  const selectedProvinceId = form.watch("provinsi");
-  const selectedCityId = form.watch("kota");
-
-  const { data: provincesData, isLoading: isProvincesLoading } = useQuery({
-    queryKey: ["provinsi-wilayah-id"],
-    queryFn: wilayahIdServices.getProvinsi,
-  });
-
-  const { data: citiesData, isLoading: isCitiesLoading } = useQuery({
-    queryKey: ["kota-wilayah-id", selectedProvinceId],
-    queryFn: () => wilayahIdServices.getKota(selectedProvinceId!),
-    enabled: !!selectedProvinceId,
-  });
-
-  const { data: kecamatanData, isLoading: isKecamatanLoading } = useQuery({
-    queryKey: ["kecamatan-wilayah-id", selectedCityId],
-    queryFn: () => wilayahIdServices.getKecamatan(selectedCityId!),
-    enabled: !!selectedCityId,
-  });
-
-  const provinceOptions =
-    provincesData?.map((prov: WilayahItem) => ({
-      label: prov.name,
-      value: prov.id,
-    })) || [];
-
-  const cityOptions =
-    citiesData?.map((city: WilayahItem) => ({
-      label: city.name,
-      value: city.id,
-    })) || [];
-
-  const kecamatanOptions =
-    kecamatanData?.map((kec: WilayahItem) => ({
-      label: kec.name,
-      value: kec.id,
-    })) || [];
-    
 
   const { mutate: postDataPegawai, isPending } = useMutation({
     mutationFn: (data: FormData) => postPegawaiServices.dataPegawai(data),
@@ -303,34 +257,15 @@ const DataPegawai = () => {
   const handleSubmitDataPegawai = (values: DataPegawaiSchema) => {
     const formData = new FormData();
 
-    // Mapping untuk mengubah ID wilayah menjadi nama
-    const provinceName = provinceOptions.find(
-      (p: any) => p.value === values.provinsi
-    )?.label;
-    const cityName = cityOptions.find(
-      (c: any) => c.value === values.kota
-    )?.label;
-    const kecamatanName = kecamatanOptions.find(
-      (k: any) => k.value === values.kecamatan
-    )?.label;
-
     Object.keys(values).forEach((key) => {
       const formKey = key as keyof DataPegawaiSchema;
-      let value = values[formKey];
+      const value = values[formKey];
 
       if (value instanceof FileList) {
         if (value.length > 0) {
           formData.append(formKey, value[0]);
         }
       } else if (value !== null && value !== undefined && value !== "") {
-        if (formKey === "provinsi" && provinceName) {
-          value = provinceName;
-        } else if (formKey === "kota" && cityName) {
-          value = cityName;
-        } else if (formKey === "kecamatan" && kecamatanName) {
-          value = kecamatanName;
-        }
-
         if (key === "tanggal_lahir" && value instanceof Date) {
           formData.append(key, value.toISOString().split("T")[0]);
         } else {
@@ -355,15 +290,7 @@ const DataPegawai = () => {
           <KepegawaianSection form={form} />
         </div>
         <div style={{ display: show === "domisili" ? "block" : "none" }}>
-          <DomisiliSection
-            form={form}
-            provinceOptions={provinceOptions}
-            cityOptions={cityOptions}
-            kecamatanOptions={kecamatanOptions}
-            isProvincesLoading={isProvincesLoading}
-            isCitiesLoading={isCitiesLoading}
-            isKecamatanLoading={isKecamatanLoading}
-          />
+          <DomisiliSection form={form} />
         </div>
         <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
           <RekeningBankSection form={form} />
@@ -475,7 +402,7 @@ const DataPegawai = () => {
                   required={true}
                   queryKey="agama"
                   queryFn={adminServices.getAgama}
-                  itemValue="id"
+                  itemValue="nama_agama"
                   itemLabel="nama_agama"
                 />
                 <FormFieldInput
@@ -514,8 +441,20 @@ const DataPegawai = () => {
                   required={false}
                   queryKey="golongan-darah-select"
                   queryFn={adminServices.getGolonganDarah}
-                  itemValue="id"
+                  itemValue="golongan_darah"
                   itemLabel="golongan_darah"
+                />
+                <InfiniteScrollSelect
+                  form={form}
+                  label="Role"
+                  name="role_id"
+                  labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Role--"
+                  required={false}
+                  queryKey="role-id-select"
+                  queryFn={adminServices.getRole}
+                  itemValue="id"
+                  itemLabel="nama"
                 />
               </div>
 

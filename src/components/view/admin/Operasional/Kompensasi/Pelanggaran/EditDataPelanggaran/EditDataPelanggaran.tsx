@@ -15,7 +15,7 @@ import putReferensiServices from "@/services/put.admin.referensi.ts";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios"; // Impor untuk penanganan error
+import { AxiosError } from "axios";
 
 // --- START DEFINISI TIPE ---
 
@@ -32,13 +32,13 @@ const pelanggaranSchema = z.object({
 type PelanggaranSchema = z.infer<typeof pelanggaranSchema>;
 
 interface UpdatePelanggaranPayload {
-  id: number;
+  id: string; // ✅ DIUBAH: number -> string
   data: Omit<PelanggaranSchema, "file_foto" | "pegawai_id">;
 }
 
 // Tipe untuk item dari API getJenisPelanggaran
 interface JenisPelanggaranItem {
-  id: number | string;
+  id: string; // ✅ DIUBAH: number | string -> string
   nama_pelanggaran: string;
 }
 
@@ -77,7 +77,7 @@ const PelanggaranForm = ({ initialData }: { initialData: any }) => {
   const jenisPelanggaranOptions =
     data?.data.data.map((item) => ({
       label: item.nama_pelanggaran,
-      value: item.id.toString(),
+      value: item.id.toString(), // ✅ Tetap pakai toString() untuk konsistensi
     })) || [];
 
   const { mutate, isPending } = useMutation({
@@ -100,10 +100,10 @@ const PelanggaranForm = ({ initialData }: { initialData: any }) => {
   const handleSubmitData = (values: PelanggaranSchema) => {
     if (!params.id) return toast.error("ID data tidak ditemukan!");
 
-    const numericId = Number(params.id);
+    // ✅ TIDAK PERLU CONVERT KE NUMBER, langsung pakai string
     const { file_foto, pegawai_id, ...dataToSend } = values;
 
-    mutate({ id: numericId, data: dataToSend });
+    mutate({ id: params.id, data: dataToSend }); // ✅ Langsung pakai params.id sebagai string
   };
 
   return (

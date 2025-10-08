@@ -46,7 +46,7 @@ interface JenisPenghargaanResponse {
 }
 
 const jenisPenghargaanSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
   nama: z.string().min(1, "Nama jenis cuti tidak boleh kosong"),
 });
@@ -65,7 +65,7 @@ const JenisPenghargaan = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // get data
@@ -111,7 +111,7 @@ const JenisPenghargaan = () => {
 
   // hapus data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       deleteReferensiServices.deteleJenisPenghargaan(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
@@ -128,7 +128,7 @@ const JenisPenghargaan = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteData(id);
   };
 

@@ -44,7 +44,7 @@ interface jenisHariResponse {
 }
 
 const jenisHariSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "kode tidak boleh kosong"),
   nama_hari: z.string().min(1, "Nama hari tidak boleh kosong"),
   jenis_hari: z
@@ -61,7 +61,7 @@ const JenisHari = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -114,7 +114,7 @@ const JenisHari = () => {
 
   // hapus data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleJenisHari(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleJenisHari(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["jenis-hari"] });
@@ -128,7 +128,7 @@ const JenisHari = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteData(id);
   };
 
@@ -216,7 +216,7 @@ const JenisHari = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: 0,
+                          id: "",
                           kode: "",
                           nama_hari: "",
                           jenis_hari: false,

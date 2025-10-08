@@ -34,7 +34,7 @@ import deleteReferensiServices from "@/services/admin.delete.referensi";
 
 // Interfaces
 interface BeritaItem {
-  id: string ;
+  id: string;
   judul: string;
   tgl_posting: string;
   tgl_expired: string;
@@ -85,7 +85,7 @@ const Berita = () => {
   });
 
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleDataBerita(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleDataBerita(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["berita"] });
@@ -120,7 +120,7 @@ const Berita = () => {
     if (!dates) return "-";
     try {
       return format(parseISO(dates), "d MMM yyyy");
-    } catch (error) {
+    } catch {
       return "Invalid Date";
     }
   };
@@ -230,7 +230,7 @@ const Berita = () => {
                         <ConfirmDialog
                           title="Hapus Berita?"
                           description={`Anda yakin ingin menghapus berita "${item.judul}"?`}
-                          onConfirm={() => deleteData(Number(item.id))}
+                          onConfirm={() => deleteData(item.id)}
                         >
                           <Button size="icon" variant="ghost">
                             <FaRegTrashAlt className="text-red-500" />

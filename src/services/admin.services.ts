@@ -701,10 +701,10 @@ const adminServices = {
   getBeritaSelect: () => axiosInstance.get(`${endpoint.ADMIN}/berita`),
 
   // for detail
-  getPegawaiDetailAdminPage: (idPegawai: number) =>
+  getPegawaiDetailAdminPage: (idPegawai: string) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/` + idPegawai),
 
-  getBeritaSelectwithParams: (id: number) =>
+  getBeritaSelectwithParams: (id: number | string) =>
     axiosInstance.get(`${endpoint.ADMIN}/berita/` + id),
 
   getDetailPenghargaan: (id: number | string) =>
@@ -713,10 +713,10 @@ const adminServices = {
   getDetailPelanggaran: (id: number | string) =>
     axiosInstance.get(`${endpoint.ADMIN}/datapelanggaran/` + id),
 
-  getDetailUnitKerja: (id: number) =>
+  getDetailUnitKerja: (id: number | string) =>
     axiosInstance.get(`${endpoint.ADMIN}/unit-kerja/` + id),
 
-  getSuku: (idSuku: number) =>
+  getSuku: (idSuku: string) =>
     axiosInstance.get(`${endpoint.ADMIN}/suku/` + idSuku),
 
   getDaftarRoleID: () => axiosInstance.get(`${endpoint.ADMIN}/role`),
@@ -949,6 +949,7 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/validasi-cuti/${id}`),
   getPermohonanIzinDetail: (id: string) =>
     axiosInstance.get(`${endpoint.ADMIN}/validasi-izin/${id}`),
+  getRole: () => axiosInstance.get(`${endpoint.ADMIN}/role`),
   getDiklatDetailAdmin: (id: string) => {
     return axiosInstance.get(`${endpoint.ADMIN}/pegawai/riwayat-diklat/${id}`);
   },

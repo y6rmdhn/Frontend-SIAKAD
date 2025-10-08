@@ -17,9 +17,8 @@ import DetailKendaraanSection from "@/components/blocks/DataPegawaiForm/DetailKe
 import { zodResolver } from "@hookform/resolvers/zod";
 import SearchInput from "@/components/blocks/SearchInput";
 import Title from "@/components/blocks/Title";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import adminServices from "../../../../services/admin.services";
-import wilayahIdServices from "@/services/binderByte.services.ts";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import putReferensiServices from "@/services/put.admin.referensi";
 import { toast } from "sonner";
@@ -50,7 +49,7 @@ const optionalEmail = z
 
 // DIPERBARUI: Skema Zod disesuaikan untuk edit
 const dataPegawaiSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
   nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
@@ -78,9 +77,7 @@ const dataPegawaiSchema = z.object({
   email_pegawai: z.string().email("Format email tidak valid"),
   email_pribadi: optionalEmail,
   golongan: z.string().optional(),
-  // DIPERBARUI: Disesuaikan menjadi _id
   jabatan_fungsional_id: z.string().optional(),
-  // DITAMBAHKAN: Validasi untuk jabatan akademik
   jabatan_akademik_id: z.string().optional(),
   no_ktp: z
     .string()
@@ -164,14 +161,10 @@ const dataPegawaiSchema = z.object({
     .positive("Berat badan harus positif")
     .max(500, "Berat badan tidak wajar")
     .optional(),
+  role_id: z.string().min(1, "Role ID wajib ada"),
 });
 
 export type DataPegawaiSchema = z.infer<typeof dataPegawaiSchema>;
-
-interface WilayahItem {
-  name: string;
-  code?: string;
-}
 
 interface FormDataPegawaiProps {
   show: string;
@@ -190,8 +183,9 @@ const EditDataPegawai = () => {
     queryKey: ["pegawai-edit", params.id],
     queryFn: async () => {
       const response = await adminServices.getPegawaiDetailAdminPage(
-        Number(params.id)
+        params.id!
       );
+      console.log(response.data);
       return response.data.data;
     },
     enabled: !!params.id,
@@ -209,75 +203,99 @@ const EditDataPegawai = () => {
     },
   });
 
+  // DIPERBARUI: Default values langsung di useForm
   const form = useForm<DataPegawaiSchema>({
     resolver: zodResolver(dataPegawaiSchema),
-    defaultValues: {
-      nip: "",
-      nuptk: "",
-      nama: "",
-    },
+    // @ts-ignore
+    values: data
+      ? {
+          // Data pribadi
+          id: data.id,
+          nip: data.nip || "",
+          nuptk: data.nuptk || "",
+          nama: data.nama || "",
+          gelar_depan: data.gelar_depan || "",
+          gelar_belakang: data.gelar_belakang || "",
+          jenis_kelamin:
+            data.jenis_kelamin === "LAKI-LAKI"
+              ? "Laki-laki"
+              : data.jenis_kelamin === "PEREMPUAN"
+              ? "Perempuan"
+              : undefined,
+          agama: data.agama || "",
+          tempat_lahir: data.tempat_lahir || "",
+          tanggal_lahir: data.tanggal_lahir
+            ? new Date(data.tanggal_lahir)
+            : undefined,
+          kode_status_pernikahan: data.kode_status_pernikahan?.toString() || "",
+          golongan_darah: data.golongan_darah || "",
+
+          // Data kepegawaian
+          unit_kerja_id: data.unit_kerja_id?.toString() || "",
+          status_aktif_id: data.status_aktif_id?.toString() || "",
+          status_kerja: data.hubungan_kerja_id?.toString() || "",
+          email_pegawai: data.email_pegawai || "",
+          email_pribadi: data.email_pribadi || "",
+          jabatan_fungsional_id: data.jabatan_fungsional_id?.toString() || "",
+          jabatan_akademik_id: data.jabatan_struktural_id?.toString() || "",
+
+          // Data domisili
+          no_ktp: data.no_ktp || "",
+          no_kk: data.no_kk || "",
+          warga_negara: "WNI",
+          provinsi: data.provinsi || "",
+          kota: data.kota || "",
+          kecamatan: data.kecamatan || "",
+          alamat_domisili: data.alamat_domisili || "",
+          kode_pos: data.kode_pos || "",
+          suku: data.suku_id?.toString() || "",
+          jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
+          no_whatsapp: data.no_whatsapp || "",
+          no_handphone: data.no_handphone || "",
+
+          // Data rekening
+          nama_bank: data.nama_bank || "",
+          cabang_bank: data.cabang_bank || "",
+          no_rekening: data.no_rekening || "",
+
+          // Data dokumen
+          npwp: data.npwp || "",
+          kapreg: data.kapreg || "",
+          no_bpjs: data.no_bpjs || "",
+          no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
+          no_bpjs_pensiun: data.no_bpjs_pensiun || "",
+
+          // Data kendaraan
+          nomor_polisi: data.nomor_polisi || "",
+          jenis_kendaraan: data.jenis_kendaraan || "",
+          tinggi_badan: data.tinggi_badan
+            ? Number(data.tinggi_badan)
+            : undefined,
+          berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
+
+          // Lainnya
+          role_id: data.role_id || "",
+
+          // File fields
+          file_kapreg: undefined,
+          file_npwp: undefined,
+          file_rekening: undefined,
+          file_kk: undefined,
+          file_ktp: undefined,
+          file_sertifikasi_dosen: undefined,
+          file_bpjs: undefined,
+          file_bpjs_ketenagakerjaan: undefined,
+          file_tanda_tangan: undefined,
+        }
+      : {
+          nip: "",
+          nuptk: "",
+          nama: "",
+          warga_negara: "",
+        },
   });
 
-  useEffect(() => {
-    if (data) {
-      // DIPERBARUI: form.reset disesuaikan dengan skema baru
-      form.reset({
-        id: data.id,
-        nip: data.nip || "",
-        nuptk: data.nuptk || "",
-        nama: data.nama || "",
-        gelar_depan: data.gelar_depan || "",
-        gelar_belakang: data.gelar_belakang || "",
-        jenis_kelamin:
-          data.jenis_kelamin === "L"
-            ? "Laki-laki"
-            : data.jenis_kelamin === "P"
-            ? "Perempuan"
-            : undefined,
-        agama: data.agama || "",
-        tempat_lahir: data.tempat_lahir || "",
-        tanggal_lahir: data.tanggal_lahir
-          ? new Date(data.tanggal_lahir)
-          : undefined,
-        kode_status_pernikahan: data.kode_status_pernikahan?.toString() || "",
-        golongan_darah: data.golongan_darah || "",
-        unit_kerja_id: data.unit_kerja_id?.toString() || "",
-        status_aktif_id: data.status_aktif_id?.toString() || "",
-        status_kerja: data.status_kerja || "",
-        email_pegawai: data.email_pegawai || "",
-        email_pribadi: data.email_pribadi || "",
-        // DITAMBAHKAN: Mengisi jabatan fungsional dan akademik
-        jabatan_fungsional_id: data.jabatan_fungsional_id?.toString() || "",
-        jabatan_akademik_id: data.jabatan_akademik_id?.toString() || "",
-        no_ktp: data.no_ktp || "",
-        no_kk: data.no_kk || "",
-        warga_negara: "WNI",
-        alamat_domisili: data.alamat_domisili || "",
-        provinsi: data.provinsi || "",
-        kota: data.kota || "",
-        kecamatan: data.kecamatan || "",
-        kode_pos: data.kode_pos || "",
-        suku: data.suku_id?.toString() || "",
-        jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
-        no_whatsapp: data.no_whatsapp || "",
-        no_handphone: data.no_handphone || "",
-        nama_bank: data.nama_bank || "",
-        cabang_bank: data.cabang_bank || "",
-        no_rekening: data.no_rekening || "",
-        npwp: data.npwp || "",
-        kapreg: data.kapreg || "",
-        no_bpjs: data.no_bpjs || "",
-        no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
-        nomor_polisi: data.nomor_polisi || "",
-        jenis_kendaraan: data.jenis_kendaraan || "",
-        tinggi_badan: data.tinggi_badan ? Number(data.tinggi_badan) : undefined,
-        berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
-      });
-    }
-  }, [data, form]);
-
   const onSubmit = (formData: DataPegawaiSchema) => {
-    // Tidak perlu FormData, kirim objek JSON langsung
     putData(formData);
   };
 
@@ -294,57 +312,13 @@ const EditDataPegawai = () => {
     }
   };
 
-  // Kode untuk fetching wilayah tidak berubah
-  const selectedProvinceId = form.watch("provinsi");
-  const selectedCityId = form.watch("kota");
-
-  const { data: provincesData, isLoading: isProvincesLoading } = useQuery({
-    queryKey: ["provinsi-wilayah-id"],
-    queryFn: wilayahIdServices.getProvinsi,
-  });
-  const provinceOptions =
-    provincesData?.data?.map((prov: WilayahItem) => ({
-      label: prov.name,
-      value: prov.code,
-    })) || [];
-
-  const { data: citiesData, isLoading: isCitiesLoading } = useQuery({
-    queryKey: ["kota-wilayah-id", selectedProvinceId],
-    queryFn: () => wilayahIdServices.getKota(selectedProvinceId!),
-    enabled: !!selectedProvinceId,
-  });
-  const cityOptions =
-    citiesData?.data?.map((city: WilayahItem) => ({
-      label: city.name,
-      value: city.code,
-    })) || [];
-
-  const { data: kecamatanData, isLoading: isKecamatanLoading } = useQuery({
-    queryKey: ["kecamatan-wilayah-id", selectedCityId],
-    queryFn: () => wilayahIdServices.getKecamatan(selectedCityId!),
-    enabled: !!selectedCityId,
-  });
-  const kecamatanOptions =
-    kecamatanData?.data?.map((kec: WilayahItem) => ({
-      label: kec.name,
-      value: kec.code,
-    })) || [];
-
   const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => (
     <div>
       <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
         <KepegawaianSection form={form} />
       </div>
       <div style={{ display: show === "domisili" ? "block" : "none" }}>
-        <DomisiliSection
-          form={form}
-          provinceOptions={provinceOptions}
-          cityOptions={cityOptions}
-          kecamatanOptions={kecamatanOptions}
-          isProvincesLoading={isProvincesLoading}
-          isCitiesLoading={isCitiesLoading}
-          isKecamatanLoading={isKecamatanLoading}
-        />
+        <DomisiliSection form={form} />
       </div>
       <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
         <RekeningBankSection form={form} />
@@ -452,7 +426,7 @@ const EditDataPegawai = () => {
                   required={true}
                   queryKey="agama"
                   queryFn={adminServices.getAgama}
-                  itemValue="id"
+                  itemValue="nama_agama"
                   itemLabel="nama_agama"
                 />
                 <FormFieldInput
@@ -491,8 +465,20 @@ const EditDataPegawai = () => {
                   required={false}
                   queryKey="golongan-darah-select"
                   queryFn={adminServices.getGolonganDarah}
-                  itemValue="id"
+                  itemValue="golongan_darah"
                   itemLabel="golongan_darah"
+                />
+                <InfiniteScrollSelect
+                  form={form}
+                  label="Role"
+                  name="role_id"
+                  labelStyle="text-[#3F6FA9]"
+                  placeholder="--Pilih Role--"
+                  required={false}
+                  queryKey="role-id-select"
+                  queryFn={adminServices.getRole}
+                  itemValue="id"
+                  itemLabel="nama"
                 />
               </div>
 

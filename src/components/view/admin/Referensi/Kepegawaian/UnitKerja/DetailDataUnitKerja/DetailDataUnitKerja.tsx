@@ -43,9 +43,7 @@ const DetailDataUnitKerja = () => {
       if (!params.id) {
         throw new Error("ID Unit Kerja tidak ditemukan di URL.");
       }
-      const response = await adminServices.getDetailUnitKerja(
-        Number(params.id)
-      );
+      const response = await adminServices.getDetailUnitKerja(params.id);
       return response.data.data;
     },
     enabled: !!params.id,

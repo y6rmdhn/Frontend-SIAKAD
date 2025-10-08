@@ -1,11 +1,14 @@
+// components/DomisiliSection.tsx
 import React, { useEffect, useRef } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect.tsx";
-import { COUNTRIES } from "@/constant/countries/countries.ts";
 import adminServices from "@/services/admin.services.ts";
 import type { DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
+import { formatCountries, wilayahServices } from "@/services/wilayahService";
+import { SimpleSelect } from "../SimpleSelect/SimpleSelect";
+import { useWilayahData } from "@/hooks/useWilayah";
 
 type SelectOption = {
   label: string;
@@ -25,23 +28,11 @@ function usePrevious<T>(value: T): T | undefined {
 interface DomisiliSectionProps {
   form: UseFormReturn<DataPegawaiSchema>;
   isReadOnly?: boolean;
-  provinceOptions?: SelectOption[];
-  cityOptions?: SelectOption[];
-  kecamatanOptions?: SelectOption[];
-  isProvincesLoading?: boolean;
-  isCitiesLoading?: boolean;
-  isKecamatanLoading?: boolean;
 }
 
 const DomisiliSection = ({
   form,
   isReadOnly = false,
-  provinceOptions = [],
-  cityOptions = [],
-  kecamatanOptions = [],
-  isProvincesLoading = false,
-  isCitiesLoading = false,
-  isKecamatanLoading = false,
 }: DomisiliSectionProps) => {
   const { watch, setValue } = form;
 
@@ -50,6 +41,33 @@ const DomisiliSection = ({
   const prevProvinceId = usePrevious(selectedProvinceId);
   const prevCityId = usePrevious(selectedCityId);
 
+  // Use the custom hook for wilayah data
+  const {
+    provinces,
+    regencies,
+    districts,
+    isProvincesLoading,
+    isRegenciesLoading,
+    isDistrictsLoading,
+  } = useWilayahData(selectedProvinceId, selectedCityId);
+
+  // Convert to SelectOption format
+  const provinceOptions: SelectOption[] = provinces.map((province) => ({
+    label: province.name,
+    value: province.id,
+  }));
+
+  const cityOptions: SelectOption[] = regencies.map((regency) => ({
+    label: regency.name,
+    value: regency.id,
+  }));
+
+  const kecamatanOptions: SelectOption[] = districts.map((district) => ({
+    label: district.name,
+    value: district.id,
+  }));
+
+  // Reset dependent fields when parent field changes
   useEffect(() => {
     if (
       !isReadOnly &&
@@ -89,18 +107,30 @@ const DomisiliSection = ({
         required={!isReadOnly}
         readOnly={isReadOnly}
       />
-      <FormFieldSelect
+
+      {/* Countries Select */}
+      <SimpleSelect
         form={form}
         label="Warga Negara"
         name="warga_negara"
-        labelStyle="text-[#3F6FA9]"
-        options={COUNTRIES}
         placeholder="--Pilih Warga Negara--"
-        required={!isReadOnly}
-        disabled={isReadOnly}
+        required={true}
+        queryKey="countries"
+        queryFn={async () => {
+          try {
+            const response = await wilayahServices.getCountries();
+            const formatted = formatCountries(response.data);
+            return formatted;
+          } catch (error) {
+            console.error("Error fetching countries:", error);
+            return [];
+          }
+        }}
+        itemValue="id"
+        itemLabel="name"
       />
 
-      {/* Conditionally render Input or Select for Provinsi */}
+      {/* Provinsi Select */}
       {isReadOnly ? (
         <FormFieldInput
           form={form}
@@ -116,13 +146,15 @@ const DomisiliSection = ({
           name="provinsi"
           labelStyle="text-[#3F6FA9]"
           options={provinceOptions}
-          placeholder={isProvincesLoading ? "Memuat..." : "--Pilih Provinsi--"}
+          placeholder={
+            isProvincesLoading ? "Memuat provinsi..." : "--Pilih Provinsi--"
+          }
           disabled={isProvincesLoading}
           required={true}
         />
       )}
 
-      {/* Conditionally render Input or Select for Kota */}
+      {/* Kota/Kabupaten Select */}
       {isReadOnly ? (
         <FormFieldInput
           form={form}
@@ -138,13 +170,13 @@ const DomisiliSection = ({
           name="kota"
           labelStyle="text-[#3F6FA9]"
           options={cityOptions}
-          placeholder={isCitiesLoading ? "Memuat kota..." : "--Pilih Kota--"}
-          disabled={!watch("provinsi") || isCitiesLoading}
+          placeholder={isRegenciesLoading ? "Memuat kota..." : "--Pilih Kota--"}
+          disabled={!selectedProvinceId || isRegenciesLoading}
           required={true}
         />
       )}
 
-      {/* Conditionally render Input or Select for Kecamatan */}
+      {/* Kecamatan Select */}
       {isReadOnly ? (
         <FormFieldInput
           form={form}
@@ -161,9 +193,9 @@ const DomisiliSection = ({
           labelStyle="text-[#3F6FA9]"
           options={kecamatanOptions}
           placeholder={
-            isKecamatanLoading ? "Memuat kecamatan..." : "--Pilih Kecamatan--"
+            isDistrictsLoading ? "Memuat kecamatan..." : "--Pilih Kecamatan--"
           }
-          disabled={!watch("kota") || isKecamatanLoading}
+          disabled={!selectedCityId || isDistrictsLoading}
           required={true}
         />
       )}
@@ -186,7 +218,7 @@ const DomisiliSection = ({
         readOnly={isReadOnly}
       />
 
-      {/* Conditionally render Input or InfiniteScrollSelect for Suku */}
+      {/* Suku Select */}
       {isReadOnly ? (
         <FormFieldInput
           form={form}

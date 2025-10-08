@@ -80,9 +80,9 @@ interface Suku {
   nama_suku: string;
 }
 
-interface UnitKerja{
+interface UnitKerja {
   id: string;
-  kode_unit:string;
+  kode_unit: string;
   nama_unit: string;
 }
 
@@ -99,9 +99,7 @@ const Biodata = () => {
       if (!params.id) {
         throw new Error("ID Pegawai tidak ditemukan");
       }
-      const response = await adminServices.getPegawaiDetailAdminPage(
-        Number(params.id)
-      );
+      const response = await adminServices.getPegawaiDetailAdminPage(params.id);
       return response.data.data;
     },
     enabled: !!params.id, // Query hanya akan berjalan jika params.id ada
@@ -148,7 +146,6 @@ const Biodata = () => {
       ? "Cerai"
       : "-",
   ];
-
 
   // kepegawaian
   const dataKepegawaianLeft = [

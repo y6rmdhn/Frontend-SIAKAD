@@ -56,7 +56,7 @@ type RejectActionSchema = z.infer<typeof rejectActionSchema>;
 
 // FIX: Define the full shape of the API response
 interface CutiItem {
-  id: string;
+  id: string; // ✅ ID sebagai string
   nama_pegawai: string;
   unit_kerja: string;
   jenis_cuti: string;
@@ -90,7 +90,7 @@ const PermohonanCuti = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // ✅ DIUBAH: number[] -> string[]
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -111,7 +111,6 @@ const PermohonanCuti = () => {
   }, [isDialogOpen, form]);
 
   // --- Data Fetching (React Query) ---
-  // FIX: Provide the ApiResponse type to useQuery and replace `keepPreviousData`
   const { data, isLoading, isError, error } = useQuery<ApiResponse>({
     queryKey: [
       "permohonan-cuti-validasi-data",
@@ -170,17 +169,15 @@ const PermohonanCuti = () => {
       }`
     );
 
-  // FIX: use `isPending` instead of `isLoading` for mutations
   const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
-    mutationFn: (payload: { ids: number[]; keterangan_admin: string }) =>
+    mutationFn: (payload: { ids: string[]; keterangan_admin: string }) =>
       patchDataServices.tolakPengajuanCuti(payload),
     onSuccess: () => handleMutationSuccess("menolak"),
     onError: handleMutationError,
   });
 
-  // FIX: use `isPending` instead of `isLoading` for mutations
   const { mutate: approveMutation, isPending: isApproving } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
+    mutationFn: (payload: { ids: string[] }) =>
       patchDataServices.aprovePengajuanCuti(payload),
     onSuccess: () => handleMutationSuccess("menyetujui"),
     onError: handleMutationError,
@@ -226,7 +223,10 @@ const PermohonanCuti = () => {
   const isSomeSelectedOnPage =
     !isAllSelectedOnPage && pageIds.some((id) => selectedItem.includes(id));
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (
+    id: string,
+    checked: boolean // ✅ DIUBAH: number -> string
+  ) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );

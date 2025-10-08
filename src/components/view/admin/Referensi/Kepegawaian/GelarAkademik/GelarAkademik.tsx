@@ -45,7 +45,7 @@ import { IoSaveOutline } from "react-icons/io5";
 
 // --- Skema Validasi dan Tipe Data ---
 const gelarSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   gelar: z.string().min(1, "Gelar tidak boleh kosong"),
   nama_gelar: z.string().min(1, "Nama Gelar tidak boleh kosong"),
 });
@@ -79,7 +79,7 @@ const GelarAkademik = () => {
   const [debouncedSearch] = useDebounce(searchData, 500);
   const [isAddData, setIsAddData] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
   const currentPage = searchParam.get("page") || "1";
 
@@ -133,7 +133,7 @@ const GelarAkademik = () => {
   });
 
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deleteGelarAkademik(id),
+    mutationFn: (id: string) => deleteReferensiServices.deleteGelarAkademik(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       handleCancel();

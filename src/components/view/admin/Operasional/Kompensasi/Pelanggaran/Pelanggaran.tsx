@@ -41,7 +41,7 @@ const Pelanggaran = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // Changed to string[]
 
   // Get filter values directly from the URL with new ID suffixes
   const currentPage = searchParam.get("page") || "1";
@@ -88,8 +88,9 @@ const Pelanggaran = () => {
 
   // --- Data Mutation (Delete) ---
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) =>
-      deleteReferensiServices.deteleDataPelanggaran(id),
+    mutationFn: (
+      id: string // Changed to string
+    ) => deleteReferensiServices.deteleDataPelanggaran(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["pelanggaran-data"] });
@@ -122,14 +123,18 @@ const Pelanggaran = () => {
 
   // --- Table Selection Logic ---
   const tableData = data?.data || [];
-  const pageIds = tableData.data?.map((item: any) => item.id) || [];
+  const pageIds = tableData.data?.map((item: any) => String(item.id)) || []; // Convert to string
   const isAllSelectedOnPage =
-    pageIds.length > 0 && pageIds.every((id: any) => selectedItem.includes(id));
-  const isSomeSelectedOnPage = pageIds.some((id: any) =>
+    pageIds.length > 0 &&
+    pageIds.every((id: string) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: string) =>
     selectedItem.includes(id)
   );
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (
+    id: string,
+    checked: boolean // Changed to string
+  ) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );
@@ -284,8 +289,10 @@ const Pelanggaran = () => {
               <TableRow key={item.id} className="even:bg-gray-50">
                 <TableCell className="text-center">
                   <Checkbox
-                    checked={selectedItem.includes(item.id)}
-                    onCheckedChange={(c) => handleSelectedItemId(item.id, !!c)}
+                    checked={selectedItem.includes(String(item.id))} // Convert to string
+                    onCheckedChange={(c) =>
+                      handleSelectedItemId(String(item.id), !!c)
+                    } // Convert to string
                   />
                 </TableCell>
                 <TableCell className="text-center">{item.nip}</TableCell>
@@ -313,7 +320,7 @@ const Pelanggaran = () => {
                     <ConfirmDialog
                       title="Hapus Data?"
                       description={`Apakah Anda yakin ingin menghapus data pelanggaran "${item.jenis_pelanggaran}"?`}
-                      onConfirm={() => deleteData(item.id)}
+                      onConfirm={() => deleteData(String(item.id))} // Convert to string
                     >
                       <Button size="icon" variant="ghost">
                         <FaRegTrashAlt className="text-red-500" />

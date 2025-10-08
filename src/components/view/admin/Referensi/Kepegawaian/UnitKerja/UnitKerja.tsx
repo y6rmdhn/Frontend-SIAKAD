@@ -91,14 +91,14 @@ const UnitKerja = () => {
 
   // delete data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleUnitKerja(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleUnitKerja(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["unit-kerja-all"] });
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteData(id);
   };
 

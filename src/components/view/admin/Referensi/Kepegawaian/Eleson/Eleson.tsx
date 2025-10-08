@@ -49,7 +49,7 @@ interface eselonResponse {
 }
 
 const eselonSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "Pangkat tidak boleh kosong"),
   nama_eselon: z.string().min(1, "Nama Golongan tidak boleh kosong"),
   status: z.boolean(),
@@ -62,7 +62,7 @@ const Eleson = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -118,7 +118,7 @@ const Eleson = () => {
 
   // hapus data
   const { mutate: deleteEselon } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleEselon(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleEselon(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["eselon"] });
@@ -132,7 +132,7 @@ const Eleson = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteEselon(id);
   };
 
@@ -215,7 +215,7 @@ const Eleson = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: 0,
+                          id: "",
                           kode: "",
                           nama_eselon: "",
                           status: false,

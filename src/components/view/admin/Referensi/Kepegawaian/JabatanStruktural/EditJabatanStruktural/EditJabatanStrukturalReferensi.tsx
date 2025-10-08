@@ -85,7 +85,7 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
     UpdateJabatanStrukturalPayload
   >({
     mutationFn: (payload) =>
-      putReferensiServices.jabatanStruktural(Number(payload.id), payload.data),
+      putReferensiServices.jabatanStruktural(payload.id, payload.data),
     onSuccess: () => {
       toast.success("Data berhasil diperbarui");
       queryClient.invalidateQueries({

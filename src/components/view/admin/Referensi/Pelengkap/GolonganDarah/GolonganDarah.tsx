@@ -46,7 +46,7 @@ interface golonganDarahResponse {
 }
 
 const golonganDarahSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   golongan_darah: z.string().min(1, "Nama golongan darah tidak boleh kosong"),
 });
 
@@ -57,7 +57,7 @@ const GolonganDarah = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -112,7 +112,7 @@ const GolonganDarah = () => {
 
   // hapus data
   const { mutate: deleteEselon } = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       deleteReferensiServices.deteleDataGolonganDarah(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
@@ -127,7 +127,7 @@ const GolonganDarah = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteEselon(id);
   };
 

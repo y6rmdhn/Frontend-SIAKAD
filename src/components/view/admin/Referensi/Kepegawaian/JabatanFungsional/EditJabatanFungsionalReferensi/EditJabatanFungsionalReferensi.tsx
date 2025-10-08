@@ -88,8 +88,7 @@ const JabatanFungsionalForm = ({ initialData }: { initialData: any }) => {
     AxiosError,
     JabatanFungsionalPayload
   >({
-    mutationFn: (data) =>
-      putReferensiServices.jabatanFungsional(Number(id), data),
+    mutationFn: (data) => putReferensiServices.jabatanFungsional(id!, data),
     onSuccess: () => {
       toast.success("Data berhasil diperbarui");
       queryClient.invalidateQueries({
@@ -106,8 +105,8 @@ const JabatanFungsionalForm = ({ initialData }: { initialData: any }) => {
     if (!id) return toast.error("ID Jabatan tidak ditemukan!");
     const payload: JabatanFungsionalPayload = {
       ...values,
-      jabatan_akademik_id: parseInt(values.jabatan_akademik_id, 10),
-      pangkat_id: parseInt(values.pangkat_id, 10),
+      jabatan_akademik_id: values.jabatan_akademik_id,
+      pangkat_id: values.pangkat_id,
       usia_pensiun: parseInt(values.usia_pensiun, 10),
     };
     updateMutation(payload);

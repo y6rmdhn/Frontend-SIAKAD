@@ -31,7 +31,7 @@ const penghargaanSchema = z.object({
 type PenghargaanSchema = z.infer<typeof penghargaanSchema>;
 
 interface UpdatePenghargaanPayload {
-  id: number;
+  id: string; // Changed to string
   data: Omit<PenghargaanSchema, "file_penghargaan">;
 }
 
@@ -60,7 +60,7 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: UpdatePenghargaanPayload) =>
-      putReferensiServices.penghargaan(payload.id, payload.data),
+      putReferensiServices.penghargaan(payload.id, payload.data), // ID as string
     onSuccess: () => {
       toast.success("Data berhasil diperbarui");
       queryClient.invalidateQueries({
@@ -77,7 +77,10 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
 
   const handleSubmitData = (values: PenghargaanSchema) => {
     if (!params.id) return toast.error("ID data tidak ditemukan!");
-    const numericId = Number(params.id);
+
+    // Remove Number conversion - use string directly
+    const stringId = params.id; // Already a string
+
     const { file_penghargaan, ...dataToSend } = values;
     const payloadForApi = {
       ...dataToSend,
@@ -86,7 +89,8 @@ const PenghargaanForm = ({ initialData }: { initialData: any }) => {
       tanggal_sk: dataToSend.tanggal_sk || "",
       keterangan: dataToSend.keterangan || "",
     };
-    mutate({ id: numericId, data: payloadForApi });
+
+    mutate({ id: stringId, data: payloadForApi });
   };
 
   const onFormError = (errors: any) => {
@@ -196,7 +200,7 @@ const EditDataPenghargaan = () => {
     queryKey: ["default-value-penghargaan-admin", params.id],
     queryFn: async () => {
       if (!params.id) return null;
-      const response = await adminServices.getDetailPenghargaan(params.id);
+      const response = await adminServices.getDetailPenghargaan(params.id); // params.id is already string
       console.log(response.data);
 
       return response.data;

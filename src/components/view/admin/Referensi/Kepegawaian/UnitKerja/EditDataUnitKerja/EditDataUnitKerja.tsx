@@ -34,9 +34,9 @@ const unitKerjaSchema = z.object({
   nama_unit: z
     .string({ required_error: "Nama Unit wajib diisi." })
     .min(1, "Nama Unit tidak boleh kosong."),
-  jenis_unit_id: z.coerce.number().optional(),
-  tk_pendidikan_id: z.coerce.number().optional(),
-  akreditasi_id: z.coerce.number().optional(),
+  jenis_unit_id: z.coerce.string().optional(),
+  tk_pendidikan_id: z.coerce.string().optional(),
+  akreditasi_id: z.coerce.string().optional(),
   parent_unit_id: z.string().optional().or(z.literal("")),
   alamat: z.string().optional(),
   telepon: z.string().optional(),
@@ -107,7 +107,7 @@ const UnitKerjaForm = ({ initialData }: { initialData: any }) => {
     UpdateUnitKerjaPayload
   >({
     mutationFn: (payload) =>
-      putReferensiServices.unitKerja(Number(payload.id), payload.data),
+      putReferensiServices.unitKerja(payload.id, payload.data),
     onSuccess: () => {
       toast.success("Data unit kerja berhasil diperbarui");
       queryClient.invalidateQueries({ queryKey: ["unit-kerja-referensi"] });
@@ -185,7 +185,7 @@ const UnitKerjaForm = ({ initialData }: { initialData: any }) => {
               placeholder="--Pilih Parent Unit--"
               queryKey="parent-unit-select-referensi-edit"
               queryFn={adminServices.getUnitKerja}
-              itemValue="kode_unit"
+              itemValue="id"
               itemLabel="nama_unit"
               initialSelectedItem={initialData?.parent_unit}
             />
@@ -310,7 +310,7 @@ const EditDataUnitKerja = () => {
     queryKey: ["unit-kerja-edit", id],
     queryFn: async () => {
       if (!id) return null;
-      const response = await adminServices.getDetailUnitKerja(Number(id));
+      const response = await adminServices.getDetailUnitKerja(id);
       return response.data;
     },
     enabled: !!id, // Query hanya berjalan jika ID ada

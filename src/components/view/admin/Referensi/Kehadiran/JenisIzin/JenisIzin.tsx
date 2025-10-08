@@ -30,9 +30,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const jenisIzinSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   jenis_kehadiran_id: z.coerce
-    .number({
+    .string({
       required_error: "Jenis kehadiran harus dipilih.",
     })
     .min(1, "Jenis kehadiran harus dipilih."),
@@ -49,14 +49,14 @@ const JenisIzin = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
 
   const form = useForm<jenisIzinFormvalue>({
     defaultValues: {
-      jenis_kehadiran_id: 0,
+      jenis_kehadiran_id: "",
       kode: "",
       jenis_izin: "",
       izin_max: "",
@@ -84,11 +84,20 @@ const JenisIzin = () => {
   });
 
   const jenisKehadiranMap = useMemo(() => {
-    if (!jenisKehadiranData) return {};
-    return jenisKehadiranData.data.reduce((acc: any, kehadiran: any) => {
+    if (!jenisKehadiranData?.data) {
+      console.log("❌ Data jenis kehadiran kosong");
+      return {};
+    }
+
+    console.log("🔄 Mapping jenis kehadiran:", jenisKehadiranData.data);
+    const map = jenisKehadiranData.data.reduce((acc: any, kehadiran: any) => {
+      console.log(`📝 Mapping: ${kehadiran.id} -> ${kehadiran.nama_jenis}`);
       acc[kehadiran.id] = kehadiran.nama_jenis;
       return acc;
     }, {});
+
+    console.log("🗺️ Final map:", map);
+    return map;
   }, [jenisKehadiranData]);
 
   // --- MUTATIONS (CREATE, UPDATE, DELETE) ---
@@ -117,7 +126,7 @@ const JenisIzin = () => {
   });
 
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deleteJenisIzin(id),
+    mutationFn: (id: string) => deleteReferensiServices.deleteJenisIzin(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["jenis-izin-referensi"] });
@@ -131,7 +140,7 @@ const JenisIzin = () => {
   });
 
   // --- HANDLER FUNCTIONS ---
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteData(id);
   };
 
@@ -212,8 +221,8 @@ const JenisIzin = () => {
                   onClick={() => {
                     if (!isEditMode) {
                       form.reset({
-                        id: 0,
-                        jenis_kehadiran_id: undefined,
+                        id: "",
+                        jenis_kehadiran_id: "",
                         kode: "",
                         jenis_izin: "",
                         izin_max: "",

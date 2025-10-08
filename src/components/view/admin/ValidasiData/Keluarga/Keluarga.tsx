@@ -66,7 +66,7 @@ const Keluarga = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // Changed to string[]
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -144,15 +144,17 @@ const Keluarga = () => {
   const handleError = (error: Error) => toast.error(`Gagal: ${error.message}`);
 
   const { mutate: rejectMutation } = useMutation({
-    mutationFn: (payload: { ids: number[]; keterangan?: string }) =>
-      patchDataServices.tolakDataKeluarga(payload),
+    mutationFn: (
+      payload: { ids: string[]; keterangan?: string } // Changed to string[]
+    ) => patchDataServices.tolakDataKeluarga(payload),
     onSuccess: () => handleSuccess("reject"),
     onError: handleError,
   });
 
   const { mutate: approveMutation } = useMutation({
-    mutationFn: (payload: { ids: number[]; keterangan?: string }) =>
-      patchDataServices.approveDataKeluarga(payload),
+    mutationFn: (
+      payload: { ids: string[]; keterangan?: string } // Changed to string[]
+    ) => patchDataServices.approveDataKeluarga(payload),
     onSuccess: () => handleSuccess("approve"),
     onError: handleError,
   });
@@ -182,7 +184,7 @@ const Keluarga = () => {
 
   const handleSubmitData = (values: ActionSchema) => {
     const payload = {
-      ids: selectedItem,
+      ids: selectedItem, // Already string[]
       keterangan: values.keterangan_admin,
     };
     if (pendingAction === "approve") approveMutation(payload);
@@ -200,14 +202,16 @@ const Keluarga = () => {
 
   // --- Table Selection Logic ---
   const tableData = data?.data?.data || [];
-  const pageIds = tableData.map((item: any) => item.id);
+  const pageIds = tableData.map((item: any) => String(item.id)); // Convert to string
   const isAllSelectedOnPage =
-    pageIds.length > 0 && pageIds.every((id: any) => selectedItem.includes(id));
-  const isSomeSelectedOnPage = pageIds.some((id: any) =>
+    pageIds.length > 0 &&
+    pageIds.every((id: string) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: string) =>
     selectedItem.includes(id)
   );
 
-  const handleSelectedItemId = (id: number, checked: boolean) => {
+  const handleSelectedItemId = (id: string, checked: boolean) => {
+    // Changed to string
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );
@@ -241,7 +245,6 @@ const Keluarga = () => {
       <h1 className="text-xl lg:text-2xl font-medium">
         Validasi Data Keluarga
       </h1>
-
 
       <CustomCard
         title="Filter Data"
@@ -290,44 +293,43 @@ const Keluarga = () => {
       />
 
       <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
-  {/* Search Input */}
-  <SearchInput
-    placeholder="Cari NIP atau nama pegawai..."
-    value={searchData}
-    onChange={(e) => setSearchData(e.target.value)}
-    className="w-full md:w-80"
-  />
+        {/* Search Input */}
+        <SearchInput
+          placeholder="Cari NIP atau nama pegawai..."
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+          className="w-full md:w-80"
+        />
 
-    {/* Tombol Aksi */}
-    <div className="flex flex-wrap md:flex-row gap-2 justify-end">
-      {selectedItem.length > 0 && (
-        <>
-          <Button
-            type="button"
-            onClick={() => handleOpenDialog("approve")}
-            className="bg-green-light-uika hover:bg-[#329C59]"
-          >
-            <FaCheck className="mr-2" /> Approve ({selectedItem.length})
-          </Button>
-          <Button
-            type="button"
-            onClick={() => handleOpenDialog("reject")}
-            variant="destructive"
-          >
-            <IoClose className="mr-2" /> Reject ({selectedItem.length})
-          </Button>
-        </>
-      )}
+        {/* Tombol Aksi */}
+        <div className="flex flex-wrap md:flex-row gap-2 justify-end">
+          {selectedItem.length > 0 && (
+            <>
+              <Button
+                type="button"
+                onClick={() => handleOpenDialog("approve")}
+                className="bg-green-light-uika hover:bg-[#329C59]"
+              >
+                <FaCheck className="mr-2" /> Approve ({selectedItem.length})
+              </Button>
+              <Button
+                type="button"
+                onClick={() => handleOpenDialog("reject")}
+                variant="destructive"
+              >
+                <IoClose className="mr-2" /> Reject ({selectedItem.length})
+              </Button>
+            </>
+          )}
 
-      {/* Tombol Tambah Data selalu muncul */}
-      <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
-        <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-          <FaPlus className="mr-2" /> Tambah Data
-        </Button>
-      </Link>
-    </div>
-</div>
-
+          {/* Tombol Tambah Data selalu muncul */}
+          <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
+            <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+              <FaPlus className="mr-2" /> Tambah Data
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
@@ -369,13 +371,15 @@ const Keluarga = () => {
               <TableRow key={item.id} className="even:bg-gray-50">
                 <TableCell className="text-center">
                   <Checkbox
-                    checked={selectedItem.includes(item.id)}
-                    onCheckedChange={(c) =>
-                      handleSelectedItemId(item.id, c === true)
+                    checked={selectedItem.includes(String(item.id))} // Convert to string
+                    onCheckedChange={
+                      (c) => handleSelectedItemId(String(item.id), c === true) // Convert to string
                     }
                   />
                 </TableCell>
-                <TableCell className="text-center rounded-tl-lg">{item.nip}</TableCell>
+                <TableCell className="text-center rounded-tl-lg">
+                  {item.nip}
+                </TableCell>
                 <TableCell>{item.nama_pegawai}</TableCell>
                 <TableCell>{item.nama_keluarga}</TableCell>
                 <TableCell className="text-center">{item.hubungan}</TableCell>

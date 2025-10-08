@@ -46,9 +46,9 @@ const unitKerjaSchema = z.object({
   nama_unit: z
     .string({ required_error: "Nama Unit wajib diisi." })
     .min(1, "Nama Unit tidak boleh kosong."),
-  jenis_unit_id: z.coerce.number().optional(),
-  tk_pendidikan_id: z.coerce.number().optional(),
-  akreditasi_id: z.coerce.number().optional(),
+  jenis_unit_id: z.coerce.string().optional(),
+  tk_pendidikan_id: z.coerce.string().optional(),
+  akreditasi_id: z.coerce.string().optional(),
   parent_unit_id: z.string().optional(),
   alamat: z.string().optional(),
   telepon: z.string().optional(),
@@ -89,9 +89,9 @@ const DetailUnitKerja = () => {
       no_sk_pendirian: "",
       gedung: "",
       // default untuk field number
-      jenis_unit_id: undefined,
-      tk_pendidikan_id: undefined,
-      akreditasi_id: undefined,
+      jenis_unit_id: "",
+      tk_pendidikan_id: "",
+      akreditasi_id: "",
     },
   });
 
@@ -115,8 +115,8 @@ const DetailUnitKerja = () => {
     const payload: UnitKerja = {
       ...values,
       // Memberikan nilai default 0 jika field yang WAJIB tidak diisi
-      tk_pendidikan_id: values.tk_pendidikan_id ?? 0,
-      akreditasi_id: values.akreditasi_id ?? 0,
+      tk_pendidikan_id: values.tk_pendidikan_id ?? "",
+      akreditasi_id: values.akreditasi_id ?? "",
       // jenis_unit_id bisa undefined karena opsional di interface UnitKerja
       jenis_unit_id: values.jenis_unit_id,
     };
@@ -181,7 +181,7 @@ const DetailUnitKerja = () => {
                 required={true}
                 queryKey="parent-unit-select-referensi-edit"
                 queryFn={(page) => adminServices.getUnitKerja(page)}
-                itemValue="kode_unit"
+                itemValue="id"
                 itemLabel="nama_unit"
               />
               <FormFieldSelect

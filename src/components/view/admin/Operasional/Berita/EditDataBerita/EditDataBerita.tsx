@@ -142,7 +142,7 @@ const BeritaForm = ({ initialData }: { initialData: any }) => {
     let parsedKonten: Descendant[];
     try {
       parsedKonten = JSON.parse(initialData.konten);
-    } catch (error) {
+    } catch {
       parsedKonten =
         typeof initialData.konten === "string"
           ? [
@@ -179,7 +179,7 @@ const BeritaForm = ({ initialData }: { initialData: any }) => {
 
   const { mutate: updateBerita, isPending } = useMutation({
     mutationFn: (payload: { id: string; data: FormData }) =>
-      putReferensiServices.berita(Number(payload.id), payload.data),
+      putReferensiServices.berita(payload.id, payload.data),
     onSuccess: () => {
       toast.success("Berhasil memperbarui data berita");
       queryClient.invalidateQueries({ queryKey: ["berita-operasional"] });

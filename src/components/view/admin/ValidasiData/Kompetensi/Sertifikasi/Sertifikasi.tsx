@@ -63,7 +63,7 @@ const Sertifikasi = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // Changed to string[]
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -134,22 +134,25 @@ const Sertifikasi = () => {
     );
 
   const { mutate: rejectMutation } = useMutation({
-    mutationFn: (payload: { ids: number[]; keterangan: string }) =>
-      patchDataServices.rejectDataRiwayatSertifikasi(payload),
+    mutationFn: (
+      payload: { ids: string[]; keterangan: string } // Changed to string[]
+    ) => patchDataServices.rejectDataRiwayatSertifikasi(payload),
     onSuccess: () => handleSuccess("reject"),
     onError: handleError,
   });
 
   const { mutate: approveMutation } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.approveDataRiwayatSertifikasi(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.approveDataRiwayatSertifikasi(payload),
     onSuccess: () => handleSuccess("approve"),
     onError: handleError,
   });
 
   const { mutate: draftMutation } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.draftDataRiwayatSertifikasi(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.draftDataRiwayatSertifikasi(payload),
     onSuccess: () => handleSuccess("draft"),
     onError: handleError,
   });
@@ -171,7 +174,7 @@ const Sertifikasi = () => {
   }, [debouncedInput]);
 
   const handleSubmitReject = (values: RejectActionSchema) => {
-    rejectMutation({ ids: selectedItem, keterangan: values.keterangan });
+    rejectMutation({ ids: selectedItem, keterangan: values.keterangan }); // selectedItem is already string[]
   };
 
   const handleOpenDialog = (action: ActionType) => {
@@ -185,14 +188,18 @@ const Sertifikasi = () => {
 
   // --- Table Selection Logic ---
   const tableData = data?.data || [];
-  const pageIds = tableData.data?.map((item: any) => item.id) || [];
+  const pageIds = tableData.data?.map((item: any) => String(item.id)) || []; // Convert to string
   const isAllSelectedOnPage =
-    pageIds.length > 0 && pageIds.every((id: any) => selectedItem.includes(id));
-  const isSomeSelectedOnPage = pageIds.some((id: any) =>
+    pageIds.length > 0 &&
+    pageIds.every((id: string) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: string) =>
     selectedItem.includes(id)
   );
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (
+    id: string,
+    checked: boolean // Changed to string
+  ) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );
@@ -365,8 +372,10 @@ const Sertifikasi = () => {
               <TableRow key={item.id} className="even:bg-gray-50">
                 <TableCell className="text-center">
                   <Checkbox
-                    checked={selectedItem.includes(item.id)}
-                    onCheckedChange={(c) => handleSelectedItemId(item.id, !!c)}
+                    checked={selectedItem.includes(String(item.id))} // Convert to string
+                    onCheckedChange={(c) =>
+                      handleSelectedItemId(String(item.id), !!c)
+                    } // Convert to string
                   />
                 </TableCell>
                 <TableCell className="text-center">

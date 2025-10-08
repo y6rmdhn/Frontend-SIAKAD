@@ -33,7 +33,7 @@ import AddRumpunBidangIlmuRow from "@/components/blocks/AddRumpunBidangIlmuRow/A
 
 // Skema validasi Zod
 export const rumpunSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, { message: "Kode tidak boleh kosong." }),
   nama_bidang: z
     .string()
@@ -101,7 +101,7 @@ const RumpunBidangIlmu = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
   const form = useForm<RumpunFormValues>({
     resolver: zodResolver(rumpunSchema),
@@ -157,8 +157,8 @@ const RumpunBidangIlmu = () => {
   });
 
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) =>
-      deleteReferensiServices.deleteRumpunBidangIlmu(id),
+    mutationFn: (id: string) =>
+      deleteReferensiServices.deleteRumpunBidangIlmu(id!),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey });
@@ -169,7 +169,7 @@ const RumpunBidangIlmu = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       deleteData(id);
     }

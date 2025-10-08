@@ -22,7 +22,7 @@ interface JabatanStrukturalRowProps {
   node: JabatanStrukturalNode;
   level: number;
   openRows: Record<string, boolean>;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
   toggleRow: (kode: string) => void;
   createRefCallback: (kode: string) => (el: HTMLTableRowElement | null) => void;
 }

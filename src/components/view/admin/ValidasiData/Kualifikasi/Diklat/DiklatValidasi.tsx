@@ -81,7 +81,7 @@ const DiklatValidasi = () => {
   // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<number[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string[]>([]); // Changed to string[]
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
@@ -149,15 +149,17 @@ const DiklatValidasi = () => {
 
   // PERBAIKAN: `isLoading` diganti menjadi `isPending` untuk TanStack Query v5
   const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.rejectDataDiklat(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.rejectDataDiklat(payload),
     onSuccess: () => handleSuccess("menolak"),
     onError: handleError,
   });
 
   const { mutate: approveMutation, isPending: isApproving } = useMutation({
-    mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.approveDataDiklat(payload),
+    mutationFn: (
+      payload: { ids: string[] } // Changed to string[]
+    ) => patchDataServices.approveDataDiklat(payload),
     onSuccess: () => handleSuccess("menyetujui"),
     onError: handleError,
   });
@@ -185,17 +187,26 @@ const DiklatValidasi = () => {
   };
 
   const handleConfirmAction = () => {
-    if (pendingAction === "approve") approveMutation({ ids: selectedItem });
-    else if (pendingAction === "reject") rejectMutation({ ids: selectedItem });
+    if (pendingAction === "approve")
+      approveMutation({
+        ids: selectedItem,
+      }); // selectedItem is already string[]
+    else if (pendingAction === "reject") rejectMutation({ ids: selectedItem }); // selectedItem is already string[]
   };
 
   const tableData = data?.data || [];
-  const pageIds = tableData.map((item) => item.id);
+  const pageIds = tableData.map((item) => String(item.id)); // Convert to string
   const isAllSelectedOnPage =
-    pageIds.length > 0 && pageIds.every((id) => selectedItem.includes(id));
-  const isSomeSelectedOnPage = pageIds.some((id) => selectedItem.includes(id));
+    pageIds.length > 0 &&
+    pageIds.every((id: string) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = pageIds.some((id: string) =>
+    selectedItem.includes(id)
+  );
 
-  const handleSelectedItemId = (id: number, checked: boolean) =>
+  const handleSelectedItemId = (
+    id: string,
+    checked: boolean // Changed to string
+  ) =>
     setSelectedItem((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id)
     );
@@ -331,9 +342,9 @@ const DiklatValidasi = () => {
                 <TableRow key={item.id} className="even:bg-gray-50">
                   <TableCell className="text-center">
                     <Checkbox
-                      checked={selectedItem.includes(item.id)}
-                      onCheckedChange={(c) =>
-                        handleSelectedItemId(item.id, !!c)
+                      checked={selectedItem.includes(String(item.id))} // Convert to string
+                      onCheckedChange={
+                        (c) => handleSelectedItemId(String(item.id), !!c) // Convert to string
                       }
                     />
                   </TableCell>

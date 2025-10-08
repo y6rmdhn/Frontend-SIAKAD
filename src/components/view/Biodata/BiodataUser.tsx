@@ -14,18 +14,9 @@ import { useState, useEffect } from "react";
 import dosenServices from "@/services/dosen.services";
 import { Button } from "@/components/ui/button";
 
-// ====================================================================
-// PERBAIKAN KUNCI (1): Hapus definisi 'type DataPegawaiSchema' lokal dari sini.
-// ====================================================================
-
-// ====================================================================
-// PERBAIKAN KUNCI (2): Impor tipe dari satu sumber terpusat agar konsisten
-// dengan semua komponen anak.
-// Ganti path ini jika lokasi file Anda berbeda.
 import { type DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
-// ====================================================================
 
 interface FormDataPegawaiProps {
   show: string;
@@ -36,11 +27,8 @@ interface FormDataPegawaiProps {
 const BiodataUser = () => {
   const [show, setShow] = useState<string>("kepegawaian");
 
-  // Sekarang useForm menggunakan tipe yang diimpor, yang lebih ketat
   const form = useForm<DataPegawaiSchema>({
     defaultValues: {
-      // PERBAIKAN KUNCI (3): Berikan nilai default yang valid sesuai tipe yang ketat.
-      // 'jenis_kelamin' tidak boleh undefined.
       nip: "",
       nuptk: "",
       nama: "",
@@ -176,27 +164,25 @@ const BiodataUser = () => {
     <div className="mt-10 mb-10">
       <Title title="Data Pegawai" />
       <Form {...form}>
-     
-          <div className="flex justify-end">
-            <Link to="/editBiodata">
-              <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:auto">
-                <MdEdit /> Edit
-              </Button>
-            </Link>
-          </div>
-        
+        <div className="flex justify-end">
+          <Link to={`/editBiodata/${getBiodata?.biodata_pribadi?.id}`}>
+            <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:auto">
+              <MdEdit /> Edit
+            </Button>
+          </Link>
+        </div>
+
         <form>
           <Card className="mt-5 border-t-yellow-uika border-t-3">
             <CardContent className="mt-10">
               <div className="flex flex-col md:grid md:grid-rows-6 md:grid-flow-col gap-5">
                 {/* PERBAIKAN KUNCI (4): Tambahkan 'readOnly' atau 'disabled' pada semua field */}
-                <FormFieldInput 
+                <FormFieldInput
                   form={form}
                   label="NIP"
                   name="nip"
                   labelStyle="text-[#3F6FA9]"
                   readOnly
-                  
                 />
                 <FormFieldInput
                   form={form}

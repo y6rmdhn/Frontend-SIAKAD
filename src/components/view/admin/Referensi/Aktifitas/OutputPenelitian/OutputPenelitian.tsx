@@ -28,11 +28,11 @@ import { IoSaveOutline } from "react-icons/io5";
 import { RiResetLeftFill } from "react-icons/ri";
 import putReferensiServices from "@/services/put.admin.referensi";
 import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
-import {ConfirmDialog} from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 
 // Zod Schema
 const outputPenelitianSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
   output_penelitian: z.string().min(1, "Output penelitian tidak boleh kosong"),
 });
@@ -65,7 +65,7 @@ const OutputPenelitian = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const form = useForm<OutputPenelitianFormValues>({
@@ -114,8 +114,9 @@ const OutputPenelitian = () => {
   });
 
   // hapus data
-  const {mutate: deleteOutputPenelitian} = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleOutputPenelitian(id),
+  const { mutate: deleteOutputPenelitian } = useMutation({
+    mutationFn: (id: string) =>
+      deleteReferensiServices.deteleOutputPenelitian(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["output-penelitian"] });
@@ -126,11 +127,11 @@ const OutputPenelitian = () => {
         setIsEditMode(false);
         setIsAddData(false);
       }
-    }
-  })
+    },
+  });
 
-  const handleDelete = (id: number) => {
-    deleteOutputPenelitian(id)
+  const handleDelete = (id: string) => {
+    deleteOutputPenelitian(id);
   };
 
   const handleSubmitOutputPenelitian = (values: OutputPenelitianFormValues) => {
@@ -188,7 +189,9 @@ const OutputPenelitian = () => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-lg sm:text-2xl font-normal">Daftar Output Penelitian</h1>
+      <h1 className="text-lg sm:text-2xl font-normal">
+        Daftar Output Penelitian
+      </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitOutputPenelitian)}>
           <CustomCard
@@ -226,9 +229,15 @@ const OutputPenelitian = () => {
             <Table className="mt-5 table-auto">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="text-center text-xs sm:text-sm">Kode</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Output</TableHead>
-                  <TableHead className="text-center text-xs sm:text-sm">Aksi</TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Kode
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Output
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Aksi
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="divide-y divide-gray-200">
@@ -275,7 +284,9 @@ const OutputPenelitian = () => {
                 )}
                 {data?.data.map((item, index) => (
                   <TableRow key={index} className="even:bg-gray-100">
-                    <TableCell className="text-center text-xs sm:text-sm">{item.kode}</TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      {item.kode}
+                    </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.output_penelitian}
                     </TableCell>
@@ -292,17 +303,17 @@ const OutputPenelitian = () => {
                           <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                         </Button>
                         <ConfirmDialog
-                            title="Hapus Data?"
-                            description="Apakah Anda yakin ingin menghapus data ini?"
-                            onConfirm={() => handleDelete(item.id)}
+                          title="Hapus Data?"
+                          description="Apakah Anda yakin ingin menghapus data ini?"
+                          onConfirm={() => handleDelete(item.id)}
                         >
                           <Button
-                              size="icon"
-                              type="button"
-                              variant="ghost"
-                              className="cursor-pointer"
+                            size="icon"
+                            type="button"
+                            variant="ghost"
+                            className="cursor-pointer"
                           >
-                            <FaRegTrashAlt className="text-red-500"/>
+                            <FaRegTrashAlt className="text-red-500" />
                           </Button>
                         </ConfirmDialog>
                       </div>

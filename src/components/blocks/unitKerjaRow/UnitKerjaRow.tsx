@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 
 interface UnitNode {
-  id: number;
+  id: string;
   kode_unit: string;
   nama_unit: string;
   parent_unit_id: string | null;
@@ -28,7 +28,7 @@ interface UnitKerjaRowProps {
   node: UnitNode;
   level: number;
   openRows: Record<string, boolean>;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
   toggleRow: (kode_unit: string) => void;
   createRefCallback: (
     kode_unit: string

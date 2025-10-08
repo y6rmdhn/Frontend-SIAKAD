@@ -52,7 +52,7 @@ interface hubunganKerjaResponse {
 }
 
 const hubunganKerjaSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   kode: z.string().min(1, "kode tidak boleh kosong"),
   nama_hub_kerja: z.string().min(1, "Nama Hub Kerja tidak boleh kosong"),
   status_aktif: z.boolean(),
@@ -66,7 +66,7 @@ const HubunganKerja = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -123,7 +123,7 @@ const HubunganKerja = () => {
 
   // hapus data
   const { mutate: deleteData } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleHubunganKerja(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleHubunganKerja(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["hubungan-kerja"] });
@@ -137,7 +137,7 @@ const HubunganKerja = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteData(id);
   };
 
@@ -230,7 +230,7 @@ const HubunganKerja = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: 0,
+                          id: "",
                           kode: "",
                           nama_hub_kerja: "",
                           status_aktif: false,

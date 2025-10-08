@@ -21,9 +21,9 @@ interface RumpunBidangIlmuRowProps {
   openRows: Record<string, boolean>;
   toggleRow: (kode: string) => void;
   form: UseFormReturn<RumpunFormValues>;
-  editingItemId: number | null;
+  editingItemId: string | null;
   handleEdit: (item: RumpunNode) => void;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
   handleCancel: () => void;
   isPending: boolean;
 }

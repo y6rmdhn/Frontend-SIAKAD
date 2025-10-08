@@ -69,7 +69,7 @@ const PenghargaanPenunjang = () => {
   // Ambil nilai filter langsung dari URL
   const currentPage = searchParam.get("page") || "1";
   const unitKerjaFilter = searchParam.get("unit_kerja") || "";
-  const jabatanFungsionalFilter = searchParam.get("jabatan_fungsional") || ""; // DIUBAH
+  const jabatanFungsionalFilter = searchParam.get("jabatan_fungsional") || "";
   const statusFilter = searchParam.get("status_pengajuan") || "";
 
   const form = useForm<RejectActionSchema>({
@@ -88,7 +88,7 @@ const PenghargaanPenunjang = () => {
       currentPage,
       debouncedInput,
       unitKerjaFilter,
-      jabatanFungsionalFilter, // DIUBAH
+      jabatanFungsionalFilter,
       statusFilter,
     ],
     queryFn: async () => {
@@ -96,7 +96,7 @@ const PenghargaanPenunjang = () => {
         page: currentPage,
         search: debouncedInput,
         unit_kerja: unitKerjaFilter,
-        jabatan_fungsional: jabatanFungsionalFilter, // DIUBAH
+        jabatan_fungsional: jabatanFungsionalFilter,
         status_pengajuan: statusFilter,
       };
       const response = await adminServices.getPenghargaanValidasiData(params);
@@ -112,7 +112,7 @@ const PenghargaanPenunjang = () => {
       items?.map((opt) => ({ value: String(opt.id), label: opt.nama })) || [];
     return {
       unitKerja: mapToOptions(options.unit_kerja),
-      jabatanFungsional: mapToOptions(options.jabatan_fungsional), // DIUBAH
+      jabatanFungsional: mapToOptions(options.jabatan_fungsional),
       statusPengajuan: mapToOptions(options.status_pengajuan),
     };
   }, [data]);
@@ -128,17 +128,22 @@ const PenghargaanPenunjang = () => {
   const handleError = (err: any) =>
     toast.error(`Gagal: ${err?.message || "Terjadi kesalahan"}`);
 
-  // DIASUMSIKAN nama service patch sudah disesuaikan
+  // Fixed mutations with type conversion from number[] to string[]
   const { mutate: rejectMutation } = useMutation({
     mutationFn: (payload: { ids: number[]; keterangan: string }) =>
-      patchDataServices.rejectDataPenghargaan(payload),
+      patchDataServices.rejectDataPenghargaan({
+        ids: payload.ids.map((id) => id.toString()), // Convert number[] to string[]
+        keterangan: payload.keterangan,
+      }),
     onSuccess: () => handleSuccess("reject"),
     onError: handleError,
   });
 
   const { mutate: approveMutation } = useMutation({
     mutationFn: (payload: { ids: number[] }) =>
-      patchDataServices.approveDataPenghargaan(payload),
+      patchDataServices.approveDataPenghargaan({
+        ids: payload.ids.map((id) => id.toString()), // Convert number[] to string[]
+      }),
     onSuccess: () => handleSuccess("approve"),
     onError: handleError,
   });
@@ -255,7 +260,6 @@ const PenghargaanPenunjang = () => {
               />
             </div>
 
-            {/* BLOK INI YANG DIGANTI */}
             <div className="flex flex-col gap-2">
               <Label>Jabatan Fungsional</Label>
               <SelectFilter
@@ -265,7 +269,6 @@ const PenghargaanPenunjang = () => {
                 onValueChange={(v) => handleUrlChange("jabatan_fungsional", v)}
               />
             </div>
-            {/* AKHIR BLOK PENGGANTI */}
 
             <div className="flex flex-col gap-2">
               <Label>Status Pengajuan</Label>

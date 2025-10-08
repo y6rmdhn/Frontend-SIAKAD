@@ -49,7 +49,7 @@ interface jamKerjaResponse {
 }
 
 const jamKerjaSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   jenis_jam_kerja: z.string().min(1, "Jenis jam kerja tidak boleh kosong"),
   jam_normal: z.boolean(),
   jam_datang: z.string().min(1, "jam datang tidak boleh kosong"),
@@ -63,7 +63,7 @@ const JamKerja = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
@@ -120,7 +120,7 @@ const JamKerja = () => {
 
   // hapus data
   const { mutate: deleteJamKerja } = useMutation({
-    mutationFn: (id: number) => deleteReferensiServices.deteleJamKerja(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleJamKerja(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["jam-kerja"] });
@@ -134,7 +134,7 @@ const JamKerja = () => {
     },
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteJamKerja(id);
   };
 
@@ -224,7 +224,7 @@ const JamKerja = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: 0,
+                          id: "",
                           jenis_jam_kerja: "",
                           jam_normal: false,
                           jam_datang: "",
