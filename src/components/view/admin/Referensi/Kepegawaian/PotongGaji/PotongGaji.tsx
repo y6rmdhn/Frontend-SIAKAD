@@ -97,7 +97,7 @@ const PotongGaji = () => {
   // Opsi untuk select dropdown
   const jenisPotonganOptions = [
     { label: "Persen", value: "persen" },
-    { label: "Nominal Tetap", value: "nominal_tetap" },
+    { label: "Nominal Tetap", value: "nominal" },
   ];
 
   const dihitungDariOptions = [
