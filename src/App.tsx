@@ -1005,6 +1005,15 @@ const TahapanDataRiwayatPageUser = lazy(
   () => import("./pages/tahapandatariwayat")
 );
 
+const GeneratePayroll = lazy(
+  () => import("./pages/admin/payroll/generatePayroll")
+);
+
+const SlipGaji = lazy(() => import("./pages/admin/payroll/slipGaji"));
+const PotongGajiPage = lazy(
+  () => import("./pages/admin/referensi/kepegawaian/potongGaji")
+);
+
 import { useHydration } from "./hooks/useHydration";
 import LoadingSpinner from "./components/blocks/LoadingSpinner";
 import LoadingText from "./components/blocks/LoadingText";
@@ -1504,6 +1513,14 @@ function App() {
               path="pegawai/edit-data-pegawai/:id"
               Component={EditDataPegawaiPage}
             />
+
+            {/* PAYROLL */}
+            <Route
+              path="payroll/generate-payroll"
+              Component={GeneratePayroll}
+            />
+
+            <Route path="payroll/slip-gaji" Component={SlipGaji} />
 
             {/* DETAIL PEGAWAI */}
             <Route path="detail-pegawai">
@@ -2062,6 +2079,7 @@ function App() {
                   path="unit-kerja/edit-data-unit-kerja/:id"
                   Component={EditDataUnitKerjaReferensiPage}
                 />
+                <Route path="potong-gaji" Component={PotongGajiPage} />
               </Route>
 
               {/* REFERENSI > WILAYAH */}

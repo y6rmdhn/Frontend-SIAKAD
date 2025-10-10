@@ -720,11 +720,19 @@ const adminServices = {
     axiosInstance.get(`${endpoint.ADMIN}/suku/` + idSuku),
 
   getDaftarRoleID: () => axiosInstance.get(`${endpoint.ADMIN}/role`),
+  getPotongGaji: () =>
+    axiosInstance.get(`${endpoint.ADMIN}/master-potongan-wajib`),
 
   getSukuParams: (page?: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/suku`, {
       params: {
         page: page,
+      },
+    }),
+  getPegawaiPayrollParams: (search?: string) =>
+    axiosInstance.get(`${endpoint.ADMIN}/pegawai`, {
+      params: {
+        search: search,
       },
     }),
 
@@ -957,6 +965,15 @@ const adminServices = {
     return axiosInstance.get(`${endpoint.ADMIN}/gelar-akademik`, {
       params,
     });
+  },
+  getPeriodePayroll: () => {
+    return axiosInstance.get(`${endpoint.ADMIN}/payroll/periods`);
+  },
+  getSlipGajiByPeriode: (id: string) => {
+    return axiosInstance.get(`${endpoint.ADMIN}/payroll/periods/${id}`);
+  },
+  getDetailSlipGaji: (id: string) => {
+    return axiosInstance.get(`${endpoint.ADMIN}/payroll/slips/${id}`);
   },
 };
 

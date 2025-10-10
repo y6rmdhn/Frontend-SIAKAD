@@ -66,10 +66,10 @@ const referensi: {
         title: "Hubungan Kerja",
         href: "/admin/referensi/kepegawaian/hubungan-kerja",
       },
-      {
-        title: "Jabatan Akademik",
-        href: "/admin/referensi/kepegawaian/jabatan-akademik",
-      },
+      // {
+      //   title: "Jabatan Akademik",
+      //   href: "/admin/referensi/kepegawaian/jabatan-akademik",
+      // },
       {
         title: "Jabatan Fungsional",
         href: "/admin/referensi/kepegawaian/jabatan-fungsional",
@@ -97,6 +97,10 @@ const referensi: {
         href: "/admin/referensi/kepegawaian/status-keaktifan",
       },
       { title: "Unit Kerja", href: "/admin/referensi/kepegawaian/unit-kerja" },
+      {
+        title: "Potong Gaji",
+        href: "/admin/referensi/kepegawaian/potong-gaji",
+      },
     ],
   },
   {
@@ -114,11 +118,20 @@ const referensi: {
     href: "",
     childrenItems: [
       { title: "Agama", href: "/admin/referensi/pelengkap/agama" },
-      { title: "Status Pernikahan", href: "/admin/referensi/pelengkap/status-pernikahan" },
-      { title: "Jenjang Pendidikan", href: "/admin/referensi/pelengkap/jenjang-pendidikan" },
+      {
+        title: "Status Pernikahan",
+        href: "/admin/referensi/pelengkap/status-pernikahan",
+      },
+      {
+        title: "Jenjang Pendidikan",
+        href: "/admin/referensi/pelengkap/jenjang-pendidikan",
+      },
       { title: "Bank", href: "/admin/referensi/pelengkap/bank" },
       { title: "Suku", href: "/admin/referensi/pelengkap/suku" },
-      { title: "Golongan Darah", href: "/admin/referensi/pelengkap/golongan-darah" },
+      {
+        title: "Golongan Darah",
+        href: "/admin/referensi/pelengkap/golongan-darah",
+      },
     ],
   },
 ];

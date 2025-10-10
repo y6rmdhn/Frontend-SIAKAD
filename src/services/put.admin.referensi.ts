@@ -122,6 +122,12 @@ const putReferensiServices = {
   putGelarAkademik: (id: string, data: any) => {
     return axiosInstance.put(`${endpoint.ADMIN}/gelar-akademik/${id}`, data);
   },
+  potongGaji: (id: string, data: any) => {
+    return axiosInstance.put(
+      `${endpoint.ADMIN}/master-potongan-wajib/${id}`,
+      data
+    );
+  },
 };
 
 export default putReferensiServices;

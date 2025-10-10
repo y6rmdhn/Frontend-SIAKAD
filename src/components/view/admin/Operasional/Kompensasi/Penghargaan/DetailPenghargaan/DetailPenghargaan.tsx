@@ -91,13 +91,6 @@ const DetailPenghargaan = () => {
 
     const valuesToSubmit: Record<string, any> = { ...values };
 
-    if (valuesToSubmit.jenis_penghargaan_id) {
-      valuesToSubmit.jenis_penghargaan_id = parseInt(
-        valuesToSubmit.jenis_penghargaan_id,
-        10
-      );
-    }
-
     Object.keys(valuesToSubmit).forEach((key) => {
       const value = valuesToSubmit[key];
 

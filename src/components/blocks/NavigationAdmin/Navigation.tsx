@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import operasional from "@/constant/NavbarMenu/operasional";
 import validasiData from "@/constant/NavbarMenu/validasiData";
 import referensi from "@/constant/NavbarMenu/referensi";
+import payroll from "@/constant/NavbarMenu/payroll/payroll";
 
 // Definisikan tipe untuk setiap item di dalam menu
 interface MenuItem {
@@ -75,6 +76,7 @@ const Navigation = () => {
           </NavigationMenuItem>
         ))}
 
+        <MenuGroup title="Payroll" items={payroll} path="/admin/payroll" />
         <MenuGroup
           title="Operasional"
           items={operasional}
@@ -100,25 +102,25 @@ const MenuGroup = ({ title, items, path }: MenuGroupProps) => {
   const isActive = location.pathname.includes(path);
 
   return (
-      <NavigationMenuItem>
-        <NavigationMenuTrigger
-            className={isActive ? "bg-yellow-uika text-white" : "bg-[#eeeeee]"}
-        >
-          {title}
-        </NavigationMenuTrigger>
-        <NavigationMenuContent className="z-50">
-          <ul className="grid w-52 gap-3 grid-cols-1">
-            {items.map((component: MenuItem) => (
-                <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                    childrenItems={component.childrenItems}
-                />
-            ))}
-          </ul>
-        </NavigationMenuContent>
-      </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger
+        className={isActive ? "bg-yellow-uika text-white" : "bg-[#eeeeee]"}
+      >
+        {title}
+      </NavigationMenuTrigger>
+      <NavigationMenuContent className="z-50">
+        <ul className="grid w-52 gap-3 grid-cols-1">
+          {items.map((component: MenuItem) => (
+            <ListItem
+              key={component.title}
+              title={component.title}
+              href={component.href}
+              childrenItems={component.childrenItems}
+            />
+          ))}
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
   );
 };
 

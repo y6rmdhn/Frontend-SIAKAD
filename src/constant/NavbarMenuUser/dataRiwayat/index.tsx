@@ -33,10 +33,10 @@ const dataRiwayat: {
         title: "Pangkat",
         href: "/data-riwayat/kepegawaian/pangkat",
       },
-      {
-        title: "Jabatan Akademik",
-        href: "/data-riwayat/kepegawaian/jabatan-akademik",
-      },
+      // {
+      //   title: "Jabatan Akademik",
+      //   href: "/data-riwayat/kepegawaian/jabatan-akademik",
+      // },
       {
         title: "Jabatan Fungsional",
         href: "/data-riwayat/kepegawaian/jabatan-fungsional",

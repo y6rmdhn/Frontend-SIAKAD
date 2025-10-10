@@ -106,6 +106,12 @@ const potsReferensiServices = {
   postGelarAkademik: (data: any) => {
     return axiosInstance.post(`${endpoint.ADMIN}/gelar-akademik`, data);
   },
+  potongGaji: (data: any) => {
+    return axiosInstance.post(`${endpoint.ADMIN}/master-potongan-wajib`, data);
+  },
+  payrollGenerate: (data: any) => {
+    return axiosInstance.post(`${endpoint.ADMIN}/payroll/generate`, data);
+  },
 };
 
 export default potsReferensiServices;
