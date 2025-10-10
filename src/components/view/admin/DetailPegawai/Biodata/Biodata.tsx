@@ -100,6 +100,7 @@ const Biodata = () => {
         throw new Error("ID Pegawai tidak ditemukan");
       }
       const response = await adminServices.getPegawaiDetailAdminPage(params.id);
+      console.log("ini detail ", response.data.data);
       return response.data.data;
     },
     enabled: !!params.id, // Query hanya akan berjalan jika params.id ada
@@ -110,6 +111,7 @@ const Biodata = () => {
     queryFn: async () => {
       if (!data?.suku_id) return { nama_suku: "-" }; // Return default jika tidak ada suku_id
       const response = await adminServices.getSuku(data.suku_id);
+      console.log("ini suku ", response.data.data);
       return response.data.data;
     },
     enabled: !!data?.suku_id, // Query hanya berjalan jika data dan suku_id ada

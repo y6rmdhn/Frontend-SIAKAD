@@ -458,6 +458,9 @@ const dosenServices = {
       params,
     });
   },
+  getPeriodeDosen: () => {
+    return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips`);
+  },
 };
 
 export default dosenServices;
