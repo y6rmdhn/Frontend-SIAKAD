@@ -173,21 +173,6 @@ export default function PayrollGenerator() {
     toast.success(`Berhasil menambahkan ${newItems.length} item`);
   };
 
-  const addToExclusion = () => {
-    if (selectedPegawai.length === 0) {
-      toast.error("Pilih minimal 1 pegawai untuk dikecualikan!");
-      return;
-    }
-
-    const newExclusions = selectedPegawai.filter(
-      (pegawai) => !excludedPegawai.some((ex) => ex.id === pegawai.id)
-    );
-
-    setExcludedPegawai([...excludedPegawai, ...newExclusions]);
-    clearSelection();
-    toast.success(`Berhasil mengecualikan ${newExclusions.length} pegawai`);
-  };
-
   const removeFromExclusion = (pegawaiId: string) => {
     setExcludedPegawai(excludedPegawai.filter((p) => p.id !== pegawaiId));
     toast.success("Pegawai dihapus dari daftar pengecualian");
@@ -268,7 +253,7 @@ export default function PayrollGenerator() {
                     setPeriode({ ...periode, bulan: parseInt(value) })
                   }
                 >
-                  <SelectTrigger id="bulan">
+                  <SelectTrigger className="w-full" id="bulan">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -303,14 +288,14 @@ export default function PayrollGenerator() {
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger
                   value="allowance"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 data-[state=active]:bg-green-600 data-[state=active]:text-white"
                 >
                   <Plus className="h-4 w-4" />
                   Tunjangan
                 </TabsTrigger>
                 <TabsTrigger
                   value="deduction"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 data-[state=active]:bg-red-600 data-[state=active]:text-white"
                 >
                   <Trash2 className="h-4 w-4" />
                   Potongan
@@ -319,7 +304,9 @@ export default function PayrollGenerator() {
 
               <TabsContent value="allowance" className="space-y-4">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-semibold">Tambah Tunjangan</h3>
+                  <h3 className="text-lg font-semibold text-green-700">
+                    Tambah Tunjangan
+                  </h3>
                   <p className="text-sm text-muted-foreground">
                     Pilih pegawai dan isi detail tunjangan yang akan ditambahkan
                   </p>
@@ -349,6 +336,7 @@ export default function PayrollGenerator() {
                           })
                         }
                         placeholder="BONUS_PROYEK"
+                        className="border-green-200 focus:border-green-500"
                       />
                     </div>
                     <div className="space-y-2">
@@ -364,6 +352,7 @@ export default function PayrollGenerator() {
                           })
                         }
                         placeholder="Bonus penyelesaian proyek"
+                        className="border-green-200 focus:border-green-500"
                       />
                     </div>
                     <div className="space-y-2">
@@ -379,6 +368,7 @@ export default function PayrollGenerator() {
                           })
                         }
                         placeholder="1500000"
+                        className="border-green-200 focus:border-green-500"
                       />
                     </div>
                   </div>
@@ -388,27 +378,19 @@ export default function PayrollGenerator() {
                   <Button
                     onClick={addItemsForSelectedPegawai}
                     disabled={selectedPegawai.length === 0}
-                    className="flex-1"
+                    className="flex-1 bg-green-600 hover:bg-green-700"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Tambahkan untuk {selectedPegawai.length} Pegawai
-                  </Button>
-
-                  <Button
-                    onClick={addToExclusion}
-                    disabled={selectedPegawai.length === 0}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    <UserX className="h-4 w-4 mr-2" />
-                    Kecualikan {selectedPegawai.length} Pegawai
                   </Button>
                 </div>
               </TabsContent>
 
               <TabsContent value="deduction" className="space-y-4">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-semibold">Tambah Potongan</h3>
+                  <h3 className="text-lg font-semibold text-red-700">
+                    Tambah Potongan
+                  </h3>
                   <p className="text-sm text-muted-foreground">
                     Pilih pegawai dan isi detail potongan yang akan ditambahkan
                   </p>
@@ -438,6 +420,7 @@ export default function PayrollGenerator() {
                           })
                         }
                         placeholder="POTONGAN_KETERLAMBATAN"
+                        className="border-red-200 focus:border-red-500"
                       />
                     </div>
                     <div className="space-y-2">
@@ -453,6 +436,7 @@ export default function PayrollGenerator() {
                           })
                         }
                         placeholder="Potongan keterlambatan"
+                        className="border-red-200 focus:border-red-500"
                       />
                     </div>
                     <div className="space-y-2">
@@ -468,6 +452,7 @@ export default function PayrollGenerator() {
                           })
                         }
                         placeholder="50000"
+                        className="border-red-200 focus:border-red-500"
                       />
                     </div>
                   </div>
@@ -477,21 +462,10 @@ export default function PayrollGenerator() {
                   <Button
                     onClick={addItemsForSelectedPegawai}
                     disabled={selectedPegawai.length === 0}
-                    className="flex-1"
-                    variant="destructive"
+                    className="flex-1 bg-red-600 hover:bg-red-700"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Tambahkan untuk {selectedPegawai.length} Pegawai
-                  </Button>
-
-                  <Button
-                    onClick={addToExclusion}
-                    disabled={selectedPegawai.length === 0}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    <UserX className="h-4 w-4 mr-2" />
-                    Kecualikan {selectedPegawai.length} Pegawai
                   </Button>
                 </div>
               </TabsContent>
@@ -567,7 +541,7 @@ export default function PayrollGenerator() {
 
         <Button
           onClick={handleGeneratePayroll}
-          className="w-full h-12 text-lg"
+          className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-700"
           size="lg"
           disabled={generatePayrollMutation.isPending}
         >
@@ -592,7 +566,7 @@ export default function PayrollGenerator() {
   );
 }
 
-// Sub-components untuk modularitas - VERSION SIMPLIFIED
+// Sub-components untuk modularitas - VERSION FIXED
 function PegawaiSearchSection({
   selectedPegawai,
   onTogglePegawai,
@@ -647,6 +621,18 @@ function PegawaiSearchSection({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Fungsi untuk handle toggle pegawai tanpa menutup popover
+  const handleTogglePegawai = (pegawai: any) => {
+    onTogglePegawai(pegawai);
+    // Tidak menutup popover di sini
+  };
+
+  // Fungsi untuk handle select dari CommandItem (enter/click pada item)
+  const handleSelectPegawai = (pegawai: any) => {
+    onTogglePegawai(pegawai);
+    setSearchQuery(""); // Reset search query tapi tidak menutup popover
+  };
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -666,7 +652,16 @@ function PegawaiSearchSection({
                 : "Pilih pegawai..."}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-full p-0" align="start">
+          <PopoverContent
+            className="w-full p-0"
+            align="start"
+            // Mencegah penutupan otomatis ketika berinteraksi dengan konten
+            // @ts-ignore
+            onInteractOutside={(e) => {
+              // Biarkan penutupan normal ketika klik di luar
+              // Tidak perlu melakukan apa-apa khusus di sini
+            }}
+          >
             <Command shouldFilter={false}>
               <CommandInput
                 placeholder="Ketik nama atau NIP pegawai (min. 2 karakter)..."
@@ -711,20 +706,27 @@ function PegawaiSearchSection({
                       <CommandItem
                         key={pegawai.id}
                         value={pegawai.id}
-                        onSelect={() => {
-                          onTogglePegawai(pegawai);
-                          setSearchQuery("");
-                        }}
+                        onSelect={() => handleSelectPegawai(pegawai)}
                         className="flex items-center space-x-2 cursor-pointer"
                       >
-                        <Checkbox
-                          checked={isPegawaiSelected(pegawai.id)}
-                          onCheckedChange={() => onTogglePegawai(pegawai)}
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium">{pegawai.nama}</div>
-                          <div className="text-sm text-muted-foreground">
-                            NIP: {pegawai.nip}
+                        <div
+                          className="flex items-center space-x-2 w-full"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Mencegah event bubble ke CommandItem
+                            handleTogglePegawai(pegawai);
+                          }}
+                        >
+                          <Checkbox
+                            checked={isPegawaiSelected(pegawai.id)}
+                            onCheckedChange={() => handleTogglePegawai(pegawai)}
+                            // Mencegah event bubble
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <div className="flex-1">
+                            <div className="font-medium">{pegawai.nama}</div>
+                            <div className="text-sm text-muted-foreground">
+                              NIP: {pegawai.nip}
+                            </div>
                           </div>
                         </div>
                       </CommandItem>
@@ -733,6 +735,18 @@ function PegawaiSearchSection({
                 )}
               </CommandList>
             </Command>
+
+            {/* Tombol untuk menutup popover secara manual */}
+            <div className="p-2 border-t">
+              <Button
+                onClick={() => setOpen(false)}
+                variant="outline"
+                size="sm"
+                className="w-full"
+              >
+                Tutup
+              </Button>
+            </div>
           </PopoverContent>
         </Popover>
       </div>
@@ -810,15 +824,19 @@ function ItemsTable({ title, items, onRemoveItem, type }: any) {
                     variant="outline"
                     className={
                       isAllowance
-                        ? "bg-green-50 text-green-700"
-                        : "bg-red-50 text-red-700"
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : "bg-red-50 text-red-700 border-red-200"
                     }
                   >
                     {item.kode}
                   </Badge>
                 </TableCell>
                 <TableCell>{item.deskripsi}</TableCell>
-                <TableCell className="text-right font-medium">
+                <TableCell
+                  className={`text-right font-medium ${
+                    isAllowance ? "text-green-600" : "text-red-600"
+                  }`}
+                >
                   Rp {item.nominal.toLocaleString("id-ID")}
                 </TableCell>
                 <TableCell className="text-center">
@@ -826,6 +844,11 @@ function ItemsTable({ title, items, onRemoveItem, type }: any) {
                     variant="ghost"
                     size="sm"
                     onClick={() => onRemoveItem(item.id)}
+                    className={
+                      isAllowance
+                        ? "text-green-600 hover:text-green-700 hover:bg-green-50"
+                        : "text-red-600 hover:text-red-700 hover:bg-red-50"
+                    }
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -836,7 +859,11 @@ function ItemsTable({ title, items, onRemoveItem, type }: any) {
               <TableCell colSpan={4} className="text-right font-semibold">
                 Total {isAllowance ? "Tunjangan" : "Potongan"}:
               </TableCell>
-              <TableCell className="text-right font-semibold">
+              <TableCell
+                className={`text-right font-semibold ${
+                  isAllowance ? "text-green-600" : "text-red-600"
+                }`}
+              >
                 Rp {total.toLocaleString("id-ID")}
               </TableCell>
               <TableCell />

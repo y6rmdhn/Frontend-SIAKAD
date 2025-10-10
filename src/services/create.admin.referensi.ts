@@ -112,6 +112,25 @@ const potsReferensiServices = {
   payrollGenerate: (data: any) => {
     return axiosInstance.post(`${endpoint.ADMIN}/payroll/generate`, data);
   },
+  printSlipGaji: (slipIds: any, format: any) => {
+    const requestBody = {
+      slip_ids: slipIds,
+    };
+
+    const config = {
+      params: {
+        format: format,
+      },
+      responseType: "blob",
+    };
+
+    return axiosInstance.post(
+      `${endpoint.ADMIN}/payroll/print-selected`,
+      requestBody,
+      // @ts-ignore
+      config
+    );
+  },
 };
 
 export default potsReferensiServices;

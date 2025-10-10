@@ -975,6 +975,15 @@ const adminServices = {
   getDetailSlipGaji: (id: string) => {
     return axiosInstance.get(`${endpoint.ADMIN}/payroll/slips/${id}`);
   },
+  printSlipGajiBulk: (id: string, format: any) => {
+    return axiosInstance.get(
+      `${endpoint.ADMIN}/payroll/periods/${id}/print-bulk`,
+      {
+        params: { format },
+        responseType: "blob", // <-- TAMBAHKAN INI
+      }
+    );
+  },
 };
 
 export default adminServices;
