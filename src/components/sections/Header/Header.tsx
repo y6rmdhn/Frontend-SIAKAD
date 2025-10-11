@@ -93,7 +93,7 @@ const Header = () => {
         <div className="flex gap-2 md:gap-5 items-center">
           <img
             className="w-14 h-14 hidden md:block"
-            src="/images/logo/uika-logo-2.png"
+            src="/images/logo/logo_emp.png"
             alt="logo-uika"
           />
 
@@ -101,10 +101,10 @@ const Header = () => {
 
           <div className="flex flex-col justify-center">
             <p className="text-white/30 md:text-white font-light md:text-sm text-[10px]">
-              SIM Kepegawaian
+              Sistem Informasi Manajemen Kepegawaian
             </p>
             <h1 className="font-semibold text-white md:text-sm text-[10px]">
-              Universitas Ibn Khaldun
+              PT. ABCD
             </h1>
           </div>
         </div>
