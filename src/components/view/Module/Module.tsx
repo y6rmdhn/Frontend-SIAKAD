@@ -62,15 +62,20 @@ const Module = () => {
             <div className="absolute flex-col py-5 md:py-0 md:flex-row top-0 w-full h-full px-4 sm:px-10 flex justify-between items-center">
               <div className="flex gap-4 items-center">
                 <div className="bg-white p-2 rounded-2xl sm:rounded-3xl overflow-hidden">
-                  <img
+                  {/* <img
                     src="/images/logo/logo-uika-login.webp"
                     alt="logo-uika"
                     className="w-10 md:w-14 lg:w-16"
+                  /> */}
+                  <img
+                    src="/images/logo/logo_emp.png"
+                    alt="logo-uika"
+                    className="w-10 md:w-14 lg:w-16 h-16"
                   />
                 </div>
                 <div className="flex flex-col text-white">
-                  <p className="text-sm">Sistem Informasi Akademik</p>
-                  <h1 className="text-sm font-bold">UNIVERSITAS IBN KHALDUN</h1>
+                  <p className="text-sm">Sistem Informasi Manajemen Kepegawaian</p>
+                  {/* <h1 className="text-sm font-bold">UNIVERSITAS IBN KHALDUN</h1> */}
                 </div>
               </div>
 
@@ -158,7 +163,7 @@ const Module = () => {
                           Administrasi Aplikasi
                         </h1>
                         <p className="text-muted-foreground font-semibold text-sm group-hover:text-white transition-all duration-700">
-                          UIKA
+                          Unit Kerja
                         </p>
                       </div>
 
@@ -171,7 +176,7 @@ const Module = () => {
                           Kepegawaian
                         </h1>
                         <p className="text-muted-foreground font-semibold text-sm group-hover:text-white transition-all duration-700">
-                          UIKA
+                          Unit Kerja
                         </p>
                       </div>
                     </>
