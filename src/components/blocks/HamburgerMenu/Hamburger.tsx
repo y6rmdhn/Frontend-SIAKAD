@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // ini untuk dosen navigasinya
 import kehadiran from "@/constant/NavbarMenuUser/kehadiran";
@@ -19,12 +19,14 @@ import dataRiwayat from "@/constant/NavbarMenuUser/dataRiwayat";
 import operasionalAdminNav from "@/constant/NavbarMenu/operasional";
 import referensiAdminNav from "@/constant/NavbarMenu/referensi";
 import validasiDataAdminNav from "@/constant/NavbarMenu/validasiData";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import payroll from "@/constant/NavbarMenu/payroll/payroll";
 
 const HamburgerButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const userSelector = useSelector((state: RootState) => state.user);
+  const location = useLocation();
+
+  // Cek apakah path mengandung '/admin'
+  const isAdminPath = location.pathname.includes("/admin");
 
   const topBarVariants = {
     closed: { rotate: 0, y: 0, backgroundColor: "#FFFFFF" },
@@ -64,6 +66,7 @@ const HamburgerButton = () => {
                       <Link
                         to={child.href}
                         className="text-xs text-gray-700 hover:underline block py-1"
+                        onClick={() => setIsOpen(false)}
                       >
                         {child.title}
                       </Link>
@@ -76,6 +79,7 @@ const HamburgerButton = () => {
             <Link
               to={item.href}
               className="text-xs text-gray-700 hover:underline block px-4 py-2"
+              onClick={() => setIsOpen(false)}
             >
               {item.title}
             </Link>
@@ -158,14 +162,16 @@ const HamburgerButton = () => {
               transition={{ duration: 0.5 }}
             >
               <div className="flex flex-col gap-2">
-                {userSelector.role === "Admin" ? (
+                {isAdminPath ? (
+                  // Menu untuk Admin
                   <>
                     <Link to="/admin/dasboard">
                       <Button
                         className="w-full justify-start pl-0 py-0 text-xs"
                         variant="ghost"
+                        onClick={() => setIsOpen(false)}
                       >
-                        Dasboard
+                        Dashboard
                       </Button>
                     </Link>
                     <Separator className="w-full h-1" />
@@ -173,6 +179,7 @@ const HamburgerButton = () => {
                       <Button
                         className="w-full justify-start pl-0 py-0 text-xs"
                         variant="ghost"
+                        onClick={() => setIsOpen(false)}
                       >
                         Pegawai
                       </Button>
@@ -180,13 +187,15 @@ const HamburgerButton = () => {
                     <Separator className="w-full h-1" />
                   </>
                 ) : (
+                  // Menu untuk User
                   <>
                     <Link to="/dasboard">
                       <Button
                         className="w-full justify-start pl-0 py-0 text-xs"
                         variant="ghost"
+                        onClick={() => setIsOpen(false)}
                       >
-                        Dasboard
+                        Dashboard
                       </Button>
                     </Link>
                     <Separator className="w-full h-1" />
@@ -194,6 +203,7 @@ const HamburgerButton = () => {
                       <Button
                         className="w-full justify-start pl-0 py-0 text-xs"
                         variant="ghost"
+                        onClick={() => setIsOpen(false)}
                       >
                         Biodata
                       </Button>
@@ -203,9 +213,19 @@ const HamburgerButton = () => {
                 )}
               </div>
 
-              {userSelector.role === "Admin" ? (
+              {isAdminPath ? (
+                // Menu Accordion untuk Admin
                 <Accordion type="single" collapsible className="w-full">
                   {/* Operasional Admin */}
+                  <AccordionItem value="operasional-admin">
+                    <AccordionTrigger className="text-xs">
+                      Payroll
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {renderNavItems(payroll, "operasional-admin")}
+                    </AccordionContent>
+                  </AccordionItem>
+
                   <AccordionItem value="operasional-admin">
                     <AccordionTrigger className="text-xs">
                       Operasional
@@ -239,6 +259,7 @@ const HamburgerButton = () => {
                   </AccordionItem>
                 </Accordion>
               ) : (
+                // Menu Accordion untuk User
                 <Accordion type="single" collapsible className="w-full">
                   {/* Kehadiran */}
                   <AccordionItem value="kehadiran">
@@ -251,6 +272,7 @@ const HamburgerButton = () => {
                           key={index}
                           to={item.href}
                           className="text-xs text-gray-700 hover:underline block px-4 py-2 border-b border-gray-300 last:border-b-0"
+                          onClick={() => setIsOpen(false)}
                         >
                           {item.title}
                         </Link>

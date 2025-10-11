@@ -73,6 +73,9 @@ const JabatanStrukturalRow: React.FC<JabatanStrukturalRowProps> = ({
         <TableCell className="text-center text-xs sm:text-sm">
           {node.unit_kerja_nama}
         </TableCell>
+        <TableCell className="text-center text-xs sm:text-sm">
+          {node.tunjangan}
+        </TableCell>
         <TableCell className="text-center">
           <div className="flex justify-center items-center w-full h-full">
             {/* The links can be made more generic if needed */}

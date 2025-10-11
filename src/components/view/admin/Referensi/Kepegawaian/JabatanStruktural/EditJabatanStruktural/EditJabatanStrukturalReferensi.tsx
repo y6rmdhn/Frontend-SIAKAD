@@ -37,8 +37,9 @@ export const jabatanStrukturalSchema = z.object({
     .email({ message: "Alamat email tidak valid" })
     .optional()
     .or(z.literal("")),
-  eselon_id: z.string().min(1, { message: "Eselon wajib diisi" }),
-  pangkat_id: z.string().min(1, { message: "Pangkat wajib diisi" }),
+  // eselon_id: z.string().min(1, { message: "Eselon wajib diisi" }),
+  // pangkat_id: z.string().min(1, { message: "Pangkat wajib diisi" }),
+  tunjangan: z.string().min(1, { message: "tunjangan is required" }),
   beban_sks: z.string().optional(),
   is_pimpinan: z.boolean().optional(),
   aktif: z.boolean().optional(),
@@ -65,8 +66,9 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
       parent_jabatan: initialData.parent_jabatan || "",
       unit_kerja_id: String(initialData.unit_kerja_id) || "",
       alamat_email: initialData.alamat_email || "",
-      eselon_id: String(initialData.eselon_id) || "",
-      pangkat_id: String(initialData.pangkat_id) || "",
+      // eselon_id: String(initialData.eselon_id) || "",
+      // pangkat_id: String(initialData.pangkat_id) || "",
+      tunjangan: initialData.tunjangan || "",
       beban_sks: String(initialData.beban_sks) || "",
       is_pimpinan: initialData.is_pimpinan || false,
       aktif: initialData.aktif || false,
@@ -212,7 +214,7 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
               name="alamat_email"
               labelStyle="text-[#3F6FA9]"
             />
-            <InfiniteScrollSelect
+            {/* <InfiniteScrollSelect
               form={form}
               label="Eselon"
               name="eselon_id"
@@ -237,6 +239,13 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
               itemValue="id"
               itemLabel="nama_golongan"
               initialSelectedItem={initialData?.pangkat}
+            /> */}
+            <FormFieldInput
+              form={form}
+              label="Tunjangan"
+              name="tunjangan"
+              labelStyle="text-[#3F6FA9]"
+              required={false}
             />
             <FormFieldInput
               form={form}

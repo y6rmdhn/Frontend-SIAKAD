@@ -152,20 +152,10 @@ const DetailDataJabatanStrukturalReferensi = () => {
               <div className="space-y-2">
                 <div className="flex flex-col sm:flex-row border-b p-2 gap-4">
                   <Label className="text-[#2572BE] text-xs sm:text-sm w-43 shrink-0">
-                    Eselon
+                    Tunjangan
                   </Label>
                   <Label className="text-xs sm:text-sm text-left flex-1">
-                    {queryData?.eselon?.nama_eselon || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row border-b p-2 gap-4">
-                  <Label className="text-[#2572BE] text-xs sm:text-sm w-43 shrink-0">
-                    Pangkat
-                  </Label>
-                  <Label className="text-xs sm:text-sm text-left flex-1">
-                    {queryData?.pangkat
-                      ? `${queryData.pangkat.pangkat} - ${queryData.pangkat.nama_golongan}`
-                      : "-"}
+                    {queryData?.tunjangan ? `${queryData.tunjangan}` : "-"}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row border-b p-2 gap-4">

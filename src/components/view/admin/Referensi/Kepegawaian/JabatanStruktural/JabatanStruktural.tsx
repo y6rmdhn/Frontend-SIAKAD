@@ -32,6 +32,7 @@ interface JabatanStrukturalItem {
   kode: string;
   singkatan: string; // Added singkatan here
   parent_jabatan: string | null;
+  tunjangan: string | null;
   jenis_jabatan_struktural: {
     jenis_jabatan_struktural: string;
   };
@@ -48,6 +49,7 @@ export interface JabatanStrukturalNode {
   singkatan: string; // Changed from nama_jabatan
   parent_jabatan_nama: string | null;
   unit_kerja_nama: string;
+  tunjangan: string;
   children: JabatanStrukturalNode[];
 }
 
@@ -63,14 +65,18 @@ interface JabatanStrukturalApiResponse {
 }
 
 // The core logic to transform API data and build the tree structure
+// The core logic to transform API data and build the tree structure
 function buildTree(items: JabatanStrukturalItem[]): JabatanStrukturalNode[] {
   const itemMap: { [key: string]: JabatanStrukturalNode } = {};
   const roots: JabatanStrukturalNode[] = [];
 
   // First pass: Create a map of all items and their abbreviations (singkatan)
   const nameMap: { [key: string]: string } = {};
+  const tunjanganMap: { [key: string]: string | null } = {}; // Tambahkan map untuk tunjangan
+
   items.forEach((item) => {
     nameMap[item.kode] = item.singkatan;
+    tunjanganMap[item.kode] = item.tunjangan; // Simpan tunjangan
   });
 
   // Second pass: Create the nodes with all necessary data flattened
@@ -78,12 +84,13 @@ function buildTree(items: JabatanStrukturalItem[]): JabatanStrukturalNode[] {
     itemMap[item.kode] = {
       id: item.id,
       kode: item.kode,
-      singkatan: item.singkatan, // Use singkatan
+      singkatan: item.singkatan,
       // Look up the parent's abbreviation (singkatan) using the map
       parent_jabatan_nama: item.parent_jabatan
         ? nameMap[item.parent_jabatan] || item.parent_jabatan
         : "-",
       unit_kerja_nama: item.unit_kerja.nama_unit,
+      tunjangan: item.tunjangan || "-", // Ambil tunjangan dari item, berikan fallback "-"
       children: [],
     };
   });
@@ -242,6 +249,9 @@ const JabatanStruktural = () => {
             </TableHead>
             <TableHead className="text-center text-xs sm:text-sm">
               Unit Kerja
+            </TableHead>
+            <TableHead className="text-center text-xs sm:text-sm">
+              Tunjangan
             </TableHead>
             <TableHead className="text-center text-xs sm:text-sm">
               Aksi
