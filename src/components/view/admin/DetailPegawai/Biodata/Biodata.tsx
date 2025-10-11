@@ -10,6 +10,12 @@ import menuDetail from "@/constant/detailPegawaiMenu/index";
 import DetailPegawaiSidebar from "../../../../blocks/PegawaiDetailSidebar/PegawaiDetailSidebar";
 import accordionContent from "../../../../../constant/arccodionContent/arccodionContent";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  wilayahServices,
+  formatProvinces,
+  formatRegencies,
+  formatDistricts,
+} from "@/services/wilayahService";
 
 // --- START DEFINISI TIPE ---
 
@@ -83,6 +89,7 @@ interface PegawaiDetail {
   no_telepon_domisili_kontak: string;
   no_telephone_kantor: string | null;
   no_handphone: string;
+  no_whatsapp: string;
   kepemilikan_nohp_utama: string | null;
   email_pribadi: string;
   no_ktp: string;
@@ -107,6 +114,12 @@ interface PegawaiDetail {
 // Tipe untuk data suku
 interface Suku {
   nama_suku: string;
+}
+
+// Tipe untuk data wilayah
+interface Wilayah {
+  id: string;
+  name: string;
 }
 
 // --- END DEFINISI TIPE ---
@@ -138,6 +151,48 @@ const Biodata = () => {
     },
     enabled: !!data?.suku_id,
   });
+
+  // Query untuk data provinsi
+  const { data: provincesData } = useQuery({
+    queryKey: ["provinces"],
+    queryFn: async () => {
+      const response = await wilayahServices.getProvinces();
+      return formatProvinces(response.data);
+    },
+  });
+
+  // Query untuk data kota/kabupaten berdasarkan provinsi
+  const { data: regenciesData } = useQuery({
+    queryKey: ["regencies", data?.provinsi],
+    queryFn: async () => {
+      if (!data?.provinsi) return [];
+      const response = await wilayahServices.getRegencies(data.provinsi);
+      return formatRegencies(response.data);
+    },
+    enabled: !!data?.provinsi,
+  });
+
+  // Query untuk data kecamatan berdasarkan kota
+  const { data: districtsData } = useQuery({
+    queryKey: ["districts", data?.kota],
+    queryFn: async () => {
+      if (!data?.kota) return [];
+      const response = await wilayahServices.getDistricts(data.kota);
+      return formatDistricts(response.data);
+    },
+    enabled: !!data?.kota,
+  });
+
+  // Helper function untuk mengambil nama wilayah berdasarkan ID
+  const getWilayahName = (
+    id: string | null,
+    wilayahData: Wilayah[] | undefined,
+    fallback: string = "-"
+  ) => {
+    if (!id || !wilayahData) return fallback;
+    const wilayah = wilayahData.find((item) => item.id === id);
+    return wilayah ? wilayah.name : fallback;
+  };
 
   // Helper function untuk mengambil nilai nested
   const getNestedValue = (obj: any, path: string, fallback: string = "-") => {
@@ -234,19 +289,21 @@ const Biodata = () => {
     ) : (
       "-"
     ),
-    data?.provinsi || "-",
-    data?.kota || "-",
-    data?.kecamatan || "-",
+    // @ts-ignore
+    getWilayahName(data?.provinsi, provincesData),
+    // @ts-ignore
+    getWilayahName(data?.kota, regenciesData),
+    // @ts-ignore
+
+    getWilayahName(data?.kecamatan, districtsData),
     data?.alamat_domisili || "-",
     data?.kode_pos || "-",
   ];
 
   const dataAlamatRight = [
     data?.jarak_rumah_domisili || "-",
-    data?.no_telepon_domisili_kontak || "-",
-    data?.no_telephone_kantor || "-",
     data?.no_handphone || "-",
-    data?.kepemilikan_nohp_utama || "-",
+    data?.no_whatsapp || "-",
   ];
 
   // kependudukan
@@ -255,12 +312,15 @@ const Biodata = () => {
     data?.no_ktp || "-",
     data?.no_kk || "-",
     data?.warga_negara || "-",
-    data?.provinsi || "-",
-    data?.kota || "-",
+    // @ts-ignore
+    getWilayahName(data?.provinsi, provincesData),
+    // @ts-ignore
+    getWilayahName(data?.kota, regenciesData),
   ];
 
   const dataKependudukanRight = [
-    data?.kecamatan || "-",
+    // @ts-ignore
+    getWilayahName(data?.kecamatan, districtsData),
     data?.alamat_kependudukan || "-",
     data?.kode_pos || "-",
     getSuku?.nama_suku || "-",
@@ -364,6 +424,7 @@ const Biodata = () => {
       <DetailPegawaiSidebar
         currentPegawaiId={params.id}
         accordionData={accordionContent}
+        pegawaiName={data?.nama || "User"} // Pass nama pegawai ke sidebar
       />
       <div className="flex flex-col gap-20 w-full">
         <DetailPegawai

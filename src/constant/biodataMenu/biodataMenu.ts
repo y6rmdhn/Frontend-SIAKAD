@@ -1,6 +1,6 @@
 const biodataMenu = [
   { title: "Kepegawaian", show: "kepegawaian" },
-  { title: "Dosen", show: "dosen" },
+  // { title: "Dosen", show: "dosen" },
   { title: "Alamat Domisili & Kontak", show: "domisili" },
   { title: "Kependudukan", show: "kependudukan" },
   { title: "Rekening Bank", show: "rekening-bank" },

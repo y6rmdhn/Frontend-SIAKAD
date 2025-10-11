@@ -59,10 +59,8 @@ const alamatLeftColumn = [
 
 const alamatRightColumn = [
   { name: "Jarak Rumah(KM)" },
-  { name: "No. Telpon" },
-  { name: "No. Telpon Kantor" },
-  { name: "No HP Utama" },
-  { name: "Kepemilikan No HP Utama" },
+  { name: "No. Handphone" },
+  { name: "No. Whatsapp" },
 ];
 
 // kependudukan

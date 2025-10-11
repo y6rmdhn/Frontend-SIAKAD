@@ -10,13 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { toast } from "sonner";
-import adminServices from "@/services/admin.services";
-import { useQuery } from "@tanstack/react-query";
-import dosenServices from "@/services/dosen.services";
-import environment from "@/config/environments";
 
 interface AccordionItemData {
   label: string;
@@ -31,6 +24,7 @@ interface AccordionSectionData {
 interface DetailPegawaiSidebarProps {
   currentPegawaiId: string | undefined;
   accordionData: AccordionSectionData[];
+  pegawaiName?: string; // Tambahkan prop untuk nama pegawai
 }
 
 const DIM_DELAY = 3000;
@@ -40,6 +34,7 @@ const FULL_OPACITY = 1.0;
 const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
   currentPegawaiId,
   accordionData,
+  pegawaiName = "User", // Default name jika tidak disediakan
 }) => {
   const [openAccordion, setOpenAccordion] = useState<string | undefined>(
     undefined
@@ -54,42 +49,27 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
   const pegawaiIdForNavigation = currentPegawaiId || "";
   const sidebarWidth = "18rem";
 
-  const userSelector = useSelector((state: RootState) => state.user);
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const [, setInitials] = useState<string>("");
-  const role = useSelector((state: RootState) => state.user.role);
+  // Generate initials from pegawai name
+  const generateInitials = (name: string): string => {
+    const nameParts = name.split(" ");
+    let generatedInitials = "";
 
-  const { data: profileData } = useQuery({
-    queryKey: ["profile-sidebar-pegawai"],
-    queryFn: async () => {
-      if (!accessToken) return null;
-
-      try {
-        let response;
-        if (role === "Admin") {
-          response = await adminServices.getProfileAdmin();
-        } else {
-          response = await dosenServices.getProfileUser();
-        }
-        console.log(response.data);
-        return response.data.data;
-      } catch (error) {
-        console.error("Failed to fetch profile data:", error);
-        toast.error("Gagal memuat data profil.");
-        return null;
-      }
-    },
-  });
-
-  useEffect(() => {
-    if (userSelector.name) {
-      const initials = userSelector.name
-        .split(" ")
+    if (nameParts.length === 1) {
+      // Jika hanya satu kata, ambil 2 huruf pertama
+      generatedInitials = nameParts[0].substring(0, 2).toUpperCase();
+    } else {
+      // Jika lebih dari satu kata, ambil huruf pertama dari dua kata pertama
+      generatedInitials = nameParts
+        .slice(0, 2)
         .map((word) => word.charAt(0))
-        .join("");
-      setInitials(initials);
+        .join("")
+        .toUpperCase();
     }
-  }, [userSelector.name]);
+
+    return generatedInitials;
+  };
+
+  const initials = generateInitials(pegawaiName);
 
   useEffect(() => {
     let sectionToOpenBasedOnUrl: string | undefined = undefined;
@@ -211,22 +191,25 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
     open: { opacity: 1, x: 0 },
   };
 
+  // Function to render avatar with initials
+  const renderAvatar = () => {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-blue-500 text-white">
+        <div className="font-semibold text-2xl md:text-3xl mb-1">
+          {initials}
+        </div>
+        <div className="text-xs md:text-sm text-center font-medium mt-1">
+          {pegawaiName}
+        </div>
+      </div>
+    );
+  };
+
   const sidebarContent = (isMobile: boolean = false) => (
     <>
       <motion.div variants={itemVariants} className="mb-8 md:mb-10">
-        <div className="w-36 h-36 md:w-44 md:h-44 overflow-hidden rounded-md border border-gray-200">
-          <img
-            src={
-              profileData?.file_foto_url
-                ? `${environment.API_IMAGE_URL_SECOND}${profileData.file_foto_url}`
-                : "/images/default-avatar.png"
-            }
-            className="object-cover w-full h-full"
-            alt="profil-pegawai"
-            onError={(e) => {
-              e.currentTarget.src = "/images/default-avatar.png";
-            }}
-          />
+        <div className="w-36 h-36 md:w-44 md:h-44 overflow-hidden rounded-md border border-gray-200 bg-blue-500">
+          {renderAvatar()}
         </div>
       </motion.div>
 
