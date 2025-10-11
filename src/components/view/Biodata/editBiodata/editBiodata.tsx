@@ -78,7 +78,7 @@ const dataPegawaiSchema = z.object({
   email_pribadi: optionalEmail,
   golongan: z.string().optional(),
   jabatan_fungsional_id: z.string().optional(),
-  jabatan_akademik_id: z.string().optional(),
+  // jabatan_akademik_id: z.string().optional(),
   no_ktp: z
     .string()
     .trim()
@@ -237,7 +237,7 @@ const EditBiodataPageUserComponent = () => {
           email_pegawai: data.email_pegawai || "",
           email_pribadi: data.email_pribadi || "",
           jabatan_fungsional_id: data.jabatan_fungsional_id?.toString() || "",
-          jabatan_akademik_id: data.jabatan_struktural_id?.toString() || "",
+          // jabatan_akademik_id: data.jabatan_struktural_id?.toString() || "",
 
           // Data domisili
           no_ktp: data.no_ktp || "",
@@ -467,18 +467,6 @@ const EditBiodataPageUserComponent = () => {
                   queryFn={adminServices.getGolonganDarah}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
-                />
-                <InfiniteScrollSelect
-                  form={form}
-                  label="Role"
-                  name="role_id"
-                  labelStyle="text-[#3F6FA9]"
-                  placeholder="--Pilih Role--"
-                  required={false}
-                  queryKey="role-id-select"
-                  queryFn={adminServices.getRole}
-                  itemValue="id"
-                  itemLabel="nama"
                 />
               </div>
 

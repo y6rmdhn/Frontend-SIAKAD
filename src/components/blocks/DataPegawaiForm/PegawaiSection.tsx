@@ -153,23 +153,23 @@ const KepegawaianSection = ({
       {isReadOnly ? (
         <FormFieldInput
           form={form}
-          label="Jabatan Akademik"
-          name="jabatan_akademik_id"
+          label="Jenis Pegawai"
+          name="role_id"
           labelStyle="text-[#3F6FA9]"
           readOnly
         />
       ) : (
         <InfiniteScrollSelect
           form={form}
-          label="Jabatan Akademik"
-          name="jabatan_akademik_id"
+          label="Jenis Pegawai"
+          name="role_id"
           labelStyle="text-[#3F6FA9]"
-          placeholder="--Pilih Jabatan Akademik --"
+          placeholder="--Pilih Jenis Pegawai--"
           required={false}
-          queryKey="jabatan-akademik-select"
-          queryFn={adminServices.getJabatanAkademik}
+          queryKey="role-id-select"
+          queryFn={adminServices.getRole}
           itemValue="id"
-          itemLabel="jabatan_akademik"
+          itemLabel="nama"
         />
       )}
     </div>

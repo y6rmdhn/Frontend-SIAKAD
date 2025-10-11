@@ -13,6 +13,35 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // --- START DEFINISI TIPE ---
 
+// Tipe untuk hubungan kerja
+interface HubunganKerja {
+  id: string;
+  kode: string;
+  nama_hub_kerja: string;
+  status_aktif: boolean;
+  pns: boolean;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+// Tipe untuk unit kerja
+interface UnitKerja {
+  id: string;
+  kode_unit: string;
+  nama_unit: string;
+}
+
+// Tipe untuk jabatan fungsional
+interface JabatanFungsional {
+  id: string;
+  kode: string;
+  nama_jabatan: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 // Tipe untuk data detail pegawai dari API
 interface PegawaiDetail {
   id: string;
@@ -24,16 +53,16 @@ interface PegawaiDetail {
   jenis_kelamin: "L" | "P";
   agama: string;
   tempat_lahir: string;
-  tanggal_lahir: string; // ISO string date
+  tanggal_lahir: string;
   kode_status_pernikahan: number;
   unit_kerja: UnitKerja;
   status_aktif: boolean;
-  hubungan_kerja: string;
+  hubungan_kerja: HubunganKerja;
   email_pt: string;
   no_akun_finger: string | null;
   jabatan_atasan: string | null;
   jabatan_akademik: string;
-  jabatan_fungsional: string;
+  jabatan_fungsional: JabatanFungsional;
   bidang_keahlian: string | null;
   homebase: string;
   orchid_id: string | null;
@@ -43,7 +72,7 @@ interface PegawaiDetail {
   nupn: string | null;
   nbm: string | null;
   rumpun_bidang: string | null;
-  tanggal_sertifikasi_dosen: string | null; // ISO string date
+  tanggal_sertifikasi_dosen: string | null;
   file_sertifikasi_dosen: string | null;
   provinsi: string;
   kota: string;
@@ -80,22 +109,15 @@ interface Suku {
   nama_suku: string;
 }
 
-interface UnitKerja {
-  id: string;
-  kode_unit: string;
-  nama_unit: string;
-}
-
 // --- END DEFINISI TIPE ---
 
 const Biodata = () => {
   const [show, setShow] = useState("kepegawaian");
-  const params = useParams<{ id: string }>(); // Menambahkan tipe pada params
+  const params = useParams<{ id: string }>();
 
   const { data, isLoading } = useQuery<PegawaiDetail>({
     queryKey: ["detail-pegawai", params.id],
     queryFn: async () => {
-      // FIX: Memastikan params.id ada dan mengonversinya ke number
       if (!params.id) {
         throw new Error("ID Pegawai tidak ditemukan");
       }
@@ -103,19 +125,30 @@ const Biodata = () => {
       console.log("ini detail ", response.data.data);
       return response.data.data;
     },
-    enabled: !!params.id, // Query hanya akan berjalan jika params.id ada
+    enabled: !!params.id,
   });
 
   const { data: getSuku } = useQuery<Suku>({
     queryKey: ["suku", data?.suku_id],
     queryFn: async () => {
-      if (!data?.suku_id) return { nama_suku: "-" }; // Return default jika tidak ada suku_id
+      if (!data?.suku_id) return { nama_suku: "-" };
       const response = await adminServices.getSuku(data.suku_id);
       console.log("ini suku ", response.data.data);
       return response.data.data;
     },
-    enabled: !!data?.suku_id, // Query hanya berjalan jika data dan suku_id ada
+    enabled: !!data?.suku_id,
   });
+
+  // Helper function untuk mengambil nilai nested
+  const getNestedValue = (obj: any, path: string, fallback: string = "-") => {
+    if (!obj) return fallback;
+
+    const value = path.split(".").reduce((current, key) => {
+      return current && current[key] !== undefined ? current[key] : undefined;
+    }, obj);
+
+    return value !== undefined ? value : fallback;
+  };
 
   // biodata
   const datasLeft = [
@@ -151,9 +184,9 @@ const Biodata = () => {
 
   // kepegawaian
   const dataKepegawaianLeft = [
-    data?.unit_kerja?.nama_unit || "-",
+    getNestedValue(data, "unit_kerja.nama_unit"),
     data?.status_aktif ? "Aktif" : "Tidak Aktif",
-    data?.hubungan_kerja || "-",
+    getNestedValue(data, "hubungan_kerja.nama_hub_kerja"),
     data?.email_pt || "-",
     data?.no_akun_finger || "-",
   ];
@@ -161,7 +194,7 @@ const Biodata = () => {
   const dataKepegawaianRight = [
     data?.jabatan_atasan || "-",
     data?.jabatan_akademik || "-",
-    data?.jabatan_fungsional || "-",
+    getNestedValue(data, "jabatan_fungsional.nama_jabatan"),
   ];
 
   // dosen

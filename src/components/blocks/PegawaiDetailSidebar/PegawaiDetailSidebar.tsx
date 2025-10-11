@@ -1,10 +1,4 @@
-// DetailPegawaiSidebar.tsx
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback, // Import useCallback
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -39,9 +33,9 @@ interface DetailPegawaiSidebarProps {
   accordionData: AccordionSectionData[];
 }
 
-const DIM_DELAY = 3000; // 3 detik hingga meredup
-const DIMMED_OPACITY = 0.4; // Opacity saat redup
-const FULL_OPACITY = 1.0; // Opacity normal
+const DIM_DELAY = 3000;
+const DIMMED_OPACITY = 0.4;
+const FULL_OPACITY = 1.0;
 
 const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
   currentPegawaiId,
@@ -54,7 +48,6 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
   const location = useLocation();
   const sidebarContentRef = useRef<HTMLDivElement>(null);
 
-  // State dan Ref untuk opacity tombol toggle
   const [buttonOpacity, setButtonOpacity] = useState(FULL_OPACITY);
   const dimTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -144,29 +137,23 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
     };
   }, [isMobileMenuOpen]);
 
-  // Fungsi untuk memulai timer meredupkan tombol
   const startDimTimer = useCallback(() => {
     clearTimeout(dimTimerRef.current!);
     dimTimerRef.current = setTimeout(() => {
-      // Hanya meredup jika menu tidak sedang terbuka
       if (!isMobileMenuOpen) {
         setButtonOpacity(DIMMED_OPACITY);
       }
     }, DIM_DELAY);
-  }, [isMobileMenuOpen]); // isMobileMenuOpen sebagai dependency
+  }, [isMobileMenuOpen]);
 
-  // Efek untuk mengatur opacity tombol berdasarkan status menu mobile dan interaksi
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Jika menu terbuka, tombol kembali ke opacity penuh dan batalkan timer
       setButtonOpacity(FULL_OPACITY);
       clearTimeout(dimTimerRef.current!);
     } else {
-      // Jika menu tertutup, tombol kembali ke opacity penuh lalu mulai timer untuk meredup
       setButtonOpacity(FULL_OPACITY);
       startDimTimer();
     }
-    // Cleanup timer saat komponen unmount atau isMobileMenuOpen berubah
     return () => {
       clearTimeout(dimTimerRef.current!);
     };
@@ -178,7 +165,6 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
   };
 
   const handleButtonMouseLeave = () => {
-    // Jika menu tidak terbuka, mulai ulang timer untuk meredup
     if (!isMobileMenuOpen) {
       startDimTimer();
     }
@@ -230,9 +216,16 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
       <motion.div variants={itemVariants} className="mb-8 md:mb-10">
         <div className="w-36 h-36 md:w-44 md:h-44 overflow-hidden rounded-md border border-gray-200">
           <img
-            src={`${environment.API_IMAGE_URL_SECOND}${profileData?.file_foto_url}`}
+            src={
+              profileData?.file_foto_url
+                ? `${environment.API_IMAGE_URL_SECOND}${profileData.file_foto_url}`
+                : "/images/default-avatar.png"
+            }
             className="object-cover w-full h-full"
             alt="profil-pegawai"
+            onError={(e) => {
+              e.currentTarget.src = "/images/default-avatar.png";
+            }}
           />
         </div>
       </motion.div>
@@ -342,11 +335,11 @@ const DetailPegawaiSidebar: React.FC<DetailPegawaiSidebarProps> = ({
         variants={toggleButtonVariants}
         initial="closed"
         animate={isMobileMenuOpen ? "open" : "closed"}
-        style={{ opacity: buttonOpacity }} // Terapkan state opacity di sini
-        transition={{ opacity: { duration: 0.3 } }} // Tambahkan transisi untuk opacity
+        style={{ opacity: buttonOpacity }}
+        transition={{ opacity: { duration: 0.3 } }}
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        onMouseEnter={handleButtonMouseEnter} // Handler saat mouse masuk
-        onMouseLeave={handleButtonMouseLeave} // Handler saat mouse keluar
+        onMouseEnter={handleButtonMouseEnter}
+        onMouseLeave={handleButtonMouseLeave}
         className="min-[1180px]:hidden fixed left-0 top-1/2 -translate-y-1/2 z-[60] bg-[#169EF4] text-white px-1 py-3 rounded-r-md shadow-lg focus:outline-none"
         aria-label={isMobileMenuOpen ? "Tutup menu" : "Buka menu"}
       >

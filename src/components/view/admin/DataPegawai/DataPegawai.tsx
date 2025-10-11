@@ -84,7 +84,7 @@ const dataPegawaiSchema = z.object({
   golongan: z.string().optional(),
   // DIPERBAIKI: Validasi untuk jabatan_fungsional_id diaktifkan kembali
   jabatan_fungsional_id: z.string().optional(),
-  jabatan_akademik_id: z.string().optional(),
+  // jabatan_akademik_id: z.string().optional(),
 
   // --- Domisili ---
   no_ktp: z
@@ -210,7 +210,7 @@ const DataPegawai = () => {
       email_pribadi: "",
       golongan: "",
       jabatan_fungsional_id: "",
-      jabatan_akademik_id: "",
+      // jabatan_akademik_id: "",
       no_ktp: "",
       no_kk: "",
       warga_negara: "",
@@ -443,18 +443,6 @@ const DataPegawai = () => {
                   queryFn={adminServices.getGolonganDarah}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
-                />
-                <InfiniteScrollSelect
-                  form={form}
-                  label="Role"
-                  name="role_id"
-                  labelStyle="text-[#3F6FA9]"
-                  placeholder="--Pilih Role--"
-                  required={false}
-                  queryKey="role-id-select"
-                  queryFn={adminServices.getRole}
-                  itemValue="id"
-                  itemLabel="nama"
                 />
               </div>
 
