@@ -46,6 +46,8 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/master-pangkat/${id}`, payload),
   eselon: (id: string, payload: IStatusEselon) =>
     axiosInstance.put(`${endpoint.ADMIN}/eselon/${id}`, payload),
+  putSettingKehadiran: (payload: SettingKehadiranValues, id: string) =>
+    axiosInstance.post(`${endpoint.ADMIN}/setting-kehadiran/${id}`, payload),
   createSettingKehadiran: (payload: SettingKehadiranValues) =>
     axiosInstance.post(`${endpoint.ADMIN}/setting-kehadiran`, payload),
   updateSettingKehadiran: (payload: SettingKehadiranValues) =>

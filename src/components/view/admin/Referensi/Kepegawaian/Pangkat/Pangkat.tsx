@@ -32,15 +32,14 @@ import putReferensiServices from "@/services/put.admin.referensi.ts";
 import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
 import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 
-// Define interface for the data item
 interface pangkatItem {
-  id: string; // ✅ DIUBAH: number -> string
+  id: string;
   pangkat: string;
   nama_golongan: string;
   tunjangan: string;
+  potongan: string;
 }
 
-// Define interface for the API response
 interface pangkatResponse {
   data: pangkatItem[];
   links: any[];
@@ -50,10 +49,11 @@ interface pangkatResponse {
 }
 
 const pangkatSchema = z.object({
-  id: z.string().optional(), // ✅ DIUBAH: number -> string
+  id: z.string().optional(),
   pangkat: z.string().min(1, "Pangkat tidak boleh kosong"),
   nama_golongan: z.string().min(1, "Nama Golongan tidak boleh kosong"),
   tunjangan: z.string().min(1, "Tunjangan tidak boleh kosong"),
+  potongan: z.string().min(1, "Potongan tidak boleh kosong"),
 });
 
 type pangkatFormvalue = z.infer<typeof pangkatSchema>;
@@ -63,17 +63,18 @@ const Pangkat = () => {
   const queryClient = useQueryClient();
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editingItemId, setEditingItemId] = useState<string | null>(null); // ✅ DIUBAH: number -> string
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(
     Number(searchParam.get("page") || 1)
   );
 
   const form = useForm<pangkatFormvalue>({
     defaultValues: {
-      id: "", // ✅ DIUBAH: 0 -> string kosong
+      id: "",
       pangkat: "",
       nama_golongan: "",
       tunjangan: "",
+      potongan: "",
     },
     resolver: zodResolver(pangkatSchema),
   });
@@ -93,7 +94,7 @@ const Pangkat = () => {
   // tambah data
   const { mutate: postPangkat } = useMutation({
     mutationFn: (data: pangkatFormvalue) => {
-      const { id, ...createData } = data; // Hapus id untuk create
+      const { id, ...createData } = data;
       return potsReferensiServices.pangkat(createData);
     },
     onSuccess: () => {
@@ -130,9 +131,7 @@ const Pangkat = () => {
 
   // hapus data
   const { mutate: deletePangkat } = useMutation({
-    mutationFn: (
-      id: string // ✅ DIUBAH: number -> string
-    ) => deleteReferensiServices.deteleMasterPangkat(id),
+    mutationFn: (id: string) => deleteReferensiServices.deteleMasterPangkat(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["pangkat"] });
@@ -150,7 +149,6 @@ const Pangkat = () => {
   });
 
   const handleDelete = (id: string) => {
-    // ✅ DIUBAH: number -> string
     deletePangkat(id);
   };
 
@@ -171,6 +169,7 @@ const Pangkat = () => {
       pangkat: item.pangkat,
       nama_golongan: item.nama_golongan,
       tunjangan: item.tunjangan,
+      potongan: item.potongan,
     });
 
     setIsEditMode(true);
@@ -244,10 +243,11 @@ const Pangkat = () => {
                     onClick={() => {
                       if (!isEditMode) {
                         form.reset({
-                          id: "", // ✅ DIUBAH: 0 -> string kosong
+                          id: "",
                           pangkat: "",
                           nama_golongan: "",
                           tunjangan: "",
+                          potongan: "",
                         });
                         setIsAddData(true);
                         searchParam.set("page", "1");
@@ -278,6 +278,9 @@ const Pangkat = () => {
                   </TableHead>
                   <TableHead className="text-center text-xs sm:text-sm">
                     Detail Tunjangan
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
+                    Potongan
                   </TableHead>
                   <TableHead className="text-center text-xs sm:text-sm">
                     Aksi
@@ -314,6 +317,16 @@ const Pangkat = () => {
                         required={false}
                       />
                     </TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        form={form}
+                        name="potongan"
+                        required={false}
+                        type="number"
+                      />
+                    </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">
                         <Button
@@ -347,6 +360,9 @@ const Pangkat = () => {
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.tunjangan}
+                    </TableCell>
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      {item.potongan}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">
