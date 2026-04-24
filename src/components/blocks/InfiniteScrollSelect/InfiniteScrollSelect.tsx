@@ -28,6 +28,8 @@ type InfiniteScrollSelectProps = {
   itemValue: string;
   itemLabel: string;
   initialSelectedItem?: Record<string, any> | null;
+  disabled?: boolean;
+  onSelectLabel?: (label: string) => void;
 };
 
 export const InfiniteScrollSelect = ({
@@ -42,6 +44,8 @@ export const InfiniteScrollSelect = ({
   itemValue,
   itemLabel,
   initialSelectedItem,
+  disabled,
+  onSelectLabel,
 }: InfiniteScrollSelectProps) => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
@@ -51,46 +55,42 @@ export const InfiniteScrollSelect = ({
         return response.data.data;
       },
       initialPageParam: 1,
+      enabled: !disabled,
       getNextPageParam: (lastPage) => {
-        const paginationSource = lastPage;
+        const pagination = lastPage?.pagination;
 
         if (
-          !paginationSource ||
-          paginationSource.current_page >= paginationSource.last_page
+          !pagination ||
+          pagination.page >= pagination.totalPages
         ) {
           return undefined;
         }
-        return paginationSource.current_page + 1;
+        return pagination.page + 1;
       },
     });
 
   const options =
     data?.pages
       .flatMap((page) => {
-        console.log("Page structure:", page); // Untuk debugging
-
-        if (page?.data && Array.isArray(page.data)) {
-          return page.data;
-        }
-        if (page?.data?.data && Array.isArray(page.data.data)) {
-          return page.data.data;
-        }
-        if (Array.isArray(page)) {
-          return page;
+        if (page?.items && Array.isArray(page.items)) {
+          return page.items;
         }
         return [];
       })
       .filter(Boolean) ?? [];
 
-  let selectOptions = options.map((item) => ({
-    label: item[itemLabel],
-    value: item[itemValue].toString(),
-  }));
-
+  let selectOptions = options
+    .filter((item) => item && item[itemValue] !== undefined && item[itemValue] !== null)
+    .map((item) => ({
+      label: item[itemLabel] || "Unknown",
+      value: item[itemValue].toString(),
+    }));
   if (
     initialSelectedItem &&
+    initialSelectedItem[itemValue] !== undefined &&
+    initialSelectedItem[itemValue] !== null &&
     !selectOptions.some(
-      (option) => option.value === initialSelectedItem[itemValue]?.toString()
+      (option) => option.value === initialSelectedItem[itemValue].toString()
     )
   ) {
     selectOptions.unshift({
@@ -98,7 +98,6 @@ export const InfiniteScrollSelect = ({
       value: initialSelectedItem[itemValue].toString(),
     });
   }
-
   return (
     <FormField
       control={form.control}
@@ -114,14 +113,22 @@ export const InfiniteScrollSelect = ({
           )}
           <div className="w-full flex flex-col gap-1">
             <Select
-              onValueChange={field.onChange}
+              onValueChange={(value) => {
+                field.onChange(value);
+                const selectedOption = selectOptions.find(
+                  (option) => option.value === value
+                );
+                if (onSelectLabel && selectedOption) {
+                  onSelectLabel(selectedOption.label);
+                }
+              }}
               value={field.value?.toString()}
-              disabled={isLoading}
+              disabled={disabled || (isLoading && !disabled)}
             >
               <FormControl>
                 <SelectTrigger className="w-full text-xs">
                   <SelectValue
-                    placeholder={isLoading ? "Memuat data..." : placeholder}
+                    placeholder={disabled ? placeholder : isLoading ? "Memuat data..." : placeholder}
                   />
                 </SelectTrigger>
               </FormControl>

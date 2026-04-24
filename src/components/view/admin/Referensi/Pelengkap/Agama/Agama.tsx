@@ -33,7 +33,7 @@ import CustomPagination from "@/components/blocks/CustomPagination";
 interface agamaItem {
   id: string;
   kode: string;
-  nama_agama: string;
+  nama: string;
   // Add other properties as needed
 }
 
@@ -49,7 +49,7 @@ interface agamaResponse {
 const agamaSchema = z.object({
   id: z.string().optional(),
   kode: z.coerce.string().min(1, "Kode tidak boleh kosong"),
-  nama_agama: z.string().min(1, "Nama Agama tidak boleh kosong"),
+  nama: z.string().min(1, "Nama Agama tidak boleh kosong"),
 });
 
 type agamaFormvalue = z.infer<typeof agamaSchema>;
@@ -67,7 +67,7 @@ const Agama = () => {
   const form = useForm({
     defaultValues: {
       kode: "",
-      nama_agama: "",
+      nama: "",
     },
     resolver: zodResolver(agamaSchema),
   });
@@ -77,8 +77,20 @@ const Agama = () => {
     queryKey: ["agama", searchParam.get("page")],
     queryFn: async () => {
       const response = await adminServices.getAgama(searchParam.get("page"));
+      const apiData = response.data.data;
 
-      return response.data.data;
+      // Backend baru mengembalikan array langsung, normalisasi ke shape yang sama
+      if (Array.isArray(apiData)) {
+        return {
+          data: apiData,
+          links: [],
+          next_page_url: null,
+          prev_page_url: null,
+          last_page: 1,
+        };
+      }
+      // Backend lama mengembalikan paginated object
+      return apiData;
     },
   });
 
@@ -142,7 +154,7 @@ const Agama = () => {
     form.reset({
       id: item.id,
       kode: String(item.kode),
-      nama_agama: item.nama_agama,
+      nama: item.nama,
     });
 
     setIsEditMode(true);
@@ -210,7 +222,7 @@ const Agama = () => {
                         form.reset({
                           id: "",
                           kode: "",
-                          nama_agama: "",
+                          nama: "",
                         });
 
                         setSearchParam(searchParam);
@@ -218,11 +230,10 @@ const Agama = () => {
                         searchParam.set("page", "1");
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
-                        ? "bg-gray-400"
-                        : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                    className={`cursor-pointer ${isEditMode
+                      ? "bg-gray-400"
+                      : "bg-green-light-uika hover:bg-[#329C59]"
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -263,7 +274,7 @@ const Agama = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_agama"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -296,7 +307,7 @@ const Agama = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_agama}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">

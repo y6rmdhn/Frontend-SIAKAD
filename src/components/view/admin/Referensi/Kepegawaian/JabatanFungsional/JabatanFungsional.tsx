@@ -164,16 +164,16 @@ const JabatanFungsional = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data?.map((item: any) => (
+          {data?.data?.data?.map((item: any) => (
             <TableRow key={item.id} className=" even:bg-gray-100">
               <TableCell className="text-center text-xs sm:text-sm">
                 {item.kode}
               </TableCell>
               <TableCell className="text-center text-xs sm:text-sm">
-                {item.nama_jabatan_fungsional}
+                {item.nama}
               </TableCell>
               <TableCell className="text-center text-xs sm:text-sm">
-                {item.pangkat.nama_golongan}
+                {item.pangkat}
               </TableCell>
               <TableCell className="text-center text-xs sm:text-sm">
                 {item.angka_kredit}

@@ -11,84 +11,48 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import postDosenServices from "@/services/create.dosen.services.ts";
 
-// Tipe untuk data form
 type FormValues = {
   latitude: number | null;
   longitude: number | null;
   foto: File | null;
-  keterangan: string;
 };
 
-// Tipe untuk props komponen
 interface AbsensiModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   absenType?: "masuk" | "keluar";
   onAbsenSuccess: () => void;
+  settingAbsensiId?: string; // opsional, kalau tidak ada → auto-detect
 }
-
-// Tipe untuk koordinat
-// type Coords = {
-//   lat: number;
-//   lng: number;
-// };
 
 const dataURLtoFile = (dataurl: string, filename: string): File => {
   const arr = dataurl.split(",");
   const mimeMatch = arr[0].match(/:(.*?);/);
-  if (!mimeMatch) {
-    throw new Error("Invalid data URL");
-  }
+  if (!mimeMatch) throw new Error("Invalid data URL");
   const mime = mimeMatch[1];
   const bstr = atob(arr[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
   return new File([u8arr], filename, { type: mime });
 };
-
-// const getDistanceInMeters = (coords1: Coords, coords2: Coords): number => {
-//   const R = 6371e3; // Radius bumi dalam meter
-//   const lat1 = (coords1.lat * Math.PI) / 180;
-//   const lat2 = (coords2.lat * Math.PI) / 180;
-//   const deltaLat = ((coords2.lat - coords1.lat) * Math.PI) / 180;
-//   const deltaLon = ((coords2.lng - coords1.lng) * Math.PI) / 180;
-//   const a =
-//     Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-//     Math.cos(lat1) *
-//       Math.cos(lat2) *
-//       Math.sin(deltaLon / 2) *
-//       Math.sin(deltaLon / 2);
-//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//   return R * c;
-// };
 
 export function AbsensiModal({
   open,
   onOpenChange,
   absenType = "masuk",
   onAbsenSuccess,
+  settingAbsensiId,
 }: AbsensiModalProps) {
   const { handleSubmit, setValue, watch, reset } = useForm<FormValues>({
-    defaultValues: {
-      latitude: null,
-      longitude: null,
-      foto: null,
-      keterangan: "Melakukan Absensi di area Universitas Ibn Khaldun Bogor",
-    },
+    defaultValues: { latitude: null, longitude: null, foto: null },
   });
 
   const webcamRef = useRef<Webcam>(null);
   const [locationError, setLocationError] = useState("");
-
-  // const targetLocation: Coords = { lat: -6.55989, lng: 106.79296 };
-  // const allowedRadius = 200; // dalam meter
 
   const { mutate: absenMasuk, isPending: isMasukPending } = useMutation({
     mutationFn: (formData: FormData) =>
@@ -99,9 +63,7 @@ export function AbsensiModal({
       onOpenChange(false);
     },
     onError: (error: any) => {
-      const errorMessage =
-        error.response?.data?.message || "Gagal absen masuk.";
-      toast.error(errorMessage);
+      toast.error(error.response?.data?.message || "Gagal absen masuk.");
     },
   });
 
@@ -114,9 +76,7 @@ export function AbsensiModal({
       onOpenChange(false);
     },
     onError: (error: any) => {
-      const errorMessage =
-        error.response?.data?.message || "Gagal absen keluar.";
-      toast.error(errorMessage);
+      toast.error(error.response?.data?.message || "Gagal absen keluar.");
     },
   });
 
@@ -128,18 +88,6 @@ export function AbsensiModal({
       return;
     }
 
-    // const userLocation: Coords = { lat: data.latitude, lng: data.longitude };
-    // const distance = getDistanceInMeters(targetLocation, userLocation);
-
-    // if (distance > allowedRadius) {
-    //   toast.error("Gagal Absen", {
-    //     description: `Anda berada di luar radius presensi (${Math.round(
-    //       distance
-    //     )} meter).`,
-    //   });
-    //   return;
-    // }
-
     if (!data.foto) {
       toast.error("Foto belum diambil", {
         description: "Silakan ambil foto terlebih dahulu.",
@@ -148,10 +96,19 @@ export function AbsensiModal({
     }
 
     const formData = new FormData();
+
+    // Hanya kirim setting_absensi_id kalau ada nilainya
+    if (settingAbsensiId) {
+      formData.append("setting_absensi_id", settingAbsensiId);
+    }
+
     formData.append("latitude", data.latitude.toString());
     formData.append("longitude", data.longitude.toString());
-    formData.append("foto", data.foto);
-    formData.append("keterangan", data.keterangan);
+    formData.append(
+      absenType === "masuk" ? "foto_masuk" : "foto_keluar",
+      data.foto,
+      "absensi.jpg"
+    );
 
     if (absenType === "masuk") {
       absenMasuk(formData);
@@ -168,10 +125,7 @@ export function AbsensiModal({
           setValue("latitude", position.coords.latitude);
           setValue("longitude", position.coords.longitude);
         },
-        (_error) => {
-          // Menggunakan _error untuk menandakan parameter tidak digunakan
-          setLocationError("Gagal mendapatkan lokasi. Izinkan akses lokasi.");
-        }
+        () => setLocationError("Gagal mendapatkan lokasi. Izinkan akses lokasi.")
       );
     } else {
       setLocationError("Geolocation tidak didukung browser ini.");
@@ -180,34 +134,24 @@ export function AbsensiModal({
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
-      // Pemeriksaan null untuk webcamRef.current
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
-        const imageFile = dataURLtoFile(imageSrc, "absensi.jpg");
-        setValue("foto", imageFile, { shouldValidate: true });
+        setValue("foto", dataURLtoFile(imageSrc, "absensi.jpg"), {
+          shouldValidate: true,
+        });
       }
     }
-  }, [webcamRef, setValue]);
+  }, [setValue]);
 
-  const { latitude, longitude, keterangan, foto } = watch();
+  const { latitude, longitude, foto } = watch();
   const isProcessing = isMasukPending || isKeluarPending;
 
   useEffect(() => {
     if (open) {
-      const defaultKeterangan =
-        absenType === "masuk"
-          ? "Melakukan Absensi di area Universitas Ibn Khaldun Bogor"
-          : "Selesai mengajar";
-
-      reset({
-        latitude: null,
-        longitude: null,
-        foto: null,
-        keterangan: defaultKeterangan,
-      });
+      reset({ latitude: null, longitude: null, foto: null });
       getLocation();
     }
-  }, [open, reset, absenType]); // Menyatukan dua useEffect menjadi satu
+  }, [open, absenType]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -221,7 +165,9 @@ export function AbsensiModal({
 
           <div className="grid grid-cols-2 gap-4 text-center my-4">
             <div>
-              <p className="text-sm text-gray-500">Jam Masuk</p>
+              <p className="text-sm text-gray-500">
+                Jam {absenType === "masuk" ? "Masuk" : "Keluar"}
+              </p>
               <p className="font-semibold">
                 {new Date().toLocaleTimeString("id-ID", {
                   hour: "2-digit",
@@ -231,10 +177,10 @@ export function AbsensiModal({
             </div>
             <div>
               <p className="text-sm text-gray-500">Lokasi</p>
-              {latitude && longitude ? ( // Memeriksa latitude dan longitude
-                <p className="font-semibold text-xs">{`${latitude.toFixed(
-                  4
-                )}, ${longitude.toFixed(4)}`}</p>
+              {latitude && longitude ? (
+                <p className="font-semibold text-xs">
+                  {`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`}
+                </p>
               ) : (
                 <p className="font-semibold text-xs text-red-500">
                   {locationError || "Mencari lokasi..."}
@@ -261,7 +207,7 @@ export function AbsensiModal({
             )}
           </div>
 
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-center mt-2 mb-4">
             {foto ? (
               <Button
                 type="button"
@@ -277,14 +223,7 @@ export function AbsensiModal({
             )}
           </div>
 
-          <div className="mt-4">
-            <label htmlFor="keterangan" className="text-sm font-medium">
-              Keterangan
-            </label>
-            <Input id="keterangan" value={keterangan} readOnly={true} />
-          </div>
-
-          <DialogFooter className="mt-4">
+          <DialogFooter>
             <DialogClose asChild>
               <Button type="button" variant="outline">
                 Batal

@@ -11,26 +11,28 @@ const postDosenServices = {
     axiosInstance.post(`${endpoint.DOSEN}/pasangan`, payload),
   addDataOrangtua: (payload: IOrangtuaPost) =>
     axiosInstance.post(`${endpoint.DOSEN}/orangtua`, payload),
+  addDataKeluarga: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.VALIDASI}/data-keluarga`, payload),
   addDataPangkat: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/pangkat`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-pangkat`, payload),
   addDataJabatanAkademik: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/jabatanakademik`, payload),
   addDataJabatanfungsional: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/jabatanfungsional`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-jabatan-fungsional`, payload),
   addDataJabatanstruktural: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/jabatanstruktural`, payload),
   addDataHubungankerja: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/hubungankerja`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-hubungan-kerja`, payload),
   addDataDiklat: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/data-diklat`, payload),
-  addDataKemampuanbahasa: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/datakemampuanbahasa`, payload),
+  addDataKemampuanbahasa: (params?: FormData) =>
+    axiosInstance.post(`${endpoint.VALIDASI}/data-kemampuan-bahasa`, params),
   addDataOrganisasi: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/dataorganisasi`, payload),
   addDataAbsensiMasuk: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/absensi/masuk`, payload),
+    axiosInstance.post(`${endpoint.ABSENSI}/presensi/masuk`, payload),
   addDataAbsensiKeluar: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/absensi/keluar`, payload),
+    axiosInstance.patch(`${endpoint.ABSENSI}/presensi/keluar`, payload),
   addDataAdminPegawai: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/admin/pegawai`, payload),
   addDataPengajuanIzin: (payload: FormData) =>
@@ -38,18 +40,18 @@ const postDosenServices = {
   addDataPengajuanCuti: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, payload),
   addDataPendidikanFormal: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/pendidikanformaldosen`, payload),
-  addDataRiwayatPekerjaan: (payload: FormData) =>
+    axiosInstance.post(`${endpoint.VALIDASI}/data-pendidikan-formal`, payload),
+  addDataRiwayatPekerjaan: (params?: FormData) =>
     axiosInstance.post(
-      `${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen`,
-      payload
+      `${endpoint.VALIDASI}/data-riwayat-pekerjaan`,
+      params
     ),
   addDataSertifikasi: (payload: any) =>
-    axiosInstance.post(`${endpoint.DOSEN}/datasertifikasidosen`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-sertifikasi`, payload),
   addDataTes: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/datariwayattes`, payload),
-  addDataPenghargaan: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/penghargaandosen`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-test`, payload),
+  addDataPenghargaan: (params?: FormData) =>
+    axiosInstance.post(`${endpoint.VALIDASI}/data-penghargaan`, params),
   updateProfileUser: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/profiles/update`, payload),
   changePasswordUser: (payload: any) =>

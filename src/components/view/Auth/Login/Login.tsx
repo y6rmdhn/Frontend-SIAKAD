@@ -12,7 +12,7 @@ import { FaLockOpen, FaLock } from "react-icons/fa";
 import useLogin from "@/hooks/useLogin";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import SlideCaptcha from "@/components/blocks/Captcha";
+// import SlideCaptcha from "@/components/blocks/Captcha";
 
 const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -22,11 +22,11 @@ const LoginPage = () => {
     handleLogin,
     handleVisiblePassword,
     visiblePassword,
-    setCaptchaVisible,
-    captchaVisible,
-    captchaData,
+    // setCaptchaVisible,
+    // captchaVisible,
+    // captchaData,
     isFormFilled,
-    setSliderPosition,
+    // setSliderPosition,
   } = useLogin();
 
   return (
@@ -85,7 +85,7 @@ const LoginPage = () => {
             >
               <FormField
                 control={form.control}
-                name="nip"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-semibold">NIP</FormLabel>
@@ -182,27 +182,15 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              {/* Captcha Component */}
+              {/* Login Button (Captcha disabled for now) */}
               <div className="flex justify-center mb-6">
-                {!captchaVisible ? (
-                  <Button
-                    disabled={!isFormFilled}
-                    onClick={() => setCaptchaVisible(true)}
-                    className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-800 hover:bg-green-800"
-                  >
-                    Verifikasi
-                  </Button>
-                ) : (
-                  <div className="absolute top-52 z-50">
-                    <SlideCaptcha
-                      backgroundUrl={captchaData?.background_url}
-                      sliderUrl={captchaData?.slider_url}
-                      sliderY={captchaData?.slider_y}
-                      captchaId={captchaData?.captcha_id}
-                      onChangePosition={setSliderPosition}
-                    />
-                  </div>
-                )}
+                <Button
+                  type="submit"
+                  disabled={!isFormFilled}
+                  className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-800 hover:bg-green-800"
+                >
+                  Masuk
+                </Button>
               </div>
             </form>
           </Form>

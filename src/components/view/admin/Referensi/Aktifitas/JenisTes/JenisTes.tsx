@@ -33,7 +33,7 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.t
 interface JenisTesItem {
   id: string;
   kode: string;
-  jenis_tes: string;
+  jenis_test: string;
   nilai_minimal: number;
   nilai_maksimal: number;
   // Add any other properties that the API returns
@@ -56,7 +56,7 @@ const jenisTesFormSchema = z
       .min(1, "Kode tidak boleh kosong")
       .max(10, "Kode tidak boleh lebih dari 10 karakter"),
 
-    jenis_tes: z
+    jenis_test: z
       .string()
       .min(3, "Jenis Tes tidak boleh kurang dari 3 karakter"),
 
@@ -82,7 +82,7 @@ const JenisTes = () => {
   const form = useForm<JenisTesFormData>({
     defaultValues: {
       kode: "",
-      jenis_tes: "",
+      jenis_test: "",
       nilai_minimal: 0,
       nilai_maksimal: 0,
     },
@@ -162,7 +162,7 @@ const JenisTes = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      jenis_tes: item.jenis_tes,
+      jenis_test: item.jenis_test,
       nilai_minimal: item.nilai_minimal,
       nilai_maksimal: item.nilai_maksimal,
     });
@@ -223,7 +223,7 @@ const JenisTes = () => {
                       if (!isEditMode) {
                         form.reset({
                           kode: "",
-                          jenis_tes: "",
+                          jenis_test: "",
                           nilai_minimal: 0,
                           nilai_maksimal: 0,
                         });
@@ -234,11 +234,10 @@ const JenisTes = () => {
                       }
                     }}
                     type="button"
-                    className={`cursor-pointer ${
-                      isEditMode
-                        ? "bg-gray-400"
-                        : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                    className={`cursor-pointer ${isEditMode
+                      ? "bg-gray-400"
+                      : "bg-green-light-uika hover:bg-[#329C59]"
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -286,7 +285,7 @@ const JenisTes = () => {
                           inputStyle="w-full"
                           position={true}
                           form={form}
-                          name="jenis_tes"
+                          name="jenis_test"
                           required={false}
                         />
                       </TableCell>
@@ -339,7 +338,7 @@ const JenisTes = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.jenis_tes}
+                      {item.jenis_test}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.nilai_minimal}

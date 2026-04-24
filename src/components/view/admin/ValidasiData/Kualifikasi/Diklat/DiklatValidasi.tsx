@@ -1,376 +1,275 @@
-import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  keepPreviousData,
-} from "@tanstack/react-query"; // Diperbarui
+import { useDebounce } from "use-debounce";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-// UI Components
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Custom Components
 import CustomCard from "@/components/blocks/Card";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SearchInput from "@/components/blocks/SearchInput";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 
-// Icons
 import { IoClose, IoEyeOutline } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
 
-// Services
 import adminServices from "@/services/admin.services";
 import patchDataServices from "@/services/patch.admin.services";
 
-// --- Type Definitions ---
 type ActionType = "approve" | "reject";
+
+const rejectSchema = z.object({
+  keterangan: z.string().min(10, "Keterangan penolakan minimal 10 karakter."),
+});
+type RejectSchema = z.infer<typeof rejectSchema>;
 
 interface DiklatItem {
   id: string;
-  nip: string;
-  nama_pegawai: string;
-  nama_diklat: string;
-  jenis_diklat: string;
-  penyelenggara: string;
-  tahun_penyelenggaraan: string;
-  status_pengajuan_label: string;
-  tgl_diajukan_formatted: string;
+  pegawai?: { nip: string; nama: string };
+  jenis_diklat: string | null;
+  nama_diklat: string | null;
+  tgl_mulai: string | null;
+  tgl_selesai: string | null;
+  penyelenggara: string | null;
+  status: string;
+  tgl_disetujui?: string | null;
+  tgl_ditolak?: string | null;
+  createdAt?: string;
+}
+interface PaginatedData {
+  items: DiklatItem[];
+  pagination: { total: number; page: number; limit: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean };
 }
 
-interface ApiResponse {
-  data: DiklatItem[];
-  pagination: {
-    current_page: number;
-    last_page: number;
-  };
-  filters: {
-    unit_kerja: any[];
-    jenis_diklat: any[];
-    status_pengajuan: any[];
-  };
-  table_columns: any[];
-}
-// --- Component Definition ---
+const statusColor: Record<string, string> = {
+  draft: "bg-gray-400",
+  diajukan: "bg-yellow-400 text-black",
+  disetujui: "bg-green-500",
+  ditolak: "bg-red-500",
+};
+
 const DiklatValidasi = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const queryClient = useQueryClient();
 
-  // --- State Management ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
-  const [selectedItem, setSelectedItem] = useState<string[]>([]); // Changed to string[]
+  const [selectedItem, setSelectedItem] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
   const currentPage = searchParam.get("page") || "1";
-  const unitKerjaFilter = searchParam.get("unit_kerja") || "";
-  const jenisDiklatFilter = searchParam.get("jenis_diklat") || "";
-  const statusFilter = searchParam.get("status_pengajuan") || "";
+  const statusFilter = searchParam.get("status") ?? "";
+  const startDate = searchParam.get("start_date") || "";
+  const endDate = searchParam.get("end_date") || "";
+  const unitKerjaId = searchParam.get("unit_kerja_id") || "";
 
-  // --- Data Fetching ---
-  const { data, isLoading, isError } = useQuery<ApiResponse>({
-    queryKey: [
-      "diklat-validasi-data",
-      currentPage,
-      debouncedInput,
-      unitKerjaFilter,
-      jenisDiklatFilter,
-      statusFilter,
-    ],
-    queryFn: async () => {
-      const params = {
-        page: currentPage,
-        search: debouncedInput,
-        unit_kerja: unitKerjaFilter,
-        jenis_diklat: jenisDiklatFilter,
-        status_pengajuan: statusFilter,
-      };
-      const response = await adminServices.getDiklatValidasiData(params);
-      // PERBAIKAN: Mengembalikan seluruh object `response.data`
-      return response.data;
-    },
-    // PERBAIKAN: Menggunakan `placeholderData` untuk TanStack Query v5
-    placeholderData: keepPreviousData,
+  const form = useForm<RejectSchema>({
+    resolver: zodResolver(rejectSchema),
+    defaultValues: { keterangan: "" },
   });
 
-  // --- Memoized Filter Options ---
-  const filterOptions = useMemo(() => {
-    // PERBAIKAN: Path filter disesuaikan dengan struktur API
-    const filters = data?.filters || {};
-    const mapToOptions = (items: any[]) =>
-      items?.map((opt) => ({ value: String(opt.id), label: opt.nama })) || [];
-    return {
-      // @ts-ignore
-      unitKerja: mapToOptions(filters.unit_kerja),
-      // @ts-ignore
-      jenisDiklat: mapToOptions(filters.jenis_diklat),
-      // @ts-ignore
-      statusPengajuan: mapToOptions(filters.status_pengajuan),
-    };
-  }, [data]);
+  useEffect(() => {
+    if (!isDialogOpen) form.reset({ keterangan: "" });
+  }, [isDialogOpen, form]);
 
-  // --- Data Mutations ---
-  const handleSuccess = (actionText: string) => {
-    toast.success(`Berhasil ${actionText} data pengajuan.`);
+  const { data: rawData, isError, isLoading, error } = useQuery<PaginatedData>({
+    queryKey: ["diklat-validasi", currentPage, debouncedInput, statusFilter, startDate, endDate, unitKerjaId],
+    queryFn: async () => {
+      const params: Record<string, string> = { page: currentPage, limit: "10" };
+      if (statusFilter && statusFilter !== "semua") params.status = statusFilter;
+      if (debouncedInput) params.search = debouncedInput;
+      if (startDate) params.start_date = startDate;
+      if (endDate) params.end_date = endDate;
+      if (unitKerjaId) params.unit_kerja_id = unitKerjaId;
+      const response = await adminServices.getDiklatValidasiData(params as any);
+      return response.data.data;
+    },
+    placeholderData: (prev) => prev,
+  });
+
+  const { data: unitKerjaOptions } = useQuery<{ id: string; nama: string }[]>({
+    queryKey: ["master-unit-kerja"],
+    queryFn: async () => {
+      const response = await adminServices.getUnitKerja({ is_dropdown: true });
+      return response.data.data.items ?? [];
+    },
+  });
+
+  const items = rawData?.items ?? [];
+  const pagination = rawData?.pagination;
+
+  const handleUrlChange = useCallback((paramName: string, value: string) => {
+    const next = new URLSearchParams(searchParam);
+    if (value && value !== "semua") next.set(paramName, value);
+    else next.delete(paramName);
+    if (paramName !== "page") next.set("page", "1");
+    setSearchParam(next);
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => { handleUrlChange("search", debouncedInput); }, [debouncedInput, handleUrlChange]);
+
+  const handleSuccess = (action: string) => {
+    toast.success(`Berhasil ${action} data.`);
     setSelectedItem([]);
     setIsDialogOpen(false);
-    queryClient.invalidateQueries({ queryKey: ["diklat-validasi-data"] });
+    queryClient.invalidateQueries({ queryKey: ["diklat-validasi"] });
   };
+  const handleError = (err: any) => toast.error(`Gagal: ${err?.response?.data?.message || err.message}`);
 
-  const handleError = (err: any) =>
-    toast.error(
-      `Gagal: ${
-        err?.response?.data?.message || err.message || "Terjadi kesalahan"
-      }`
-    );
-
-  // PERBAIKAN: `isLoading` diganti menjadi `isPending` untuk TanStack Query v5
   const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
-    mutationFn: (
-      payload: { ids: string[] } // Changed to string[]
-    ) => patchDataServices.rejectDataDiklat(payload),
+    mutationFn: (payload: { ids: string[]; keterangan: string }) => patchDataServices.rejectDataDiklat(payload),
     onSuccess: () => handleSuccess("menolak"),
     onError: handleError,
   });
-
   const { mutate: approveMutation, isPending: isApproving } = useMutation({
-    mutationFn: (
-      payload: { ids: string[] } // Changed to string[]
-    ) => patchDataServices.approveDataDiklat(payload),
+    mutationFn: (payload: { ids: string[] }) => patchDataServices.approveDataDiklat(payload),
     onSuccess: () => handleSuccess("menyetujui"),
     onError: handleError,
   });
 
-  // --- Event Handlers & Table Logic ---
-  const handleUrlChange = (paramName: string, value: string) => {
-    const newSearchParams = new URLSearchParams(searchParam);
-    if (value && value !== "semua") newSearchParams.set(paramName, value);
-    else newSearchParams.delete(paramName);
-    if (paramName !== "page") newSearchParams.set("page", "1");
-    setSearchParam(newSearchParams);
-  };
-
-  useEffect(() => {
-    handleUrlChange("search", debouncedInput);
-  }, [debouncedInput]);
-
+  const pageIds = useMemo(() => items.map((i) => i.id), [items]);
+  const isAllSelectedOnPage = pageIds.length > 0 && pageIds.every((id) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = !isAllSelectedOnPage && pageIds.some((id) => selectedItem.includes(id));
+  const handleSelectedItemId = (id: string, checked: boolean) => setSelectedItem((prev) => checked ? [...prev, id] : prev.filter((i) => i !== id));
+  const handleSelectAll = (checked: boolean) => setSelectedItem(checked ? [...new Set([...selectedItem, ...pageIds])] : selectedItem.filter((id) => !pageIds.includes(id)));
   const handleOpenDialog = (action: ActionType) => {
-    if (selectedItem.length === 0) {
-      toast.warning("Pilih setidaknya satu data untuk diproses.");
-      return;
-    }
+    if (selectedItem.length === 0) { toast.warning("Pilih setidaknya satu data."); return; }
     setPendingAction(action);
     setIsDialogOpen(true);
   };
-
-  const handleConfirmAction = () => {
-    if (pendingAction === "approve")
-      approveMutation({
-        ids: selectedItem,
-      }); // selectedItem is already string[]
-    else if (pendingAction === "reject") rejectMutation({ ids: selectedItem }); // selectedItem is already string[]
+  const handleSubmitAction = (values: RejectSchema) => {
+    if (pendingAction === "reject") rejectMutation({ ids: selectedItem, keterangan: values.keterangan });
   };
 
-  const tableData = data?.data || [];
-  const pageIds = tableData.map((item) => String(item.id)); // Convert to string
-  const isAllSelectedOnPage =
-    pageIds.length > 0 &&
-    pageIds.every((id: string) => selectedItem.includes(id));
-  const isSomeSelectedOnPage = pageIds.some((id: string) =>
-    selectedItem.includes(id)
-  );
-
-  const handleSelectedItemId = (
-    id: string,
-    checked: boolean // Changed to string
-  ) =>
-    setSelectedItem((prev) =>
-      checked ? [...prev, id] : prev.filter((i) => i !== id)
+  if (isLoading && !rawData) {
+    return (
+      <div className="mt-10 mb-20 space-y-6">
+        <Title title="Validasi Data Diklat" />
+        <div className="mt-10 space-y-2">{[...Array(10)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
+      </div>
     );
-
-  const handleSelectAll = (checked: boolean) =>
-    setSelectedItem(
-      checked
-        ? [...new Set([...selectedItem, ...pageIds])]
-        : selectedItem.filter((id) => !pageIds.includes(id))
-    );
-
-  const dialogDetails = {
-    approve: {
-      title: "Konfirmasi Persetujuan",
-      description: `Anda akan menyetujui ${selectedItem.length} data terpilih.`,
-    },
-    reject: {
-      title: "Konfirmasi Penolakan",
-      description: `Anda akan menolak ${selectedItem.length} data terpilih.`,
-    },
-  };
-
-  if (isLoading && !data) {
-    /* ... Loading state ... */
   }
   if (isError) {
-    /* ... Error state ... */
+    return (
+      <div className="mt-10 mb-20 text-center">
+        <Title title="Validasi Data Diklat" />
+        <div className="mt-10 p-4 border-l-4 border-red-500 bg-red-50 rounded-md">
+          <p className="font-semibold text-red-600">Gagal Memuat Data</p>
+          <p className="text-sm text-red-500">{(error as Error).message}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Validasi Riwayat Diklat" subTitle="Kualifikasi" />
-      <CustomCard
-        title="Filter Data"
-        actions={
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <SelectFilter
-              placeholder="--Semua Unit Kerja--"
-              options={filterOptions.unitKerja}
-              value={unitKerjaFilter}
-              onValueChange={(v) => handleUrlChange("unit_kerja", v)}
-              label="Unit Kerja"
-            />
-            <SelectFilter
-              placeholder="--Semua Jenis--"
-              options={filterOptions.jenisDiklat}
-              value={jenisDiklatFilter}
-              onValueChange={(v) => handleUrlChange("jenis_diklat", v)}
-              label="Jenis Diklat"
-            />
-            <SelectFilter
-              placeholder="--Semua Status--"
-              options={filterOptions.statusPengajuan}
-              value={statusFilter}
-              onValueChange={(v) => handleUrlChange("status_pengajuan", v)}
-              label="Status Pengajuan"
-            />
+      <Title title="Validasi Data Diklat" />
+      <CustomCard title="Filter Data" actions={
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <Label>Status Pengajuan</Label>
+            <Select value={statusFilter || "semua"} onValueChange={(v) => handleUrlChange("status", v)}>
+              <SelectTrigger className="w-full"><SelectValue placeholder="--Pilih Status--" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="semua">Semua Status</SelectItem>
+                <SelectItem value="diajukan">Diajukan</SelectItem>
+                <SelectItem value="disetujui">Disetujui</SelectItem>
+                <SelectItem value="ditolak">Ditolak</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        }
-      />
+          <div className="flex flex-col gap-2">
+            <Label>Unit Kerja</Label>
+            <Select value={unitKerjaId || "semua"} onValueChange={(v) => handleUrlChange("unit_kerja_id", v)}>
+              <SelectTrigger className="w-full"><SelectValue placeholder="--Pilih Unit Kerja--" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="semua">Semua Unit Kerja</SelectItem>
+                {unitKerjaOptions?.map((uk) => <SelectItem key={uk.id} value={uk.id}>{uk.nama}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Tanggal Mulai</Label>
+            <input type="date" className="border rounded-md px-3 py-2 text-sm" value={startDate} onChange={(e) => handleUrlChange("start_date", e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Tanggal Akhir</Label>
+            <input type="date" className="border rounded-md px-3 py-2 text-sm" value={endDate} max={new Date().toISOString().split("T")[0]} onChange={(e) => handleUrlChange("end_date", e.target.value)} />
+          </div>
+        </div>
+      } />
 
       <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
-        <SearchInput
-          value={searchData}
-          onChange={(e) => setSearchData(e.target.value)}
-          className="w-full md:w-80"
-          placeholder="Cari NIP atau nama pegawai..."
-        />
-        {selectedItem.length > 0 && (
-          <div className="flex flex-col md:flex-row gap-2">
-            <Button
-              onClick={() => handleOpenDialog("approve")}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              <FaCheck className="mr-2" /> Setujui ({selectedItem.length})
-            </Button>
-            <Button
-              onClick={() => handleOpenDialog("reject")}
-              variant="destructive"
-            >
-              <IoClose className="mr-2" /> Tolak ({selectedItem.length})
-            </Button>
-          </div>
-        )}
+        <SearchInput value={searchData} onChange={(e) => setSearchData(e.target.value)} className="w-full md:w-80" placeholder="Cari NIP atau nama pegawai..." />
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
+          {selectedItem.length > 0 && (
+            <>
+              <Button onClick={() => handleOpenDialog("approve")} className="bg-green-600 hover:bg-green-700" disabled={isApproving || isRejecting}>
+                <FaCheck className="mr-2" /> Setujui ({selectedItem.length})
+              </Button>
+              <Button onClick={() => handleOpenDialog("reject")} variant="destructive" disabled={isApproving || isRejecting}>
+                <IoClose className="mr-2" /> Tolak ({selectedItem.length})
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="mt-5 border rounded-lg">
+      <div className="mt-5 border rounded-lg overflow-x-auto">
         <Table className="text-xs lg:text-sm">
           <TableHeader>
             <TableRow className="bg-gray-100 hover:bg-gray-100">
               <TableHead className="text-center w-10">
-                <Checkbox
-                  onCheckedChange={(c) => handleSelectAll(!!c)}
-                  checked={
-                    isAllSelectedOnPage
-                      ? true
-                      : isSomeSelectedOnPage
-                      ? "indeterminate"
-                      : false
-                  }
-                />
+                <Checkbox onCheckedChange={(c) => handleSelectAll(!!c)} checked={isAllSelectedOnPage ? true : isSomeSelectedOnPage ? "indeterminate" : false} />
               </TableHead>
-              {data?.table_columns?.map((col: any) => (
-                <TableHead key={col.field} className="text-center">
-                  {col.label}
-                </TableHead>
-              ))}
+              <TableHead className="text-center">NIP</TableHead>
+              <TableHead>Nama Pegawai</TableHead>
+              <TableHead>Jenis Diklat</TableHead>
+              <TableHead>Nama Diklat</TableHead>
+              <TableHead className="text-center">Tgl. Mulai</TableHead>
+              <TableHead className="text-center">Tgl. Selesai</TableHead>
+              <TableHead className="text-center">Penyelenggara</TableHead>
+              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              [...Array(10)].map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell colSpan={9}>
-                    <Skeleton className="h-6 w-full" />
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : tableData.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={
-                    // @ts-ignore
-                    data?.table_columns?.length + 1 || 10
-                  }
-                  className="text-center h-24"
-                >
-                  Data tidak ditemukan.
-                </TableCell>
-              </TableRow>
+            {items.length === 0 ? (
+              <TableRow><TableCell colSpan={10} className="text-center h-24">Tidak ada data.</TableCell></TableRow>
             ) : (
-              tableData.map((item: DiklatItem) => (
+              items.map((item) => (
                 <TableRow key={item.id} className="even:bg-gray-50">
                   <TableCell className="text-center">
-                    <Checkbox
-                      checked={selectedItem.includes(String(item.id))} // Convert to string
-                      onCheckedChange={
-                        (c) => handleSelectedItemId(String(item.id), !!c) // Convert to string
-                      }
-                    />
+                    <Checkbox checked={selectedItem.includes(item.id)} onCheckedChange={(c) => handleSelectedItemId(item.id, !!c)} />
                   </TableCell>
-                  <TableCell className="text-center">{item.nip}</TableCell>
-                  <TableCell>{item.nama_pegawai}</TableCell>
-                  <TableCell>{item.nama_diklat}</TableCell>
+                  <TableCell className="text-center">{item.pegawai?.nip ?? "-"}</TableCell>
+                  <TableCell>{item.pegawai?.nama ?? "-"}</TableCell>
+                  <TableCell>{item.jenis_diklat ?? "-"}</TableCell>
+                  <TableCell>{item.nama_diklat ?? "-"}</TableCell>
+                  <TableCell className="text-center">{item.tgl_mulai ?? "-"}</TableCell>
+                  <TableCell className="text-center">{item.tgl_selesai ?? "-"}</TableCell>
+                  <TableCell className="text-center">{item.penyelenggara ?? "-"}</TableCell>
                   <TableCell className="text-center">
-                    {item.jenis_diklat}
-                  </TableCell>
-                  <TableCell>{item.penyelenggara}</TableCell>
-                  <TableCell className="text-center">
-                    {item.tahun_penyelenggaraan}
+                    <span className={`capitalize px-2 py-1 rounded-md text-white text-xs ${statusColor[item.status] ?? "bg-slate-400"}`}>{item.status}</span>
                   </TableCell>
                   <TableCell className="text-center">
-                    {item.status_pengajuan_label}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-center">
-                      <Link
-                        to={`/admin/validasi-data/kualifikasi/diklat/detail-diklat/${item.id}`}
-                      >
-                        <Button size="icon" variant="ghost">
-                          <IoEyeOutline className="text-blue-500" />
-                        </Button>
-                      </Link>
-                    </div>
+                    <Link to={`/admin/validasi-data/kualifikasi/diklat/detail-diklat/${item.id}`}>
+                      <Button size="icon" variant="ghost"><IoEyeOutline className="text-blue-500" /></Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))
@@ -378,49 +277,34 @@ const DiklatValidasi = () => {
           </TableBody>
         </Table>
       </div>
-
-      {data?.data && data.data.length > 0 && (
-        <CustomPagination
-          currentPage={data.pagination.current_page}
-          totalPages={data.pagination.last_page}
-          onPageChange={(p) => handleUrlChange("page", String(p))}
-          hasNextPage={data.pagination.current_page < data.pagination.last_page}
-          hasPrevPage={data.pagination.current_page > 1}
-        />
-      )}
+      <CustomPagination pagination={pagination} onPageChange={(page) => handleUrlChange("page", String(page))} />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>
-              {pendingAction && dialogDetails[pendingAction]?.title}
-            </DialogTitle>
-            <DialogDescription>
-              {pendingAction && dialogDetails[pendingAction]?.description}
-            </DialogDescription>
+            <DialogTitle>{pendingAction === "approve" ? "Konfirmasi Persetujuan" : "Konfirmasi Penolakan"}</DialogTitle>
+            <DialogDescription>Anda akan {pendingAction === "approve" ? "menyetujui" : "menolak"} {selectedItem.length} data terpilih. Aksi ini tidak dapat dibatalkan.</DialogDescription>
           </DialogHeader>
+          {pendingAction === "reject" && (
+            <Form {...form}>
+              <form id="action-form" onSubmit={form.handleSubmit(handleSubmitAction)}>
+                <div className="py-4">
+                  <FormFieldInput form={form} name="keterangan" label="Keterangan Penolakan" placeholder="Masukkan alasan penolakan..." required />
+                </div>
+              </form>
+            </Form>
+          )}
           <DialogFooter>
-            <Button
-              variant="outline"
-              type="button"
-              onClick={() => setIsDialogOpen(false)}
-            >
-              Batal
-            </Button>
-            <Button
-              onClick={handleConfirmAction}
-              className={
-                pendingAction === "approve"
-                  ? "bg-green-600 hover:bg-green-700"
-                  : ""
-              }
-              variant={pendingAction === "reject" ? "destructive" : "default"}
-              disabled={isApproving || isRejecting}
-            >
-              {isApproving || isRejecting
-                ? "Memproses..."
-                : `Ya, ${pendingAction === "approve" ? "Setujui" : "Tolak"}`}
-            </Button>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Batal</Button>
+            {pendingAction === "approve" ? (
+              <Button onClick={() => approveMutation({ ids: selectedItem })} className="bg-green-600 hover:bg-green-700" disabled={isApproving}>
+                {isApproving ? "Memproses..." : "Ya, Setujui"}
+              </Button>
+            ) : (
+              <Button type="submit" form="action-form" variant="destructive" disabled={isRejecting}>
+                {isRejecting ? "Memproses..." : "Ya, Tolak"}
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -2,7 +2,7 @@ import CustomCard from "@/components/blocks/Card";
 import InfoList from "@/components/blocks/InfoList";
 import SearchInput from "@/components/blocks/SearchInput";
 import Title from "@/components/blocks/Title";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -11,29 +11,80 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {FaPlus} from "react-icons/fa";
-import {IoEyeOutline} from "react-icons/io5";
-import {Link, useSearchParams} from "react-router-dom";
-import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect} from "react";
-import {useQuery} from "@tanstack/react-query";
+import { FaPlus } from "react-icons/fa";
+import { IoEyeOutline } from "react-icons/io5";
+import { Link, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import {parseISO, format} from "date-fns";
+import { parseISO, format } from "date-fns";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+
+// ── Tipe data sesuai response BE baru ────────────────────────────────────────
+interface HubunganKerjaItem {
+    id: string;
+    no_sk: string;
+    tgl_sk: string;
+    tgl_mulai: string;      // dulu: tgl_awal
+    tgl_selesai: string;    // dulu: tgl_akhir
+    pejabat_penetap: string | null;
+    status: string;         // dulu: status_pengajuan, nilai: draft | diajukan | disetujui | ditolak
+    hubungan_kerja_id: string;
+    status_aktif_id: string;
+    hubungan_kerja: {
+        nama: string;
+    };
+}
+
+interface PaginatedData {
+    items: HubunganKerjaItem[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        hasNextPage: boolean;
+        hasPrevPage: boolean;
+    };
+}
+
+
+// Status badge color map
+const statusColor: Record<string, string> = {
+    draft: "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65",
+    diajukan: "bg-[#FFC951]/50 hover:bg-[#FFC951]/50",
+    disetujui: "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50",
+    ditolak: "bg-red-500 hover:bg-red-500 text-white",
+};
 
 const HubunganKerja = () => {
-
     const [searchParam, setSearchParam] = useSearchParams();
 
-    // get data
-    const {data} = useQuery({
-        queryKey: ["jabatan-hubungan-kerja-dosen", searchParam.get("page")],
+    // get data profil pegawai (shared & cached)
+    const { profile } = usePegawaiProfile();
+
+    const currentPage = Number(searchParam.get("page") || 1);
+    // get data daftar hubungan kerja
+    const { data: rawData } = useQuery<PaginatedData>({
+        queryKey: ["hubungan-kerja-pegawai", searchParam.get("page")],
         queryFn: async () => {
-            const response = await dosenServices.getHubunganKerja(searchParam.get("page"));
-            console.log(response.data)
-            return response.data;
+            const response = await dosenServices.getHubunganKerja({
+                page: currentPage,
+            });
+            return response.data.data;
         },
     });
 
+    // Ekstrak array dan pagination dari struktur baru
+    const items = rawData?.items ?? [];
+    const pagination = rawData?.pagination;
+
+    const handlePageChange = (page: number) => {
+        const next = new URLSearchParams(searchParam);
+        next.set("page", String(page));
+        setSearchParam(next);
+    };
     useEffect(() => {
         if (!searchParam.get("page")) {
             searchParam.set("page", "1");
@@ -41,33 +92,15 @@ const HubunganKerja = () => {
         }
     }, [searchParam, setSearchParam]);
 
-    useEffect(() => {
-        if (Number(searchParam.get("page")) < 1) {
-            searchParam.set("page", "1");
-            setSearchParam(searchParam);
-        }
-    }, [searchParam, setSearchParam]);
-
-    useEffect(() => {
-        if (
-            data?.last_page &&
-            Number(searchParam.get("page")) > data.last_page &&
-            data.last_page > 0
-        ) {
-            searchParam.set("page", data.last_page.toString());
-            setSearchParam(searchParam);
-        }
-    }, [searchParam, data, setSearchParam]);
-
     return (
         <div className="mt-10 mb-20">
-            <Title title="Hubungan Kerja" subTitle="Daftar Hubungan Kerja"/>
+            <Title title="Hubungan Kerja" subTitle="Daftar Hubungan Kerja" />
             <CustomCard
                 actions={
                     <div className="flex justify-end">
                         <Link to="/data-riwayat/kepegawaian/detail-hubungan-kerja">
                             <Button className="bg-[#FDA31A] text-xs md:text-sm hover:bg-[#F9A31A]">
-                                <FaPlus/> Tambah Baru
+                                <FaPlus /> Tambah Baru
                             </Button>
                         </Link>
                     </div>
@@ -76,99 +109,79 @@ const HubunganKerja = () => {
 
             <InfoList
                 items={[
-                    {label: "NIP", value: data?.pegawai_info.nip},
-                    {label: "Nama", value: data?.pegawai_info.nama},
-                    {label: "Unit Kerja", value: data?.pegawai_info.unit_kerja},
-                    {label: "Status", value: data?.pegawai_info.status},
-                    {label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik},
-                    {label: "Jab. Fungsional", value: data?.pegawai_info.jab_fungsional},
-                    {label: "Jab. Struktural", value: data?.pegawai_info.jab_struktural},
-                    {label: "Pendidikan", value: data?.pegawai_info.pendidikan},
+                    { label: "NIP", value: profile?.nip ?? "-" },
+                    { label: "Nama", value: profile?.nama ?? "-" },
+                    { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+                    { label: "Status", value: profile?.status ?? "-" },
+                    { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+                    { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+                    { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
                 ]}
             />
 
             <div className="gap-5 flex flex-col md:flex-row mt-5">
-                <SearchInput/>
+                <SearchInput />
             </div>
 
             <Table className="mt-10 table-auto text-xs lg:text-sm">
+                {/* Header — hardcoded sesuai field BE baru */}
                 <TableHeader>
-                    <TableRow className="bg-gray-300 ">
-                        {data?.table_columns.map((item: { id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
-                            <TableHead key={item.id} className="text-center text-black">
-                                {item.label}
-                            </TableHead>
-                        ))}
+                    <TableRow className="bg-gray-300">
+                        <TableHead className="text-center text-black">Tgl. Mulai</TableHead>
+                        <TableHead className="text-center text-black">Tgl. Selesai</TableHead>
+                        <TableHead className="text-center text-black">Hubungan Kerja</TableHead>
+                        <TableHead className="text-center text-black">Status</TableHead>
+                        <TableHead className="text-center text-black">Aksi</TableHead>
                     </TableRow>
                 </TableHeader>
+
+                {/* Body — field names sesuai skema DB baru */}
                 <TableBody className="divide-y divide-gray-200">
-                    {data?.data.data.map((item: { id: Key | null | undefined; no_sk: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; tgl_sk: string; tgl_awal: string; tgl_akhir: string; nama_hub_kerja: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; nama_status_aktif: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; pejabat_penetap: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; status_pengajuan: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; is_aktif_label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
-                        <TableRow key={item.id} className=" even:bg-gray-100">
-                            <TableCell className="text-center">{item.no_sk}</TableCell>
-                            <TableCell className="text-center">
-                                {item.tgl_sk ? format(parseISO(item.tgl_sk), "dd MMMM yyyy")
-                                    : "-"}
-                            </TableCell>
-                            <TableCell className="text-center">
-                                {item.tgl_awal ? format(parseISO(item.tgl_awal), "dd MMMM yyyy")
-                                    : "-"}
-                            </TableCell>
-                            <TableCell className="text-center">
-                                {item.tgl_akhir ? format(parseISO(item.tgl_akhir), "dd MMMM yyyy")
-                                    : "-"}
-                            </TableCell>
-                            <TableCell className="text-center">{item.nama_hub_kerja}</TableCell>
-                            <TableCell className="text-center">{item.nama_status_aktif}</TableCell>
-                            <TableCell className="text-center">{item.pejabat_penetap}</TableCell>
-                            <TableCell className="text-center">
-                                <Button
-                                    size="sm"
-                                    className={`w-full text-xs lg:text-sm text-black
-    ${
-                                        item.status_pengajuan === "draf"
-                                            ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
-                                            : item.status_pengajuan === "diajukan"
-                                                ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
-                                                : item.status_pengajuan === "disetujui"
-                                                    ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
-                                                    : item.status_pengajuan === "ditolak"
-                                                        ? "bg-red-500 hover:bg-red-500"
-                                                        : "bg-slate-300 hover:bg-slate-300"
-                                    }
-  `}
-                                >
-                                    {item.status_pengajuan}
-                                </Button>
-                            </TableCell>
-                            <TableCell className="text-center">{item.is_aktif_label}</TableCell>
-                            <TableCell className="h-full">
-                                <div className="flex justify-center items-center w-full h-full">
-                                    <Link to={"/data-riwayat/kepegawaian/detail-data-hubungan-kerja/" + item.id}>
-                                        <Button
-                                            size="icon"
-                                            variant="ghost"
-                                            className="cursor-pointer"
-                                        >
-                                            <IoEyeOutline className="w-5! h-5! text-[#26A1F4]"/>
-                                        </Button>
-                                    </Link>
-                                </div>
+                    {items.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                                Tidak ada data
                             </TableCell>
                         </TableRow>
-                    ))}
+                    ) : (
+                        items.map((item) => (
+                            <TableRow key={item.id} className="even:bg-gray-100">
+                                <TableCell className="text-center">
+                                    {item.tgl_mulai ? format(parseISO(item.tgl_mulai), "dd MMMM yyyy") : "-"}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    {item.tgl_selesai ? format(parseISO(item.tgl_selesai), "dd MMMM yyyy") : "-"}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    {item.hubungan_kerja?.nama || "-"}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Button
+                                        size="sm"
+                                        className={`w-full text-xs lg:text-sm text-black ${statusColor[item.status] ?? "bg-slate-300 hover:bg-slate-300"}`}
+                                    >
+                                        {item.status}
+                                    </Button>
+                                </TableCell>
+                                <TableCell className="h-full">
+                                    <div className="flex justify-center items-center w-full h-full">
+                                        <Link to={"/data-riwayat/kepegawaian/detail-data-hubungan-kerja/" + item.id}>
+                                            <Button size="icon" variant="ghost" className="cursor-pointer">
+                                                <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
                 </TableBody>
             </Table>
 
+            {/* Pagination — pakai struktur baru dari BE */}
             <CustomPagination
-                currentPage={Number(searchParam.get("page") || 1)}
-                links={data?.links || []}
-                onPageChange={(page) => {
-                    searchParam.set("page", page.toString());
-                    setSearchParam(searchParam);
-                }}
-                hasNextPage={!!data?.next_page_url}
-                hasPrevPage={!!data?.prev_page_url}
-                totalPages={data?.last_page}
+                pagination={pagination}
+                onPageChange={handlePageChange}
             />
         </div>
     );

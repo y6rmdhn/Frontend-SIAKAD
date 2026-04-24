@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { BsGrid3X2GapFill, BsPersonFill } from "react-icons/bs";
 import { IoLogOutOutline } from "react-icons/io5";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import authServices from "@/services/auth.services";
 import { ILogout } from "@/types/auth";
 import { toast } from "sonner";
@@ -23,9 +23,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { clearUserData } from "@/store/userSlice";
 import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
 import AvatarMobile from "@/components/blocks/AvatarMobile/AvatarMobile";
-import adminServices from "@/services/admin.services";
-import dosenServices from "@/services/dosen.services";
 import environment from "@/config/environments";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 
 const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -34,29 +33,9 @@ const Header = () => {
   const userSelector = useSelector((state: RootState) => state.user);
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [initials, setInitials] = useState<string>("");
-  const role = useSelector((state: RootState) => state.user.role);
 
-  const { data: profileData } = useQuery({
-    queryKey: ["profile-header-desktop"],
-    queryFn: async () => {
-      if (!accessToken) return null;
-
-      try {
-        let response;
-        if (role === "Admin") {
-          response = await adminServices.getProfileAdmin();
-        } else {
-          response = await dosenServices.getProfileUser();
-        }
-
-        return response.data.data;
-      } catch (error) {
-        console.error("Failed to fetch profile data:", error);
-        toast.error("Gagal memuat data profil.");
-        return null;
-      }
-    },
-  });
+  const { profile } = usePegawaiProfile();
+  const profileData = profile;
 
   const { mutate } = useMutation({
     mutationFn: (data: ILogout) => authServices.logout(data),

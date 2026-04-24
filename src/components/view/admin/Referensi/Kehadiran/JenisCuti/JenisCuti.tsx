@@ -34,7 +34,7 @@ import { AxiosError } from "axios";
 interface JenisCutiItem {
   id: string;
   kode: string;
-  nama_jenis_cuti: string;
+  nama: string;
   standar_cuti: number | string; // API bisa mengembalikan string atau number
   format_nomor_surat: string;
   keterangan: string;
@@ -53,7 +53,7 @@ interface JenisCutiResponse {
 const jenisCutiSchema = z.object({
   id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
-  nama_jenis_cuti: z.string().min(1, "Nama jenis cuti tidak boleh kosong"),
+  nama: z.string().min(1, "Nama jenis cuti tidak boleh kosong"),
   standar_cuti: z.coerce
     .number()
     .min(1, "Standar cuti tidak boleh kosong atau minus"),
@@ -67,7 +67,7 @@ const JenisCuti = () => {
   const form = useForm<jenisCutiFormvalue>({
     defaultValues: {
       kode: "",
-      nama_jenis_cuti: "",
+      nama: "",
       standar_cuti: 0,
       format_nomor_surat: "",
       keterangan: "",
@@ -149,7 +149,7 @@ const JenisCuti = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      nama_jenis_cuti: item.nama_jenis_cuti,
+      nama: item.nama,
       standar_cuti: Number(item.standar_cuti),
       format_nomor_surat: item.format_nomor_surat,
       keterangan: item.keterangan,
@@ -217,7 +217,7 @@ const JenisCuti = () => {
                       if (!isEditMode) {
                         form.reset({
                           kode: "",
-                          nama_jenis_cuti: "",
+                          nama: "",
                           standar_cuti: 0,
                           format_nomor_surat: "",
                           keterangan: "",
@@ -227,11 +227,10 @@ const JenisCuti = () => {
                         setSearchParam(searchParam);
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
+                    className={`cursor-pointer ${isEditMode
                         ? "bg-gray-400"
                         : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -282,7 +281,7 @@ const JenisCuti = () => {
                           inputStyle="w-full"
                           position={true}
                           form={form}
-                          name="nama_jenis_cuti"
+                          name="nama"
                           required={false}
                         />
                       </TableCell>
@@ -343,7 +342,7 @@ const JenisCuti = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_jenis_cuti}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.standar_cuti}

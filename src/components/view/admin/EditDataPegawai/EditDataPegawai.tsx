@@ -102,7 +102,7 @@ const dataPegawaiSchema = z.object({
     .length(5, "Kode pos harus 5 digit")
     .optional()
     .or(z.literal("")),
-  suku: z.string().optional(),
+  suku_id: z.string().optional(),
   jarak_rumah_domisili: z.string().optional(),
   no_whatsapp: z
     .string()
@@ -119,8 +119,9 @@ const dataPegawaiSchema = z.object({
     .or(z.literal("")),
   nama_bank: z.string().optional(),
   cabang_bank: z.string().optional(),
-  nama_rekening: z.string().optional(),
+  atas_nama_rekening: z.string().optional(),
   no_rekening: z.string().optional(),
+  bank_id: z.string().optional(),
   kapreg: z.string().max(50, "Kapreg maksimal 50 karakter").optional(),
   file_kapreg: fileSchema,
   npwp: z
@@ -151,6 +152,10 @@ const dataPegawaiSchema = z.object({
     .string()
     .max(20, "Jenis kendaraan maksimal 20 karakter")
     .optional(),
+  jabatan_struktural_id: z.string().optional(),
+  pangkat_id: z.string().optional(),
+  eselon_id: z.string().optional(),
+  jenjang_pendidikan_id: z.string().optional(),
   tinggi_badan: z.coerce
     .number({ invalid_type_error: "Tinggi badan harus angka" })
     .positive("Tinggi badan harus positif")
@@ -209,90 +214,97 @@ const EditDataPegawai = () => {
     // @ts-ignore
     values: data
       ? {
-          // Data pribadi
-          id: data.id,
-          nip: data.nip || "",
-          nuptk: data.nuptk || "",
-          nama: data.nama || "",
-          gelar_depan: data.gelar_depan || "",
-          gelar_belakang: data.gelar_belakang || "",
-          jenis_kelamin:
-            data.jenis_kelamin === "LAKI-LAKI"
-              ? "Laki-laki"
-              : data.jenis_kelamin === "PEREMPUAN"
+        // Data pribadi
+        id: data.id,
+        nip: data.nip || "",
+        nuptk: data.nuptk || "",
+        nama: data.nama || "",
+        gelar_depan: data.gelar_depan || "",
+        gelar_belakang: data.gelar_belakang || "",
+        jenis_kelamin:
+          data.jenis_kelamin?.toUpperCase() === "LAKI-LAKI" || data.jenis_kelamin === "Laki-laki"
+            ? "Laki-laki"
+            : data.jenis_kelamin?.toUpperCase() === "PEREMPUAN" || data.jenis_kelamin === "Perempuan"
               ? "Perempuan"
               : undefined,
-          agama: data.agama || "",
-          tempat_lahir: data.tempat_lahir || "",
-          tanggal_lahir: data.tanggal_lahir
-            ? new Date(data.tanggal_lahir)
-            : undefined,
-          kode_status_pernikahan: data.kode_status_pernikahan?.toString() || "",
-          golongan_darah: data.golongan_darah || "",
+        agama: data.agama || "",
+        tempat_lahir: data.tempat_lahir || "",
+        tanggal_lahir: data.tanggal_lahir
+          ? data.tanggal_lahir.split("T")[0]
+          : "",
+        kode_status_pernikahan: data.status_pernikahan_id?.id?.toString() || data.status_pernikahan_id?.toString() || "",
+        golongan_darah: data.golongan_darah || "",
 
-          // Data kepegawaian
-          unit_kerja_id: data.unit_kerja_id?.toString() || "",
-          status_aktif_id: data.status_aktif_id?.toString() || "",
-          status_kerja: data.hubungan_kerja_id?.toString() || "",
-          email_pegawai: data.email_pegawai || "",
-          email_pribadi: data.email_pribadi || "",
-          jabatan_fungsional_id: data.jabatan_fungsional_id?.toString() || "",
-          // jabatan_akademik_id: data.jabatan_struktural_id?.toString() || "",
+        // Data kepegawaian
+        unit_kerja_id: data.unit_kerja_id?.id?.toString() || data.unit_kerja_id?.toString() || "",
+        status_aktif_id: data.status_aktif_id?.id?.toString() || data.status_aktif_id?.toString() || "",
+        status_kerja: data.hubungan_kerja_id?.id?.toString() || data.hubungan_kerja_id?.toString() || data.status_kerja?.toString() || "",
+        email_pegawai: data.email_pegawai || "",
+        email_pribadi: data.email_pribadi || "",
+        jabatan_fungsional_id: data.jabatan_fungsional_id?.id?.toString() || data.jabatan_fungsional_id?.toString() || "",
+        // jabatan_akademik_id: data.jabatan_struktural_id?.id?.toString() || data.jabatan_struktural_id?.toString() || "",
 
-          // Data domisili
-          no_ktp: data.no_ktp || "",
-          no_kk: data.no_kk || "",
-          warga_negara: "WNI",
-          provinsi: data.provinsi || "",
-          kota: data.kota || "",
-          kecamatan: data.kecamatan || "",
-          alamat_domisili: data.alamat_domisili || "",
-          kode_pos: data.kode_pos || "",
-          suku: data.suku_id?.toString() || "",
-          jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
-          no_whatsapp: data.no_whatsapp || "",
-          no_handphone: data.no_handphone || "",
+        // Data domisili
+        no_ktp: data.no_ktp || "",
+        no_kk: data.no_kk || "",
+        warga_negara: data.warga_negara || "IDN",
+        provinsi: data.provinsi || "",
+        kota: data.kota || "",
+        kecamatan: data.kecamatan || "",
+        alamat_domisili: data.alamat_domisili || "",
+        kode_pos: data.kode_pos || "",
+        suku_id: data.suku_id?.id?.toString() || data.suku_id?.toString() || "",
+        jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
+        no_whatsapp: data.no_whatsapp || "",
+        no_handphone: data.no_handphone || "",
 
-          // Data rekening
-          nama_bank: data.nama_bank || "",
-          cabang_bank: data.cabang_bank || "",
-          no_rekening: data.no_rekening || "",
+        // Data rekening
+        nama_bank: data.nama_bank || "",
+        cabang_bank: data.cabang_bank || "",
+        atas_nama_rekening: data.atas_nama_rekening || "",
+        no_rekening: data.no_rekening || "",
+        bank_id: data.bank_id?.id?.toString() || data.bank_id?.toString() || "",
+        // Lanjutan Kepegawaian (karena ini aslinya tersebar, saya masukkan sini agar terbaca)
+        jabatan_struktural_id: data.jabatan_struktural_id?.id?.toString() || data.jabatan_struktural_id?.toString() || "",
+        pangkat_id: data.pangkat_id?.id?.toString() || data.pangkat_id?.toString() || "",
+        eselon_id: data.eselon_id?.id?.toString() || data.eselon_id?.toString() || "",
+        jenjang_pendidikan_id: data.jenjang_pendidikan_id?.id?.toString() || data.jenjang_pendidikan_id?.toString() || "",
 
-          // Data dokumen
-          npwp: data.npwp || "",
-          kapreg: data.kapreg || "",
-          no_bpjs: data.no_bpjs || "",
-          no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
-          no_bpjs_pensiun: data.no_bpjs_pensiun || "",
+        // Data dokumen
+        npwp: data.npwp || "",
+        kapreg: data.kapreg || "",
+        no_bpjs: data.no_bpjs || "",
+        no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
+        no_bpjs_pensiun: data.no_bpjs_pensiun || "",
 
-          // Data kendaraan
-          nomor_polisi: data.nomor_polisi || "",
-          jenis_kendaraan: data.jenis_kendaraan || "",
-          tinggi_badan: data.tinggi_badan
-            ? Number(data.tinggi_badan)
-            : undefined,
-          berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
+        // Data kendaraan
+        nomor_polisi: data.nomor_polisi || "",
+        jenis_kendaraan: data.jenis_kendaraan || "",
+        tinggi_badan: data.tinggi_badan
+          ? Number(data.tinggi_badan)
+          : undefined,
+        berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
 
-          // Lainnya
-          role_id: data.role_id || "",
+        // Lainnya
+        role_id: data.role_id?.id?.toString() || data.role_id?.toString() || "",
 
-          // File fields
-          file_kapreg: undefined,
-          file_npwp: undefined,
-          file_rekening: undefined,
-          file_kk: undefined,
-          file_ktp: undefined,
-          file_sertifikasi_dosen: undefined,
-          file_bpjs: undefined,
-          file_bpjs_ketenagakerjaan: undefined,
-          file_tanda_tangan: undefined,
-        }
+        // File fields
+        file_kapreg: undefined,
+        file_npwp: undefined,
+        file_rekening: undefined,
+        file_kk: undefined,
+        file_ktp: undefined,
+        file_sertifikasi_dosen: undefined,
+        file_bpjs: undefined,
+        file_bpjs_ketenagakerjaan: undefined,
+        file_tanda_tangan: undefined,
+      }
       : {
-          nip: "",
-          nuptk: "",
-          nama: "",
-          warga_negara: "",
-        },
+        nip: "",
+        nuptk: "",
+        nama: "",
+        warga_negara: "",
+      },
   });
 
   const onSubmit = (formData: DataPegawaiSchema) => {
@@ -426,8 +438,8 @@ const EditDataPegawai = () => {
                   required={true}
                   queryKey="agama"
                   queryFn={adminServices.getAgama}
-                  itemValue="nama_agama"
-                  itemLabel="nama_agama"
+                  itemValue="nama"
+                  itemLabel="nama"
                 />
                 <FormFieldInput
                   form={form}
@@ -447,14 +459,14 @@ const EditDataPegawai = () => {
                 <InfiniteScrollSelect
                   form={form}
                   label="Status Nikah"
-                  name="kode_status_pernikahan"
+                  name="status_pernikahan_id"
                   labelStyle="text-[#3F6FA9]"
                   placeholder="--Pilih Status Pernikahan--"
                   required={true}
                   queryKey="status-pernikahan-select"
                   queryFn={adminServices.getStatusPernikahan}
                   itemValue="id"
-                  itemLabel="nama_status"
+                  itemLabel="nama"
                 />
                 <InfiniteScrollSelect
                   form={form}
@@ -477,13 +489,11 @@ const EditDataPegawai = () => {
                       key={index}
                       type="button"
                       onClick={() => setShow(item.show)}
-                      className={`${
-                        item.title === "Alamat Domisili & Kontak"
-                          ? "col-span-2 min-[506px]:col-span-1"
-                          : ""
-                      } flex-1 cursor-pointer rounded-lg bg-[#D5D5D5] text-xs text-[#000] hover:bg-[#0A5B4F] hover:text-white md:text-sm lg:rounded-b-none lg:rounded-t-2xl transition-all duration-300 ${
-                        show === item.show ? "bg-[#106D63] text-white" : ""
-                      }`}
+                      className={`${item.title === "Alamat Domisili & Kontak"
+                        ? "col-span-2 min-[506px]:col-span-1"
+                        : ""
+                        } flex-1 cursor-pointer rounded-lg bg-[#D5D5D5] text-xs text-[#000] hover:bg-[#0A5B4F] hover:text-white md:text-sm lg:rounded-b-none lg:rounded-t-2xl transition-all duration-300 ${show === item.show ? "bg-[#106D63] text-white" : ""
+                        }`}
                     >
                       {item.title}
                     </Button>

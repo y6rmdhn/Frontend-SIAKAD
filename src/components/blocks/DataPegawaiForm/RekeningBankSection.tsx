@@ -26,14 +26,14 @@ const RekeningBankSection = ({
       <InfiniteScrollSelect
         form={form}
         label="Nama Bank"
-        name="nama_bank"
+        name="bank_id"
         labelStyle="text-[#3F6FA9]"
         placeholder="--Pilih Bank--"
         required={false}
         queryKey="bank-select"
-        queryFn={adminServices.getBankPelangkap}
-        itemValue="nama_bank"
-        itemLabel="nama_bank"
+        queryFn={(page) => adminServices.getBankPelangkap({ page, is_dropdown: true })}
+        itemValue="id"
+        itemLabel="nama"
       />
     )}
 
@@ -48,7 +48,7 @@ const RekeningBankSection = ({
     <FormFieldInput
       form={form}
       label="Atas Nama Rekening"
-      name="nama_rekening"
+      name="atas_nama_rekening"
       labelStyle="text-[#3F6FA9]"
       required={false}
       readOnly={isReadOnly}

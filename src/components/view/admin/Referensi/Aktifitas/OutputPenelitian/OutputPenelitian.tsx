@@ -34,7 +34,7 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.t
 const outputPenelitianSchema = z.object({
   id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
-  output_penelitian: z.string().min(1, "Output penelitian tidak boleh kosong"),
+  nama: z.string().min(1, "Output penelitian tidak boleh kosong"),
 });
 
 type OutputPenelitianFormValues = z.infer<typeof outputPenelitianSchema>;
@@ -43,7 +43,7 @@ type OutputPenelitianFormValues = z.infer<typeof outputPenelitianSchema>;
 interface OutputPenelitianItem {
   id: string;
   kode: string;
-  output_penelitian: string;
+  nama: string;
 }
 
 interface PaginationLink {
@@ -71,7 +71,7 @@ const OutputPenelitian = () => {
   const form = useForm<OutputPenelitianFormValues>({
     defaultValues: {
       kode: "",
-      output_penelitian: "",
+      nama: "",
     },
     resolver: zodResolver(outputPenelitianSchema),
   });
@@ -146,7 +146,7 @@ const OutputPenelitian = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      output_penelitian: item.output_penelitian,
+      nama: item.nama,
     });
 
     setIsEditMode(true);
@@ -204,7 +204,7 @@ const OutputPenelitian = () => {
                       if (!isEditMode) {
                         form.reset({
                           kode: "",
-                          output_penelitian: "",
+                          nama: "",
                         });
 
                         setIsAddData(!isAddData);
@@ -212,11 +212,10 @@ const OutputPenelitian = () => {
                         setSearchParam(searchParam);
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
+                    className={`cursor-pointer ${isEditMode
                         ? "bg-gray-400"
                         : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -256,7 +255,7 @@ const OutputPenelitian = () => {
                         inputStyle="w-full"
                         position
                         form={form}
-                        name="output_penelitian"
+                        name="nama"
                       />
                     </TableCell>
                     <TableCell className="h-full">
@@ -288,7 +287,7 @@ const OutputPenelitian = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.output_penelitian}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">

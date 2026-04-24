@@ -9,7 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useDebounce } from "use-debounce";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Link, useSearchParams } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
@@ -39,13 +40,30 @@ interface JenisSKItem {
   // Add other properties as needed
 }
 
+interface PaginatedData {
+  items: HubunganKerjaItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
+
 // Define interface for the API response
 interface JenisSKResponse {
-  data: JenisSKItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: JenisSKItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const jenisSkSchema = z.object({
@@ -73,14 +91,30 @@ const JenisSk = () => {
   );
   const queryClient = useQueryClient();
 
+
   // get data
-  const { data } = useQuery<JenisSKResponse>({
+  const { data: rawData } = useQuery<JenisSKResponse>({
     queryKey: ["jenis-sk", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisSk(searchParam.get("page"));
+      const response = await adminServices.getJenisSk({ is_dropdown: false });
       return response.data.data;
     },
   });
+
+  const items = rawData?.items || [];
+  const pagination = rawData?.pagination || {};
+
+  // Memoize url change
+  const handleUrlChange = useCallback((paramName: string, value: string) => {
+    const next = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      next.set(paramName, value);
+    } else {
+      next.delete(paramName);
+    }
+    if (paramName !== "page") next.set("page", "1");
+    setSearchParam(next);
+  }, [searchParam, setSearchParam]);
 
   // tambah data
   const { mutate: postJenisSk } = useMutation({
@@ -183,14 +217,14 @@ const JenisSk = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      rawData?.pagination.totalPages &&
+      Number(searchParam.get("page")) > rawData.pagination.totalPages &&
+      rawData.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", rawData.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
-  }, [searchParam, data, setSearchParam]);
+  }, [searchParam, rawData, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
@@ -214,11 +248,10 @@ const JenisSk = () => {
                       setIsAddData(true);
                     }
                   }}
-                  className={`cursor-pointer ${
-                    isEditMode
-                      ? "bg-gray-400"
-                      : "bg-green-light-uika hover:bg-[#329C59]"
-                  }`}
+                  className={`cursor-pointer ${isEditMode
+                    ? "bg-gray-400"
+                    : "bg-green-light-uika hover:bg-[#329C59]"
+                    }`}
                   disabled={isEditMode}
                 >
                   <FaPlus /> Tambah
@@ -284,7 +317,7 @@ const JenisSk = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
+                {items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -327,22 +360,12 @@ const JenisSk = () => {
               </TableBody>
             </Table>
 
+            {/* Pagination sesuai format baru */}
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
-              onPageChange={(page) => {
-                if (isEditMode) {
-                  toast.warning("Selesaikan edit data terlebih dahulu");
-                  return;
-                }
-
-                searchParam.set("page", page.toString());
-                setSearchParam(searchParam);
-              }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
+              pagination={rawData?.pagination}
+              onPageChange={(page) => handleUrlChange("page", String(page))}
             />
+
           </CustomCard>
         </form>
       </Form>

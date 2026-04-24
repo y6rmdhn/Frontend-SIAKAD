@@ -3,6 +3,11 @@ const endpoint = {
   USER: "user",
   ADMIN: "admin",
   DOSEN: "dosen",
+  MASTER: "master",
+  PEGAWAI: "pegawai",
+  VALIDASI: "validasi",
+  ABSENSI: "absensi",
+  STATISTIK: "statistik"
 };
 
 export default endpoint;

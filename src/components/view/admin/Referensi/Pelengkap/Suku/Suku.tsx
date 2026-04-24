@@ -35,7 +35,7 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 
 interface sukuItem {
   id: string;
-  nama_suku: string;
+  nama: string;
   // Add other properties as needed
 }
 
@@ -50,7 +50,7 @@ interface sukuResponse {
 
 const sukuSchema = z.object({
   id: z.string().optional(),
-  nama_suku: z.string().min(1, "Nama suku tidak boleh kosong"),
+  nama: z.string().min(1, "Nama suku tidak boleh kosong"),
 });
 
 type sukuFormvalue = z.infer<typeof sukuSchema>;
@@ -67,7 +67,7 @@ const Suku = () => {
 
   const form = useForm({
     defaultValues: {
-      nama_suku: "",
+      nama: "",
     },
     resolver: zodResolver(sukuSchema),
   });
@@ -141,7 +141,7 @@ const Suku = () => {
   const handleEditItem = (item: sukuItem) => {
     form.reset({
       id: item.id,
-      nama_suku: item.nama_suku,
+      nama: item.nama,
     });
 
     setIsEditMode(true);
@@ -217,7 +217,7 @@ const Suku = () => {
                       if (!isEditMode) {
                         form.reset({
                           id: "",
-                          nama_suku: "",
+                          nama: "",
                         });
 
                         setSearchParam(searchParam);
@@ -225,11 +225,10 @@ const Suku = () => {
                         searchParam.set("page", "1");
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
+                    className={`cursor-pointer ${isEditMode
                         ? "bg-gray-400"
                         : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -258,7 +257,7 @@ const Suku = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_suku"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -288,7 +287,7 @@ const Suku = () => {
                 {data?.data.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_suku}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">

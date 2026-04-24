@@ -43,10 +43,19 @@ interface PegawaiItem {
   id: string;
   nip: string;
   nidn: string | null;
-  nama_pegawai: string;
-  unit_kerja: string;
-  pendidikan_terakhir: string;
-  status: string;
+  nama: string;
+  unit_kerja_id: {
+    id: string;
+    nama: string;
+  };
+  jenjang_pendidikan_id: {
+    id: string;
+    jenjang_singkatan: string;
+  };
+  status_aktif_id: {
+    id: string;
+    nama: string;
+  };
 }
 
 interface PegawaiApiResponse {
@@ -57,8 +66,8 @@ interface PegawaiApiResponse {
     current_page: number;
   };
   filters: {
-    unit_kerja: any[];
-    status_aktif: any[];
+    unit_kerja_id: any[];
+    status_aktif_id: any[];
     hubungan_kerja: any[];
   };
 }
@@ -107,14 +116,14 @@ const Pegawai = () => {
     const filters = data?.filters;
     return {
       unitKerja:
-        filters?.unit_kerja?.map((opt: any) => ({
+        filters?.unit_kerja_id?.map((opt: any) => ({
           value: String(opt.id),
           label: opt.nama_unit,
         })) || [],
       statusAktif:
-        filters?.status_aktif?.map((opt: any) => ({
+        filters?.status_aktif_id?.map((opt: any) => ({
           value: String(opt.id),
-          label: opt.nama_status_aktif,
+          label: opt.nama,
         })) || [],
       hubunganKerja:
         filters?.hubungan_kerja?.map((opt: any) => ({
@@ -145,8 +154,8 @@ const Pegawai = () => {
 
   // --- Data Mutation (Delete) ---
   const { mutate: deleteData } = useMutation({
-    mutationFn: (payload: { pegawai_ids: string[] }) =>
-      deleteReferensiServices.deletePegawai(payload.pegawai_ids),
+    mutationFn: (payload: { ids: string[] }) =>
+      deleteReferensiServices.deletePegawai(payload.ids),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["pegawai"] });
@@ -161,12 +170,12 @@ const Pegawai = () => {
 
   const handleDeleteSelected = () => {
     if (selectedPegawaiId.length > 0) {
-      deleteData({ pegawai_ids: selectedPegawaiId });
+      deleteData({ ids: selectedPegawaiId });
     }
   };
 
   const handleDeleteSingle = (id: string) => {
-    deleteData({ pegawai_ids: [id] });
+    deleteData({ ids: [id] });
   };
 
   // --- Effects ---
@@ -318,10 +327,10 @@ const Pegawai = () => {
                   </TableCell>
                   <TableCell>{item.nip}</TableCell>
                   <TableCell>{item.nidn || "-"}</TableCell>
-                  <TableCell>{item.nama_pegawai}</TableCell>
-                  <TableCell>{item.unit_kerja}</TableCell>
-                  <TableCell>{item.pendidikan_terakhir}</TableCell>
-                  <TableCell className="text-center">{item.status}</TableCell>
+                  <TableCell>{item.nama}</TableCell>
+                  <TableCell>{item.unit_kerja_id?.nama || "-"}</TableCell>
+                  <TableCell>{item.jenjang_pendidikan_id?.jenjang_singkatan || "-"}</TableCell>
+                  <TableCell className="text-center">{item.status_aktif_id?.nama || "-"}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex justify-center items-center">
                       <Link to={`/admin/pegawai/edit-data-pegawai/${item.id}`}>
@@ -336,7 +345,7 @@ const Pegawai = () => {
                       </Link>
                       <ConfirmDialog
                         title="Hapus Data?"
-                        description={`Apakah Anda yakin ingin menghapus data "${item.nama_pegawai}"?`}
+                        description={`Apakah Anda yakin ingin menghapus data "${item.nama}"?`}
                         onConfirm={() => handleDeleteSingle(item.id)}
                       >
                         <Button size="icon" variant="ghost">

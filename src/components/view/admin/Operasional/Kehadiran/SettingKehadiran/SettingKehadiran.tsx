@@ -84,7 +84,7 @@ const SettingKehadiran = () => {
     queryKey: ["setting-kehadiran"],
     queryFn: async () => {
       const response = await adminServices.getSettingKehadiran();
-      return response.data.data || [];
+      return response.data.data.items || [];
     },
   });
 
@@ -137,28 +137,25 @@ const SettingKehadiran = () => {
     form.reset(defaultValues);
   };
 
-  const handleEditClick = (item: any) => {
+  const handleEditClick = (items: any) => {
     setIsCreateMode(false);
-    setSelectedId(item.id);
+    setSelectedId(items.id);
 
     form.reset({
-      nama_gedung: item.nama_gedung,
-      latitude: item?.coordinates?.latitude,
-      longitude: item?.coordinates?.longitude,
-      radius: item?.radius,
-      berlaku_keterlambatan: item?.late_rules?.berlaku_keterlambatan,
-      toleransi_terlambat: item?.late_rules?.toleransi_terlambat,
-      berlaku_pulang_cepat: item?.early_leave_rules?.berlaku_pulang_cepat,
-      toleransi_pulang_cepat: item?.early_leave_rules?.toleransi_pulang_cepat,
-      wajib_foto: item?.attendance_requirements?.wajib_foto,
-      wajib_isi_rencana_kegiatan:
-        item?.attendance_requirements?.wajib_isi_rencana_kegiatan,
-      wajib_isi_realisasi_kegiatan:
-        item?.attendance_requirements?.wajib_isi_realisasi_kegiatan,
-      wajib_presensi_dilokasi:
-        item?.attendance_requirements?.wajib_presensi_dilokasi,
-      qr_code_enabled: item?.qr_code?.enabled ?? false,
-      pin_code_enabled: item?.pin_code?.enabled ?? false,
+      nama_gedung: items.nama_gedung,
+      latitude: items.latitude,
+      longitude: items.longitude,
+      radius: items.radius,
+      berlaku_keterlambatan: items.berlaku_keterlambatan,
+      toleransi_terlambat: items.toleransi_terlambat ?? 0,
+      berlaku_pulang_cepat: items.berlaku_pulang_cepat,
+      toleransi_pulang_cepat: items.toleransi_pulang_cepat ?? 0,
+      wajib_foto: items.wajib_foto,
+      wajib_isi_rencana_kegiatan: items.wajib_isi_rencana_kegiatan ?? false,
+      wajib_isi_realisasi_kegiatan: items.wajib_isi_realisasi_kegiatan ?? false,
+      wajib_presensi_dilokasi: items.wajib_presensi_dilokasi,
+      qr_code_enabled: items.qr_code_enabled ?? false,
+      pin_code_enabled: items.qr_pin_enabled ?? false,
     });
   };
 
@@ -190,8 +187,8 @@ const SettingKehadiran = () => {
         {isCreateMode
           ? "Tambah Setting Kehadiran"
           : selectedId
-          ? "Edit Setting Kehadiran"
-          : "Setting Kehadiran"}
+            ? "Edit Setting Kehadiran"
+            : "Setting Kehadiran"}
       </h1>
 
       {/* TAMPILAN TABEL */}
@@ -231,28 +228,31 @@ const SettingKehadiran = () => {
             </TableHeader>
             <TableBody>
               {Array.isArray(data) &&
-                data.map((item: any) => (
-                  <TableRow key={item.id}>
+                data.map((items: any) => (
+                  <TableRow key={items.id}>
                     <TableCell className="text-center font-medium">
-                      {item.nama_gedung}
+                      {items.nama_gedung}
                     </TableCell>
                     <TableCell className="text-center">
-                      {item.coordinates?.latitude}
+                      {items.latitude}
                     </TableCell>
                     <TableCell className="text-center">
-                      {item.coordinates?.longitude}
+                      {items.longitude}
                     </TableCell>
-                    <TableCell className="text-center">{item.radius}</TableCell>
+                    <TableCell className="text-center">{items.radius}</TableCell>
 
                     <TableCell className="text-center">
-                      {item.qr_code?.download_url ? (
+                      {items.qr_code_path ? (
                         <Button
                           size="sm"
                           variant="ghost"
                           title="Download QR Code"
                           className="hover:bg-slate-100"
                           onClick={() =>
-                            window.open(item.qr_code.download_url, "_blank")
+                            window.open(
+                              `${import.meta.env.VITE_BACKEND_SIAKAD_PUBLIC_URL}${items.qr_code_path}`,
+                              "_blank"
+                            )
                           }
                         >
                           <MdQrCode2 className="h-6 w-6 text-slate-700" />
@@ -266,7 +266,7 @@ const SettingKehadiran = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => handleEditClick(item)}
+                        onClick={() => handleEditClick(items)}
                         className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 border-yellow-300"
                       >
                         <MdEdit className="mr-1" /> Edit

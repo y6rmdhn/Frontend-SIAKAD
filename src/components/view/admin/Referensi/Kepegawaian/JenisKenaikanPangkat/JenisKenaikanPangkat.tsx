@@ -15,7 +15,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { IoSaveOutline } from "react-icons/io5";
@@ -37,7 +37,7 @@ export const jenisKenaikanPangkatSchema = z.object({
       required_error: "Kode tidak boleh kosong.",
     })
     .min(1, "Kode tidak boleh kosong."),
-  jenis_pangkat: z
+  nama: z
     .string({
       required_error: "Jenis pangkat tidak boleh kosong.",
     })
@@ -47,6 +47,17 @@ export const jenisKenaikanPangkatSchema = z.object({
 export type JenisKenaikanPangkatSchema = z.infer<
   typeof jenisKenaikanPangkatSchema
 >;
+interface PaginatedData {
+  items: HubunganKerjaItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
 
 const JenisKenaikanPangkat = () => {
   const [searchParam, setSearchParam] = useSearchParams();
@@ -63,21 +74,35 @@ const JenisKenaikanPangkat = () => {
     defaultValues: {
       id: "", // ✅ DIUBAH: 0 -> string kosong
       kode: "",
-      jenis_pangkat: "",
+      nama: "",
     },
   });
 
   // get data
-  const { data } = useQuery({
+  const { data: rawData } = useQuery({
     queryKey: ["jenis-kenaikan-pangkat-referensi", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisKenaikanPangkat(
-        searchParam.get("page")
-      );
-      console.log("📋 Data dari API:", response.data.data); // Debug
+      const response = await adminServices.getJenisKenaikanPangkat({ page: searchParam.get("page") })
+
       return response.data.data;
     },
   });
+
+  const items = rawData?.items || [];
+  const pagination = rawData?.pagination || {};
+
+  // Memoize url change
+  const handleUrlChange = useCallback((paramName: string, value: string) => {
+    const next = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      next.set(paramName, value);
+    } else {
+      next.delete(paramName);
+    }
+    if (paramName !== "page") next.set("page", "1");
+    setSearchParam(next);
+  }, [searchParam, setSearchParam]);
+
 
   // tambah data
   const { mutate: postData } = useMutation({
@@ -165,7 +190,7 @@ const JenisKenaikanPangkat = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      jenis_pangkat: item.jenis_pangkat,
+      nama: item.nama,
     });
 
     setIsEditMode(true);
@@ -206,17 +231,6 @@ const JenisKenaikanPangkat = () => {
     }
   }, [searchParam, setSearchParam]);
 
-  useEffect(() => {
-    if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
-    ) {
-      searchParam.set("page", data.last_page.toString());
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
-
   return (
     <div className="mt-10 mb-20">
       <Title title="Daftar Jenis Kenaikan Pangkat" />
@@ -233,18 +247,17 @@ const JenisKenaikanPangkat = () => {
                       form.reset({
                         id: "", // ✅ DIUBAH: 0 -> string kosong
                         kode: "",
-                        jenis_pangkat: "",
+                        nama: "",
                       });
                       setIsAddData(true);
                       searchParam.set("page", "1");
                       setSearchParam(searchParam);
                     }
                   }}
-                  className={`cursor-pointer ${
-                    isEditMode
-                      ? "bg-gray-400"
-                      : "bg-green-light-uika hover:bg-[#329C59]"
-                  }`}
+                  className={`cursor-pointer ${isEditMode
+                    ? "bg-gray-400"
+                    : "bg-green-light-uika hover:bg-[#329C59]"
+                    }`}
                   disabled={isEditMode}
                 >
                   <FaPlus className="w-4! h-4! text-white" />
@@ -284,7 +297,7 @@ const JenisKenaikanPangkat = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="jenis_pangkat"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -311,13 +324,13 @@ const JenisKenaikanPangkat = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item: any) => (
+                {items.map((item: any) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.jenis_pangkat}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full gap-2">
@@ -352,20 +365,10 @@ const JenisKenaikanPangkat = () => {
               </TableBody>
             </Table>
 
+            {/* Pagination sesuai format baru */}
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
-              onPageChange={(page) => {
-                if (isEditMode) {
-                  toast.warning("Selesaikan edit data terlebih dahulu");
-                  return;
-                }
-                searchParam.set("page", page.toString());
-                setSearchParam(searchParam);
-              }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
+              pagination={rawData?.pagination}
+              onPageChange={(page) => handleUrlChange("page", String(page))}
             />
           </CustomCard>
         </form>

@@ -18,6 +18,11 @@ axiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
 
+        const activeMode = localStorage.getItem("active_mode");
+        if (activeMode) {
+            config.headers["X-Active-Mode"] = activeMode; // "admin" | "pegawai"
+        }
+
         return config;
     },
     (error) => Promise.reject(error)
@@ -31,15 +36,15 @@ axiosInstance.interceptors.response.use(
         const genericMessage = "Terjadi kesalahan pada server.";
 
         if (status === 401) {
-            const message = responseData?.message || "Terjadi kesalahan autentikasi!";
-            if (message === "Unauthorized" || responseData?.errors?.message === "Unauthorized") {
-                reduxStore.dispatch(clearUserData());
-                localStorage.removeItem("user");
-                toast.error("Sesi kamu habis. Silakan login kembali.");
-                window.location.href = "/login";
-            } else {
-                toast.error(message);
-            }
+            // Redirect ke login untuk semua kondisi 401:
+            // - "jwt expired" (token kedaluwarsa)
+            // - "Unauthorized: Invalid token"
+            // - token tidak ada
+            reduxStore.dispatch(clearUserData());
+            localStorage.removeItem("user");
+            localStorage.removeItem("refresh_token");
+            toast.error("Sesi kamu habis. Silakan login kembali.");
+            window.location.href = "/login";
         } else if (status === 422) {
             // Tangani error validasi 422
             const mainMessage = responseData?.message || "Data yang diberikan tidak valid.";

@@ -30,8 +30,8 @@ import { z } from "zod";
 
 interface jenisKehadiranItem {
   id: string;
-  kode_jenis: string;
-  nama_jenis: string;
+  kode: string;
+  nama: string;
   warna: string;
   // Add other properties as needed
 }
@@ -47,8 +47,8 @@ interface jenisKehadiranResponse {
 
 const jenisKehadiranSchema = z.object({
   id: z.string().optional(),
-  kode_jenis: z.string().min(1, "Kode tidak boleh kosong"),
-  nama_jenis: z.string().min(1, "Nama Jenis tidak boleh kosong"),
+  kode: z.string().min(1, "Kode tidak boleh kosong"),
+  nama: z.string().min(1, "Nama Jenis tidak boleh kosong"),
   warna: z.string().min(1, "Warna tidak boleh kosong"),
 });
 
@@ -67,8 +67,8 @@ const JenisKehadiran = () => {
   const form = useForm({
     defaultValues: {
       id: "",
-      kode_jenis: "",
-      nama_jenis: "",
+      kode: "",
+      nama: "",
       warna: "",
     } as jenisKehadiranFormvalue,
     resolver: zodResolver(jenisKehadiranSchema),
@@ -147,8 +147,8 @@ const JenisKehadiran = () => {
   const handleEditItem = (item: jenisKehadiranItem) => {
     form.reset({
       id: item.id,
-      kode_jenis: item.kode_jenis,
-      nama_jenis: item.nama_jenis,
+      kode: item.kode,
+      nama: item.nama,
       warna: item.warna,
     });
 
@@ -218,8 +218,8 @@ const JenisKehadiran = () => {
                       if (!isEditMode) {
                         form.reset({
                           id: "",
-                          kode_jenis: "",
-                          nama_jenis: "",
+                          kode: "",
+                          nama: "",
                           warna: "",
                         });
 
@@ -228,11 +228,10 @@ const JenisKehadiran = () => {
                         searchParam.set("page", "1");
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
-                        ? "bg-gray-400"
-                        : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                    className={`cursor-pointer ${isEditMode
+                      ? "bg-gray-400"
+                      : "bg-green-light-uika hover:bg-[#329C59]"
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -267,7 +266,7 @@ const JenisKehadiran = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="kode_jenis"
+                        name="kode"
                         required={false}
                       />
                     </TableCell>
@@ -276,7 +275,7 @@ const JenisKehadiran = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_jenis"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -315,10 +314,10 @@ const JenisKehadiran = () => {
                 {data?.data.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.kode_jenis}
+                      {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_jenis}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.warna}

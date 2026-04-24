@@ -10,20 +10,20 @@ import { useDispatch } from "react-redux";
 
 // Internal imports
 import authServices from "@/services/auth.services";
-import captchaServices from "@/services/captcha.services";
+// import captchaServices from "@/services/captcha.services";
 import { ILogin } from "@/types/auth";
 import { setUserData } from "@/store/userSlice";
 
 // Form validation schema
 const loginFormSchema = z.object({
-  nip: z
+  username: z
     .string()
     .min(1, "Nomor Induk Pegawai tidak boleh kosong")
     .regex(/^\d+$/, "Nomor Induk Pegawai harus berupa angka")
     .max(20, "Nomor Induk Pegawai tidak boleh lebih dari 20 digit"),
   password: z.string().min(8, "Kata Sandi tidak boleh kurang dari 8 karakter"),
-  captcha_id: z.string().min(1, "Captcha ID wajib diisi"),
-  slider_position: z.number().min(0, "Slider wajib diisi"),
+  captcha_id: z.string().optional(),
+  slider_position: z.number().optional(),
 });
 
 // Define type from schema
@@ -52,37 +52,37 @@ const useLogin = () => {
   // Form setup
   const form = useForm<LoginFormValues>({
     defaultValues: {
-      nip: "",
+      username: "",
       password: "",
-      captcha_id: "",
-      slider_position: 0,
+      // captcha_id: "",
+      // slider_position: 0,
     },
     resolver: zodResolver(loginFormSchema),
   });
 
   // Watch form fields
-  const nip = form.watch("nip");
+  const username = form.watch("username");
   const password = form.watch("password");
-  const isFormFilled = nip && password;
+  const isFormFilled = username && password;
   const { errors } = form.formState;
 
   // Captcha data query
-  const { data: captchaData } = useQuery({
-    queryKey: ["generate-captcha"],
-    queryFn: async () => {
-      try {
-        const response = await captchaServices.generateCaptcha();
-        if (response.data && response.data.data) {
-          setCaptchaId(response.data.data.captcha_id);
-          return response.data.data;
-        }
-        return null;
-      } catch (error) {
-        console.error("Error fetching captcha:", error);
-        return null;
-      }
-    },
-  });
+  // const { data: captchaData } = useQuery({
+  //   queryKey: ["generate-captcha"],
+  //   queryFn: async () => {
+  //     try {
+  //       const response = await captchaServices.generateCaptcha();
+  //       if (response.data && response.data.data) {
+  //         setCaptchaId(response.data.data.captcha_id);
+  //         return response.data.data;
+  //       }
+  //       return null;
+  //     } catch (error) {
+  //       console.error("Error fetching captcha:", error);
+  //       return null;
+  //     }
+  //   },
+  // });
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -106,16 +106,22 @@ const useLogin = () => {
   const { isPending, mutate } = useMutation({
     mutationFn: (data: ILogin) => authServices.login(data),
     onSuccess: (response) => {
+      const data = response.data.data;
+
       // Handle successful login
       const userData = {
-        id: response.data.user.id,
-        name: response.data.user.nama,
-        role: response.data.role,
-        accessToken: response.data.access_token,
+        id: data.user.id,
+        name: data.user.nama,
+        nip: data.user.nip,
+        pegawai_id: data.user.pegawai_id,
+        role: data.user.role,
+        accessToken: data.accessToken,
+        refreshToken: data.refresh_token
       };
 
-      // Store user data and update state
+      // Store user data and tokens
       localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("refresh_token", data.refreshToken ?? data.refresh_token ?? "");
       dispatch(setUserData(userData));
 
       // Show success message and navigate
@@ -129,12 +135,12 @@ const useLogin = () => {
       setCaptchaVisible(false);
 
       // Reset form but keep NIP value
-      const currentNip = form.getValues("nip");
+      const currentNip = form.getValues("username");
       form.reset({
-        nip: currentNip,
+        username: currentNip,
         password: "",
-        captcha_id: "",
-        slider_position: 0,
+        // captcha_id: "",
+        // slider_position: 0,
       });
     },
   });
@@ -144,7 +150,11 @@ const useLogin = () => {
    */
   const handleLogin = (values: LoginFormValues) => {
     console.log(values);
-    mutate(values);
+    mutate({
+      ...values,
+      // captcha_id: values.captcha_id || "",
+      // slider_position: values.slider_position || 0,
+    });
   };
 
   /**
@@ -167,14 +177,14 @@ const useLogin = () => {
     isPending,
     captchaVisible,
     setCaptchaVisible,
-    captchaData,
-    nip,
+    // captchaData,
+    username,
     password,
     isFormFilled,
-    captchaId,
-    setCaptchaId,
-    sliderPosition,
-    setSliderPosition,
+    // captchaId,
+    // setCaptchaId,
+    // sliderPosition,
+    // setSliderPosition,
   };
 };
 

@@ -34,26 +34,34 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.t
 
 interface pangkatItem {
   id: string;
-  pangkat: string;
-  nama_golongan: string;
-  tunjangan: string;
-  potongan: string;
+  kode: string;
+  nama: string;
+  tunjangan: number;
+  potongan: number;
 }
 
 interface pangkatResponse {
   data: pangkatItem[];
-  links: any[];
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  // links: any[];
+  // next_page_url: string | null;
+  // prev_page_url: string | null;
+  // last_page: number;
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const pangkatSchema = z.object({
   id: z.string().optional(),
-  pangkat: z.string().min(1, "Pangkat tidak boleh kosong"),
-  nama_golongan: z.string().min(1, "Nama Golongan tidak boleh kosong"),
-  tunjangan: z.string().min(1, "Tunjangan tidak boleh kosong"),
-  potongan: z.string().min(1, "Potongan tidak boleh kosong"),
+  kode: z.string().min(1, "Kode tidak boleh kosong"),
+  nama: z.string().min(1, "Nama Golongan tidak boleh kosong"),
+  tunjangan: z.number().min(1, "Tunjangan tidak boleh kosong"),
+  potongan: z.number().min(1, "Potongan tidak boleh kosong"),
 });
 
 type pangkatFormvalue = z.infer<typeof pangkatSchema>;
@@ -64,29 +72,26 @@ const Pangkat = () => {
   const [isAddData, setIsAddData] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(
-    Number(searchParam.get("page") || 1)
-  );
+  const currentPage = Number(searchParam.get("page") || 1);
 
   const form = useForm<pangkatFormvalue>({
     defaultValues: {
       id: "",
-      pangkat: "",
-      nama_golongan: "",
-      tunjangan: "",
-      potongan: "",
+      kode: "",
+      nama: "",
+      tunjangan: 0,
+      potongan: 0,
     },
     resolver: zodResolver(pangkatSchema),
   });
 
   // get data
   const { data } = useQuery<pangkatResponse>({
-    queryKey: ["pangkat", searchParam.get("page")],
+    queryKey: ["kode", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getMasterPangkatReferensi(
-        searchParam.get("page")
-      );
-      console.log("📋 Data pangkat dari API:", response.data.data);
+      const response = await adminServices.getMasterPangkatReferensi({
+        page: searchParam.get("page") || 1
+      });
       return response.data.data;
     },
   });
@@ -101,7 +106,7 @@ const Pangkat = () => {
       form.reset();
       toast.success("Berhasil menambahkan data");
       setIsAddData(false);
-      queryClient.invalidateQueries({ queryKey: ["pangkat"] });
+      queryClient.invalidateQueries({ queryKey: ["kode"] });
     },
     onError: (error) => {
       toast.error(`Gagal menambah data: ${error.message}`);
@@ -122,7 +127,7 @@ const Pangkat = () => {
       setIsAddData(false);
       setEditingItemId(null);
       form.reset();
-      queryClient.invalidateQueries({ queryKey: ["pangkat"] });
+      queryClient.invalidateQueries({ queryKey: ["kode"] });
     },
     onError: (error) => {
       toast.error(`Gagal mengedit data: ${error.message}`);
@@ -134,7 +139,7 @@ const Pangkat = () => {
     mutationFn: (id: string) => deleteReferensiServices.deteleMasterPangkat(id),
     onSuccess: () => {
       toast.success("Data berhasil dihapus");
-      queryClient.invalidateQueries({ queryKey: ["pangkat"] });
+      queryClient.invalidateQueries({ queryKey: ["kode"] });
 
       if (editingItemId) {
         form.reset();
@@ -166,8 +171,8 @@ const Pangkat = () => {
 
     form.reset({
       id: item.id,
-      pangkat: item.pangkat,
-      nama_golongan: item.nama_golongan,
+      kode: item.kode,
+      nama: item.nama,
       tunjangan: item.tunjangan,
       potongan: item.potongan,
     });
@@ -189,12 +194,6 @@ const Pangkat = () => {
     setIsAddData(false);
   };
 
-  useEffect(() => {
-    const page = Number(searchParam.get("page") || 1);
-    if (page !== currentPage) {
-      setCurrentPage(page);
-    }
-  }, [searchParam]);
 
   useEffect(() => {
     if (!searchParam.get("page")) {
@@ -212,11 +211,11 @@ const Pangkat = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -244,21 +243,22 @@ const Pangkat = () => {
                       if (!isEditMode) {
                         form.reset({
                           id: "",
-                          pangkat: "",
-                          nama_golongan: "",
-                          tunjangan: "",
-                          potongan: "",
+                          kode: "",
+                          nama: "",
+                          tunjangan: 0,
+                          potongan: 0,
                         });
                         setIsAddData(true);
-                        searchParam.set("page", "1");
-                        setSearchParam(searchParam);
+                        setSearchParam((prev) => {
+                          prev.set("page", "1");
+                          return prev;
+                        });
                       }
                     }}
-                    className={`cursor-pointer w-full md:w-auto text-xs sm:text-sm ${
-                      isEditMode
-                        ? "bg-gray-400"
-                        : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                    className={`cursor-pointer w-full md:w-auto text-xs sm:text-sm ${isEditMode
+                      ? "bg-gray-400"
+                      : "bg-green-light-uika hover:bg-[#329C59]"
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus /> Tambah
@@ -295,7 +295,7 @@ const Pangkat = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="pangkat"
+                        name="kode"
                         required={false}
                       />
                     </TableCell>
@@ -304,7 +304,7 @@ const Pangkat = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_golongan"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -353,10 +353,10 @@ const Pangkat = () => {
                 {data?.data.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.pangkat}
+                      {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_golongan}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.tunjangan}
@@ -398,19 +398,20 @@ const Pangkat = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              currentPage={currentPage}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
                   return;
                 }
-                searchParam.set("page", page.toString());
-                setSearchParam(searchParam);
+                setSearchParam((prev) => {
+                  prev.set("page", page.toString());
+                  return prev;
+                });
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
+              hasNextPage={data?.pagination.hasNextPage}
+              hasPrevPage={data?.pagination.hasPrevPage}
+              totalPages={data?.pagination.totalPages}
             />
           </CustomCard>
         </form>

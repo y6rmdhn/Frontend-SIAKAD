@@ -19,6 +19,7 @@ const DetailHubunganKerja = () => {
       if (!id) throw new Error("ID tidak ditemukan");
       // 2. Memanggil service yang sesuai
       const response = await adminServices.getHubunganKerjaDetail(id);
+      console.log(response.data);
       return response.data;
     },
     enabled: !!id,
@@ -117,7 +118,7 @@ const DetailHubunganKerja = () => {
                     Nama Pegawai
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {data?.pegawai_info_detail.nama || "-"}
+                    {data?.data?.pegawai?.nama || "-"}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -125,7 +126,7 @@ const DetailHubunganKerja = () => {
                     Jenis Hubungan Kerja
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {data?.data.hubungan_kerja_label || "-"}
+                    {data?.data.hubungan_kerja.nama || "-"}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -149,7 +150,7 @@ const DetailHubunganKerja = () => {
                     Tgl. Mulai
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.tgl_awal)}
+                    {formatDate(data?.data.tgl_mulai)}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -157,7 +158,7 @@ const DetailHubunganKerja = () => {
                     Tgl. Selesai
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.tgl_akhir)}
+                    {formatDate(data?.data.tgl_selesai)}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -173,7 +174,7 @@ const DetailHubunganKerja = () => {
                     Status Aktif
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {data?.data.status_aktif_label || "-"}
+                    {data?.data.status_aktif.nama || "-"}
                   </Label>
                 </div>
               </div>
@@ -187,10 +188,10 @@ const DetailHubunganKerja = () => {
                   <Label className="text-sm font-medium text-right">
                     <span
                       className={`capitalize px-2 py-1 text-xs rounded-md text-white ${getStatusColor(
-                        data?.data.status_info.color
+                        data?.data.status.color
                       )}`}
                     >
-                      {data?.data.status_info.label || "-"}
+                      {data?.data.status || "-"}
                     </span>
                   </Label>
                 </div>
@@ -199,7 +200,7 @@ const DetailHubunganKerja = () => {
                     Tanggal Diajukan
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.tgl_diajukan)}
+                    {formatDate(data?.data.createdAt)}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -212,30 +213,36 @@ const DetailHubunganKerja = () => {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                   <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
+                    Tanggal Ditolak
+                  </Label>
+                  <Label className="text-sm font-medium text-right">
+                    {formatDate(data?.data.tgl_ditolak)}
+                  </Label>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
                     Dibuat Oleh
                   </Label>
                   <Label className="text-sm font-medium text-right">
-                    {data?.data.nama_pegawai || "-"}
+                    {data?.data.pegawai.nama || "-"}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                   <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
                     File Pendukung
                   </Label>
-                  <div className="text-sm font-medium text-right">
-                    {data?.data.file_hubungan_kerja_link ? (
+                  <div className="flex flex-col gap-1">
+                    {data.data.dokumen.map((doc: any) => (
                       <a
-                        href={data.data.file_hubungan_kerja_link}
+                        key={doc.id}
+                        href={doc.url}
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline flex items-center justify-end"
+                        rel="noreferrer"
+                        className="text-blue-600 hover:underline text-xs sm:text-sm flex items-center gap-1"
                       >
-                        <FaFileDownload className="mr-2" />
-                        Lihat Dokumen
+                        📄 {doc.file_name}
                       </a>
-                    ) : (
-                      "-"
-                    )}
+                    ))}
                   </div>
                 </div>
               </div>

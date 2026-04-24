@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { format, parseISO } from "date-fns";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -14,29 +15,21 @@ import { Label } from "@/components/ui/label";
 import { Form } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogClose, DialogContent, DialogDescription,
+  DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 
 // Custom Components
 import CustomCard from "@/components/blocks/Card";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import SearchInput from "@/components/blocks/SearchInput";
-import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 
@@ -47,10 +40,8 @@ import { FaCheck, FaPlus } from "react-icons/fa";
 // Services
 import adminServices from "@/services/admin.services";
 import patchDataServices from "@/services/patch.admin.services";
-import environment from "@/config/environments";
 
-// --- Definisi Tipe Data ---
-
+// ── Tipe Data Baru sesuai BE ──────────────────────────────────────────────────
 type ActionType = "approve" | "reject";
 
 const rejectActionSchema = z.object({
@@ -60,66 +51,76 @@ const rejectActionSchema = z.object({
 });
 type ActionSchema = z.infer<typeof rejectActionSchema>;
 
+interface Dokumen {
+  id: string;
+  file_name: string;
+  url: string;
+}
+
 interface HubunganKerjaItem {
   id: string;
-  nip_pegawai: string;
-  nama_pegawai: string;
-  tgl_mulai_formatted: string;
-  tgl_selesai_formatted: string;
-  hubungan_kerja_label: string;
-  keterangan: string | null;
-  file_hubungan_kerja_link: string | null;
-  file_penghargaan?: string;
-  status_pengajuan: string;
+  pegawai?: { nip: string; nama: string };
+  hubungan_kerja?: { nama: string };
+  status_aktif?: { nama: string };
+  tgl_mulai: string | null;
+  tgl_selesai: string | null;
+  pejabat_penetap?: string | null;
+  status: string; // 'draft' | 'diajukan' | 'disetujui' | 'ditolak'
+  tgl_disetujui?: string | null;
+  tgl_ditolak?: string | null;
+  createdAt?: string;
+  dokumen?: Dokumen[];
 }
 
 interface PaginatedData {
-  data: HubunganKerjaItem[];
-  current_page: number;
-  last_page: number;
-  links: any[];
-}
-
-interface FilterOption {
-  id: string;
-  nama: string;
-}
-
-interface TableColumn {
-  field: string;
-  label: string;
-}
-
-interface ApiResponse {
-  data: PaginatedData;
-  filters: {
-    original: {
-      filter_options: {
-        unit_kerja: FilterOption[];
-        jabatan_fungsional: FilterOption[];
-        status_pengajuan: FilterOption[];
-      };
-    };
+  items: HubunganKerjaItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
   };
-  table_columns: TableColumn[];
 }
 
-// --- Definisi Komponen ---
+// Status badge
+const statusColor: Record<string, string> = {
+  draft: "bg-gray-400",
+  diajukan: "bg-yellow-400 text-black",
+  disetujui: "bg-green-500",
+  ditolak: "bg-red-500",
+};
+
+const formatDate = (d?: string | null) =>
+  d ? format(parseISO(d), "dd MMM yyyy") : "-";
+
+// Helper: tanggal yang relevan sesuai status
+const getRelevantDate = (item: HubunganKerjaItem) => {
+  if (item.status === "disetujui") return { label: "Tgl. Disetujui", value: item.tgl_disetujui };
+  if (item.status === "ditolak") return { label: "Tgl. Ditolak", value: item.tgl_ditolak };
+  return { label: "Tgl. Diajukan", value: item.createdAt };
+};
+
+// ── Komponen Utama ────────────────────────────────────────────────────────────
 const HubunganKerjaKepegawaian = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const queryClient = useQueryClient();
 
-  // --- State Management ---
+  // State management
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
   const [selectedItem, setSelectedItem] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
+  const [selectedDokumen, setSelectedDokumen] = useState<Dokumen[]>([]);
   const [pendingAction, setPendingAction] = useState<ActionType | null>(null);
 
   const currentPage = searchParam.get("page") || "1";
-  const unitKerjaFilter = searchParam.get("unit_kerja_id") || "";
-  const jabatanFilter = searchParam.get("jabatan_fungsional_id") || "";
-  const statusFilter = searchParam.get("status_pengajuan") || "";
+  const statusFilter = searchParam.get("status") ?? "";
+  const startDate = searchParam.get("start_date") || "";
+  const endDate = searchParam.get("end_date") || "";
+  const unitKerjaId = searchParam.get("unit_kerja_id") || "";
 
   const form = useForm<ActionSchema>({
     resolver: zodResolver(rejectActionSchema),
@@ -127,52 +128,71 @@ const HubunganKerjaKepegawaian = () => {
   });
 
   useEffect(() => {
-    if (!isDialogOpen) {
-      form.reset({ keterangan_penolakan: "" });
-    }
+    if (!isDialogOpen) form.reset({ keterangan_penolakan: "" });
   }, [isDialogOpen, form]);
 
-  // --- Data Fetching (React Query) ---
-  const { data, isLoading, isError, error } = useQuery<ApiResponse>({
+
+  // Data fetching
+  const { data: rawData, isError, isLoading, error } = useQuery<PaginatedData>({
     queryKey: [
       "hubungan-kerja-validasi",
       currentPage,
       debouncedInput,
-      unitKerjaFilter,
-      jabatanFilter,
       statusFilter,
+      startDate,
+      endDate,
+      unitKerjaId,
     ],
     queryFn: async () => {
-      const params = {
+      const params: Record<string, string> = {
         page: currentPage,
-        search: debouncedInput,
-        unit_kerja_id: unitKerjaFilter,
-        jabatan_fungsional_id: jabatanFilter,
-        status_pengajuan: statusFilter,
+        limit: "10",
+        status: statusFilter,
+        start_date: startDate,
+        end_date: endDate,
+        unit_kerja_id: unitKerjaId,
       };
+      if (statusFilter && statusFilter !== "semua") params.status = statusFilter;
+      if (debouncedInput) params.search = debouncedInput;
+      if (startDate) params.start_date = startDate;
+      if (endDate) params.end_date = endDate;
+      if (unitKerjaId) params.unit_kerja_id = unitKerjaId;
+
       const response = await adminServices.getHubunganKerjaValidasiData(params);
-      return response.data;
+      return response.data.data;
     },
-    placeholderData: (previousData) => previousData,
+    placeholderData: (prev) => prev,
   });
 
-  // Memoize filter options
-  const filterOptions = useMemo(() => {
-    const options = data?.filters?.original?.filter_options;
-    if (!options)
-      return { unitKerja: [], jabatanFungsional: [], statusPengajuan: [] };
+  const { data: unitKerjaOptions } = useQuery<{ id: string; nama: string }[]>({
+    queryKey: ["master-unit-kerja"],
+    queryFn: async () => {
+      const response = await adminServices.getUnitKerja({ is_dropdown: true });
+      // Response is_dropdown: true → data.items langsung array
+      return response.data.data.items ?? [];
+    },
+  });
 
-    const mapToOptions = (items: FilterOption[] = []) =>
-      items.map((opt) => ({ value: String(opt.id), label: opt.nama }));
+  const items = rawData?.items ?? [];
+  const pagination = rawData?.pagination;
 
-    return {
-      unitKerja: mapToOptions(options.unit_kerja),
-      jabatanFungsional: mapToOptions(options.jabatan_fungsional),
-      statusPengajuan: mapToOptions(options.status_pengajuan),
-    };
-  }, [data?.filters]);
+  // Memoize url change
+  const handleUrlChange = useCallback((paramName: string, value: string) => {
+    const next = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      next.set(paramName, value);
+    } else {
+      next.delete(paramName);
+    }
+    if (paramName !== "page") next.set("page", "1");
+    setSearchParam(next);
+  }, [searchParam, setSearchParam]);
 
-  // --- Data Mutation ---
+  useEffect(() => {
+    handleUrlChange("search", debouncedInput);
+  }, [debouncedInput, handleUrlChange]);
+
+  // Mutations
   const handleSuccess = (action: string) => {
     toast.success(`Berhasil ${action} data pengajuan.`);
     setSelectedItem([]);
@@ -181,11 +201,7 @@ const HubunganKerjaKepegawaian = () => {
   };
 
   const handleError = (err: any) =>
-    toast.error(
-      `Gagal: ${
-        err?.response?.data?.message || err.message || "Terjadi kesalahan"
-      }`
-    );
+    toast.error(`Gagal: ${err?.response?.data?.message || err.message || "Terjadi kesalahan"}`);
 
   const { mutate: rejectMutation, isPending: isRejecting } = useMutation({
     mutationFn: (payload: { ids: string[]; keterangan_penolakan: string }) =>
@@ -201,83 +217,49 @@ const HubunganKerjaKepegawaian = () => {
     onError: handleError,
   });
 
-  // --- Event Handlers ---
-  const handleUrlChange = useCallback(
-    (paramName: string, value: string) => {
-      const newSearchParam = new URLSearchParams(searchParam);
-      if (value && value !== "semua") {
-        newSearchParam.set(paramName, value);
-      } else {
-        newSearchParam.delete(paramName);
-      }
+  // Checkbox logic
+  const pageIds = useMemo(() => items.map((i) => i.id), [items]);
+  const isAllSelectedOnPage = pageIds.length > 0 && pageIds.every((id) => selectedItem.includes(id));
+  const isSomeSelectedOnPage = !isAllSelectedOnPage && pageIds.some((id) => selectedItem.includes(id));
 
-      if (paramName !== "page") newSearchParam.set("page", "1");
-      setSearchParam(newSearchParam);
-    },
-    [searchParam, setSearchParam]
-  );
+  const handleSelectedItemId = (id: string, checked: boolean) =>
+    setSelectedItem((prev) => checked ? [...prev, id] : prev.filter((i) => i !== id));
 
-  useEffect(() => {
-    handleUrlChange("search", debouncedInput);
-  }, [debouncedInput, handleUrlChange]);
-
-  const handleSubmitAction = (values: ActionSchema) => {
-    if (pendingAction === "reject") {
-      rejectMutation({
-        ids: selectedItem,
-        keterangan_penolakan: values.keterangan_penolakan,
-      });
-    }
-  };
+  const handleSelectAll = (checked: boolean) =>
+    setSelectedItem(checked
+      ? [...new Set([...selectedItem, ...pageIds])]
+      : selectedItem.filter((id) => !pageIds.includes(id))
+    );
 
   const handleOpenDialog = (action: ActionType) => {
-    if (selectedItem.length === 0) {
-      toast.warning("Pilih setidaknya satu data untuk diproses.");
-      return;
-    }
+    if (selectedItem.length === 0) { toast.warning("Pilih setidaknya satu data."); return; }
     setPendingAction(action);
     setIsDialogOpen(true);
   };
 
-  // --- Table Selection Logic ---
-  const tableData = data?.data;
-  const pageIds = tableData?.data?.map((item) => item.id) || [];
-  const isAllSelectedOnPage =
-    pageIds.length > 0 && pageIds.every((id) => selectedItem.includes(id));
-  const isSomeSelectedOnPage =
-    !isAllSelectedOnPage && pageIds.some((id) => selectedItem.includes(id));
+  const handleSubmitAction = (values: ActionSchema) => {
+    if (pendingAction === "reject") {
+      rejectMutation({ ids: selectedItem, keterangan_penolakan: values.keterangan_penolakan });
+    }
+  };
 
-  const handleSelectedItemId = (id: string, checked: boolean) =>
-    setSelectedItem((prev) =>
-      checked ? [...prev, id] : prev.filter((i) => i !== id)
-    );
 
-  const handleSelectAll = (checked: boolean) =>
-    setSelectedItem(
-      checked
-        ? [...new Set([...selectedItem, ...pageIds])]
-        : selectedItem.filter((id) => !pageIds.includes(id))
-    );
 
-  // --- Loading and Error States ---
-  if (isLoading && !data) {
+  // Status options (static sesuai enum BE)
+  const statusOptions = [
+    { value: "diajukan", label: "Diajukan" },
+    { value: "disetujui", label: "Disetujui" },
+    { value: "ditolak", label: "Ditolak" },
+    { value: "draft", label: "Draft" },
+  ];
+
+  // Loading
+  if (isLoading && !rawData) {
     return (
       <div className="mt-10 mb-20 space-y-6">
         <Title title="Validasi Data Riwayat Hubungan Kerja" />
-        <div className="p-6 border rounded-lg mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-            ))}
-          </div>
-        </div>
         <div className="mt-10 space-y-2">
-          {[...Array(10)].map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full" />
-          ))}
+          {[...Array(10)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
         </div>
       </div>
     );
@@ -295,45 +277,82 @@ const HubunganKerjaKepegawaian = () => {
     );
   }
 
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Validasi Data Riwayat Hubungan Kerja" />
+
+      {/* Filter Section */}
       <CustomCard
         title="Filter Data"
         actions={
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Filter Status */}
+            <div className="flex flex-col gap-2">
+              <Label>Status Pengajuan</Label>
+              <Select
+                value={statusFilter}
+                onValueChange={(v) => handleUrlChange("status", v)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="--Pilih Status--" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="semua">Semua Status</SelectItem>
+                  <SelectItem value="diajukan">Diajukan</SelectItem>
+                  <SelectItem value="disetujui">Disetujui</SelectItem>
+                  <SelectItem value="ditolak">Ditolak</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Filter Unit Kerja */}
             <div className="flex flex-col gap-2">
               <Label>Unit Kerja</Label>
-              <SelectFilter
-                placeholder="--Semua Unit Kerja--"
-                options={filterOptions.unitKerja || []}
-                value={unitKerjaFilter}
+              <Select
+                value={unitKerjaId || "semua"}
                 onValueChange={(v) => handleUrlChange("unit_kerja_id", v)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="--Pilih Unit Kerja--" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="semua">Semua Unit Kerja</SelectItem>
+                  {unitKerjaOptions?.map((uk) => (
+                    <SelectItem key={uk.id} value={uk.id}>{uk.nama}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Filter Start Date */}
+            <div className="flex flex-col gap-2">
+              <Label>Tanggal Mulai Pengajuan</Label>
+              <input
+                type="date"
+                className="border rounded-md px-3 py-2 text-sm"
+                value={startDate}
+                onChange={(e) => handleUrlChange("start_date", e.target.value)}
               />
             </div>
+
+            {/* Filter End Date */}
             <div className="flex flex-col gap-2">
-              <Label>Jabatan Fungsional</Label>
-              <SelectFilter
-                placeholder="--Semua Jabatan--"
-                options={filterOptions.jabatanFungsional || []}
-                value={jabatanFilter}
-                onValueChange={(v) =>
-                  handleUrlChange("jabatan_fungsional_id", v)
-                }
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label>Status</Label>
-              <SelectFilter
-                placeholder="--Semua Status--"
-                options={filterOptions.statusPengajuan || []}
-                value={statusFilter}
-                onValueChange={(v) => handleUrlChange("status_pengajuan", v)}
+              <Label>Tanggal Akhir Pengajuan</Label>
+              <input
+                type="date"
+                className="border rounded-md px-3 py-2 text-sm"
+                value={endDate}
+                max={new Date().toISOString().split("T")[0]} // tidak bisa pilih masa depan
+                onChange={(e) => handleUrlChange("end_date", e.target.value)}
               />
             </div>
           </div>
         }
       />
+
+      {/* Search & Actions */}
       <div className="flex flex-col md:flex-row md:justify-between mt-10 gap-4">
         <SearchInput
           value={searchData}
@@ -341,191 +360,180 @@ const HubunganKerjaKepegawaian = () => {
           className="w-full md:w-80"
           placeholder="Cari NIP atau nama pegawai..."
         />
-        {selectedItem.length > 0 && (
-          <div className="flex flex-col md:flex-row gap-2">
-            <Button
-              onClick={() => handleOpenDialog("approve")}
-              className="bg-green-600 hover:bg-green-700"
-              disabled={isApproving || isRejecting}
-            >
-              <FaCheck className="mr-2" /> Setujui ({selectedItem.length})
-            </Button>
-            <Button
-              onClick={() => handleOpenDialog("reject")}
-              variant="destructive"
-              disabled={isApproving || isRejecting}
-            >
-              <IoClose className="mr-2" /> Tolak ({selectedItem.length})
-            </Button>
-          </div>
-        )}
 
-        <Link to="/admin/validasi-data/keluarga/tambah-keluarga">
-          <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
-            <FaPlus className="mr-2" /> Tambah Data
-          </Button>
-        </Link>
+        <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
+          {selectedItem.length > 0 && (
+            <>
+              <Button
+                onClick={() => handleOpenDialog("approve")}
+                className="bg-green-600 hover:bg-green-700"
+                disabled={isApproving || isRejecting}
+              >
+                <FaCheck className="mr-2" /> Setujui ({selectedItem.length})
+              </Button>
+              <Button
+                onClick={() => handleOpenDialog("reject")}
+                variant="destructive"
+                disabled={isApproving || isRejecting}
+              >
+                <IoClose className="mr-2" /> Tolak ({selectedItem.length})
+              </Button>
+            </>
+          )}
+          {/* Tombol tambah mengarah ke form tambah hubungan kerja admin */}
+          <Link to="/admin/validasi-data/kepegawaian/hubungan-kerja/tambah-hubungan-kerja">
+            <Button className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
+              <FaPlus className="mr-2" /> Tambah Data
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      <div className="mt-5 border rounded-lg">
+      {/* Table */}
+      <div className="mt-5 border rounded-lg overflow-x-auto">
         <Table className="text-xs lg:text-sm">
           <TableHeader>
             <TableRow className="bg-gray-100 hover:bg-gray-100">
+              {/* Checkbox */}
               <TableHead className="text-center w-10">
                 <Checkbox
                   onCheckedChange={(c) => handleSelectAll(!!c)}
-                  checked={
-                    isAllSelectedOnPage
-                      ? true
-                      : isSomeSelectedOnPage
-                      ? "indeterminate"
-                      : false
-                  }
+                  checked={isAllSelectedOnPage ? true : isSomeSelectedOnPage ? "indeterminate" : false}
                 />
               </TableHead>
-              {data?.table_columns?.map((col) => (
-                <TableHead key={col.field} className="text-center">
-                  {col.label}
-                </TableHead>
-              ))}
+              <TableHead className="text-center">NIP</TableHead>
+              <TableHead>Nama Pegawai</TableHead>
+              <TableHead className="text-center">Tgl. Mulai</TableHead>
+              <TableHead className="text-center">Tgl. Selesai</TableHead>
+              <TableHead>Hubungan Kerja</TableHead>
+              <TableHead className="text-center">File</TableHead>
+              {/* Kolom tanggal dinamis sesuai status aktif filter */}
+              <TableHead className="text-center">
+                {statusFilter === "disetujui" ? "Tgl. Disetujui"
+                  : statusFilter === "ditolak" ? "Tgl. Ditolak"
+                    : "Tgl. Diajukan"}
+              </TableHead>
+              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!tableData?.data?.length ? (
+            {items.length === 0 ? (
               <TableRow>
-                {/* FIX: Safely calculate colSpan */}
-                <TableCell
-                  colSpan={(data?.table_columns?.length ?? 10) + 1}
-                  className="text-center h-24"
-                >
-                  Data tidak ditemukan.
+                <TableCell colSpan={10} className="text-center h-24">
+                  Tidak ada data.
                 </TableCell>
               </TableRow>
             ) : (
-              tableData.data.map((item) => (
-                <TableRow key={item.id} className="even:bg-gray-50">
-                  <TableCell className="text-center">
-                    <Checkbox
-                      checked={selectedItem.includes(item.id)}
-                      onCheckedChange={(c) =>
-                        handleSelectedItemId(item.id, !!c)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {item.nip_pegawai}
-                  </TableCell>
-                  <TableCell>{item.nama_pegawai}</TableCell>
-                  <TableCell className="text-center">
-                    {item.tgl_mulai_formatted}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {item.tgl_selesai_formatted}
-                  </TableCell>
-                  <TableCell>{item.hubungan_kerja_label}</TableCell>
-                  <TableCell>{item.keterangan || "-"}</TableCell>
-                  <TableCell>
-                    <Label className="text-xs sm:text-sm text-left flex-1">
-                      {item?.file_hubungan_kerja_link ? (
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="link"
-                              className="p-0 h-auto text-blue-600 hover:underline hover:text-blue-800"
-                            >
-                              Lihat File
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-[600px]">
-                            <DialogHeader>
-                              <DialogTitle>Pratinjau File</DialogTitle>
-                            </DialogHeader>
-                            <div className="py-4">
-                              {/\.(jpeg|jpg|png|gif)$/i.test(
-                                item.file_penghargaan || ""
-                              ) ? (
-                                <img
-                                  src={`${environment.API_IMAGE_URL_SECOND}${item.file_hubungan_kerja_link}`}
-                                  alt="Pratinjau File"
-                                  className="w-full h-auto rounded-md object-contain max-h-[70vh]"
-                                />
-                              ) : (
-                                <div className="text-center">
-                                  <p className="mb-4">
-                                    Pratinjau tidak tersedia untuk tipe file
-                                    ini. Silakan buka di tab baru.
-                                  </p>
-                                  <a
-                                    href={`${environment.API_IMAGE_URL_SECOND}${item.file_hubungan_kerja_link}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <Button>Buka File</Button>
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button type="button" variant="secondary">
-                                  Tutup
-                                </Button>
-                              </DialogClose>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
+              items.map((item) => {
+                const relevantDate = getRelevantDate(item);
+                return (
+                  <TableRow key={item.id} className="even:bg-gray-50">
+                    {/* Checkbox */}
+                    <TableCell className="text-center">
+                      <Checkbox
+                        checked={selectedItem.includes(item.id)}
+                        onCheckedChange={(c) => handleSelectedItemId(item.id, !!c)}
+                      />
+                    </TableCell>
+                    {/* NIP */}
+                    <TableCell className="text-center">{item.pegawai?.nip ?? "-"}</TableCell>
+                    {/* Nama */}
+                    <TableCell>{item.pegawai?.nama ?? "-"}</TableCell>
+                    {/* Tgl Mulai */}
+                    <TableCell className="text-center">{formatDate(item.tgl_mulai)}</TableCell>
+                    {/* Tgl Selesai */}
+                    <TableCell className="text-center">{formatDate(item.tgl_selesai)}</TableCell>
+                    {/* Nama Hubungan Kerja */}
+                    <TableCell>{item.hubungan_kerja?.nama ?? "-"}</TableCell>
+                    {/* File Dokumen */}
+                    <TableCell className="text-center">
+                      {item.dokumen && item.dokumen.length > 0 ? (
+                        <Button
+                          variant="link"
+                          className="p-0 h-auto text-blue-600 hover:underline hover:text-blue-800"
+                          onClick={() => {
+                            setSelectedDokumen(item.dokumen!);
+                            setIsFileDialogOpen(true);
+                          }}
+                        >
+                          Lihat File
+                        </Button>
                       ) : (
                         <span>-</span>
                       )}
-                    </Label>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {item.status_pengajuan}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex justify-center">
-                      <Link
-                        to={`/admin/validasi-data/kepegawaian/hubungan-kerja/detail-hubungan-kerja/${item.id}`}
-                      >
+                    </TableCell>
+                    {/* Tanggal relevan */}
+                    <TableCell className="text-center">
+                      {formatDate(relevantDate.value)}
+                    </TableCell>
+                    {/* Status Badge */}
+                    <TableCell className="text-center">
+                      <span className={`capitalize px-2 py-1 rounded-md text-white text-xs ${statusColor[item.status] ?? "bg-slate-400"}`}>
+                        {item.status}
+                      </span>
+                    </TableCell>
+                    {/* Aksi */}
+                    <TableCell className="text-center">
+                      <Link to={`/admin/validasi-data/kepegawaian/hubungan-kerja/detail-hubungan-kerja/${item.id}`}>
                         <Button size="icon" variant="ghost">
                           <IoEyeOutline className="text-blue-500" />
                         </Button>
                       </Link>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination sesuai format baru */}
       <CustomPagination
-        currentPage={tableData?.current_page || 1}
-        links={tableData?.links || []}
+        pagination={rawData?.pagination}
         onPageChange={(page) => handleUrlChange("page", String(page))}
-        totalPages={tableData?.last_page}
       />
 
+      {/* Dialog Preview File */}
+      <Dialog open={isFileDialogOpen} onOpenChange={setIsFileDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Pratinjau Dokumen</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 flex flex-col gap-3">
+            {selectedDokumen.map((doc) => (
+              <div key={doc.id} className="flex items-center justify-between border rounded p-2">
+                <span className="text-sm">📄 {doc.file_name}</span>
+                <a href={doc.url} target="_blank" rel="noreferrer">
+                  <Button size="sm" variant="outline">Buka File</Button>
+                </a>
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">Tutup</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Approve/Reject */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              {pendingAction === "approve"
-                ? "Konfirmasi Persetujuan"
-                : "Konfirmasi Penolakan"}
+              {pendingAction === "approve" ? "Konfirmasi Persetujuan" : "Konfirmasi Penolakan"}
             </DialogTitle>
             <DialogDescription>
               Anda akan {pendingAction === "approve" ? "menyetujui" : "menolak"}{" "}
-              {selectedItem.length} data terpilih. Aksi ini tidak dapat
-              dibatalkan.
+              {selectedItem.length} data terpilih. Aksi ini tidak dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>
           {pendingAction === "reject" && (
             <Form {...form}>
-              <form
-                id="action-form"
-                onSubmit={form.handleSubmit(handleSubmitAction)}
-              >
+              <form id="action-form" onSubmit={form.handleSubmit(handleSubmitAction)}>
                 <div className="py-4">
                   <FormFieldInput
                     form={form}
@@ -539,9 +547,7 @@ const HubunganKerjaKepegawaian = () => {
             </Form>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Batal
-            </Button>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Batal</Button>
             {pendingAction === "approve" ? (
               <Button
                 onClick={() => approveMutation({ ids: selectedItem })}
@@ -551,12 +557,7 @@ const HubunganKerjaKepegawaian = () => {
                 {isApproving ? "Memproses..." : "Ya, Setujui"}
               </Button>
             ) : (
-              <Button
-                type="submit"
-                form="action-form"
-                variant="destructive"
-                disabled={isRejecting}
-              >
+              <Button type="submit" form="action-form" variant="destructive" disabled={isRejecting}>
                 {isRejecting ? "Memproses..." : "Ya, Tolak"}
               </Button>
             )}

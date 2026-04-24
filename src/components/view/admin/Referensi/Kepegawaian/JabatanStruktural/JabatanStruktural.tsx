@@ -37,7 +37,7 @@ interface JabatanStrukturalItem {
     jenis_jabatan_struktural: string;
   };
   unit_kerja: {
-    nama_unit: string;
+    nama: string;
   };
   [key: string]: any;
 }
@@ -54,9 +54,16 @@ export interface JabatanStrukturalNode {
 }
 
 interface JabatanStrukturalResponse {
-  data: JabatanStrukturalItem[];
-  current_page: number;
-  last_page: number;
+  items: JabatanStrukturalItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    per_page: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  }
 }
 
 interface JabatanStrukturalApiResponse {
@@ -65,41 +72,38 @@ interface JabatanStrukturalApiResponse {
 }
 
 // The core logic to transform API data and build the tree structure
-// The core logic to transform API data and build the tree structure
 function buildTree(items: JabatanStrukturalItem[]): JabatanStrukturalNode[] {
   const itemMap: { [key: string]: JabatanStrukturalNode } = {};
   const roots: JabatanStrukturalNode[] = [];
 
-  // First pass: Create a map of all items and their abbreviations (singkatan)
-  const nameMap: { [key: string]: string } = {};
-  const tunjanganMap: { [key: string]: string | null } = {}; // Tambahkan map untuk tunjangan
-
+  // Map by ID
   items.forEach((item) => {
-    nameMap[item.kode] = item.singkatan;
-    tunjanganMap[item.kode] = item.tunjangan; // Simpan tunjangan
-  });
-
-  // Second pass: Create the nodes with all necessary data flattened
-  items.forEach((item) => {
-    itemMap[item.kode] = {
+    itemMap[item.id] = {
       id: item.id,
       kode: item.kode,
       singkatan: item.singkatan,
-      // Look up the parent's abbreviation (singkatan) using the map
-      parent_jabatan_nama: item.parent_jabatan
-        ? nameMap[item.parent_jabatan] || item.parent_jabatan
-        : "-",
-      unit_kerja_nama: item.unit_kerja.nama_unit,
-      tunjangan: item.tunjangan || "-", // Ambil tunjangan dari item, berikan fallback "-"
+      parent_jabatan_nama: null, // will be set below
+      unit_kerja_nama: item.unit_kerja?.nama ?? "-",
+      tunjangan: item.tunjangan ?? "-",
       children: [],
     };
   });
 
-  // Third pass: Structure the items into a tree
+  // Build parent name map by ID
+  const nameById: Record<string, string> = {};
   items.forEach((item) => {
-    const node = itemMap[item.kode];
-    if (item.parent_jabatan && itemMap[item.parent_jabatan]) {
-      itemMap[item.parent_jabatan].children.push(node);
+    nameById[item.id] = item.singkatan;
+  });
+
+  // Link parent-child by ID
+  items.forEach((item) => {
+    const node = itemMap[item.id];
+    node.parent_jabatan_nama = item.parent_jabatan_id
+      ? nameById[item.parent_jabatan_id] ?? item.parent_jabatan_id
+      : "-";
+
+    if (item.parent_jabatan_id && itemMap[item.parent_jabatan_id]) {
+      itemMap[item.parent_jabatan_id].children.push(node);
     } else {
       roots.push(node);
     }
@@ -120,24 +124,24 @@ const JabatanStruktural = () => {
   const { data, fetchNextPage, hasNextPage, isFetching } =
     useInfiniteQuery<JabatanStrukturalApiResponse>({
       queryKey: ["jabatan-struktural-all", searchParam.get("search")],
-      queryFn: async ({ pageParam = 1 }) => {
+      queryFn: async ({ pageParam = 1 }: any) => {
         const search = searchParam.get("search") || "";
-        const response = await adminServices.getJabatanStrukturalReferensi(
-          pageParam,
-          search
-        );
+        const response = await adminServices.getJabatanStrukturalReferensi({
+          page: pageParam,
+          search: search,
+          is_dropdown: false,
+        });
         return response.data;
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        const currentPage = lastPage.data.current_page;
-        const totalPages = lastPage.data.last_page;
-        return currentPage < totalPages ? currentPage + 1 : undefined;
+        const { page, totalPages } = lastPage.data.pagination;
+        return page < totalPages ? page + 1 : undefined;
       },
     });
 
   const allJabatanStruktural = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data.data) ?? [];
+    return data?.pages.flatMap((page) => page.data.items) ?? [];
   }, [data]);
 
   const treeData = useMemo(() => {

@@ -27,9 +27,9 @@ import { toast } from "sonner";
 
 interface UnitKerjaItem {
   id: string;
-  kode_unit: string;
-  nama_unit: string;
-  parent_unit_id: string | null;
+  kode: string;
+  nama: string;
+  parent_id: string | null;
   [key: string]: any;
 }
 
@@ -53,13 +53,13 @@ function buildTree(units: UnitKerjaItem[]): UnitNode[] {
   const roots: UnitNode[] = [];
 
   units.forEach((unit) => {
-    unitMap[unit.kode_unit] = { ...unit, children: [] };
+    unitMap[unit.kode] = { ...unit, children: [] };
   });
 
   units.forEach((unit) => {
-    const node = unitMap[unit.kode_unit];
-    if (unit.parent_unit_id && unitMap[unit.parent_unit_id]) {
-      unitMap[unit.parent_unit_id].children.push(node);
+    const node = unitMap[unit.kode];
+    if (unit.parent_id && unitMap[unit.parent_id]) {
+      unitMap[unit.parent_id].children.push(node);
     } else {
       roots.push(node);
     }
@@ -108,13 +108,13 @@ const UnitKerja = () => {
 
   const treeData = allUnitKerja.length > 0 ? buildTree(allUnitKerja) : [];
 
-  const toggleRow = (kode_unit: string) => {
-    setOpenRows((prev) => ({ ...prev, [kode_unit]: !prev[kode_unit] }));
+  const toggleRow = (kode: string) => {
+    setOpenRows((prev) => ({ ...prev, [kode]: !prev[kode] }));
   };
 
   const createRefCallback =
-    (kode_unit: string) => (el: HTMLTableRowElement | null) => {
-      rowRefs.current[kode_unit] = el;
+    (kode: string) => (el: HTMLTableRowElement | null) => {
+      rowRefs.current[kode] = el;
     };
 
   useEffect(() => {
@@ -173,7 +173,7 @@ const UnitKerja = () => {
           <TableBody className="divide-y divide-gray-200">
             {treeData.map((node) => (
               <UnitKerjaRow
-                key={node.kode_unit}
+                key={node.kode}
                 node={node}
                 level={0}
                 openRows={openRows}

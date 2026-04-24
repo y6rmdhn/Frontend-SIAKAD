@@ -156,6 +156,12 @@ const DetailHubunganKerjaValidasiPage = lazy(
       "./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian/detailhubunganKerjaKepegawaian"
     )
 );
+const TambahHubunganKerjaPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/hubunganKerjaKepegawaian/tambahHubunganKerja/index"
+    )
+);
 const JabatanAkademikPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/jabatanAkademik")
 );
@@ -174,6 +180,12 @@ const DetailJabatanFungionalValidasiPage = lazy(
       "./pages/admin/validasiData/kepegawaian/jabatanFungsional/detailjabatanFungsional"
     )
 );
+const TambahJabatanFungsionalPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/jabatanFungsional/tambahJabatanFungsional/index"
+    )
+);
 const JabatanStrukturalPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/jabatanStruktural")
 );
@@ -183,11 +195,20 @@ const DetailJabatanStrukturalValidasiPage = lazy(
       "./pages/admin/validasiData/kepegawaian/jabatanStruktural/detailjabatanStruktural"
     )
 );
+const TambahJabatanStrukturalPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/kepegawaian/jabatanStruktural/tambahJabatanStruktural/index"
+    )
+);
 const PangkatPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/pangkat")
 );
 const DetailPangkatValidasiPage = lazy(
   () => import("./pages/admin/validasiData/kepegawaian/pangkat/detailPangkat")
+);
+const TambahPangkatPage = lazy(
+  () => import("./pages/admin/validasiData/kepegawaian/pangkat/tambahPangkat")
 );
 const SertifikasiPage = lazy(
   () => import("./pages/admin/validasiData/kompetensi/sertifikasi")
@@ -198,7 +219,16 @@ const DetailSertifikasiValidasiPage = lazy(
       "./pages/admin/validasiData/kompetensi/sertifikasi/detailSertifikasiValidasi"
     )
 );
+const TambahSertifikasiPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/kompetensi/sertifikasi/tambahSertifikasi/index"
+    )
+);
 const TesPage = lazy(() => import("./pages/admin/validasiData/kompetensi/tes"));
+const TambahTesPage = lazy(
+  () => import("./pages/admin/validasiData/kompetensi/tes/tambahTes/index")
+);
 const DetailTesValidasiPage = lazy(
   () => import("./pages/admin/validasiData/kompetensi/tes/detailTesValidasi")
 );
@@ -215,6 +245,12 @@ const PendidikanFormalValidasiPage = lazy(
   () =>
     import("./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi")
 );
+const TambahPendidikanFormalPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/Kualifikasi/pendidikanformalValidasi/tambahPendidikanFormal/index"
+    )
+);
 const DetailPendidikanFormalValidasiPage = lazy(
   () =>
     import(
@@ -229,6 +265,12 @@ const DetailRiwayatPekerjaanValidasiPage = lazy(
   () =>
     import(
       "./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi/detailriwayatpekerjaanValidasi"
+    )
+);
+const TambahRiwayatPekerjaanPage = lazy(
+  () =>
+    import(
+      "./pages/admin/validasiData/Kualifikasi/riwayatpekerjaanValidasi/tambahRiwayatPekerjaan/index"
     )
 );
 const BahanAjarPage = lazy(
@@ -265,6 +307,9 @@ const PengabdianPage = lazy(
 const KemampuanBahasaPage = lazy(
   () => import("./pages/admin/validasiData/pengembangan/kemampuanBahasa")
 );
+const TambahKemampuanBahasaPage = lazy(
+  () => import("./pages/admin/validasiData/pengembangan/kemampuanBahasa/tambahKemampuanBahasa")
+);
 
 const OrganisasiPage = lazy(
   () => import("./pages/admin/validasiData/pengembangan/organisasi")
@@ -274,6 +319,9 @@ const OrganisasiPenunjangPage = lazy(
 );
 const PenghargaanPenunjangPage = lazy(
   () => import("./pages/admin/validasiData/penunjang/penghargaan")
+);
+const TambahPenghargaanPage = lazy(
+  () => import("./pages/admin/validasiData/penunjang/penghargaan/tambahPenghargaan")
 );
 const PenunjangLainPage = lazy(
   () => import("./pages/admin/validasiData/penunjang/penunjangLain")
@@ -1833,6 +1881,10 @@ function App() {
                   Component={DetailHubunganKerjaValidasiPage}
                 />
                 <Route
+                  path="hubungan-kerja/tambah-hubungan-kerja"
+                  Component={TambahHubunganKerjaPage}
+                />
+                <Route
                   path="jabatan-akademik"
                   Component={JabatanAkademikPage}
                 />
@@ -1849,6 +1901,10 @@ function App() {
                   Component={DetailJabatanFungionalValidasiPage}
                 />
                 <Route
+                  path="jabatan-fungsional/tambah-jabatan-fungsional"
+                  Component={TambahJabatanFungsionalPage}
+                />
+                <Route
                   path="jabatan-struktural"
                   Component={JabatanStrukturalPage}
                 />
@@ -1856,10 +1912,18 @@ function App() {
                   path="jabatan-struktural/detail-jabatan-struktural/:id"
                   Component={DetailJabatanStrukturalValidasiPage}
                 />
+                <Route
+                  path="jabatan-struktural/tambah-jabatan-struktural"
+                  Component={TambahJabatanStrukturalPage}
+                />
                 <Route path="pangkat" Component={PangkatPage} />
                 <Route
                   path="pangkat/detail-pangkat/:id"
                   Component={DetailPangkatValidasiPage}
+                />
+                <Route
+                  path="pangkat/tambah-pangkat"
+                  Component={TambahPangkatPage}
                 />
               </Route>
 
@@ -1870,11 +1934,20 @@ function App() {
                   path="sertifikasi/detail-sertifikasi/:id"
                   Component={DetailSertifikasiValidasiPage}
                 />
+                <Route
+                  path="sertifikasi/tambah-sertifikasi"
+                  Component={TambahSertifikasiPage}
+                />
                 <Route path="tes" Component={TesPage} />
                 <Route
                   path="tes/detail-tes/:id"
                   Component={DetailTesValidasiPage}
                 />
+                <Route
+                  path="tes/tambah-tes"
+                  Component={TambahTesPage}
+                />
+
               </Route>
 
               {/* VALIDASI > KUALIFIKASI */}
@@ -1889,6 +1962,10 @@ function App() {
                   Component={PendidikanFormalValidasiPage}
                 />
                 <Route
+                  path="pendidikan-formal/tambah-pendidikan-formal"
+                  Component={TambahPendidikanFormalPage}
+                />
+                <Route
                   path="pendidikan-formal/detail-pendidikan-formal/:id"
                   Component={DetailPendidikanFormalValidasiPage}
                 />
@@ -1899,6 +1976,10 @@ function App() {
                 <Route
                   path="riwayat-pekerjaan/detail-riwayat-pekerjaan/:id"
                   Component={DetailRiwayatPekerjaanValidasiPage}
+                />
+                <Route
+                  path="riwayat-pekerjaan/tambah-riwayat-pekerjaan"
+                  Component={TambahRiwayatPekerjaanPage}
                 />
               </Route>
 
@@ -1934,6 +2015,10 @@ function App() {
                   Component={KemampuanBahasaPage}
                 />
                 <Route
+                  path="kemampuan-bahasa/tambah-kemampuan-bahasa"
+                  Component={TambahKemampuanBahasaPage}
+                />
+                <Route
                   path="detail-data-kemampuan-bahasa/:id"
                   Component={DetailDataKemampuanBahasaKepegawaianPage}
                 />
@@ -1950,6 +2035,10 @@ function App() {
                 <Route
                   path="penghargaan"
                   Component={PenghargaanPenunjangPage}
+                />
+                <Route
+                  path="penghargaan/tambah-penghargaan"
+                  Component={TambahPenghargaanPage}
                 />
                 <Route
                   path="detail-data-penghargaan/:id"

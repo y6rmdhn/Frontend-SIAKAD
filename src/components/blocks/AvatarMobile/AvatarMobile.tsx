@@ -9,13 +9,8 @@ import { CiGrid41 } from "react-icons/ci";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoExit } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import adminServices from "@/services/admin.services";
-import dosenServices from "@/services/dosen.services";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import environment from "@/config/environments";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 
 interface AvatarMobileProps {
   initials: string;
@@ -26,30 +21,8 @@ interface AvatarMobileProps {
 const AvatarMobile = ({ initials, user, logout }: AvatarMobileProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const role = useSelector((state: RootState) => state.user.role);
-
-  const { data: profileData } = useQuery({
-    queryKey: ["profile-header"],
-    queryFn: async () => {
-      if (!accessToken) return null;
-
-      try {
-        let response;
-        if (role === "Admin") {
-          response = await adminServices.getProfileAdmin();
-        } else {
-          response = await dosenServices.getProfileUser();
-        }
-
-        return response.data.data;
-      } catch (error) {
-        console.error("Failed to fetch profile data:", error);
-        toast.error("Gagal memuat data profil.");
-        return null;
-      }
-    },
-  });
+  const { profile } = usePegawaiProfile();
+  const profileData = profile;
 
   // Lock body scroll when menu is open
   useEffect(() => {

@@ -21,12 +21,6 @@ const fungsionalSchema = z.object({
   nama_jabatan_fungsional: z
     .string()
     .min(1, { message: "Nama Jabatan Fungsional is required" }),
-  kode_jabatan_akademik: z
-    .string()
-    .min(1, { message: "Kode Jabatan Akademik is required" }),
-  jabatan_akademik_id: z
-    .string()
-    .min(1, { message: "Jabatan Akademik is required" }),
   pangkat_id: z.string().min(1, { message: "Golongan Pangkat is required" }),
   pangkat: z.string().min(1, { message: "Pangkat is required" }),
   angka_kredit: z.string().min(1, { message: "Angka Kredit is required" }),
@@ -39,12 +33,10 @@ type FungsionalSchema = z.infer<typeof fungsionalSchema>;
 type JabatanFungsionalPayload = {
   kode: string;
   nama_jabatan_fungsional: string;
-  jabatan_akademik_id: string;
   pangkat_id: string;
   angka_kredit: string;
   usia_pensiun: number;
   keterangan?: string;
-  kode_jabatan_akademik: string;
   pangkat: string;
 };
 
@@ -56,8 +48,6 @@ const DetailJabatanFungsional = () => {
     defaultValues: {
       kode: "",
       nama_jabatan_fungsional: "",
-      kode_jabatan_akademik: "",
-      jabatan_akademik_id: "",
       pangkat_id: "",
       pangkat: "",
       angka_kredit: "",
@@ -85,7 +75,6 @@ const DetailJabatanFungsional = () => {
   const handleSubmitData = (values: FungsionalSchema) => {
     const payload: JabatanFungsionalPayload = {
       ...values,
-      jabatan_akademik_id: values.jabatan_akademik_id,
       pangkat_id: values.pangkat_id,
       usia_pensiun: parseInt(values.usia_pensiun, 10),
     };
@@ -132,25 +121,6 @@ const DetailJabatanFungsional = () => {
                 name="nama_jabatan_fungsional"
                 labelStyle="text-[#3F6FA9]"
                 required={true}
-              />
-              <FormFieldInput
-                form={form}
-                label="Kode Jabatan Akademik"
-                name="kode_jabatan_akademik"
-                labelStyle="text-[#3F6FA9]"
-                required={true}
-              />
-              <InfiniteScrollSelect
-                form={form}
-                label="Jabatan Akademik"
-                name="jabatan_akademik_id"
-                labelStyle="text-[#3F6FA9]"
-                placeholder="--Pilih Jabatan Akademik--"
-                required={true}
-                queryKey="jab-akademik-select-referensi"
-                queryFn={adminServices.getJabatanAkademik}
-                itemValue="id"
-                itemLabel="jabatan_akademik"
               />
               <InfiniteScrollSelect
                 form={form}

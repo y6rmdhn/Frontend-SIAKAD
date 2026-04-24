@@ -2,18 +2,9 @@
 import React, { useEffect, useRef } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { FormFieldInput } from "../CustomFormInput/CustomFormInput";
-import { FormFieldSelect } from "../CustomFormSelect/CustomFormSelect";
-import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect.tsx";
-import adminServices from "@/services/admin.services.ts";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+import adminServices from "@/services/admin.services";
 import type { DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
-import { formatCountries, wilayahServices } from "@/services/wilayahService";
-import { SimpleSelect } from "../SimpleSelect/SimpleSelect";
-import { useWilayahData } from "@/hooks/useWilayah";
-
-type SelectOption = {
-  label: string;
-  value: string;
-};
 
 // Custom hook to get the previous value of a state or prop
 function usePrevious<T>(value: T): T | undefined {
@@ -41,31 +32,7 @@ const DomisiliSection = ({
   const prevProvinceId = usePrevious(selectedProvinceId);
   const prevCityId = usePrevious(selectedCityId);
 
-  // Use the custom hook for wilayah data
-  const {
-    provinces,
-    regencies,
-    districts,
-    isProvincesLoading,
-    isRegenciesLoading,
-    isDistrictsLoading,
-  } = useWilayahData(selectedProvinceId, selectedCityId);
-
-  // Convert to SelectOption format
-  const provinceOptions: SelectOption[] = provinces.map((province) => ({
-    label: province.name,
-    value: province.id,
-  }));
-
-  const cityOptions: SelectOption[] = regencies.map((regency) => ({
-    label: regency.name,
-    value: regency.id,
-  }));
-
-  const kecamatanOptions: SelectOption[] = districts.map((district) => ({
-    label: district.name,
-    value: district.id,
-  }));
+  // Diganti untuk langsung menggunakan API backend via InfiniteScrollSelect
 
   // Reset dependent fields when parent field changes
   useEffect(() => {
@@ -108,27 +75,29 @@ const DomisiliSection = ({
         readOnly={isReadOnly}
       />
 
-      {/* Countries Select */}
-      <SimpleSelect
-        form={form}
-        label="Warga Negara"
-        name="warga_negara"
-        placeholder="--Pilih Warga Negara--"
-        required={true}
-        queryKey="countries"
-        queryFn={async () => {
-          try {
-            const response = await wilayahServices.getCountries();
-            const formatted = formatCountries(response.data);
-            return formatted;
-          } catch (error) {
-            console.error("Error fetching countries:", error);
-            return [];
-          }
-        }}
-        itemValue="id"
-        itemLabel="name"
-      />
+      {/* Warga Negara Select */}
+      {isReadOnly ? (
+        <FormFieldInput
+          form={form}
+          label="Warga Negara"
+          name="warga_negara"
+          labelStyle="text-[#3F6FA9]"
+          readOnly
+        />
+      ) : (
+        <InfiniteScrollSelect
+          form={form}
+          label="Warga Negara"
+          name="warga_negara"
+          labelStyle="text-[#3F6FA9]"
+          placeholder="--Pilih Warga Negara--"
+          required={true}
+          queryKey="warga-negara-select"
+          queryFn={(page) => adminServices.getWilayahNegara({ page, is_dropdown: true })}
+          itemValue="id"
+          itemLabel="nama"
+        />
+      )}
 
       {/* Provinsi Select */}
       {isReadOnly ? (
@@ -140,17 +109,17 @@ const DomisiliSection = ({
           readOnly
         />
       ) : (
-        <FormFieldSelect
+        <InfiniteScrollSelect
           form={form}
           label="Provinsi"
           name="provinsi"
           labelStyle="text-[#3F6FA9]"
-          options={provinceOptions}
-          placeholder={
-            isProvincesLoading ? "Memuat provinsi..." : "--Pilih Provinsi--"
-          }
-          disabled={isProvincesLoading}
+          placeholder="--Pilih Provinsi--"
           required={true}
+          queryKey="provinsi-select"
+          queryFn={(page) => adminServices.getProvinsi({ page, is_dropdown: true })}
+          itemValue="id"
+          itemLabel="nama"
         />
       )}
 
@@ -164,15 +133,18 @@ const DomisiliSection = ({
           readOnly
         />
       ) : (
-        <FormFieldSelect
+        <InfiniteScrollSelect
           form={form}
           label="Kota"
           name="kota"
           labelStyle="text-[#3F6FA9]"
-          options={cityOptions}
-          placeholder={isRegenciesLoading ? "Memuat kota..." : "--Pilih Kota--"}
-          disabled={!selectedProvinceId || isRegenciesLoading}
+          placeholder="--Pilih Kota--"
+          disabled={!selectedProvinceId}
           required={true}
+          queryKey={`kota-select-${selectedProvinceId || ""}`}
+          queryFn={(page) => adminServices.getKota({ page, provinsi_id: selectedProvinceId, is_dropdown: true })}
+          itemValue="id"
+          itemLabel="nama"
         />
       )}
 
@@ -186,17 +158,18 @@ const DomisiliSection = ({
           readOnly
         />
       ) : (
-        <FormFieldSelect
+        <InfiniteScrollSelect
           form={form}
           label="Kecamatan"
           name="kecamatan"
           labelStyle="text-[#3F6FA9]"
-          options={kecamatanOptions}
-          placeholder={
-            isDistrictsLoading ? "Memuat kecamatan..." : "--Pilih Kecamatan--"
-          }
-          disabled={!selectedCityId || isDistrictsLoading}
+          placeholder="--Pilih Kecamatan--"
+          disabled={!selectedCityId}
           required={true}
+          queryKey={`kecamatan-select-${selectedCityId || ""}`}
+          queryFn={(page) => adminServices.getKecamatan({ page, kabupaten_id: selectedCityId, is_dropdown: true })}
+          itemValue="id"
+          itemLabel="nama"
         />
       )}
 
@@ -223,7 +196,7 @@ const DomisiliSection = ({
         <FormFieldInput
           form={form}
           label="Suku"
-          name="suku"
+          name="suku_id"
           labelStyle="text-[#3F6FA9]"
           readOnly
         />
@@ -231,14 +204,21 @@ const DomisiliSection = ({
         <InfiniteScrollSelect
           form={form}
           label="Suku"
-          name="suku"
+          name="suku_id"
           labelStyle="text-[#3F6FA9]"
           placeholder="--Pilih Suku--"
           required={false}
-          queryKey="suku"
-          queryFn={adminServices.getSukuParams}
+          // 👇 1. Ganti nama key agar cache lama yang nyangkut langsung terbuang
+          queryKey="master-suku-dropdown"
+          queryFn={async (page) => {
+            const response = await adminServices.getSukuParams({ page, is_dropdown: true });
+
+            // 👇 2. Tembak langsung ke array intinya (data.data.data)
+            // Jika ada error/kosong, pastikan dia me-return array kosong []
+            return response?.data?.data?.data || [];
+          }}
           itemValue="id"
-          itemLabel="nama_suku"
+          itemLabel="nama"
         />
       )}
 

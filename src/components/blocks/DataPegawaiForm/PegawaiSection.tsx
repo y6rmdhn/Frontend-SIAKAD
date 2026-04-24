@@ -35,9 +35,9 @@ const KepegawaianSection = ({
           placeholder="--Pilih Unit Kerja--"
           required={true}
           queryKey="unit-kerja-pegawai-select"
-          queryFn={adminServices.getUnitKerja}
+          queryFn={(page) => adminServices.getUnitKerja({ page, is_dropdown: true })}
           itemValue="id"
-          itemLabel="nama_unit"
+          itemLabel="nama"
         />
       )}
 
@@ -58,9 +58,9 @@ const KepegawaianSection = ({
           placeholder="--Pilih Status Aktif--"
           required={true}
           queryKey="status-aktif-pegawai-select"
-          queryFn={adminServices.getStatusAktif}
+          queryFn={(page) => adminServices.getStatusAktif({ page, is_dropdown: true })}
           itemValue="id"
-          itemLabel="nama_status_aktif"
+          itemLabel="nama"
         />
       )}
 
@@ -81,9 +81,9 @@ const KepegawaianSection = ({
           placeholder="--Pilih Hubungan Kerja--"
           required={true}
           queryKey="hubungan-kerja-pegawai-select"
-          queryFn={adminServices.getHubunganKerja}
+          queryFn={(page) => adminServices.getHubunganKerja({ page, is_dropdown: true })}
           itemValue="id"
-          itemLabel="nama_hub_kerja"
+          itemLabel="nama"
         />
       )}
 
@@ -107,23 +107,45 @@ const KepegawaianSection = ({
       {isReadOnly ? (
         <FormFieldInput
           form={form}
-          label="Golongan"
-          name="golongan"
+          label="Pangkat"
+          name="pangkat_id"
           labelStyle="text-[#3F6FA9]"
           readOnly
         />
       ) : (
         <InfiniteScrollSelect
           form={form}
-          label="Golongan"
-          name="golongan"
+          label="Pangkat"
+          name="pangkat_id"
           labelStyle="text-[#3F6FA9]"
-          placeholder="--Pilih Golongan--"
+          placeholder="--Pilih Pangkat--"
           required={false}
-          queryKey="golongan-pangkat-pegawai-select"
-          queryFn={adminServices.getMasterPangkatReferensi}
+          queryKey="pangkat-pegawai-select"
+          queryFn={(page) => adminServices.getMasterPangkatReferensi({ page, is_dropdown: true })}
           itemValue="id"
-          itemLabel="nama_golongan"
+          itemLabel="nama"
+        />
+      )}
+      {isReadOnly ? (
+        <FormFieldInput
+          form={form}
+          label="Eselon"
+          name="eselon_id"
+          labelStyle="text-[#3F6FA9]"
+          readOnly
+        />
+      ) : (
+        <InfiniteScrollSelect
+          form={form}
+          label="Eselon"
+          name="eselon_id"
+          labelStyle="text-[#3F6FA9]"
+          placeholder="--Pilih Eselon--"
+          required={false}
+          queryKey="eselon-pegawai-select"
+          queryFn={(page) => adminServices.getMasterEselon({ page, is_dropdown: true })}
+          itemValue="id"
+          itemLabel="nama"
         />
       )}
 

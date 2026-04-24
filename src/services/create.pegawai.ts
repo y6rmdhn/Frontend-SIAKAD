@@ -3,7 +3,7 @@ import endpoint from "@/services/endpoint.constant.ts";
 
 const postPegawaiServices = {
   dataPegawai: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.ADMIN}/pegawai`, payload),
+    axiosInstance.post(`${endpoint.PEGAWAI}/`, payload),
 };
 
 export default postPegawaiServices;

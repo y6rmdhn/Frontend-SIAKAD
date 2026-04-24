@@ -212,11 +212,10 @@ const JenisPenghargaan = () => {
                         setSearchParam(searchParam);
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
+                    className={`cursor-pointer ${isEditMode
                         ? "bg-gray-400"
                         : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />

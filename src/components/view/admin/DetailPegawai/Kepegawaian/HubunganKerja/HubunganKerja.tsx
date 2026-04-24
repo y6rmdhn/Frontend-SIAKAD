@@ -48,6 +48,21 @@ const HubunganKerja = () => {
       return response.data;
     },
   });
+  const handleUrlChange = useCallback((paramName: string, value: string) => {
+    const next = new URLSearchParams(searchParam);
+    if (value && value !== "semua") {
+      next.set(paramName, value);
+    } else {
+      next.delete(paramName);
+    }
+    if (paramName !== "page") next.set("page", "1"); // reset page saat filter berubah
+    setSearchParam(next);
+  }, [searchParam, setSearchParam]);
+
+  useEffect(() => {
+    handleUrlChange("search", debouncedInput);
+  }, [debouncedInput]);
+
 
   useEffect(() => {
     const newSearchParam = new URLSearchParams(searchParam);
@@ -233,15 +248,8 @@ const HubunganKerja = () => {
         </Table>
 
         <CustomPagination
-          currentPage={Number(searchParam.get("page") || 1)}
-          links={data?.links || []}
-          onPageChange={(page) => {
-            searchParam.set("page", page.toString());
-            setSearchParam(searchParam);
-          }}
-          hasNextPage={!!data?.next_page_url}
-          hasPrevPage={!!data?.prev_page_url}
-          totalPages={data?.last_page}
+          pagination={rawData?.pagination}
+          onPageChange={(page) => handleUrlChange("page", String(page))}
         />
       </div>
     </DetailPegawaiLayout>

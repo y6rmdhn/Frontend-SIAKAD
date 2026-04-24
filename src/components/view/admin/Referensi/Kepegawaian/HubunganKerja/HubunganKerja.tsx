@@ -36,9 +36,9 @@ import { z } from "zod";
 interface hubunganKerjaItem {
   id: string;
   kode: string;
-  nama_hub_kerja: string;
-  status_aktif: boolean;
-  pns: boolean;
+  nama: string;
+  is_aktif: boolean;
+  is_pns: boolean;
   // Add other properties as needed
 }
 
@@ -54,9 +54,9 @@ interface hubunganKerjaResponse {
 const hubunganKerjaSchema = z.object({
   id: z.string().optional(),
   kode: z.string().min(1, "kode tidak boleh kosong"),
-  nama_hub_kerja: z.string().min(1, "Nama Hub Kerja tidak boleh kosong"),
-  status_aktif: z.boolean(),
-  pns: z.boolean(),
+  nama: z.string().min(1, "Nama Hub Kerja tidak boleh kosong"),
+  is_aktif: z.boolean(),
+  is_pns: z.boolean(),
 });
 
 type hubunganKerjaFormvalue = z.infer<typeof hubunganKerjaSchema>;
@@ -74,9 +74,9 @@ const HubunganKerja = () => {
   const form = useForm({
     defaultValues: {
       kode: "",
-      nama_hub_kerja: "",
-      status_aktif: false,
-      pns: false,
+      nama: "",
+      is_aktif: false,
+      is_pns: false,
     },
     resolver: zodResolver(hubunganKerjaSchema),
   });
@@ -160,9 +160,9 @@ const HubunganKerja = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      nama_hub_kerja: item.nama_hub_kerja,
-      status_aktif: item.status_aktif,
-      pns: item.pns,
+      nama: item.nama,
+      is_aktif: item.is_aktif,
+      is_pns: item.is_pns,
     });
 
     setIsEditMode(true);
@@ -232,9 +232,9 @@ const HubunganKerja = () => {
                         form.reset({
                           id: "",
                           kode: "",
-                          nama_hub_kerja: "",
-                          status_aktif: false,
-                          pns: false,
+                          nama: "",
+                          is_aktif: false,
+                          is_pns: false,
                         });
 
                         setSearchParam(searchParam);
@@ -242,11 +242,10 @@ const HubunganKerja = () => {
                         searchParam.set("page", "1");
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
-                        ? "bg-gray-400"
-                        : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                    className={`cursor-pointer ${isEditMode
+                      ? "bg-gray-400"
+                      : "bg-green-light-uika hover:bg-[#329C59]"
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -293,7 +292,7 @@ const HubunganKerja = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_hub_kerja"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -303,7 +302,7 @@ const HubunganKerja = () => {
                         position={true}
                         type="checkbox"
                         form={form}
-                        name="status_aktif"
+                        name="is_aktif"
                         required={false}
                       />
                     </TableCell>
@@ -313,7 +312,7 @@ const HubunganKerja = () => {
                         position={true}
                         type="checkbox"
                         form={form}
-                        name="pns"
+                        name="is_pns"
                         required={false}
                       />
                     </TableCell>
@@ -346,11 +345,11 @@ const HubunganKerja = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_hub_kerja}
+                      {item.nama}
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center items-center">
-                        {item.status_aktif ? (
+                        {item.is_aktif ? (
                           <FaCheck className="text-green-500 w-4 h-4" />
                         ) : (
                           <IoClose className="text-red-500 w-5 h-5" />
@@ -359,7 +358,7 @@ const HubunganKerja = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center items-center">
-                        {item.pns ? (
+                        {item.is_pns ? (
                           <FaCheck className="text-green-500 w-4 h-4" />
                         ) : (
                           <IoClose className="text-red-500 w-5 h-5" />

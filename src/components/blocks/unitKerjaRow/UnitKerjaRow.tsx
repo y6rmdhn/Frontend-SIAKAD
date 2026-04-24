@@ -18,8 +18,8 @@ import {
 
 interface UnitNode {
   id: string;
-  kode_unit: string;
-  nama_unit: string;
+  kode: string;
+  nama: string;
   parent_unit_id: string | null;
   children: UnitNode[];
 }
@@ -29,9 +29,9 @@ interface UnitKerjaRowProps {
   level: number;
   openRows: Record<string, boolean>;
   handleDelete: (id: string) => void;
-  toggleRow: (kode_unit: string) => void;
+  toggleRow: (kode: string) => void;
   createRefCallback: (
-    kode_unit: string
+    kode: string
   ) => (el: HTMLTableRowElement | null) => void;
 }
 
@@ -43,34 +43,33 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
   toggleRow,
   createRefCallback,
 }) => {
-  const isRowOpen = openRows[node.kode_unit] || false;
+  const isRowOpen = openRows[node.kode] || false;
 
   return (
     <React.Fragment>
       <TableRow
         className={level > 0 ? "bg-gray-50" : "even:bg-gray-100"}
-        ref={createRefCallback(node.kode_unit)}
+        ref={createRefCallback(node.kode)}
       >
         <TableCell style={{ paddingLeft: `${(level + 1) * 1}rem` }}>
           {node.children.length > 0 && (
             <Button
-              onClick={() => toggleRow(node.kode_unit)}
+              onClick={() => toggleRow(node.kode)}
               variant="ghost"
               size="icon"
             >
               <ChevronDownIcon
-                className={`text-muted-foreground size-4 transition-transform duration-200 ${
-                  isRowOpen ? "rotate-180" : ""
-                }`}
+                className={`text-muted-foreground size-4 transition-transform duration-200 ${isRowOpen ? "rotate-180" : ""
+                  }`}
               />
             </Button>
           )}
         </TableCell>
         <TableCell className="text-center text-xs sm:text-sm">
-          {node.kode_unit}
+          {node.kode}
         </TableCell>
         <TableCell className="text-left text-xs sm:text-sm">
-          {node.nama_unit}
+          {node.nama}
         </TableCell>
         <TableCell className="text-center text-xs sm:text-sm">
           {node.parent_unit_id || "-"}
@@ -107,7 +106,7 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
                     Apakah Anda benar-benar yakin ingin menghapus unit kerja
                     <strong className="text-red-600">
                       {" "}
-                      "{node.nama_unit}"
+                      "{node.nama}"
                     </strong>
                     ? Tindakan ini tidak dapat dibatalkan.
                   </DialogDescription>
@@ -132,7 +131,7 @@ const UnitKerjaRow: React.FC<UnitKerjaRowProps> = ({
       {isRowOpen &&
         node.children.map((childNode) => (
           <UnitKerjaRow
-            key={childNode.kode_unit}
+            key={childNode.kode}
             node={childNode}
             level={level + 1} // Tingkatkan level indentasi
             openRows={openRows}

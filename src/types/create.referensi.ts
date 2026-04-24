@@ -33,13 +33,16 @@ interface IJenisSk {
 
 interface IStatusKeaktifan {
   kode: string;
-  nama_status_aktif: string;
-  status_keluar: boolean;
+  nama: string;
+  is_keluar: boolean;
 }
 
 interface IStatusPangkat {
-  pangkat: string;
-  nama_golongan: string;
+  id?: string;
+  kode: string;
+  nama: string;
+  tunjangan: number;
+  potongan: number;
 }
 
 interface IStatusEselon {
@@ -134,8 +137,8 @@ interface IJenisHari {
 interface IHubunganKerja {
   kode: string;
   nama_hub_kerja: string;
-  status_aktif: boolean;
-  pns: boolean;
+  is_aktif: boolean;
+  is_pns: boolean;
 }
 
 interface IAgama {

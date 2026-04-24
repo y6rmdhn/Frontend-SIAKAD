@@ -47,7 +47,7 @@ import { IoSaveOutline } from "react-icons/io5";
 const gelarSchema = z.object({
   id: z.string().optional(),
   gelar: z.string().min(1, "Gelar tidak boleh kosong"),
-  nama_gelar: z.string().min(1, "Nama Gelar tidak boleh kosong"),
+  nama: z.string().min(1, "Nama Gelar tidak boleh kosong"),
 });
 
 type GelarFormValues = z.infer<typeof gelarSchema>;
@@ -55,7 +55,7 @@ type GelarFormValues = z.infer<typeof gelarSchema>;
 interface GelarItem {
   id: string;
   gelar: string;
-  nama_gelar: string;
+  nama: string;
 }
 
 // PERBAIKAN: Tipe ini sekarang mencerminkan seluruh objek response
@@ -85,7 +85,7 @@ const GelarAkademik = () => {
 
   const form = useForm<GelarFormValues>({
     resolver: zodResolver(gelarSchema),
-    defaultValues: { gelar: "", nama_gelar: "" },
+    defaultValues: { gelar: "", nama: "" },
   });
 
   // --- Data Fetching ---
@@ -159,7 +159,7 @@ const GelarAkademik = () => {
   }, [debouncedSearch]);
 
   const handleCancel = () => {
-    form.reset({ gelar: "", nama_gelar: "" });
+    form.reset({ gelar: "", nama: "" });
     setIsEditMode(false);
     setEditingItemId(null);
     setIsAddData(false);
@@ -249,7 +249,7 @@ const GelarAkademik = () => {
                       <TableCell>
                         <FormFieldInput
                           form={form}
-                          name="nama_gelar"
+                          name="nama"
                           placeholder="Contoh: Sarjana Komputer"
                         />
                       </TableCell>
@@ -292,7 +292,7 @@ const GelarAkademik = () => {
                     tableData?.data.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell>{item.gelar}</TableCell>
-                        <TableCell>{item.nama_gelar}</TableCell>
+                        <TableCell>{item.nama}</TableCell>
                         <TableCell>
                           <div className="flex justify-center items-center gap-2">
                             <Button
@@ -303,16 +303,15 @@ const GelarAkademik = () => {
                               disabled={isEditMode && editingItemId !== item.id}
                             >
                               <MdEdit
-                                className={`w-5 h-5 ${
-                                  editingItemId === item.id
+                                className={`w-5 h-5 ${editingItemId === item.id
                                     ? "text-gray-400"
                                     : "text-yellow-500"
-                                }`}
+                                  }`}
                               />
                             </Button>
                             <ConfirmDialog
                               title="Hapus Data?"
-                              description={`Yakin ingin menghapus gelar "${item.nama_gelar}"?`}
+                              description={`Yakin ingin menghapus gelar "${item.nama}"?`}
                               onConfirm={() => deleteData(item.id)}
                             >
                               <Button size="icon" variant="ghost">

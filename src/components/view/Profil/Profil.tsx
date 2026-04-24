@@ -74,6 +74,8 @@ interface UserProfile {
 const Profil = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+  const refreshToken = useSelector((state: RootState) => state.user.refreshToken);
+  const userId = useSelector((state: RootState) => state.user.id);
   const role = useSelector((state: RootState) => state.user.role);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -201,7 +203,11 @@ const Profil = () => {
       toast.error("Token akses tidak valid. Silakan login kembali.");
       return;
     }
-    logoutMutation({ accessToken });
+    logoutMutation({
+      accessToken: accessToken,
+      refresh_token: refreshToken || "",
+      userId: userId,
+    });
   };
 
   const onSubmitPasswordChange = (

@@ -82,9 +82,11 @@ const dataPegawaiSchema = z.object({
   email_pegawai: z.string().email("Format email tidak valid"),
   email_pribadi: optionalEmail,
   golongan: z.string().optional(),
-  // DIPERBAIKI: Validasi untuk jabatan_fungsional_id diaktifkan kembali
   jabatan_fungsional_id: z.string().optional(),
-  // jabatan_akademik_id: z.string().optional(),
+  jabatan_struktural_id: z.string().optional(),
+  pangkat_id: z.string().optional(),
+  eselon_id: z.string().optional(),
+  jenjang_pendidikan_id: z.string().optional(),
 
   // --- Domisili ---
   no_ktp: z
@@ -110,7 +112,7 @@ const dataPegawaiSchema = z.object({
     .length(5, "Kode pos harus 5 digit")
     .optional()
     .or(z.literal("")),
-  suku: z.string().optional(),
+  suku_id: z.string().optional(),
   jarak_rumah_domisili: z.string().optional(),
   no_whatsapp: z
     .string()
@@ -129,8 +131,9 @@ const dataPegawaiSchema = z.object({
   // --- Rekening Bank ---
   nama_bank: z.string().optional(),
   cabang_bank: z.string().optional(),
-  nama_rekening: z.string().optional(),
+  atas_nama_rekening: z.string().optional(),
   no_rekening: z.string().optional(),
+  bank_id: z.string().optional(),
 
   // --- Dokumen (DIPERBAIKI: Menggunakan fileSchema lokal) ---
   kapreg: z.string().max(50, "Kapreg maksimal 50 karakter").optional(),
@@ -210,7 +213,10 @@ const DataPegawai = () => {
       email_pribadi: "",
       golongan: "",
       jabatan_fungsional_id: "",
-      // jabatan_akademik_id: "",
+      jabatan_struktural_id: "",
+      pangkat_id: "",
+      eselon_id: "",
+      jenjang_pendidikan_id: "",
       no_ktp: "",
       no_kk: "",
       warga_negara: "",
@@ -219,14 +225,15 @@ const DataPegawai = () => {
       alamat_domisili: "",
       kecamatan: "",
       kode_pos: "",
-      suku: "",
+      suku_id: "",
       jarak_rumah_domisili: "",
       no_whatsapp: "",
       no_handphone: "",
       nama_bank: "",
       cabang_bank: "",
-      nama_rekening: "",
+      atas_nama_rekening: "",
       no_rekening: "",
+      bank_id: "",
       kapreg: "",
       file_kapreg: undefined,
       npwp: "",
@@ -402,8 +409,8 @@ const DataPegawai = () => {
                   required={true}
                   queryKey="agama"
                   queryFn={adminServices.getAgama}
-                  itemValue="nama_agama"
-                  itemLabel="nama_agama"
+                  itemValue="nama"
+                  itemLabel="nama"
                 />
                 <FormFieldInput
                   form={form}
@@ -430,7 +437,7 @@ const DataPegawai = () => {
                   queryKey="status-pernikahan-select"
                   queryFn={adminServices.getStatusPernikahan}
                   itemValue="id"
-                  itemLabel="nama_status"
+                  itemLabel="nama"
                 />
                 <InfiniteScrollSelect
                   form={form}
@@ -453,13 +460,11 @@ const DataPegawai = () => {
                       key={index}
                       type="button"
                       onClick={() => setShow(item.show)}
-                      className={`${
-                        item.title === "Alamat Domisili & Kontak"
-                          ? "col-span-2 min-[506px]:col-span-1"
-                          : ""
-                      } flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
-                        show === item.show ? "bg-[#106D63] text-white" : ""
-                      }`}
+                      className={`${item.title === "Alamat Domisili & Kontak"
+                        ? "col-span-2 min-[506px]:col-span-1"
+                        : ""
+                        } flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${show === item.show ? "bg-[#106D63] text-white" : ""
+                        }`}
                     >
                       {item.title}
                     </Button>

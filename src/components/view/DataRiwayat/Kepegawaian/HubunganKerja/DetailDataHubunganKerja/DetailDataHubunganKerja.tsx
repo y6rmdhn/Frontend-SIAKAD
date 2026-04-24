@@ -9,18 +9,27 @@ import dosenServices from "@/services/dosen.services.ts";
 import { format, parseISO } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// --- START DEFINISI TIPE ---
+// Skema disesuaikan dengan DB backend baru
+interface Dokumen {
+    id: string;
+    file_name: string;
+    kategori_dokumen: string;
+    url: string;
+}
 
 interface HubunganKerjaDetail {
-    nama_hub_kerja: string;
+    hubungan_kerja?: { id: string; nama: string };
+    nama_hubungan_kerja?: string; // fallback flat field
     no_sk: string;
-    tgl_sk: string; // ISO string date
-    tgl_mulai: string; // ISO string date
-    tgl_selesai: string; // ISO string date
-    pejabat_penetap: string;
-    is_aktif_label: string;
-    status_pengajuan: string;
-    // Jika ada timestamp, bisa ditambahkan di sini
+    tgl_sk: string;
+    tgl_mulai: string;
+    tgl_selesai: string;
+    pejabat_penetap?: string | null;
+    status: string;          // 'draft' | 'diajukan' | 'disetujui' | 'ditolak'
+    tgl_disetujui?: string | null;
+    tgl_ditolak?: string | null;
+    pegawai: { nip: string; nama: string; }
+    dokumen?: Dokumen[];
 }
 
 interface PegawaiInfo {
@@ -29,10 +38,8 @@ interface PegawaiInfo {
 
 interface DetailHubunganKerjaApiResponse {
     data: HubunganKerjaDetail;
-    pegawai: PegawaiInfo;
+    pegawai?: PegawaiInfo;
 }
-
-// --- END DEFINISI TIPE ---
 
 const DetailDataHubunganKerja = () => {
     const params = useParams<{ id: string }>();
@@ -46,8 +53,8 @@ const DetailDataHubunganKerja = () => {
                 throw new Error("ID Hubungan Kerja tidak ditemukan di URL");
             }
             const response = await dosenServices.getHubunganKerjaDetail(params.id);
-            console.log(response.data);
-            return response.data;
+            // response.data bisa berupa { data: {...}, pegawai: {...} }
+            return response.data?.data ? response.data : { data: response.data };
         },
         // Query hanya akan berjalan jika params.id ada
         enabled: !!params.id,
@@ -80,7 +87,7 @@ const DetailDataHubunganKerja = () => {
     }
 
     // Menampilkan state error
-    if(isError) {
+    if (isError) {
         return (
             <div className="mt-10 mb-20 text-center text-red-500">
                 Gagal memuat detail data hubungan kerja.
@@ -110,10 +117,10 @@ const DetailDataHubunganKerja = () => {
                             <div className="space-y-2">
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                                        Jabatan Struktural
+                                        Hubungan Kerja
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.nama_hub_kerja || "-"}
+                                        {data?.data?.hubungan_kerja?.nama || data?.data?.nama_hubungan_kerja || "-"}
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -154,6 +161,9 @@ const DetailDataHubunganKerja = () => {
                                             : "-"}
                                     </Label>
                                 </div>
+                                {/*
+                                  Pejabat Penetap — sekarang ada di DB baru (allowNull: true)
+                                */}
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
                                         Pejabat Penetap
@@ -167,7 +177,7 @@ const DetailDataHubunganKerja = () => {
                                         Status Aktif
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.is_aktif_label || "-"}
+                                        {data?.data.status || "-"}
                                     </Label>
                                 </div>
                             </div>
@@ -179,29 +189,61 @@ const DetailDataHubunganKerja = () => {
                                         Status Pengajuan
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.status_pengajuan || "-"}
+                                        {data?.data.status || "-"}
                                     </Label>
                                 </div>
-                                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">
-                                        Tanggal Diajukan
-                                    </Label>
-                                    <Label className="text-xs sm:text-sm">-</Label>
-                                </div>
+                                {/* Tanggal Disetujui */}
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">
                                         Tanggal Disetujui
                                     </Label>
-                                    <Label className="text-xs sm:text-sm">-</Label>
+                                    <Label className="text-xs sm:text-sm">
+                                        {data?.data.tgl_disetujui
+                                            ? format(parseISO(data.data.tgl_disetujui), "dd MMMM yyyy")
+                                            : "-"}
+                                    </Label>
                                 </div>
+                                {/* Tanggal Ditolak */}
+                                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                                    <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">
+                                        Tanggal Ditolak
+                                    </Label>
+                                    <Label className="text-xs sm:text-sm">
+                                        {data?.data.tgl_ditolak
+                                            ? format(parseISO(data.data.tgl_ditolak), "dd MMMM yyyy")
+                                            : "-"}
+                                    </Label>
+                                </div>
+                                {/* Dibuat oleh */}
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
                                     <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm shrink-0 w-38">
                                         Dibuat Oleh
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.pegawai.nama || "-"}
+                                        {data?.data?.pegawai?.nama || "-"}
                                     </Label>
                                 </div>
+                                {/* Dokumen — struktur baru dari API */}
+                                {data?.data.dokumen && data.data.dokumen.length > 0 && (
+                                    <div className="flex flex-col gap-2 border-b p-2">
+                                        <Label className="text-[#2572BE] font-semibold text-xs sm:text-sm">
+                                            Dokumen
+                                        </Label>
+                                        <div className="flex flex-col gap-1">
+                                            {data.data.dokumen.map((doc) => (
+                                                <a
+                                                    key={doc.id}
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="text-blue-600 hover:underline text-xs sm:text-sm flex items-center gap-1"
+                                                >
+                                                    📄 {doc.file_name}
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

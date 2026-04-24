@@ -38,7 +38,7 @@ export const bankSchema = z.object({
     })
     .min(1, "Kode bank tidak boleh kosong."),
 
-  nama_bank: z
+  nama: z
     .string({
       required_error: "Nama bank tidak boleh kosong.",
     })
@@ -61,7 +61,7 @@ const Bank = () => {
     resolver: zodResolver(bankSchema),
     defaultValues: {
       kode: "",
-      nama_bank: "",
+      nama: "",
     },
   });
 
@@ -136,7 +136,7 @@ const Bank = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      nama_bank: item.nama_bank,
+      nama: item.nama,
     });
 
     setIsEditMode(true);
@@ -204,7 +204,7 @@ const Bank = () => {
                         form.reset({
                           id: "",
                           kode: "",
-                          nama_bank: "",
+                          nama: "",
                         });
 
                         setSearchParam(searchParam);
@@ -212,11 +212,10 @@ const Bank = () => {
                         searchParam.set("page", "1");
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
-                        ? "bg-gray-400"
-                        : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                    className={`cursor-pointer ${isEditMode
+                      ? "bg-gray-400"
+                      : "bg-green-light-uika hover:bg-[#329C59]"
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -257,7 +256,7 @@ const Bank = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_bank"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -284,13 +283,13 @@ const Bank = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.map((item: any) => (
+                {data?.data?.map((item: any) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_bank}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">

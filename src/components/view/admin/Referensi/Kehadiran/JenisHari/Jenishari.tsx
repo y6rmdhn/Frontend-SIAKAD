@@ -31,8 +31,8 @@ import { z } from "zod";
 interface jenishariItem {
   id: string;
   kode: string;
-  nama_hari: string;
-  jenis_hari: boolean;
+  nama: string;
+  is_efektif: boolean;
 }
 
 interface jenisHariResponse {
@@ -46,8 +46,8 @@ interface jenisHariResponse {
 const jenisHariSchema = z.object({
   id: z.string().optional(),
   kode: z.string().min(1, "kode tidak boleh kosong"),
-  nama_hari: z.string().min(1, "Nama hari tidak boleh kosong"),
-  jenis_hari: z
+  nama: z.string().min(1, "Nama hari tidak boleh kosong"),
+  is_efektif: z
     .enum(["true", "false"], {
       required_error: "Jenis hari harus dipilih.",
     })
@@ -70,8 +70,8 @@ const JenisHari = () => {
     resolver: zodResolver(jenisHariSchema),
     defaultValues: {
       kode: "",
-      nama_hari: "",
-      jenis_hari: undefined,
+      nama: "",
+      is_efektif: undefined,
     },
   });
 
@@ -144,8 +144,8 @@ const JenisHari = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      nama_hari: item.nama_hari,
-      jenis_hari: item.jenis_hari,
+      nama: item.nama,
+      is_efektif: item.is_efektif,
     });
 
     setIsEditMode(true);
@@ -218,8 +218,8 @@ const JenisHari = () => {
                         form.reset({
                           id: "",
                           kode: "",
-                          nama_hari: "",
-                          jenis_hari: false,
+                          nama: "",
+                          is_efektif: false,
                         });
 
                         setSearchParam(searchParam);
@@ -227,11 +227,10 @@ const JenisHari = () => {
                         searchParam.set("page", "1");
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
+                    className={`cursor-pointer ${isEditMode
                         ? "bg-gray-400"
                         : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -275,7 +274,7 @@ const JenisHari = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_hari"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -289,7 +288,7 @@ const JenisHari = () => {
                           { value: "false", label: "Non Efektif" },
                         ]}
                         form={form}
-                        name="jenis_hari"
+                        name="is_efektif"
                         required={false}
                       />
                     </TableCell>
@@ -322,10 +321,10 @@ const JenisHari = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_hari}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.jenis_hari ? "Efektif" : "Non Efektif"}
+                      {item.is_efektif ? "Efektif" : "Non Efektif"}
                     </TableCell>
                     <TableCell className="h-full">
                       <div className="flex justify-center items-center w-full h-full">

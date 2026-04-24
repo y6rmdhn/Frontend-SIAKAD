@@ -24,21 +24,35 @@ const Module = () => {
     mutationFn: (data: ILogout) => authServices.logout(data),
     onSuccess: (response) => {
       localStorage.removeItem("user");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("active_mode");
       dispatch(clearUserData());
       navigate("/login");
-      toast.success(response.data.message);
+      toast.success(response.data.message ?? "Berhasil Keluar");
+    },
+    onError: () => {
+      // Tetap bersihkan state lokal meskipun request gagal
+      localStorage.removeItem("user");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("active_mode");
+      dispatch(clearUserData());
+      navigate("/login");
     },
   });
 
   if (!accessToken) return <Navigate to="/login" />;
 
   const handleLogout = () => {
-    if (!accessToken || typeof accessToken !== "string") {
-      toast.error("Please login again.");
+    const refresh_token = localStorage.getItem("refresh_token") ?? "";
+    if (!refresh_token) {
+      // Tidak ada token, langsung bersihkan state
+      localStorage.removeItem("user");
+      dispatch(clearUserData());
+      navigate("/login");
       return;
     }
 
-    mutate({ accessToken });
+    mutate({ accessToken: accessToken ?? "", refresh_token });
   };
 
   return (
@@ -113,16 +127,14 @@ const Module = () => {
                         setRole("kepegawaian");
                         setSelected("kepegawaian");
                       }}
-                      className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${
-                        selected === "kepegawaian" ? "!bg-[#cfd6db]" : ""
-                      }`}
+                      className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${selected === "kepegawaian" ? "!bg-[#cfd6db]" : ""
+                        }`}
                     >
                       <div
-                        className={`bg-white/50 w-full h-full rounded-xl ${
-                          hovered === "kepegawaianEnterMouse"
-                            ? "scale-110 transition-transform duration-500"
-                            : "scale-100 transition-transform duration-300"
-                        }`}
+                        className={`bg-white/50 w-full h-full rounded-xl ${hovered === "kepegawaianEnterMouse"
+                          ? "scale-110 transition-transform duration-500"
+                          : "scale-100 transition-transform duration-300"
+                          }`}
                       >
                         <div className="flex flex-col items-center justify-center p-5 h-full">
                           <img
@@ -144,7 +156,7 @@ const Module = () => {
                   className={`${
                     // Panel ini hanya akan muncul jika 'role' sudah di-set (setelah klik modul)
                     role ? "flex flex-col" : "hidden lg:flex lg:flex-col"
-                  } w-full lg:h-[1000px] pt-5 px-8 bg-[#EEEEEE] order-1 lg:order-2`}
+                    } w-full lg:h-[1000px] pt-5 px-8 bg-[#EEEEEE] order-1 lg:order-2`}
                 >
                   {/* Cek jika 'role' ada, maka tampilkan semua role untuk admin */}
                   {role && (
@@ -156,7 +168,10 @@ const Module = () => {
 
                       {/* Role Administrasi Aplikasi */}
                       <div
-                        onClick={() => navigate("/admin/dasboard")}
+                        onClick={() => {
+                          localStorage.setItem("active_mode", "admin");
+                          navigate("/admin/dasboard")
+                        }}
                         className="group bg-white p-3 rounded-md mt-6 cursor-pointer shadow-sm hover:bg-[#00325B] transition-all duration-300"
                       >
                         <h1 className="font-semibold text-[#004680] group-hover:text-white transition-all duration-500">
@@ -169,7 +184,10 @@ const Module = () => {
 
                       {/* Role Kepegawaian */}
                       <div
-                        onClick={() => navigate("/dasboard")}
+                        onClick={() => {
+                          localStorage.setItem("active_mode", "pegawai");
+                          navigate("/dasboard")
+                        }}
                         className="group bg-white p-3 rounded-md mt-4 cursor-pointer shadow-sm hover:bg-[#00325B] transition-all duration-300"
                       >
                         <h1 className="font-semibold text-[#004680] group-hover:text-white transition-all duration-500">
@@ -198,16 +216,14 @@ const Module = () => {
                         setRole("kepegawaian");
                         setSelected("kepegawaian");
                       }}
-                      className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${
-                        selected === "kepegawaian" ? "!bg-[#cfd6db]" : ""
-                      }`}
+                      className={`bg-white hover:bg-[#cfd6db] flex items-center justify-center h-36 rounded-xl cursor-pointer shadow-sm ${selected === "kepegawaian" ? "!bg-[#cfd6db]" : ""
+                        }`}
                     >
                       <div
-                        className={`bg-white/50 w-full h-full rounded-xl ${
-                          hovered === "kepegawaianEnterMouse"
-                            ? "scale-110 transition-transform duration-500"
-                            : "scale-100 transition-transform duration-300"
-                        }`}
+                        className={`bg-white/50 w-full h-full rounded-xl ${hovered === "kepegawaianEnterMouse"
+                          ? "scale-110 transition-transform duration-500"
+                          : "scale-100 transition-transform duration-300"
+                          }`}
                       >
                         <div className="flex flex-col items-center justify-center p-5 h-full">
                           <img
@@ -224,9 +240,8 @@ const Module = () => {
                   </div>
                 </div>
                 <div
-                  className={`${
-                    role ? "flex flex-col" : "hidden lg:flex lg:flex-col"
-                  } w-full lg:h-[1000px] pt-5 px-8 bg-[#EEEEEE] order-1 lg:order-2`}
+                  className={`${role ? "flex flex-col" : "hidden lg:flex lg:flex-col"
+                    } w-full lg:h-[1000px] pt-5 px-8 bg-[#EEEEEE] order-1 lg:order-2`}
                 >
                   {role && (
                     <div>

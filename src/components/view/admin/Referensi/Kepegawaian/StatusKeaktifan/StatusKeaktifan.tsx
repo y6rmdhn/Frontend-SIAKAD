@@ -36,8 +36,8 @@ import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.t
 interface StatusKeaktifanItem {
   id: string;
   kode: string;
-  nama_status_aktif: string;
-  status_keluar: boolean;
+  nama: string;
+  is_keluar: boolean;
   // Add other properties as needed
 }
 
@@ -53,8 +53,8 @@ interface StatusKeaktifanResponse {
 const statusKeaktifanSchema = z.object({
   id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
-  nama_status_aktif: z.string().min(1, "Nama status aktif tidak boleh kosong"),
-  status_keluar: z.boolean(),
+  nama: z.string().min(1, "Nama status aktif tidak boleh kosong"),
+  is_keluar: z.boolean(),
 });
 
 type statusKeaktifanFormvalue = z.infer<typeof statusKeaktifanSchema>;
@@ -63,8 +63,8 @@ const StatusKeaktifan = () => {
   const form = useForm({
     defaultValues: {
       kode: "",
-      nama_status_aktif: "",
-      status_keluar: false,
+      nama: "",
+      is_keluar: false,
     },
     resolver: zodResolver(statusKeaktifanSchema),
   });
@@ -149,8 +149,8 @@ const StatusKeaktifan = () => {
     form.reset({
       id: item.id,
       kode: item.kode,
-      nama_status_aktif: item.nama_status_aktif,
-      status_keluar: item.status_keluar,
+      nama: item.nama,
+      is_keluar: item.is_keluar,
     });
 
     setIsEditMode(true);
@@ -216,8 +216,8 @@ const StatusKeaktifan = () => {
                     if (!isEditMode) {
                       form.reset({
                         kode: "",
-                        nama_status_aktif: "",
-                        status_keluar: false,
+                        nama: "",
+                        is_keluar: false,
                       });
 
                       setIsAddData(true);
@@ -225,11 +225,10 @@ const StatusKeaktifan = () => {
                       setSearchParam(searchParam);
                     }
                   }}
-                  className={`cursor-pointer ${
-                    isEditMode
-                      ? "bg-gray-400"
-                      : "bg-green-light-uika hover:bg-[#329C59]"
-                  }`}
+                  className={`cursor-pointer ${isEditMode
+                    ? "bg-gray-400"
+                    : "bg-green-light-uika hover:bg-[#329C59]"
+                    }`}
                   disabled={isEditMode}
                 >
                   <FaPlus /> Tambah
@@ -271,7 +270,7 @@ const StatusKeaktifan = () => {
                         inputStyle="w-full"
                         position={true}
                         form={form}
-                        name="nama_status_aktif"
+                        name="nama"
                         required={false}
                       />
                     </TableCell>
@@ -281,7 +280,7 @@ const StatusKeaktifan = () => {
                         position={true}
                         form={form}
                         type="checkbox"
-                        name="status_keluar"
+                        name="is_keluar"
                         required={false}
                       />
                     </TableCell>
@@ -314,10 +313,10 @@ const StatusKeaktifan = () => {
                       {item.kode}
                     </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
-                      {item.nama_status_aktif}
+                      {item.nama}
                     </TableCell>
                     <TableCell className="flex text-center justify-center items-center w-full h-full">
-                      {item.status_keluar ? (
+                      {item.is_keluar ? (
                         <FaCheck className="text-green-500 w-4 h-4 mt-2" />
                       ) : (
                         <IoClose className="text-red-500 w-5 h-5 mt-2" />
