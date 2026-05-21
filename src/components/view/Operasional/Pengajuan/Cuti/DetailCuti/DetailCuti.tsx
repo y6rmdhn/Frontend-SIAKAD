@@ -13,9 +13,10 @@ import postDosenServices from "@/services/create.dosen.services";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
+// import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
-import dosenServices from "@/services/dosen.services";
+// import dosenServices from "@/services/dosen.services";
+import { dosenServices } from "@/services/dosen.services";
 import { useEffect } from "react"; // Import useEffect
 
 const cutiSchema = z.object({
@@ -27,7 +28,7 @@ const cutiSchema = z.object({
   alamat: z.string().optional(),
   no_telp: z.coerce.number().optional(),
   submit_type: z.string().optional(),
-  file_cuti: fileSchemaNew,
+  //   file_cuti: fileSchemaNew,
 });
 
 export type CutiSchema = z.infer<typeof cutiSchema>;

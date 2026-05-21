@@ -25,6 +25,7 @@ import {
   UnitKerjaItem,
 } from "@/types";
 
+import { responseParams } from "@/types/response.params";
 type HubunganKerjaMonitoringParams = {
   page?: string;
   search?: string;
@@ -35,17 +36,33 @@ type HubunganKerjaMonitoringParams = {
 };
 
 const adminServices = {
-  getProfilePegawai: () =>
-    axiosInstance.get(`${endpoint.PEGAWAI}/profile`),
-  searchPegawai: (params?: { search?: string; is_dropdown?: boolean; page?: number }) =>
-    axiosInstance.get(`${endpoint.PEGAWAI}`, { params }),
-  getStatusAktif: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string }) =>
+  getProfilePegawai: () => axiosInstance.get(`${endpoint.PEGAWAI}/profile`),
+  searchPegawai: (params?: {
+    search?: string;
+    is_dropdown?: boolean;
+    page?: number;
+  }) => axiosInstance.get(`${endpoint.PEGAWAI}`, { params }),
+  getStatusAktif: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) =>
     axiosInstance.get(`${endpoint.ADMIN}/status-aktif`, {
-      params
+      params,
     }),
-  getHubunganKerjaValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getHubunganKerjaValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-hubungan-kerja/`, {
-      params
+      params,
     });
   },
   getHubunganKerjaMonitoring: (params: HubunganKerjaMonitoringParams) => {
@@ -63,9 +80,14 @@ const adminServices = {
       params: cleanParams,
     });
   },
-  getUnitKerja: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string }) =>
+  getUnitKerja: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) =>
     axiosInstance.get(`${endpoint.MASTER}/unit-kerja`, {
-      params
+      params,
     }),
   getHubunganKerja: (page?: any) =>
     axiosInstance.get(`${endpoint.ADMIN}/hubungan-kerja`, {
@@ -252,7 +274,16 @@ const adminServices = {
     }),
   getSettingKehadiran: () =>
     axiosInstance.get(`${endpoint.ABSENSI}/setting-presensi`),
-  getPenghargaan: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getPenghargaan: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.ADMIN}/data-penghargaan`, {
       params,
     });
@@ -410,70 +441,146 @@ const adminServices = {
         search: search,
       },
     }),
-  getKeluargaValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) =>
+  getKeluargaValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) =>
     axiosInstance.get(`${endpoint.VALIDASI}/data-keluarga`, {
       params,
     }),
-  getPangkatValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getPangkatValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-pangkat`, {
-      params
+      params,
     });
   },
-  getJabatanStrukturalValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getJabatanStrukturalValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-struktural`, {
       params,
     });
   },
-  getJabatanFungsionalValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getJabatanFungsionalValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-fungsional`, {
       params,
     });
   },
-  getJabatanAkademikValidasiData: (params: JabatanAkademikParams) => {
-    const cleanParams: Record<string, any> = { page: params.page || "1" };
-
-    if (params.search) cleanParams.search = params.search;
-
-    if (params.unit_kerja_id) {
-      cleanParams.unit_kerja_id = params.unit_kerja_id;
-    }
-    if (params.jabatan_akademik_id) {
-      cleanParams.jabatan_akademik_id = params.jabatan_akademik_id;
-    }
-    if (params.status_pengajuan) {
-      cleanParams.status_pengajuan = params.status_pengajuan;
-    }
-
-    return axiosInstance.get(`${endpoint.ADMIN}/datajabatanakademikadm`, {
+  getJabatanAkademikValidasiData: (params: responseParams) => {
+    return axiosInstance.get(`${endpoint.VALIDASI}/datajabatanakademikadm`, {
       params: cleanParams,
     });
   },
-  getPendidikanFormalValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getPendidikanFormalValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-pendidikan-formal`, {
       params,
     });
   },
-  getTesKompetensi: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getTesKompetensi: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-test`, {
       params,
     });
   },
-  getPenghargaanValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getPenghargaanValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-penghargaan`, {
       params,
     });
   },
-  getOrganisasiValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getOrganisasiValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-organisasi`, {
       params,
     });
   },
-  getSertifikasiValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getSertifikasiValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-sertifikasi`, {
       params,
     });
   },
-  getRiwayatPekerjaanValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getRiwayatPekerjaanValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-riwayat-pekerjaan`, {
       params,
     });
@@ -529,12 +636,30 @@ const adminServices = {
       params: cleanParams,
     });
   },
-  getKemampuanBahasa: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getKemampuanBahasa: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-kemampuan-bahasa`, {
       params,
     });
   },
-  getDiklatValidasiData: (params?: { is_dropdown?: boolean, page?: number, limit?: number, search?: string, status?: string, unit_kerja_id?: string, start_end?: string, end_date?: string }) => {
+  getDiklatValidasiData: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
     return axiosInstance.get(`${endpoint.VALIDASI}/data-diklat`, {
       params,
     });
@@ -590,7 +715,7 @@ const adminServices = {
   getPangkatDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-pangkat`, {
       params: {
@@ -601,7 +726,7 @@ const adminServices = {
   getJabatanStrukturalDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(
       `${endpoint.ADMIN}/pegawai/${id}/riwayat-jabatan-struktural`,
@@ -610,12 +735,12 @@ const adminServices = {
           page: page,
           search: search,
         },
-      }
+      },
     ),
   getJabatanAkademikDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(
       `${endpoint.ADMIN}/pegawai/${id}/riwayat-jabatan-akademik`,
@@ -624,12 +749,12 @@ const adminServices = {
           page: page,
           search: search,
         },
-      }
+      },
     ),
   getHubunganKerjaDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(
       `${endpoint.ADMIN}/pegawai/${id}/riwayat-hubungan-kerja`,
@@ -638,12 +763,12 @@ const adminServices = {
           page: page,
           search: search,
         },
-      }
+      },
     ),
   getPelanggaranDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-pelanggaran`, {
       params: {
@@ -654,7 +779,7 @@ const adminServices = {
   getSertifikasiDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-sertifikasi`, {
       params: {
@@ -665,7 +790,7 @@ const adminServices = {
   getTesDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-tes`, {
       params: {
@@ -676,7 +801,7 @@ const adminServices = {
   getDiklatDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-diklat`, {
       params: {
@@ -687,7 +812,7 @@ const adminServices = {
   getPendidikanFormalDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(
       `${endpoint.ADMIN}/pegawai/${id}/riwayat-pendidikan-formal`,
@@ -696,12 +821,12 @@ const adminServices = {
           page: page,
           search: search,
         },
-      }
+      },
     ),
   getRiwayatPekerjaanDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-pekerjaan`, {
       params: {
@@ -712,7 +837,7 @@ const adminServices = {
   getRiwayatPresensiDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-presensi`, {
       params: {
@@ -723,7 +848,7 @@ const adminServices = {
   getPenghargaanDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-penghargaan`, {
       params: {
@@ -734,7 +859,7 @@ const adminServices = {
   getOrganisasiDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-organisasi`, {
       params: {
@@ -745,7 +870,7 @@ const adminServices = {
   getKemampuanBahasaDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(
       `${endpoint.ADMIN}/pegawai/${id}/riwayat-kemampuan-bahasa`,
@@ -754,12 +879,12 @@ const adminServices = {
           page: page,
           search: search,
         },
-      }
+      },
     ),
   getCutiDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-cuti`, {
       params: {
@@ -770,7 +895,7 @@ const adminServices = {
   getIzinDetailPegawai: (
     page?: any,
     id?: string | undefined,
-    search?: string | undefined
+    search?: string | undefined,
   ) =>
     axiosInstance.get(`${endpoint.ADMIN}/pegawai/${id}/riwayat-izin`, {
       params: {
@@ -831,7 +956,7 @@ const adminServices = {
       {
         params: { format },
         responseType: "blob", // <-- TAMBAHKAN INI
-      }
+      },
     );
   },
   // ─── Pelaksanaan Pendidikan ─────────────────────────────────────────────────
@@ -858,11 +983,16 @@ const adminServices = {
   getPembicaraValidasiData: (params?: any) =>
     axiosInstance.get(`${endpoint.VALIDASI}/data-pembicara`, { params }),
   getJabatanStrukturalPengabdianValidasiData: (params?: any) =>
-    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-struktural-pengabdian`, { params }),
+    axiosInstance.get(
+      `${endpoint.VALIDASI}/data-jabatan-struktural-pengabdian`,
+      { params },
+    ),
 
   // ─── Penunjang ───────────────────────────────────────────────────────────────
   getPenunjangLainValidasiData: (params?: any) =>
-    axiosInstance.get(`${endpoint.VALIDASI}/data-penunjang-lainnya`, { params }),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-penunjang-lainnya`, {
+      params,
+    }),
 
   // ─── Kepegawaian: Homebase ───────────────────────────────────────────────────
   getHomebaseValidasiData: (params?: any) =>
