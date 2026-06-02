@@ -47,21 +47,22 @@ const optionalEmail = z
   .optional()
   .or(z.literal(""));
 
+const cleanOptionalString = z
+  .string()
+  .trim()
+  .optional()
+  .nullable()
+  .transform((val) => (val === "" ? null : val));
+
 // DIPERBARUI: Skema Zod disesuaikan untuk edit
 const dataPegawaiSchema = z.object({
   id: z.string().optional(),
-  nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
-  nidn: z.string().trim().optional().or(z.literal("")),
-  nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
+  nip: z.string().trim().min(9, "NIP harus terdiri minimal dari 9 digit angka"),
+  nidn: cleanOptionalString,
+  nuptk: cleanOptionalString,
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
-  gelar_depan: z
-    .string()
-    .max(20, "Gelar depan maksimal 20 karakter")
-    .optional(),
-  gelar_belakang: z
-    .string()
-    .max(20, "Gelar belakang maksimal 20 karakter")
-    .optional(),
+  gelar_depan: cleanOptionalString,
+  gelar_belakang: cleanOptionalString,
   jenis_kelamin: z.enum(["Laki-laki", "Perempuan"], {
     required_error: "Jenis kelamin wajib dipilih",
   }),
@@ -71,40 +72,24 @@ const dataPegawaiSchema = z.object({
     errorMap: () => ({ message: "Format tanggal lahir tidak valid" }),
   }),
   kode_status_pernikahan: z.string().min(1, "Status pernikahan wajib dipilih"),
-  golongan_darah: z.string().optional(),
+  golongan_darah: cleanOptionalString,
   unit_kerja_id: z.string().min(1, "Unit kerja wajib dipilih"),
   status_aktif_id: z.string().min(1, "Status aktif wajib dipilih"),
   status_kerja: z.string().min(1, "Hubungan kerja wajib dipilih"),
   email_pegawai: z.string().email("Format email tidak valid"),
   email_pribadi: optionalEmail,
-  golongan: z.string().optional(),
-  jabatan_fungsional_id: z.string().optional(),
-  // jabatan_akademik_id: z.string().optional(),
-  no_ktp: z
-    .string()
-    .trim()
-    .length(16, "No. KTP harus 16 digit")
-    .optional()
-    .or(z.literal("")),
-  no_kk: z
-    .string()
-    .trim()
-    .length(16, "No. KK harus 16 digit")
-    .optional()
-    .or(z.literal("")),
+  golongan: cleanOptionalString,
+  jabatan_fungsional_id: cleanOptionalString,
+  no_ktp: cleanOptionalString,
+  no_kk: cleanOptionalString,
   warga_negara: z.string().min(1, "Warga negara wajib diisi"),
   provinsi: z.string().min(1, "Provinsi wajib dipilih"),
   kota: z.string().min(1, "Kota wajib dipilih"),
   kecamatan: z.string().min(1, "Kecamatan wajib dipilih"),
   alamat_domisili: z.string().trim().min(10, "Alamat minimal 10 karakter"),
-  kode_pos: z
-    .string()
-    .trim()
-    .length(5, "Kode pos harus 5 digit")
-    .optional()
-    .or(z.literal("")),
-  suku_id: z.string().optional(),
-  jarak_rumah_domisili: z.string().optional(),
+  kode_pos: cleanOptionalString,
+  suku_id: cleanOptionalString,
+  jarak_rumah_domisili: cleanOptionalString,
   no_whatsapp: z
     .string()
     .trim()
@@ -112,51 +97,32 @@ const dataPegawaiSchema = z.object({
       /^08[0-9]{8,11}$/,
       "Format No. Telpon Whatsapp tidak valid (contoh: 081234567890)"
     ),
-  no_handphone: z
-    .string()
-    .trim()
-    .regex(/^08[0-9]{8,11}$/, "Format No. telpon tidak valid")
-    .optional()
-    .or(z.literal("")),
-  nama_bank: z.string().optional(),
-  cabang_bank: z.string().optional(),
-  atas_nama_rekening: z.string().optional(),
-  no_rekening: z.string().optional(),
-  bank_id: z.string().optional(),
-  kapreg: z.string().max(50, "Kapreg maksimal 50 karakter").optional(),
+  no_handphone: cleanOptionalString,
+  nama_bank: cleanOptionalString,
+  cabang_bank: cleanOptionalString,
+  atas_nama_rekening: cleanOptionalString,
+  no_rekening: cleanOptionalString,
+  bank_id: cleanOptionalString,
+  kapreg: cleanOptionalString,
   file_kapreg: fileSchema,
-  npwp: z
-    .string()
-    .trim()
-    .length(15, "NPWP harus 15 digit")
-    .optional()
-    .or(z.literal("")),
+  npwp: cleanOptionalString,
   file_npwp: fileSchema,
   file_rekening: fileSchema,
   file_kk: fileSchema,
   file_ktp: fileSchema,
   file_sertifikasi_dosen: fileSchema,
-  no_bpjs: z.string().max(20, "No. BPJS maksimal 20 digit").optional(),
+  no_bpjs: cleanOptionalString,
   file_bpjs: fileSchema,
-  no_bpjs_ketenagakerjaan: z
-    .string()
-    .max(20, "No. BPJS Ketenagakerjaan maksimal 20 digit")
-    .optional(),
+  no_bpjs_ketenagakerjaan: cleanOptionalString,
   file_bpjs_ketenagakerjaan: fileSchema,
-  no_bpjs_pensiun: z
-    .string()
-    .max(20, "No. BPJS Pensiun maksimal 20 digit")
-    .optional(),
+  no_bpjs_pensiun: cleanOptionalString,
   file_tanda_tangan: fileSchema,
-  nomor_polisi: z.string().max(10, "Nomor polisi maksimal 10 digit").optional(),
-  jenis_kendaraan: z
-    .string()
-    .max(20, "Jenis kendaraan maksimal 20 karakter")
-    .optional(),
-  jabatan_struktural_id: z.string().optional(),
-  pangkat_id: z.string().optional(),
-  eselon_id: z.string().optional(),
-  jenjang_pendidikan_id: z.string().optional(),
+  nomor_polisi: cleanOptionalString,
+  jenis_kendaraan: cleanOptionalString,
+  jabatan_struktural_id: cleanOptionalString,
+  pangkat_id: cleanOptionalString,
+  eselon_id: cleanOptionalString,
+  jenjang_pendidikan_id: cleanOptionalString,
   tinggi_badan: z.coerce
     .number({ invalid_type_error: "Tinggi badan harus angka" })
     .positive("Tinggi badan harus positif")
