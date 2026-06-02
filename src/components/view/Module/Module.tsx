@@ -52,7 +52,7 @@ const Module = () => {
       return;
     }
 
-    mutate({ accessToken: accessToken ?? "", refresh_token });
+    mutate({ accessToken: accessToken ?? "", refresh_token } as any);
   };
 
   return (

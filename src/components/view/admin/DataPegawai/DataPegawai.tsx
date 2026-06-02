@@ -57,6 +57,7 @@ const optionalEmail = z
 const dataPegawaiSchema = z.object({
   // --- Data Pribadi ---
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
+  nidn: z.string().trim().optional().or(z.literal("")),
   nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
   gelar_depan: z.string().max(5, "Gelar depan maksimal 20 karakter").optional(),
@@ -112,7 +113,7 @@ const dataPegawaiSchema = z.object({
     .length(5, "Kode pos harus 5 digit")
     .optional()
     .or(z.literal("")),
-  suku_id: z.string().optional(),
+  suku: z.string().optional(),
   jarak_rumah_domisili: z.string().optional(),
   no_whatsapp: z
     .string()
@@ -168,6 +169,7 @@ const dataPegawaiSchema = z.object({
     .string()
     .max(20, "Jenis kendaraan maksimal 20 karakter")
     .optional(),
+  merk_kendaraan: z.string().optional(),
   tinggi_badan: z.coerce
     .number({ invalid_type_error: "Tinggi badan harus angka" })
     .positive("Tinggi badan harus positif")
@@ -196,6 +198,7 @@ const DataPegawai = () => {
     resolver: zodResolver(dataPegawaiSchema),
     defaultValues: {
       nip: "",
+      nidn: "",
       nuptk: "",
       nama: "",
       gelar_depan: "",
@@ -225,7 +228,7 @@ const DataPegawai = () => {
       alamat_domisili: "",
       kecamatan: "",
       kode_pos: "",
-      suku_id: "",
+      suku: "",
       jarak_rumah_domisili: "",
       no_whatsapp: "",
       no_handphone: "",
@@ -362,6 +365,13 @@ const DataPegawai = () => {
                 />
                 <FormFieldInput
                   form={form}
+                  label="NIDN"
+                  name="nidn"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
+                />
+                <FormFieldInput
+                  form={form}
                   label="NUPTK"
                   name="nuptk"
                   labelStyle="text-[#3F6FA9]"
@@ -408,7 +418,7 @@ const DataPegawai = () => {
                   placeholder="--Pilih Agama--"
                   required={true}
                   queryKey="agama"
-                  queryFn={adminServices.getAgama}
+                  queryFn={(page) => adminServices.getAgama({ page, is_dropdown: true })}
                   itemValue="nama"
                   itemLabel="nama"
                 />
@@ -435,7 +445,7 @@ const DataPegawai = () => {
                   placeholder="--Pilih Status Pernikahan--"
                   required={true}
                   queryKey="status-pernikahan-select"
-                  queryFn={adminServices.getStatusPernikahan}
+                  queryFn={(page) => adminServices.getStatusPernikahan({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="nama"
                 />
@@ -447,7 +457,7 @@ const DataPegawai = () => {
                   placeholder="--Pilih Golongan Darah--"
                   required={false}
                   queryKey="golongan-darah-select"
-                  queryFn={adminServices.getGolonganDarah}
+                  queryFn={(page) => adminServices.getGolonganDarah({ page, is_dropdown: true })}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
                 />

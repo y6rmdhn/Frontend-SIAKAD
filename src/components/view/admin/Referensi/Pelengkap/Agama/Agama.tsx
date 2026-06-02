@@ -39,11 +39,15 @@ interface agamaItem {
 
 // Define interface for the API response
 interface agamaResponse {
-  data: agamaItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: agamaItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const agamaSchema = z.object({
@@ -76,21 +80,10 @@ const Agama = () => {
   const { data } = useQuery<agamaResponse>({
     queryKey: ["agama", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getAgama(searchParam.get("page"));
-      const apiData = response.data.data;
-
-      // Backend baru mengembalikan array langsung, normalisasi ke shape yang sama
-      if (Array.isArray(apiData)) {
-        return {
-          data: apiData,
-          links: [],
-          next_page_url: null,
-          prev_page_url: null,
-          last_page: 1,
-        };
-      }
-      // Backend lama mengembalikan paginated object
-      return apiData;
+      const response = await adminServices.getAgama({
+        page: Number(searchParam.get("page") || 1),
+      });
+      return response.data.data;
     },
   });
 
@@ -197,11 +190,11 @@ const Agama = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -301,7 +294,7 @@ const Agama = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
+                 {data?.items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -343,15 +336,11 @@ const Agama = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

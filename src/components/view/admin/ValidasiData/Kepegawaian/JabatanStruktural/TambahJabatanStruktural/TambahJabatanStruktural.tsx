@@ -203,7 +203,7 @@ const TambahJabatanStruktural = () => {
               placeholder="--Pilih Jabatan Struktural--"
               required
               queryKey="jabatan_struktural_admin_tambah"
-              queryFn={(page) => dosenServices.getJabatanStrukturalSelect({
+              queryFn={(page) => adminServices.getJabatanStrukturalReferensi({
                 is_dropdown: true,
                 page: page
               })}

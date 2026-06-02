@@ -59,6 +59,18 @@ export const jenjangPendidikanSchema = z.object({
 
 export type JenjangPendidikanSchema = z.infer<typeof jenjangPendidikanSchema>;
 
+interface jenjangPendidikanResponse {
+  items: JenjangPendidikanSchema[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
 const JenjangPendidikan = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const queryClient = useQueryClient();
@@ -83,12 +95,12 @@ const JenjangPendidikan = () => {
   });
 
   // get data
-  const { data } = useQuery({
+  const { data } = useQuery<jenjangPendidikanResponse>({
     queryKey: ["jenjang-pendidikan", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenjangPendidikan(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getJenjangPendidikan({
+        page: Number(searchParam.get("page") || 1),
+      });
       console.log("📋 Data jenjang pendidikan:", response.data.data);
       return response.data.data;
     },
@@ -220,11 +232,11 @@ const JenjangPendidikan = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -378,7 +390,7 @@ const JenjangPendidikan = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item: any) => (
+                 {data?.items.map((item: any) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.jenjang_singkatan}
@@ -431,8 +443,7 @@ const JenjangPendidikan = () => {
               </TableBody>
             </Table>
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -441,9 +452,6 @@ const JenjangPendidikan = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

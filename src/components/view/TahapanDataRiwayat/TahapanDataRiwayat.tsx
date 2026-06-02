@@ -77,7 +77,7 @@ const TahapanDataRiwayat = () => {
         queryKey: ["tahapan-riwayat"],
         queryFn: () =>
             dosenServices
-                .getTahapanRiwayat()
+                .getAbsensiDashboard()
                 .then((res) => res.data.data.persentase_riwayat),
     });
 

@@ -30,6 +30,7 @@ const BiodataUser = () => {
   const form = useForm<DataPegawaiSchema>({
     defaultValues: {
       nip: "",
+      nidn: "",
       nuptk: "",
       nama: "",
       gelar_depan: "",
@@ -60,7 +61,7 @@ const BiodataUser = () => {
       no_handphone: "",
       nama_bank: "",
       cabang_bank: "",
-      nama_rekening: "",
+      atas_nama_rekening: "",
       no_rekening: "",
       kapreg: "",
       npwp: "",
@@ -69,6 +70,7 @@ const BiodataUser = () => {
       no_bpjs_pensiun: "",
       nomor_polisi: "",
       jenis_kendaraan: "",
+      merk_kendaraan: "",
       tinggi_badan: undefined,
       berat_badan: undefined,
     },
@@ -77,7 +79,7 @@ const BiodataUser = () => {
   const { data: getBiodata } = useQuery({
     queryKey: ["biodata-dosen"],
     queryFn: async () => {
-      const response = await dosenServices.getBiodataDosen();
+      const response = await dosenServices.getProfilPegawai();
 
       console.log(response.data.data);
       return response.data.data;
@@ -86,50 +88,59 @@ const BiodataUser = () => {
 
   useEffect(() => {
     if (getBiodata) {
-      const {
-        biodata_pribadi,
-        kontak,
-        dokumen_identitas,
-        rekening_bank,
-        status_kepegawaian,
-      } = getBiodata;
+      const data = getBiodata;
 
       form.reset({
-        nip: biodata_pribadi.nip || "",
-        nuptk: biodata_pribadi.nuptk || "",
-        nama: biodata_pribadi.nama_lengkap || "",
-        gelar_depan: biodata_pribadi.gelar_depan || "",
-        gelar_belakang: biodata_pribadi.gelar_belakang || "",
+        nip: data.nip || "",
+        nidn: data.nidn || "",
+        nuptk: data.nuptk || "",
+        nama: data.nama || "",
+        gelar_depan: data.gelar_depan || "",
+        gelar_belakang: data.gelar_belakang || "",
         jenis_kelamin:
-          biodata_pribadi.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan",
-        agama: biodata_pribadi.agama || "",
-        tempat_lahir: biodata_pribadi.tempat_lahir || "",
-        tanggal_lahir: biodata_pribadi.tanggal_lahir
-          ? new Date(biodata_pribadi.tanggal_lahir)
+          data.jenis_kelamin === "L" ? "Laki-laki" : data.jenis_kelamin === "P" ? "Perempuan" : undefined,
+        agama: data.agama || "",
+        tempat_lahir: data.tempat_lahir || "",
+        tanggal_lahir: data.tanggal_lahir
+          ? new Date(data.tanggal_lahir)
           : undefined,
-        golongan_darah: biodata_pribadi.golongan_darah || "",
-        alamat_domisili: kontak.alamat_domisili || "",
-        kota: kontak.kota || "",
-        provinsi: kontak.provinsi || "",
-        kode_pos: kontak.kode_pos || "",
-        no_handphone: kontak.no_handphone || "",
-        email_pribadi: kontak.email_pribadi || "",
-        jarak_rumah_domisili: kontak.jarak_rumah_domisili || "",
-        no_ktp: dokumen_identitas.no_ktp || "",
-        no_kk: dokumen_identitas.no_kk || "",
-        npwp: dokumen_identitas.npwp || "",
-        no_bpjs: dokumen_identitas.no_bpjs || "",
-        no_bpjs_ketenagakerjaan:
-          dokumen_identitas.no_bpjs_ketenagakerjaan || "",
-        no_bpjs_pensiun: dokumen_identitas.no_bpjs_pensiun || "",
-        kapreg: dokumen_identitas.karpeg || "",
-        no_rekening: rekening_bank.no_rekening || "",
-        nama_bank: rekening_bank.nama_bank || "",
-        cabang_bank: rekening_bank.cabang_bank || "",
-        status_aktif_id: status_kepegawaian.status_aktif?.nama_status || "",
-        status_kerja: status_kepegawaian.status_kerja || "",
-        tinggi_badan: biodata_pribadi.tinggi_badan || undefined,
-        berat_badan: biodata_pribadi.berat_badan || undefined,
+        golongan_darah: data.golongan_darah || "",
+        alamat_domisili: data.alamat_domisili || "",
+        warga_negara: data.warga_negara || "",
+        suku: data.suku?.nama || "",
+        kecamatan: data.kecamatan || "",
+        kota: data.kota || "",
+        provinsi: data.provinsi || "",
+        kode_pos: data.kode_pos || "",
+        no_handphone: data.no_handphone || "",
+        no_whatsapp: data.no_whatsapp || "",
+        email_pribadi: data.email_pribadi || "",
+        email_pegawai: data.email_pegawai || "",
+        jarak_rumah_domisili: data.jarak_rumah_domisili || "",
+        no_ktp: data.no_ktp || "",
+        no_kk: data.no_kk || "",
+        npwp: data.npwp || "",
+        no_bpjs: data.no_bpjs || "",
+        no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
+        no_bpjs_pensiun: data.no_bpjs_pensiun || "",
+        kapreg: data.karpeg || "",
+        no_rekening: data.no_rekening || "",
+        atas_nama_rekening: data.atas_nama_rekening || "",
+        nama_bank: data.nama_bank || "",
+        cabang_bank: data.cabang_bank || "",
+        status_aktif_id: data.status_aktif_id?.nama || "",
+        status_kerja: data.hubungan_kerja_id?.nama || "",
+        unit_kerja_id: data.unit_kerja_id?.nama || "",
+        pangkat_id: data.pangkat_id?.nama || "",
+        eselon_id: data.eselon_id?.nama || "",
+        jabatan_fungsional_id: data.jabatan_fungsional?.nama || "",
+        role_id: data.role_id?.nama || "",
+        nomor_polisi: data.nomor_polisi || "",
+        jenis_kendaraan: data.jenis_kendaraan || "",
+        merk_kendaraan: data.merk_kendaraan || "",
+        tinggi_badan: data.tinggi_badan || undefined,
+        berat_badan: data.berat_badan || undefined,
+        kode_status_pernikahan: data.status_pernikahan?.nama || ""
       });
     }
   }, [getBiodata, form]);
@@ -165,7 +176,7 @@ const BiodataUser = () => {
       <Title title="Data Pegawai" />
       <Form {...form}>
         <div className="flex justify-end">
-          <Link to={`/editBiodata/${getBiodata?.biodata_pribadi?.id}`}>
+          <Link to={`/editBiodata/${getBiodata?.id}`}>
             <Button className="bg-yellow-uika hover:bg-hover-yellow-uika w-full sm:auto">
               <MdEdit /> Edit
             </Button>
@@ -181,6 +192,13 @@ const BiodataUser = () => {
                   form={form}
                   label="NIP"
                   name="nip"
+                  labelStyle="text-[#3F6FA9]"
+                  readOnly
+                />
+                <FormFieldInput
+                  form={form}
+                  label="NIDN"
+                  name="nidn"
                   labelStyle="text-[#3F6FA9]"
                   readOnly
                 />
@@ -269,13 +287,11 @@ const BiodataUser = () => {
                       key={index}
                       type="button"
                       onClick={() => setShow(item.show)}
-                      className={`${
-                        item.title === "Alamat Domisili & Kontak"
-                          ? "col-span-2 min-[506px]:col-span-1"
-                          : ""
-                      } flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${
-                        show === item.show ? "bg-[#106D63] text-white" : ""
-                      }`}
+                      className={`${item.title === "Alamat Domisili & Kontak"
+                        ? "col-span-2 min-[506px]:col-span-1"
+                        : ""
+                        } flex-1 text-xs md:text-sm cursor-pointer bg-[#D5D5D5] text-[#000] hover:bg-[#0A5B4F] hover:text-white lg:rounded-t-2xl lg:rounded-b-none transition-all duration-300 ${show === item.show ? "bg-[#106D63] text-white" : ""
+                        }`}
                     >
                       {item.title}
                     </Button>

@@ -34,11 +34,15 @@ interface statusPernikahanItem {
 
 // Define interface for the API response
 interface statusPernikahanResponse {
-  data: statusPernikahanItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: statusPernikahanItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const statusPernikahanSchema = z.object({
@@ -69,9 +73,9 @@ const StatusPernikahan = () => {
   const { data } = useQuery<statusPernikahanResponse>({
     queryKey: ["status-pernikahan", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getStatusPernikahan(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getStatusPernikahan({
+        page: Number(searchParam.get("page") || 1),
+      });
 
       return response.data.data;
     },
@@ -186,7 +190,7 @@ const StatusPernikahan = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
+                 {data?.items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode_status}
@@ -214,15 +218,11 @@ const StatusPernikahan = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

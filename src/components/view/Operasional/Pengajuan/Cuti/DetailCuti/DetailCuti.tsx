@@ -13,10 +13,31 @@ import postDosenServices from "@/services/create.dosen.services";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { fileSchemaNew } from "@/components/view/DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
+import { useEffect } from "react";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import dosenServices from "@/services/dosen.services";
-import { useEffect } from "react"; // Import useEffect
+
+const fileSchema = z
+  .any()
+  .refine((files) => files instanceof FileList && files.length > 0, {
+    message: "File wajib diunggah.",
+  })
+  .refine(
+    (files) => {
+      if (!(files instanceof FileList) || files.length === 0) return true;
+      return files[0].size <= 5000000;
+    },
+    { message: "Ukuran file maksimal 5MB." }
+  )
+  .refine(
+    (files) => {
+      if (!(files instanceof FileList) || files.length === 0) return true;
+      return ["application/pdf", "image/jpeg", "image/png"].includes(
+        files[0].type
+      );
+    },
+    { message: "Format file harus PDF, JPEG, atau PNG." }
+  );
 
 const cutiSchema = z.object({
   jenis_cuti_id: z.string().min(1, { message: "Jenis cuti harus diisi." }),
@@ -27,7 +48,7 @@ const cutiSchema = z.object({
   alamat: z.string().optional(),
   no_telp: z.coerce.number().optional(),
   submit_type: z.string().optional(),
-  file_cuti: fileSchemaNew,
+  file_cuti: fileSchema,
 });
 
 export type CutiSchema = z.infer<typeof cutiSchema>;
@@ -157,10 +178,10 @@ const DetailCuti = () => {
                         labelStyle="text-[#3F6FA9]"
                         placeholder="--Pilih Jenis Cuti--"
                         required
-                        queryKey="cuti-dosen-select"
-                        queryFn={dosenServices.getPengajuanCutiDosen}
+                        queryKey="cuti-dosen-select-new"
+                        queryFn={(page) => dosenServices.getPengajuanCutiDosen({ page, is_dropdown: true })}
                         itemValue="id"
-                        itemLabel="nama_jenis_cuti"
+                        itemLabel="nama"
                       />
                       <FormFieldInput
                         form={form}

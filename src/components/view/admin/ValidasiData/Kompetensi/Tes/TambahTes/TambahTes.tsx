@@ -248,7 +248,7 @@ const TambahTes = () => {
                             placeholder="--Pilih Jenis Tes--"
                             required
                             queryKey="jenis_test_admin_tambah"
-                            queryFn={(page) => dosenServices.getJenisTes({ page, is_dropdown: true })}
+                            queryFn={(page) => adminServices.getJenisTes({ page, is_dropdown: true })}
                             itemValue="id"
                             itemLabel="jenis_test"
                         />

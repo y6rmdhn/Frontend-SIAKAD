@@ -41,11 +41,7 @@ interface pangkatItem {
 }
 
 interface pangkatResponse {
-  data: pangkatItem[];
-  // links: any[];
-  // next_page_url: string | null;
-  // prev_page_url: string | null;
-  // last_page: number;
+  items: pangkatItem[];
   pagination: {
     total: number;
     page: number;
@@ -350,7 +346,7 @@ const Pangkat = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item, index) => (
+                {data?.items.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -398,7 +394,7 @@ const Pangkat = () => {
             </Table>
 
             <CustomPagination
-              currentPage={currentPage}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -409,9 +405,6 @@ const Pangkat = () => {
                   return prev;
                 });
               }}
-              hasNextPage={data?.pagination.hasNextPage}
-              hasPrevPage={data?.pagination.hasPrevPage}
-              totalPages={data?.pagination.totalPages}
             />
           </CustomCard>
         </form>

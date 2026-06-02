@@ -22,6 +22,7 @@ import adminServices from "../../../../services/admin.services";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 import putReferensiServices from "@/services/put.admin.referensi";
 import { toast } from "sonner";
+import dosenServices from "@/services/dosen.services";
 
 // --- Skema Validasi dan Tipe Data ---
 
@@ -50,7 +51,8 @@ const optionalEmail = z
 // DIPERBARUI: Skema Zod disesuaikan untuk edit
 const dataPegawaiSchema = z.object({
   id: z.string().optional(),
-  nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
+  nip: z.string().trim().length(9, "NIP harus terdiri minimal dari 9 digit angka"),
+  nidn: z.string().trim().optional().or(z.literal("")),
   nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
   gelar_depan: z
@@ -182,9 +184,7 @@ const EditBiodataPageUserComponent = () => {
   const { data } = useQuery({
     queryKey: ["pegawai-edit", params.id],
     queryFn: async () => {
-      const response = await adminServices.getPegawaiDetailAdminPage(
-        params.id!
-      );
+      const response = await dosenServices.getProfilPegawai();
       console.log(response.data);
       return response.data.data;
     },
@@ -193,13 +193,14 @@ const EditBiodataPageUserComponent = () => {
 
   const { mutate: putData, isPending } = useMutation({
     mutationFn: (data: DataPegawaiSchema) =>
-      putReferensiServices.pegawai(data.id!, data),
+      dosenServices.updateProfilPegawai(data),
     onSuccess: () => {
       toast.success("Data pegawai berhasil diperbarui");
       queryClient.invalidateQueries({ queryKey: ["pegawai-edit", params.id] });
+      queryClient.invalidateQueries({ queryKey: ["biodata-dosen"] });
     },
-    onError: (error) => {
-      toast.error(`Gagal memperbarui data: ${error.message}`);
+    onError: (error: any) => {
+      toast.error(`Gagal memperbarui data: ${error.response?.data?.message || error.message}`);
     },
   });
 
@@ -209,90 +210,93 @@ const EditBiodataPageUserComponent = () => {
     // @ts-ignore
     values: data
       ? {
-          // Data pribadi
-          id: data.id,
-          nip: data.nip || "",
-          nuptk: data.nuptk || "",
-          nama: data.nama || "",
-          gelar_depan: data.gelar_depan || "",
-          gelar_belakang: data.gelar_belakang || "",
-          jenis_kelamin:
-            data.jenis_kelamin === "LAKI-LAKI"
-              ? "Laki-laki"
-              : data.jenis_kelamin === "PEREMPUAN"
+        // Data pribadi
+        id: data.id,
+        nip: data.nip || "",
+        nidn: data.nidn || "",
+        nuptk: data.nuptk || "",
+        nama: data.nama || "",
+        gelar_depan: data.gelar_depan || "",
+        gelar_belakang: data.gelar_belakang || "",
+        jenis_kelamin:
+          data.jenis_kelamin === "L"
+            ? "Laki-laki"
+            : data.jenis_kelamin === "P"
               ? "Perempuan"
               : undefined,
-          agama: data.agama || "",
-          tempat_lahir: data.tempat_lahir || "",
-          tanggal_lahir: data.tanggal_lahir
-            ? new Date(data.tanggal_lahir)
-            : undefined,
-          kode_status_pernikahan: data.kode_status_pernikahan?.toString() || "",
-          golongan_darah: data.golongan_darah || "",
+        agama: data.agama || "",
+        tempat_lahir: data.tempat_lahir || "",
+        tanggal_lahir: data.tanggal_lahir
+          ? new Date(data.tanggal_lahir)
+          : undefined,
+        kode_status_pernikahan: data.status_pernikahan_id?.toString() || "",
+        golongan_darah: data.golongan_darah || "",
 
-          // Data kepegawaian
-          unit_kerja_id: data.unit_kerja_id?.toString() || "",
-          status_aktif_id: data.status_aktif_id?.toString() || "",
-          status_kerja: data.hubungan_kerja_id?.toString() || "",
-          email_pegawai: data.email_pegawai || "",
-          email_pribadi: data.email_pribadi || "",
-          jabatan_fungsional_id: data.jabatan_fungsional_id?.toString() || "",
-          // jabatan_akademik_id: data.jabatan_struktural_id?.toString() || "",
+        // Data kepegawaian (Read-Only)
+        unit_kerja_id: data.unit_kerja_id?.nama || "",
+        status_aktif_id: data.status_aktif_id?.nama || "",
+        status_kerja: data.hubungan_kerja_id?.nama || "",
+        email_pegawai: data.email_pegawai || "",
+        email_pribadi: data.email_pribadi || "",
+        jabatan_fungsional_id: data.jabatan_fungsional?.nama || "",
+        pangkat_id: data.pangkat_id?.nama || "",
+        eselon_id: data.eselon_id?.nama || "",
+        role_id: data.role_id?.nama || "",
 
-          // Data domisili
-          no_ktp: data.no_ktp || "",
-          no_kk: data.no_kk || "",
-          warga_negara: "WNI",
-          provinsi: data.provinsi || "",
-          kota: data.kota || "",
-          kecamatan: data.kecamatan || "",
-          alamat_domisili: data.alamat_domisili || "",
-          kode_pos: data.kode_pos || "",
-          suku: data.suku_id?.toString() || "",
-          jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
-          no_whatsapp: data.no_whatsapp || "",
-          no_handphone: data.no_handphone || "",
+        // Data domisili
+        no_ktp: data.no_ktp || "",
+        no_kk: data.no_kk || "",
+        warga_negara: data.warga_negara || "WNI",
+        provinsi: data.provinsi || "",
+        kota: data.kota || "",
+        kecamatan: data.kecamatan || "",
+        alamat_domisili: data.alamat_domisili || "",
+        kode_pos: data.kode_pos || "",
+        suku: data.suku_id?.toString() || "",
+        jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
+        no_whatsapp: data.no_whatsapp || "",
+        no_handphone: data.no_handphone || "",
 
-          // Data rekening
-          nama_bank: data.nama_bank || "",
-          cabang_bank: data.cabang_bank || "",
-          no_rekening: data.no_rekening || "",
+        // Data rekening
+        nama_bank: data.nama_bank || "",
+        cabang_bank: data.cabang_bank || "",
+        nama_rekening: data.atas_nama_rekening || "",
+        no_rekening: data.no_rekening || "",
 
-          // Data dokumen
-          npwp: data.npwp || "",
-          kapreg: data.kapreg || "",
-          no_bpjs: data.no_bpjs || "",
-          no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
-          no_bpjs_pensiun: data.no_bpjs_pensiun || "",
+        // Data dokumen
+        npwp: data.npwp || "",
+        kapreg: data.karpeg || "",
+        no_bpjs: data.no_bpjs || "",
+        no_bpjs_ketenagakerjaan: data.no_bpjs_ketenagakerjaan || "",
+        no_bpjs_pensiun: data.no_bpjs_pensiun || "",
 
-          // Data kendaraan
-          nomor_polisi: data.nomor_polisi || "",
-          jenis_kendaraan: data.jenis_kendaraan || "",
-          tinggi_badan: data.tinggi_badan
-            ? Number(data.tinggi_badan)
-            : undefined,
-          berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
+        // Data kendaraan
+        nomor_polisi: data.nomor_polisi || "",
+        jenis_kendaraan: data.jenis_kendaraan || "",
+        merk_kendaraan: data.merk_kendaraan || "",
+        tinggi_badan: data.tinggi_badan
+          ? Number(data.tinggi_badan)
+          : undefined,
+        berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
 
-          // Lainnya
-          role_id: data.role_id || "",
-
-          // File fields
-          file_kapreg: undefined,
-          file_npwp: undefined,
-          file_rekening: undefined,
-          file_kk: undefined,
-          file_ktp: undefined,
-          file_sertifikasi_dosen: undefined,
-          file_bpjs: undefined,
-          file_bpjs_ketenagakerjaan: undefined,
-          file_tanda_tangan: undefined,
-        }
+        // File fields
+        file_kapreg: undefined,
+        file_npwp: undefined,
+        file_rekening: undefined,
+        file_kk: undefined,
+        file_ktp: undefined,
+        file_sertifikasi_dosen: undefined,
+        file_bpjs: undefined,
+        file_bpjs_ketenagakerjaan: undefined,
+        file_tanda_tangan: undefined,
+      }
       : {
-          nip: "",
-          nuptk: "",
-          nama: "",
-          warga_negara: "",
-        },
+        nip: "",
+        nidn: "",
+        nuptk: "",
+        nama: "",
+        warga_negara: "",
+      },
   });
 
   const onSubmit = (formData: DataPegawaiSchema) => {
@@ -315,7 +319,7 @@ const EditBiodataPageUserComponent = () => {
   const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => (
     <div>
       <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
-        <KepegawaianSection form={form} />
+        <KepegawaianSection form={form} isReadOnly={false} isLecturerEdit={true} />
       </div>
       <div style={{ display: show === "domisili" ? "block" : "none" }}>
         <DomisiliSection form={form} />
@@ -379,6 +383,13 @@ const EditBiodataPageUserComponent = () => {
                 />
                 <FormFieldInput
                   form={form}
+                  label="NIDN"
+                  name="nidn"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
+                />
+                <FormFieldInput
+                  form={form}
                   label="NUPTK"
                   name="nuptk"
                   labelStyle="text-[#3F6FA9]"
@@ -425,9 +436,9 @@ const EditBiodataPageUserComponent = () => {
                   placeholder="--Pilih Agama--"
                   required={true}
                   queryKey="agama"
-                  queryFn={adminServices.getAgama}
-                  itemValue="nama_agama"
-                  itemLabel="nama_agama"
+                  queryFn={(page) => adminServices.getAgama({ page, is_dropdown: true })}
+                  itemValue="nama"
+                  itemLabel="nama"
                 />
                 <FormFieldInput
                   form={form}
@@ -452,9 +463,9 @@ const EditBiodataPageUserComponent = () => {
                   placeholder="--Pilih Status Pernikahan--"
                   required={true}
                   queryKey="status-pernikahan-select"
-                  queryFn={adminServices.getStatusPernikahan}
+                  queryFn={(page) => adminServices.getStatusPernikahan({ page, is_dropdown: true })}
                   itemValue="id"
-                  itemLabel="nama_status"
+                  itemLabel="nama"
                 />
                 <InfiniteScrollSelect
                   form={form}
@@ -464,7 +475,7 @@ const EditBiodataPageUserComponent = () => {
                   placeholder="--Pilih Golongan Darah--"
                   required={false}
                   queryKey="golongan-darah-select"
-                  queryFn={adminServices.getGolonganDarah}
+                  queryFn={(page) => adminServices.getGolonganDarah({ page, is_dropdown: true })}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
                 />
@@ -477,13 +488,11 @@ const EditBiodataPageUserComponent = () => {
                       key={index}
                       type="button"
                       onClick={() => setShow(item.show)}
-                      className={`${
-                        item.title === "Alamat Domisili & Kontak"
-                          ? "col-span-2 min-[506px]:col-span-1"
-                          : ""
-                      } flex-1 cursor-pointer rounded-lg bg-[#D5D5D5] text-xs text-[#000] hover:bg-[#0A5B4F] hover:text-white md:text-sm lg:rounded-b-none lg:rounded-t-2xl transition-all duration-300 ${
-                        show === item.show ? "bg-[#106D63] text-white" : ""
-                      }`}
+                      className={`${item.title === "Alamat Domisili & Kontak"
+                        ? "col-span-2 min-[506px]:col-span-1"
+                        : ""
+                        } flex-1 cursor-pointer rounded-lg bg-[#D5D5D5] text-xs text-[#000] hover:bg-[#0A5B4F] hover:text-white md:text-sm lg:rounded-b-none lg:rounded-t-2xl transition-all duration-300 ${show === item.show ? "bg-[#106D63] text-white" : ""
+                        }`}
                     >
                       {item.title}
                     </Button>

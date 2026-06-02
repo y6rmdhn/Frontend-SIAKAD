@@ -44,11 +44,15 @@ interface hubunganKerjaItem {
 
 // Define interface for the API response
 interface hubunganKerjaResponse {
-  data: hubunganKerjaItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: hubunganKerjaItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const hubunganKerjaSchema = z.object({
@@ -83,11 +87,11 @@ const HubunganKerja = () => {
 
   // get data
   const { data } = useQuery<hubunganKerjaResponse>({
-    queryKey: ["hubungan-kerja", searchParam.get("page")],
+    queryKey: ["hubungan-kerja", currentPage],
     queryFn: async () => {
-      const response = await adminServices.getHubunganKerja(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getHubunganKerja({
+        page: currentPage,
+      });
       return response.data.data;
     },
   });
@@ -198,11 +202,11 @@ const HubunganKerja = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -339,7 +343,7 @@ const HubunganKerja = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item, index) => (
+                {data?.items.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -401,15 +405,15 @@ const HubunganKerja = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
+                if (isEditMode) {
+                  toast.warning("Selesaikan edit data terlebih dahulu");
+                  return;
+                }
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

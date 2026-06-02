@@ -51,6 +51,7 @@ const optionalEmail = z
 const dataPegawaiSchema = z.object({
   id: z.string().optional(),
   nip: z.string().trim().length(18, "NIP harus terdiri dari 18 digit angka"),
+  nidn: z.string().trim().optional().or(z.literal("")),
   nuptk: z.string().trim().min(1, "NUPTK wajib diisi"),
   nama: z.string().trim().min(3, "Nama lengkap minimal 3 karakter"),
   gelar_depan: z
@@ -197,8 +198,8 @@ const EditDataPegawai = () => {
   });
 
   const { mutate: putData, isPending } = useMutation({
-    mutationFn: (data: DataPegawaiSchema) =>
-      putReferensiServices.pegawai(data.id!, data),
+    mutationFn: (payload: FormData) =>
+      putReferensiServices.pegawai(params.id!, payload),
     onSuccess: () => {
       toast.success("Data pegawai berhasil diperbarui");
       queryClient.invalidateQueries({ queryKey: ["pegawai-edit", params.id] });
@@ -217,6 +218,7 @@ const EditDataPegawai = () => {
         // Data pribadi
         id: data.id,
         nip: data.nip || "",
+        nidn: data.nidn || "",
         nuptk: data.nuptk || "",
         nama: data.nama || "",
         gelar_depan: data.gelar_depan || "",
@@ -301,13 +303,33 @@ const EditDataPegawai = () => {
       }
       : {
         nip: "",
+        nidn: "",
         nuptk: "",
         nama: "",
         warga_negara: "",
       },
   });
 
-  const onSubmit = (formData: DataPegawaiSchema) => {
+  const onSubmit = (values: DataPegawaiSchema) => {
+    const formData = new FormData();
+
+    Object.keys(values).forEach((key) => {
+      const formKey = key as keyof DataPegawaiSchema;
+      const value = values[formKey];
+
+      if (value instanceof FileList) {
+        if (value.length > 0) {
+          formData.append(formKey, value[0]);
+        }
+      } else if (value !== null && value !== undefined && value !== "") {
+        if (key === "tanggal_lahir" && value instanceof Date) {
+          formData.append(key, value.toISOString().split("T")[0]);
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
     putData(formData);
   };
 
@@ -391,6 +413,13 @@ const EditDataPegawai = () => {
                 />
                 <FormFieldInput
                   form={form}
+                  label="NIDN"
+                  name="nidn"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
+                />
+                <FormFieldInput
+                  form={form}
                   label="NUPTK"
                   name="nuptk"
                   labelStyle="text-[#3F6FA9]"
@@ -429,7 +458,7 @@ const EditDataPegawai = () => {
                   ]}
                   labelStyle="text-[#3F6FA9]"
                 />
-                <InfiniteScrollSelect
+                 <InfiniteScrollSelect
                   form={form}
                   label="Agama"
                   name="agama"
@@ -437,7 +466,7 @@ const EditDataPegawai = () => {
                   placeholder="--Pilih Agama--"
                   required={true}
                   queryKey="agama"
-                  queryFn={adminServices.getAgama}
+                  queryFn={(page) => adminServices.getAgama({ page, is_dropdown: true })}
                   itemValue="nama"
                   itemLabel="nama"
                 />
@@ -464,7 +493,7 @@ const EditDataPegawai = () => {
                   placeholder="--Pilih Status Pernikahan--"
                   required={true}
                   queryKey="status-pernikahan-select"
-                  queryFn={adminServices.getStatusPernikahan}
+                  queryFn={(page) => adminServices.getStatusPernikahan({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="nama"
                 />
@@ -476,7 +505,7 @@ const EditDataPegawai = () => {
                   placeholder="--Pilih Golongan Darah--"
                   required={false}
                   queryKey="golongan-darah-select"
-                  queryFn={adminServices.getGolonganDarah}
+                  queryFn={(page) => adminServices.getGolonganDarah({ page, is_dropdown: true })}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
                 />

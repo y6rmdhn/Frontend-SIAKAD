@@ -47,6 +47,18 @@ export const bankSchema = z.object({
 
 export type BankSchema = z.infer<typeof bankSchema>;
 
+interface bankResponse {
+  items: BankSchema[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
 const Bank = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const queryClient = useQueryClient();
@@ -66,12 +78,12 @@ const Bank = () => {
   });
 
   // get data
-  const { data } = useQuery({
+  const { data } = useQuery<bankResponse>({
     queryKey: ["bank-pelangkap", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getBankPelangkap(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getBankPelangkap({
+        page: Number(searchParam.get("page") || 1),
+      });
 
       return response.data.data;
     },
@@ -179,11 +191,11 @@ const Bank = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -283,7 +295,7 @@ const Bank = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data?.map((item: any) => (
+                 {data?.items?.map((item: any) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -325,15 +337,11 @@ const Bank = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

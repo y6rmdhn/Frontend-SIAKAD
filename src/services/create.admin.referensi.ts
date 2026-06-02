@@ -118,7 +118,9 @@ const potsReferensiServices = {
   changePasswordAdmin: (payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/profiles/change-password`, payload),
   generatePayroll: (payload: any) =>
-    axiosInstance.post(`${endpoint.ADMIN}/payroll/generate`, payload),
+    axiosInstance.post(`${endpoint.GAJI}/gaji/generate`, payload),
+  komponenGaji: (data: any) =>
+    axiosInstance.post(`${endpoint.MASTER}/komponen-gaji`, data),
   potongGaji: (data: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/master-potongan-wajib`, data),
   payrollGenerate: (data: any) =>

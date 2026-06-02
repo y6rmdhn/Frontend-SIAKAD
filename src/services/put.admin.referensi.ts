@@ -126,12 +126,14 @@ const putReferensiServices = {
     axiosInstance.put(`${endpoint.ADMIN}/datapelanggaran/${id}`, payload),
   inputPresensi: (id: string, payload: InputPresensiFormValue) =>
     axiosInstance.put(`${endpoint.ADMIN}/input-presensi/${id}`, payload),
-  pegawai: (id: string, payload: DataPegawaiSchema) =>
+  pegawai: (id: string, payload: any) =>
     axiosInstance.put(`${endpoint.ADMIN}/pegawai/${id}`, payload),
   berita: (id: string, payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/berita/${id}`, payload),
   potongGaji: (id: string, data: any) =>
     axiosInstance.put(`${endpoint.ADMIN}/master-potongan-wajib/${id}`, data),
+  komponenGaji: (id: string, data: any) =>
+    axiosInstance.put(`${endpoint.MASTER}/komponen-gaji/${id}`, data),
 };
 
 export default putReferensiServices;

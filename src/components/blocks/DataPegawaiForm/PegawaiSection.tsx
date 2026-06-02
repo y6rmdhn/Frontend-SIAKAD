@@ -4,21 +4,24 @@ import adminServices from "@/services/admin.services.ts";
 import type { DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
 import { InfiniteScrollSelect } from "../InfiniteScrollSelect/InfiniteScrollSelect";
 
-// 1. Tambahkan prop isReadOnly ke interface
 interface KepegawaianSectionProps {
   form: UseFormReturn<DataPegawaiSchema>;
   isReadOnly?: boolean;
+  isLecturerEdit?: boolean;
 }
 
 const KepegawaianSection = ({
   form,
   isReadOnly = false,
+  isLecturerEdit = false,
 }: KepegawaianSectionProps) => {
+  const showReadOnlyOther = isReadOnly || isLecturerEdit;
+
   return (
     <div className="grid lg:grid-rows-4 lg:grid-flow-col gap-4 mt-10">
       {/* 3. Terapkan logika kondisional untuk setiap field */}
 
-      {isReadOnly ? (
+      {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Unit Kerja"
@@ -41,7 +44,7 @@ const KepegawaianSection = ({
         />
       )}
 
-      {isReadOnly ? (
+      {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Status Aktif"
@@ -64,7 +67,7 @@ const KepegawaianSection = ({
         />
       )}
 
-      {isReadOnly ? (
+      {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Hubungan Kerja"
@@ -92,19 +95,19 @@ const KepegawaianSection = ({
         label="Email Pegawai"
         name="email_pegawai"
         labelStyle="text-[#3F6FA9]"
-        required={!isReadOnly}
-        readOnly={isReadOnly}
+        required={isLecturerEdit ? true : !isReadOnly}
+        readOnly={isLecturerEdit ? false : isReadOnly}
       />
       <FormFieldInput
         form={form}
         label="Email Pribadi"
         name="email_pribadi"
         labelStyle="text-[#3F6FA9]"
-        required={!isReadOnly}
-        readOnly={isReadOnly}
+        required={isLecturerEdit ? false : !isReadOnly}
+        readOnly={isLecturerEdit ? false : isReadOnly}
       />
 
-      {isReadOnly ? (
+      {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Pangkat"
@@ -126,7 +129,7 @@ const KepegawaianSection = ({
           itemLabel="nama"
         />
       )}
-      {isReadOnly ? (
+      {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Eselon"
@@ -143,13 +146,13 @@ const KepegawaianSection = ({
           placeholder="--Pilih Eselon--"
           required={false}
           queryKey="eselon-pegawai-select"
-          queryFn={(page) => adminServices.getMasterEselon({ page, is_dropdown: true })}
+          queryFn={(page) => adminServices.getMasterEselonReferensi({ page, is_dropdown: true })}
           itemValue="id"
           itemLabel="nama"
         />
       )}
 
-      {/* {isReadOnly ? (
+      {/* {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Jabatan Fungsional"
@@ -172,7 +175,7 @@ const KepegawaianSection = ({
         />
       )} */}
 
-      {isReadOnly ? (
+      {showReadOnlyOther ? (
         <FormFieldInput
           form={form}
           label="Jenis Pegawai"
@@ -189,7 +192,7 @@ const KepegawaianSection = ({
           placeholder="--Pilih Jenis Pegawai--"
           required={false}
           queryKey="role-id-select"
-          queryFn={adminServices.getRole}
+          queryFn={() => adminServices.getRole()}
           itemValue="id"
           itemLabel="nama"
         />

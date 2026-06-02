@@ -38,11 +38,15 @@ interface JenisPenghargaanItem {
 
 // Define interface for the API response
 interface JenisPenghargaanResponse {
-  data: JenisPenghargaanItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: JenisPenghargaanItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const jenisPenghargaanSchema = z.object({
@@ -72,9 +76,9 @@ const JenisPenghargaan = () => {
   const { data } = useQuery<JenisPenghargaanResponse>({
     queryKey: ["jenis-penghargaan-aktifitas", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisPenghargaanAktifitas(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getJenisPenghargaanAktifitas({
+        page: Number(searchParam.get("page") || 1),
+      });
       return response.data.data;
     },
   });
@@ -180,11 +184,11 @@ const JenisPenghargaan = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -284,7 +288,7 @@ const JenisPenghargaan = () => {
                       </TableCell>
                     </TableRow>
                   )}
-                {data?.data.map((item) => (
+                {data?.items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -326,8 +330,7 @@ const JenisPenghargaan = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -337,9 +340,6 @@ const JenisPenghargaan = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

@@ -30,6 +30,7 @@ type InfiniteScrollSelectProps = {
   initialSelectedItem?: Record<string, any> | null;
   disabled?: boolean;
   onSelectLabel?: (label: string) => void;
+  onSelectItem?: (item: any) => void;
 };
 
 export const InfiniteScrollSelect = ({
@@ -46,6 +47,7 @@ export const InfiniteScrollSelect = ({
   initialSelectedItem,
   disabled,
   onSelectLabel,
+  onSelectItem,
 }: InfiniteScrollSelectProps) => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
@@ -120,6 +122,14 @@ export const InfiniteScrollSelect = ({
                 );
                 if (onSelectLabel && selectedOption) {
                   onSelectLabel(selectedOption.label);
+                }
+                if (onSelectItem) {
+                  const rawItem = options.find(
+                    (opt) => opt[itemValue]?.toString() === value.toString()
+                  );
+                  if (rawItem) {
+                    onSelectItem(rawItem);
+                  }
                 }
               }}
               value={field.value?.toString()}

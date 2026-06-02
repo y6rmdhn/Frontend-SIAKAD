@@ -26,7 +26,7 @@ export const useAllUnitKerja = () => {
         queryKey: ["unit-kerja", "all"],
 
         queryFn: async ({pageParam}) => {
-            const response = await adminServices.getUnitKerja(pageParam);
+            const response = await adminServices.getUnitKerja({ page: pageParam as number });
             return response.data;
         },
 

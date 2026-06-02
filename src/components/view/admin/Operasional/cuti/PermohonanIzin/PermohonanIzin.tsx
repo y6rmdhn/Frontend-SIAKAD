@@ -135,7 +135,26 @@ const PermohonanIzin = () => {
         jenis_izin: jenisIzinFilter,
       };
       const response = await adminServices.getPengajuanIzinAdmin(params);
-      return response.data;
+      const apiData = response.data?.data?.data?.items || response.data?.data?.items || [];
+      const pagination = response.data?.data?.data?.pagination || response.data?.data?.pagination || {};
+      
+      const mappedData = apiData.map((item: any) => ({
+        id: item.id,
+        nama_pegawai: item.pegawai?.nama || "-",
+        unit_kerja: item.pegawai?.unit_kerja_id?.nama || item.unit_kerja?.nama || "-",
+        jenis_izin: item.jenis_izin?.nama || "-",
+        lama_izin: item.jumlah_hari ? `${item.jumlah_hari} Hari` : "-",
+        status: item.status || "-",
+      }));
+
+      return {
+        data: mappedData,
+        filter_options: response.data?.filter_options || { unit_kerja: [], jenis_izin: [], periode_izin: [], status: [] },
+        pagination: {
+          current_page: pagination.currentPage || pagination.current_page || 1,
+          last_page: pagination.totalPages || pagination.last_page || 1,
+        }
+      };
     },
     placeholderData: (previousData) => previousData,
   });

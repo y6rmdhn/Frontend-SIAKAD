@@ -60,10 +60,14 @@ interface HistoryAbsenItem {
 
 interface SlipGaji {
   id: string;
-  periode: { nama_periode: string };
-  total_pendapatan: string;
-  total_potongan: string;
-  gaji_bersih: string;
+  pegawai_id: string;
+  periode_bulan: number;
+  periode_tahun: number;
+  total_kehadiran: number;
+  total_tunjangan_tetap: number;
+  total_tunjangan_variabel: number;
+  total_potongan: number;
+  gaji_bersih: number;
 }
 
 interface TahapanRiwayatDetail {
@@ -98,10 +102,15 @@ const DasboardUser = () => {
   const queryClient = useQueryClient();
 
   // --- START QUERIES ---
-  const { data: dataGrafik } = useQuery({
-    queryKey: ["dasboard-user-grafik"],
-    queryFn: () => dosenServices.getDasboardGrafik().then((res) => res.data.data),
+  // Mengambil data dashboard absensi (gabungan kehadiran dan riwayat)
+  const { data: absensiDashboard, isLoading: isAbsensiDashboardLoading } = useQuery({
+    queryKey: ["absensi-dashboard"],
+    queryFn: () => dosenServices.getAbsensiDashboard().then((res) => res.data.data),
   });
+
+  const dataGrafik = absensiDashboard;
+  const tahapanRiwayat = absensiDashboard?.persentase_riwayat;
+  const isTahapanLoading = isAbsensiDashboardLoading;
 
   const { data: statusAbsen, isLoading: isStatusLoading } = useQuery<StatusAbsen>({
     queryKey: ["status-absen"],
@@ -123,14 +132,8 @@ const DasboardUser = () => {
     queryFn: async () => {
       const response = await dosenServices.getSlipGaji();
       // Mengambil data gaji pertama dari array
-      return response.data.data[0];
+      return response.data.data?.[0];
     },
-  });
-
-  // Query untuk mengambil persentase kelengkapan riwayat
-  const { data: tahapanRiwayat, isLoading: isTahapanLoading } = useQuery<TahapanRiwayat>({
-    queryKey: ["tahapan-riwayat-dashboard"],
-    queryFn: () => dosenServices.getTahapanRiwayat().then((res) => res.data.data.persentase_riwayat),
   });
   // --- END QUERIES ---
 
@@ -153,6 +156,12 @@ const DasboardUser = () => {
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(Number(angka));
+  };
+
+  const getNamaBulan = (bulan: number | undefined) => {
+    if (!bulan) return "";
+    const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    return namaBulan[bulan - 1] || "";
   };
 
   const getGreeting = () => {
@@ -224,7 +233,7 @@ const DasboardUser = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm ">
-                        {slipGajiData?.periode.nama_periode || "Gaji Bulan Ini"}
+                        {slipGajiData ? `Bulan ${getNamaBulan(slipGajiData.periode_bulan)} ${slipGajiData.periode_tahun}` : "Gaji Bulan Ini"}
                       </p>
                       <p className="text-2xl font-bold">
                         {formatRupiah(slipGajiData?.gaji_bersih)}
@@ -243,7 +252,7 @@ const DasboardUser = () => {
                     <div className="flex justify-between">
                       <span>Total Pendapatan</span>
                       <span>
-                        {formatRupiah(slipGajiData?.total_pendapatan)}
+                        {formatRupiah((slipGajiData?.total_tunjangan_tetap || 0) + (slipGajiData?.total_tunjangan_variabel || 0))}
                       </span>
                     </div>
                     <div className="flex justify-between text-red-600">
