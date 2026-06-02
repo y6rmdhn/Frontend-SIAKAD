@@ -34,39 +34,39 @@ const LoginPage = () => {
       {/* Bagian Gambar - Sebelah Kiri */}
       <div className="hidden md:flex md:w-[55%]  relative items-center justify-center">
         <img
-          src="/images/background/123.png"
+          src="/images/background/Simpeg_Uika_Masjid.png"
           alt="Kampus UIKA"
-          className="absolute inset-0 w-full h-full object-contain"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* <img
+        <img
           src="/images/logo/Simpeg_Uika_Logo.webp"
           alt="Logo Kampus UIKA"
           className="absolute top-10 w-72 opacity-70"
-        /> */}
+        />
       </div>
 
       {/* Bagian Form - Sebelah Kanan */}
       <div className="w-full md:w-[45%] flex items-center relative justify-center p-6 sm:p-8 bg-white">
         <div className="absolute top-0 left-6 flex items-center">
-          {/* <img
+          <img
             src="/images/logo/Simpeg_Uika_Logo.webp"
             alt="Logo Kampus UIKA"
             className="w-20"
-          /> */}
-          {/* <img
+          />
+          <img
             src="/images/logo/logo_emp.png"
             alt="Logo simpeg kepegawaian"
             className="w-8 h-12 mt-2"
-          /> */}
+          />
         </div>
         <div className="w-full max-w-md">
           {/* Logo kecil di atas form */}
           <div className="flex justify-center mb-6">
-            {/* <img
+            <img
               src="/images/logo/logo-uika-login.webp"
               alt="Logo UIKA"
               className="object-contain w-20"
-            /> */}
+            />
             <img
               src="/images/logo/logo_emp.png"
               alt="Logo UIKA"
