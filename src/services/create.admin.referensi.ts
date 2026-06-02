@@ -124,7 +124,10 @@ const potsReferensiServices = {
   potongGaji: (data: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/master-potongan-wajib`, data),
   payrollGenerate: (data: any) =>
-    axiosInstance.post(`${endpoint.ADMIN}/payroll/generate`, data),
+    axiosInstance.post(`${endpoint.GAJI}/gaji/generate`, {
+      periode_bulan: data.periode_bulan ?? data.bulan,
+      periode_tahun: data.periode_tahun ?? data.tahun,
+    }),
   printSlipGaji: (slipIds: any, format: any) => {
     const requestBody = { slip_ids: slipIds };
     const config = { params: { format: format }, responseType: "blob" };

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Eye, Filter, ChevronDown, X } from "lucide-react";
+import { Eye, Filter, ChevronDown, X, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -101,6 +101,17 @@ export default function SlipGaji() {
   const [selectedSlip, setSelectedSlip] = useState<RiwayatPenggajian | null>(
     null
   );
+
+  const handlePrint = () => {
+    const printContents = document.getElementById("printArea")?.innerHTML;
+    const originalContents = document.body.innerHTML;
+    if (printContents) {
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      window.location.reload();
+    }
+  };
 
   // ─── Fetch riwayat penggajian ───────────────────────────────────────────
   const { data: riwayatData, isLoading } = useQuery({
@@ -370,7 +381,7 @@ export default function SlipGaji() {
           </DialogHeader>
 
           {selectedSlip && (
-            <div className="border-2 border-gray-300 rounded-lg p-6 bg-white space-y-5">
+            <div id="printArea" className="border-2 border-gray-300 rounded-lg p-6 bg-white space-y-5">
               {/* Header Slip */}
               <div className="text-center border-b-2 pb-4">
                 <h2 className="text-2xl font-bold text-gray-800">SLIP GAJI</h2>
@@ -490,7 +501,13 @@ export default function SlipGaji() {
             </div>
           )}
 
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              onClick={handlePrint}
+              className="flex items-center gap-2 bg-[#106D63] hover:bg-[#0c524a] text-white"
+            >
+              <Printer className="w-4 h-4" /> Cetak
+            </Button>
             <Button variant="outline" onClick={() => setSelectedSlip(null)}>
               Tutup
             </Button>

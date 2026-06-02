@@ -453,17 +453,12 @@ const dosenServices = {
         axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
     getBeritaDetail: (id: string) =>
         axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
-    getSlipGaji: () => axiosInstance.get(`${endpoint.GAJI}/gaji/riwayat`),
-    getSlipGajiDetail: (id: string) => {
-        return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips/${id}`);
-    },
+    getSlipGaji: (params?: { pegawai_id?: string; periode_tahun?: string }) =>
+        axiosInstance.get(`${endpoint.GAJI}/gaji/riwayat`, { params }),
     getEvaluasiKinerja: (params: EvaluasiKinerjaParams) => {
         return axiosInstance.get(`${endpoint.DOSEN}/evaluasi-kinerja`, {
             params,
         });
-    },
-    getPeriodeDosen: () => {
-        return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips`);
     },
 };
 

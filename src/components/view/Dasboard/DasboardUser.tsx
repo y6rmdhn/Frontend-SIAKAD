@@ -252,7 +252,7 @@ const DasboardUser = () => {
                     <div className="flex justify-between">
                       <span>Total Pendapatan</span>
                       <span>
-                        {formatRupiah((slipGajiData?.total_tunjangan_tetap || 0) + (slipGajiData?.total_tunjangan_variabel || 0))}
+                        {formatRupiah(Number(slipGajiData?.total_tunjangan_tetap || 0) + Number(slipGajiData?.total_tunjangan_variabel || 0))}
                       </span>
                     </div>
                     <div className="flex justify-between text-red-600">
