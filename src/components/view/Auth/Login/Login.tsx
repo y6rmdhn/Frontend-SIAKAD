@@ -12,61 +12,47 @@ import { FaLockOpen, FaLock } from "react-icons/fa";
 import useLogin from "@/hooks/useLogin";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-// import SlideCaptcha from "@/components/blocks/Captcha";
+import { useSsoLogin } from "@/hooks/useSSoLogin";
 
 const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
+  const { isSsoLogin } = useSsoLogin(); // ← tambah ini
 
   const {
     form,
     handleLogin,
     handleVisiblePassword,
     visiblePassword,
-    // setCaptchaVisible,
-    // captchaVisible,
-    // captchaData,
     isFormFilled,
-    // setSliderPosition,
   } = useLogin();
 
+  // Tampilkan loading spinner saat proses SSO
+  if (isSsoLogin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-800/30 border-t-emerald-800 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600 font-medium">Memverifikasi sesi SSO...</p>
+          <p className="text-gray-400 text-sm mt-1">Mohon tunggu sebentar</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Form login biasa (tidak berubah sama sekali)
   return (
     <div className="min-h-screen font-roboto flex overflow-x-hidden text-black-uika">
-      {/* Bagian Gambar - Sebelah Kiri */}
-      <div className="hidden md:flex md:w-[55%]  relative items-center justify-center">
+      <div className="hidden md:flex md:w-[55%] relative items-center justify-center">
         <img
           src="/images/background/123.png"
           alt="Kampus UIKA"
           className="absolute inset-0 w-full h-full object-contain"
         />
-        {/* <img
-          src="/images/logo/Simpeg_Uika_Logo.webp"
-          alt="Logo Kampus UIKA"
-          className="absolute top-10 w-72 opacity-70"
-        /> */}
       </div>
 
-      {/* Bagian Form - Sebelah Kanan */}
       <div className="w-full md:w-[45%] flex items-center relative justify-center p-6 sm:p-8 bg-white">
-        <div className="absolute top-0 left-6 flex items-center">
-          {/* <img
-            src="/images/logo/Simpeg_Uika_Logo.webp"
-            alt="Logo Kampus UIKA"
-            className="w-20"
-          /> */}
-          {/* <img
-            src="/images/logo/logo_emp.png"
-            alt="Logo simpeg kepegawaian"
-            className="w-8 h-12 mt-2"
-          /> */}
-        </div>
         <div className="w-full max-w-md">
-          {/* Logo kecil di atas form */}
           <div className="flex justify-center mb-6">
-            {/* <img
-              src="/images/logo/logo-uika-login.webp"
-              alt="Logo UIKA"
-              className="object-contain w-20"
-            /> */}
             <img
               src="/images/logo/logo_emp.png"
               alt="Logo UIKA"
@@ -141,13 +127,11 @@ const LoginPage = () => {
                 )}
               />
 
-              {/* Hidden fields for captcha data */}
               <FormField
                 control={form.control}
                 name="captcha_id"
                 render={({ field }) => <Input type="hidden" {...field} />}
               />
-
               <FormField
                 control={form.control}
                 name="slider_position"
@@ -171,7 +155,6 @@ const LoginPage = () => {
                     Ingat Saya
                   </label>
                 </div>
-
                 <div className="text-sm">
                   <Link
                     to="/forget-password"
@@ -182,7 +165,6 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              {/* Login Button (Captcha disabled for now) */}
               <div className="flex justify-center mb-6">
                 <Button
                   type="submit"
@@ -206,11 +188,10 @@ const LoginPage = () => {
                 </span>
               </div>
             </div>
-
             <div className="mt-6">
               <button
                 type="button"
-                className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 <img
                   src="/images/logo/logo-google.png"
