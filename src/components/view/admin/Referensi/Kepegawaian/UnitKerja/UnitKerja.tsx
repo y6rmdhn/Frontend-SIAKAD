@@ -38,9 +38,15 @@ interface UnitNode extends UnitKerjaItem {
 }
 
 interface UnitKerjaResponse {
-  data: UnitKerjaItem[];
-  current_page: number;
-  last_page: number;
+  items: UnitKerjaItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 interface UnitKerjaApiResponse {
@@ -78,13 +84,13 @@ const UnitKerja = () => {
     useInfiniteQuery<UnitKerjaApiResponse>({
       queryKey: ["unit-kerja-all"],
       queryFn: async ({ pageParam = 1 }) => {
-        const response = await adminServices.getUnitKerja(pageParam);
+        const response = await adminServices.getUnitKerja({ page: pageParam });
         return response.data;
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        const currentPage = lastPage.data.current_page;
-        const totalPages = lastPage.data.last_page;
+        const currentPage = lastPage.data.pagination.page;
+        const totalPages = lastPage.data.pagination.totalPages;
         return currentPage < totalPages ? currentPage + 1 : undefined;
       },
     });
@@ -103,7 +109,7 @@ const UnitKerja = () => {
   };
 
   const allUnitKerja = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data.data) ?? [];
+    return data?.pages.flatMap((page) => page.data.items) ?? [];
   }, [data]);
 
   const treeData = allUnitKerja.length > 0 ? buildTree(allUnitKerja) : [];

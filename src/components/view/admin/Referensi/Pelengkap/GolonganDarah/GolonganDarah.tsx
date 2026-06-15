@@ -36,13 +36,16 @@ interface golonganDarahItem {
   // Add other properties as needed
 }
 
-// Define interface for the API response
 interface golonganDarahResponse {
-  data: golonganDarahItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: golonganDarahItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const golonganDarahSchema = z.object({
@@ -73,9 +76,9 @@ const GolonganDarah = () => {
   const { data } = useQuery<golonganDarahResponse>({
     queryKey: ["golongan-darah", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getGolonganDarah(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getGolonganDarah({
+        page: Number(searchParam.get("page") || 1),
+      });
 
       return response.data.data;
     },
@@ -185,11 +188,11 @@ const GolonganDarah = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -276,7 +279,7 @@ const GolonganDarah = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
+                 {data?.items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.golongan_darah}
@@ -315,15 +318,11 @@ const GolonganDarah = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

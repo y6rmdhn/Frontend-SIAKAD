@@ -38,7 +38,7 @@ const postDosenServices = {
   addDataPengajuanIzin: (payload: FormData) =>
     axiosInstance.post(`${endpoint.DOSEN}/pengajuan-izin-dosen`, payload),
   addDataPengajuanCuti: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, payload),
+    axiosInstance.post(`${endpoint.ABSENSI}/cuti`, payload),
   addDataPendidikanFormal: (payload: FormData) =>
     axiosInstance.post(`${endpoint.VALIDASI}/data-pendidikan-formal`, payload),
   addDataRiwayatPekerjaan: (params?: FormData) =>

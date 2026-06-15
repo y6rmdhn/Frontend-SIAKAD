@@ -71,7 +71,7 @@ const Header = () => {
       <div className="bg-green-uika h-full flex pl-3 items-center rounded-tr-[40px]">
         <div className="flex gap-2 md:gap-5 items-center">
           <img
-            className="w-14 h-14 hidden md:block"
+            className="w-14 h-14 hidden md:block bg-white rounded-full p-1 border-2 border-white object-contain"
             src="/images/logo/logo_emp.png"
             alt="logo-uika"
           />
@@ -83,7 +83,7 @@ const Header = () => {
               Sistem Informasi Manajemen Kepegawaian
             </p>
             <h1 className="font-semibold text-white md:text-sm text-[10px]">
-              PT. ABCD
+              Universitas Ibn Khaldun Bogor
             </h1>
           </div>
         </div>
@@ -121,9 +121,8 @@ const Header = () => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className={`gap-6 py-7 ring-0 focus-visible:ring-0 focus:outline-none cursor-pointer hidden md:flex ${
-                  open ? "bg-hover-yellow-uika" : "hover:bg-hover-yellow-uika"
-                }`}
+                className={`gap-6 py-7 ring-0 focus-visible:ring-0 focus:outline-none cursor-pointer hidden md:flex ${open ? "bg-hover-yellow-uika" : "hover:bg-hover-yellow-uika"
+                  }`}
               >
                 <MdPerson className="h-5 w-5 text-white" />
                 <div className="flex flex-col text-start text-white">
@@ -133,9 +132,8 @@ const Header = () => {
                   <p className="text-xs">{userSelector.role}</p>
                 </div>
                 <IoMdArrowDropdown
-                  className={`text-white transition-transform duration-200 ${
-                    open ? "rotate-180" : ""
-                  }`}
+                  className={`text-white transition-transform duration-200 ${open ? "rotate-180" : ""
+                    }`}
                 />
               </Button>
             </DropdownMenuTrigger>

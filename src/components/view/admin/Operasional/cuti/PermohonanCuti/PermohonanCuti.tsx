@@ -129,7 +129,26 @@ const PermohonanCuti = () => {
         status: statusFilter,
       };
       const response = await adminServices.getPengajuanCutiAdmin(params);
-      return response.data;
+      const apiData = response.data?.data?.data?.items || response.data?.data?.items || [];
+      const pagination = response.data?.data?.data?.pagination || response.data?.data?.pagination || {};
+      
+      const mappedData = apiData.map((item: any) => ({
+        id: item.id,
+        nama_pegawai: item.pegawai?.nama || "-",
+        unit_kerja: item.pegawai?.unit_kerja_id?.nama || item.unit_kerja?.nama || "-",
+        jenis_cuti: item.jenis_cuti?.nama || "-",
+        lama_cuti: item.jumlah_hari ? `${item.jumlah_hari} Hari` : "-",
+        status: item.status || "-",
+      }));
+
+      return {
+        data: mappedData,
+        filter_options: response.data?.filter_options || { unit_kerja: [], jenis_cuti: [], status: [] },
+        pagination: {
+          current_page: pagination.currentPage || pagination.current_page || 1,
+          last_page: pagination.totalPages || pagination.last_page || 1,
+        }
+      };
     },
     placeholderData: (previousData) => previousData,
   });

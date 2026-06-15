@@ -24,7 +24,7 @@ interface ChartData {
   }[];
 }
 
-type FungsionalTableRow = (string | number)[];
+type FungsionalTableRow = { unit?: string; jabatan_fungsional?: string; jumlah: number } | (string | number)[];
 
 interface ObjectTableRow {
   kode: number | string;
@@ -41,7 +41,7 @@ interface TableData<T> {
 }
 
 interface CardStatistikPegawaiProps {
-  staffDistribution: {
+  jabatanFungsionalDistribution: {
     chart_data: ChartData;
     table_data: TableData<FungsionalTableRow>;
   };
@@ -74,11 +74,11 @@ const chartConfigBar = {
 const CardStatistikPegawai = ({
   academicEducation,
   nonAcademicEducation,
-  staffDistribution,
+  jabatanFungsionalDistribution,
   workRelationships,
 }: CardStatistikPegawaiProps) => {
   const [aktifBtn, setAktifBtn] = useState<string>("Fungsional");
-  const { chart_data: staffData, table_data: tabelStaff } = staffDistribution;
+  const { chart_data: jabatanFungsionalData, table_data: tabelStaff } = jabatanFungsionalDistribution;
   const { chart_data: hubunganKerjaData, table_data: tabelHubunganKerja } =
     workRelationships;
   const { chart_data: academicChart, table_data: tabelAcademic } =
@@ -88,10 +88,10 @@ const CardStatistikPegawai = ({
 
   // pie chart
   const colors = ["#4F46E5", "#10B981"];
-  const staffChartData = staffData.labels.map(
+  const staffChartData = jabatanFungsionalData.labels.map(
     (label: string, index: number) => ({
       name: label,
-      values: staffData.datasets[0].data[index],
+      values: jabatanFungsionalData.datasets[0].data[index],
       fill: colors[index % colors.length],
     })
   );
@@ -160,18 +160,26 @@ const CardStatistikPegawai = ({
                 {tabelStaff.rows.map(
                   (row: FungsionalTableRow, rowIndex: number) => (
                     <TableRow key={rowIndex} className="even:bg-gray-100">
-                      {row.map((cell: string | number, cellIndex: number) => (
-                        <TableCell className="text-center" key={cellIndex}>
-                          {cell}
-                        </TableCell>
-                      ))}
+                      {Array.isArray(row) ? (
+                        // Jika row berupa array (format lama)
+                        row.map((cell: string | number, cellIndex: number) => (
+                          <TableCell className="text-center" key={cellIndex}>
+                            {cell}
+                          </TableCell>
+                        ))
+                      ) : (
+                        // Jika row berupa object { unit, jumlah } (format API baru)
+                        <>
+                          <TableCell className="text-left">{(row as any).jabatan_fungsional || (row as any).unit}</TableCell>
+                          <TableCell className="text-center">{(row as any).jumlah}</TableCell>
+                        </>
+                      )}
                     </TableRow>
                   )
                 )}
 
                 {tabelStaff.total && (
                   <TableRow className="border-b-2 border-b-[#056C7A]">
-                    <TableCell></TableCell>
                     <TableCell className="text-center">Total</TableCell>
                     <TableCell className="text-center">
                       {tabelStaff.total}
@@ -216,9 +224,8 @@ const CardStatistikPegawai = ({
                   (item: ObjectTableRow, index: number) => (
                     <TableRow key={index} className=" even:bg-gray-100">
                       {/* MEMPERBAIKI: Menampilkan properti dari objek, bukan objeknya langsung */}
-                      <TableCell className="text-center">{item.kode}</TableCell>
                       <TableCell className="text-center">
-                        {item.hubungan_kerja}
+                        {item.status}
                       </TableCell>
                       <TableCell className="text-center">
                         {item.jumlah}
@@ -263,9 +270,8 @@ const CardStatistikPegawai = ({
                 {tabelAcademic.rows.map(
                   (item: ObjectTableRow, index: number) => (
                     <TableRow key={index} className=" even:bg-gray-100">
-                      <TableCell className="text-center">{item.kode}</TableCell>
                       <TableCell className="text-center">
-                        {item.jenjang_pendidikan}
+                        {item.pendidikan}
                       </TableCell>
                       <TableCell className="text-center">
                         {item.jumlah}
@@ -312,9 +318,8 @@ const CardStatistikPegawai = ({
                 {tabelNonAcademic.rows.map(
                   (item: ObjectTableRow, index: number) => (
                     <TableRow key={index} className=" even:bg-gray-100">
-                      <TableCell className="text-center">{item.kode}</TableCell>
                       <TableCell className="text-center">
-                        {item.jenjang_pendidikan}
+                        {item.pendidikan}
                       </TableCell>
                       <TableCell className="text-center">
                         {item.jumlah}

@@ -40,9 +40,9 @@ const JabatanFungsional = () => {
     ],
     queryFn: async () => {
       const search = searchParam.get("search") || "";
-      const page = searchParam.get("page");
+      const page = Number(searchParam.get("page") || 1);
 
-      const response = await adminServices.getJabatanFungsional(page, search);
+      const response = await adminServices.getJabatanFungsional({ page, search });
 
       return response.data;
     },
@@ -97,12 +97,12 @@ const JabatanFungsional = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.data.pagination.totalPages &&
+      data.data.pagination.totalPages > 0
     ) {
       const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", data.last_page.toString());
+      newSearchParam.set("page", data.data.pagination.totalPages.toString());
       setSearchParam(newSearchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -164,7 +164,7 @@ const JabatanFungsional = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data?.data?.map((item: any) => (
+          {data?.data?.items?.map((item: any) => (
             <TableRow key={item.id} className=" even:bg-gray-100">
               <TableCell className="text-center text-xs sm:text-sm">
                 {item.kode}
@@ -219,15 +219,11 @@ const JabatanFungsional = () => {
       </Table>
 
       <CustomPagination
-        currentPage={Number(searchParam.get("page") || 1)}
-        links={data?.links || []}
+        pagination={data?.data?.pagination}
         onPageChange={(page) => {
           searchParam.set("page", page.toString());
           setSearchParam(searchParam);
         }}
-        hasNextPage={!!data?.next_page_url}
-        hasPrevPage={!!data?.prev_page_url}
-        totalPages={data?.last_page}
       />
     </div>
   );

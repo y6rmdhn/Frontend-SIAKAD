@@ -60,10 +60,15 @@ interface PegawaiItem {
 
 interface PegawaiApiResponse {
   data: {
-    data: PegawaiItem[];
-    links: any[];
-    last_page: number;
-    current_page: number;
+    items: PegawaiItem[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
   };
   filters: {
     unit_kerja_id: any[];
@@ -216,7 +221,7 @@ const Pegawai = () => {
   const tableData = data?.data;
 
   // --- Select All Logic ---
-  const currentPageIds = tableData?.data?.map((item) => item.id) || [];
+  const currentPageIds = tableData?.items?.map((item) => item.id) || [];
   const isAllSelected =
     currentPageIds.length > 0 &&
     currentPageIds.every((id) => selectedPegawaiId.includes(id));
@@ -314,8 +319,8 @@ const Pegawai = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableData?.data && tableData.data.length > 0 ? (
-              tableData.data.map((item) => (
+            {tableData?.items && tableData.items.length > 0 ? (
+              tableData.items.map((item) => (
                 <TableRow key={item.id} className="even:bg-gray-50">
                   <TableCell>
                     <Checkbox
@@ -335,7 +340,7 @@ const Pegawai = () => {
                     <div className="flex justify-center items-center">
                       <Link to={`/admin/pegawai/edit-data-pegawai/${item.id}`}>
                         <Button size="icon" variant="ghost">
-                          <MdEdit className="text-yellow-500" />
+                           <MdEdit className="text-yellow-500" />
                         </Button>
                       </Link>
                       <Link to={`/admin/detail-pegawai/biodata/${item.id}`}>
@@ -367,13 +372,10 @@ const Pegawai = () => {
         </Table>
       </div>
 
-      {tableData && tableData.data.length > 0 && (
+      {tableData && tableData.items.length > 0 && (
         <CustomPagination
-          currentPage={tableData.current_page}
-          totalPages={tableData.last_page}
+          pagination={tableData.pagination}
           onPageChange={(page) => handleUrlChange("page", String(page))}
-          hasNextPage={tableData.current_page < tableData.last_page}
-          hasPrevPage={tableData.current_page > 1}
         />
       )}
     </div>

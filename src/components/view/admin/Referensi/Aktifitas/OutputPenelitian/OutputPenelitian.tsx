@@ -53,11 +53,15 @@ interface PaginationLink {
 }
 
 interface OutputPenelitianResponse {
-  data: OutputPenelitianItem[];
-  links: PaginationLink[];
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: OutputPenelitianItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 // Komponen utama
@@ -82,7 +86,9 @@ const OutputPenelitian = () => {
   const { data } = useQuery<OutputPenelitianResponse>({
     queryKey: ["output-penelitian", currentPage],
     queryFn: async () => {
-      const response = await adminServices.getOutputPenelitian(currentPage);
+      const response = await adminServices.getOutputPenelitian({
+        page: currentPage,
+      });
       return response.data.data;
     },
   });
@@ -181,8 +187,8 @@ const OutputPenelitian = () => {
   }, [currentPage, searchParam, setSearchParam]);
 
   useEffect(() => {
-    if (data?.last_page && currentPage > data.last_page && data.last_page > 0) {
-      searchParam.set("page", data.last_page.toString());
+    if (data?.pagination.totalPages && currentPage > data.pagination.totalPages && data.pagination.totalPages > 0) {
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [data, currentPage, searchParam, setSearchParam]);
@@ -281,7 +287,7 @@ const OutputPenelitian = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item, index) => (
+                {data?.items.map((item, index) => (
                   <TableRow key={index} className="even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -323,8 +329,7 @@ const OutputPenelitian = () => {
             </Table>
 
             <CustomPagination
-              currentPage={currentPage}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -334,9 +339,6 @@ const OutputPenelitian = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page || 1}
             />
           </CustomCard>
         </form>

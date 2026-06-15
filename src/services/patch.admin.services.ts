@@ -12,23 +12,38 @@ interface IPayloadWithArrayKeteranganAdmin {
 }
 
 const patchDataServices = {
-  aprovePengajuanIzin: (payload: IPayloadWithArray) =>
-    axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-izin/batch/approve`,
-      payload
-    ),
-  tolakPengajuanIzin: (payload: IPayloadWithArray) =>
-    axiosInstance.patch(
-      `${endpoint.ADMIN}/validasi-izin/batch/reject`,
-      payload
-    ),
-  aprovePengajuanCuti: (payload: IPayloadWithArrayKeteranganAdmin) =>
-    axiosInstance.post(
-      `${endpoint.ADMIN}/validasi-cuti/batch/approve`,
-      payload
-    ),
-  tolakPengajuanCuti: (payload: IPayloadWithArray) =>
-    axiosInstance.post(`${endpoint.ADMIN}/validasi-cuti/batch/reject`, payload),
+  aprovePengajuanIzin: async (payload: IPayloadWithArray) => {
+    const promises = payload.ids.map(id => 
+      axiosInstance.put(`${endpoint.ABSENSI}/izin/${id}/approve`, null)
+    );
+    const results = await Promise.all(promises);
+    return results[0];
+  },
+  tolakPengajuanIzin: async (payload: any) => {
+    const promises = payload.ids.map((id: string) => 
+      axiosInstance.put(`${endpoint.ABSENSI}/izin/${id}/reject`, { 
+        alasan_penolakan: payload.keterangan_admin || payload.keterangan || "" 
+      })
+    );
+    const results = await Promise.all(promises);
+    return results[0];
+  },
+  aprovePengajuanCuti: async (payload: IPayloadWithArrayKeteranganAdmin) => {
+    const promises = payload.ids.map(id => 
+      axiosInstance.put(`${endpoint.ABSENSI}/cuti/${id}/approve`, null)
+    );
+    const results = await Promise.all(promises);
+    return results[0];
+  },
+  tolakPengajuanCuti: async (payload: any) => {
+    const promises = payload.ids.map((id: string) => 
+      axiosInstance.put(`${endpoint.ABSENSI}/cuti/${id}/reject`, { 
+        alasan_penolakan: payload.keterangan_admin || payload.keterangan || "" 
+      })
+    );
+    const results = await Promise.all(promises);
+    return results[0];
+  },
   tolakDataKeluarga: (payload: IPayloadWithArray) =>
     axiosInstance.post(`${endpoint.VALIDASI}/data-keluarga/bulk-reject`, payload),
   approveDataKeluarga: (payload: IPayloadWithArray) =>

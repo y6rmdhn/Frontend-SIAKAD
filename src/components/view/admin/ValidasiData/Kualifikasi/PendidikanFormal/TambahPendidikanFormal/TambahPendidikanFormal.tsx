@@ -375,14 +375,14 @@ const TambahPendidikanFormal = () => {
               </div>
               <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
                 <FormFieldInput label="Lokasi Studi" name="lokasi_pendidikan" form={form} type="radio" options={[{ value: "DALAM_NEGERI", label: "Dalam Negeri" }, { value: "LUAR_NEGERI", label: "Luar Negeri" }]} labelStyle="text-gray-700" />
-                <InfiniteScrollSelect form={form} label="Jenjang Pendidikan" name="jenjang_pendidikan_id" placeholder="--Pilih Jenjang--" required queryKey="jenjang" queryFn={(page) => dosenServices.getJenjangPendidikanSelect({ page, is_dropdown: true })} itemValue="id" itemLabel="jenjang_singkatan" onSelectLabel={handleJenjangChange} />
+                <InfiniteScrollSelect form={form} label="Jenjang Pendidikan" name="jenjang_pendidikan_id" placeholder="--Pilih Jenjang--" required queryKey="jenjang" queryFn={(page) => adminServices.getJenjangPendidikan({ page, is_dropdown: true })} itemValue="id" itemLabel="jenjang_singkatan" onSelectLabel={handleJenjangChange} />
                 {modeSederhana ? (
                   <FormFieldInput label="Nama Instansi Pendidikan" name="instansi_pendidikan" form={form} required placeholder="Cth: SDN 01 Jakarta" labelStyle="text-gray-700" />
                 ) : (
                   <>
-                    <InfiniteScrollSelect form={form} label="Nama Perguruan Tinggi" name="univ_id" placeholder="--Pilih Perguruan Tinggi--" required queryKey="universitas" queryFn={(page) => dosenServices.getUniversitasSelect({ page, is_dropdown: true })} itemValue="id" itemLabel="nama" />
-                    <InfiniteScrollSelect form={form} label="Program Studi" name="prodi_id" placeholder="--Pilih Program Studi--" required={false} queryKey="prodi" queryFn={(page) => dosenServices.getProdiSelect({ page, is_dropdown: true })} itemValue="id" itemLabel="nama_prodi" />
-                    <InfiniteScrollSelect form={form} label="Rumpun Bidang Ilmu" name="rumpun_bidang_ilmu_id" placeholder="--Pilih Rumpun Bidang Ilmu--" required={false} queryKey="rumpun_bidang_ilmu" queryFn={(page) => dosenServices.getRumpunBidangIlmu({ page, is_dropdown: true })} itemValue="id" itemLabel="nama" />
+                    <InfiniteScrollSelect form={form} label="Nama Perguruan Tinggi" name="univ_id" placeholder="--Pilih Perguruan Tinggi--" required queryKey="universitas" queryFn={(page) => adminServices.getUniversitas({ page, is_dropdown: true })} itemValue="id" itemLabel="nama" />
+                    <InfiniteScrollSelect form={form} label="Program Studi" name="prodi_id" placeholder="--Pilih Program Studi--" required={false} queryKey="prodi" queryFn={(page) => adminServices.getProdiSelect({ page, is_dropdown: true })} itemValue="id" itemLabel="nama_prodi" />
+                    <InfiniteScrollSelect form={form} label="Rumpun Bidang Ilmu" name="rumpun_bidang_ilmu_id" placeholder="--Pilih Rumpun Bidang Ilmu--" required={false} queryKey="rumpun_bidang_ilmu" queryFn={(page) => adminServices.getRumpunBidangIlmu({ page, is_dropdown: true })} itemValue="id" itemLabel="nama" />
                     <FormFieldInput label="Konsentrasi" name="konsentrasi" form={form} placeholder="Cth: Artificial Intelligence" labelStyle="text-gray-700" />
                   </>
                 )}
@@ -418,7 +418,7 @@ const TambahPendidikanFormal = () => {
               <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
                 {!modeSederhana && (
                   <>
-                    <InfiniteScrollSelect label="Gelar Akademik" name="gelar_id" placeholder="--Pilih Gelar--" form={form} required queryKey="gelar" queryFn={(page) => dosenServices.getGelarSelect({ page, is_dropdown: true })} itemValue="id" itemLabel="nama" />
+                    <InfiniteScrollSelect label="Gelar Akademik" name="gelar_id" placeholder="--Pilih Gelar--" form={form} required queryKey="gelar" queryFn={(page) => adminServices.getGelarAkademik({ page, is_dropdown: true })} itemValue="id" itemLabel="nama" />
                     <FormFieldSelect label="Letak Gelar" name="letak_gelar" placeholder="--Pilih Letak Gelar--" form={form} options={[{ value: "DEPAN", label: "Depan" }, { value: "BELAKANG", label: "Belakang" }]} labelStyle="text-gray-700" />
                   </>
                 )}

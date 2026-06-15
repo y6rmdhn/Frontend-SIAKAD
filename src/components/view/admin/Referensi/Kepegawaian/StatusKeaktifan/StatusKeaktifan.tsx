@@ -43,11 +43,15 @@ interface StatusKeaktifanItem {
 
 // Define interface for the API response
 interface StatusKeaktifanResponse {
-  data: StatusKeaktifanItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: StatusKeaktifanItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const statusKeaktifanSchema = z.object({
@@ -81,9 +85,9 @@ const StatusKeaktifan = () => {
   const { data } = useQuery<StatusKeaktifanResponse>({
     queryKey: ["status-keaktifan", searchParam.get("page")],
     queryFn: async () => {
-      const statusKeaktifanResponse = await adminServices.getStatusAktif(
-        searchParam.get("page")
-      );
+      const statusKeaktifanResponse = await adminServices.getStatusAktif({
+        page: Number(searchParam.get("page") || 1),
+      });
 
       return statusKeaktifanResponse.data.data;
     },
@@ -193,11 +197,11 @@ const StatusKeaktifan = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -307,7 +311,7 @@ const StatusKeaktifan = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item, index) => (
+                 {data?.items.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -356,8 +360,7 @@ const StatusKeaktifan = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -367,9 +370,6 @@ const StatusKeaktifan = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

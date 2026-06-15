@@ -208,6 +208,7 @@ const Biodata = () => {
   // biodata
   const datasLeft = [
     data?.nip || "-",
+    data?.nidn || "-",
     data?.nuptk || "-",
     data?.nama || "-",
     data?.gelar_depan || "-",

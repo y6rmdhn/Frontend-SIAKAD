@@ -1,6 +1,7 @@
 // biodata
 const biodataLeftColumn = [
   { name: "NIP" },
+  { name: "NIDN" },
   { name: "NUPTK" },
   { name: "Nama Lengkap" },
   { name: "Gelar Depan" },

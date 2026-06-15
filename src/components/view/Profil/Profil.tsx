@@ -38,8 +38,29 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
-import { fileSchemaNew } from "../DataRiwayat/Kualifikasi/PendidikanFormal/DetailPendidikanFormal/DetailPendidikanFormal";
 import environment from "@/config/environments";
+
+const fileSchema = z
+  .any()
+  .refine((files) => files instanceof FileList && files.length > 0, {
+    message: "File wajib diunggah.",
+  })
+  .refine(
+    (files) => {
+      if (!(files instanceof FileList) || files.length === 0) return true;
+      return files[0].size <= 5000000;
+    },
+    { message: "Ukuran file maksimal 5MB." }
+  )
+  .refine(
+    (files) => {
+      if (!(files instanceof FileList) || files.length === 0) return true;
+      return ["application/pdf", "image/jpeg", "image/png"].includes(
+        files[0].type
+      );
+    },
+    { message: "Format file harus PDF, JPEG, atau PNG." }
+  );
 
 const passwordChangeSchema = z
   .object({
@@ -60,7 +81,7 @@ const profileUpdateSchema = z.object({
     .email("Email tidak valid.")
     .or(z.literal(""))
     .optional(),
-  file_foto_url: fileSchemaNew.optional(),
+  file_foto_url: fileSchema.optional(),
 });
 interface UserProfile {
   email: string;
@@ -112,7 +133,7 @@ const Profil = () => {
           if (role === "Admin") {
             response = await adminServices.getProfileAdmin();
           } else {
-            response = await dosenServices.getProfileUser();
+            response = await adminServices.getProfilePegawai();
           }
           console.log(response.data);
 
@@ -207,7 +228,7 @@ const Profil = () => {
       accessToken: accessToken,
       refresh_token: refreshToken || "",
       userId: userId,
-    });
+    } as any);
   };
 
   const onSubmitPasswordChange = (

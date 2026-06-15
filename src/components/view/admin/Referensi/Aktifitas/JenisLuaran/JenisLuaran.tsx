@@ -39,11 +39,15 @@ interface JenisLuaranItem {
 
 // Define interface for the API response
 interface JenisLuaranResponse {
-  data: JenisLuaranItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: JenisLuaranItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const jenisLuaranSchema = z.object({
@@ -76,9 +80,9 @@ const JenisLuaran = () => {
   const { data } = useQuery<JenisLuaranResponse>({
     queryKey: ["jenis-luaran", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisLuaran(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getJenisLuaran({
+        page: Number(searchParam.get("page") || 1),
+      });
 
       return response.data.data;
     },
@@ -184,11 +188,11 @@ const JenisLuaran = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -217,11 +221,10 @@ const JenisLuaran = () => {
                         setSearchParam(searchParam);
                       }
                     }}
-                    className={`cursor-pointer ${
-                      isEditMode
+                    className={`cursor-pointer ${isEditMode
                         ? "bg-gray-400"
                         : "bg-green-light-uika hover:bg-[#329C59]"
-                    }`}
+                      }`}
                     disabled={isEditMode}
                   >
                     <FaPlus className="w-4! h-4! text-white" />
@@ -289,7 +292,7 @@ const JenisLuaran = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
+                {data?.items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -315,10 +318,10 @@ const JenisLuaran = () => {
                           onConfirm={() => handleDelete(item.id)}
                         >
                           <Button
-                            size="icon"
-                            type="button"
-                            variant="ghost"
-                            className="cursor-pointer"
+                             size="icon"
+                             type="button"
+                             variant="ghost"
+                             className="cursor-pointer"
                           >
                             <FaRegTrashAlt className="text-red-500" />
                           </Button>
@@ -331,8 +334,7 @@ const JenisLuaran = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -342,9 +344,6 @@ const JenisLuaran = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

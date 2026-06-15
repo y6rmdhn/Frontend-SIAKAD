@@ -39,11 +39,15 @@ interface JenisPublikasiItem {
 
 // Define interface for the API response
 interface JenisPublikasiResponse {
-  data: JenisPublikasiItem[];
-  links: any[]; // You might want to define a more specific type
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: JenisPublikasiItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const jenisPublikasiSchema = z.object({
@@ -76,9 +80,9 @@ const JenisPublikasi = () => {
   const { data } = useQuery<JenisPublikasiResponse>({
     queryKey: ["jenis-publikasi", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisPublikasi(
-        searchParam.get("page")
-      );
+      const response = await adminServices.getJenisPublikasi({
+        page: Number(searchParam.get("page") || 1),
+      });
 
       return response.data.data;
     },
@@ -186,11 +190,11 @@ const JenisPublikasi = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -290,7 +294,7 @@ const JenisPublikasi = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {data?.data.map((item) => (
+                {data?.items.map((item) => (
                   <TableRow key={item.id} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -331,8 +335,7 @@ const JenisPublikasi = () => {
               </TableBody>
             </Table>
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 if (isEditMode) {
                   toast.warning("Selesaikan edit data terlebih dahulu");
@@ -342,9 +345,6 @@ const JenisPublikasi = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

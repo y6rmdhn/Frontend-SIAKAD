@@ -828,7 +828,7 @@ const TambahPendidikanFormal = () => {
                       <th className="px-3 py-2 w-10 text-center">
                         <button
                           type="button"
-                          onClick={() => append({ ...defaultDokumenRow })}
+                          onClick={() => append(defaultDokumenRow as any)}
                           className="bg-green-500 hover:bg-green-600 text-white rounded p-1"
                         >
                           <Plus size={14} />

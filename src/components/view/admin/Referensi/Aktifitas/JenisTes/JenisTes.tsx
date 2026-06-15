@@ -41,11 +41,15 @@ interface JenisTesItem {
 
 // Define a type for the API response
 interface JenisTesResponse {
-  data: JenisTesItem[];
-  links: any[]; // You might want to define a more specific type here
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  last_page: number;
+  items: JenisTesItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
 const jenisTesFormSchema = z
@@ -99,7 +103,9 @@ const JenisTes = () => {
   const { data } = useQuery<JenisTesResponse>({
     queryKey: ["jenis-tes", searchParam.get("page")],
     queryFn: async () => {
-      const response = await adminServices.getJenisTes(searchParam.get("page"));
+      const response = await adminServices.getJenisTes({
+        page: Number(searchParam.get("page") || 1),
+      });
       console.log(response.data.data);
 
       return response.data.data;
@@ -200,11 +206,11 @@ const JenisTes = () => {
 
   useEffect(() => {
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      data?.pagination.totalPages &&
+      Number(searchParam.get("page")) > data.pagination.totalPages &&
+      data.pagination.totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", data.pagination.totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -332,7 +338,7 @@ const JenisTes = () => {
                       </TableCell>
                     </TableRow>
                   )}
-                {data?.data.map((item, index) => (
+                {data?.items.map((item, index) => (
                   <TableRow key={index} className=" even:bg-gray-100">
                     <TableCell className="text-center text-xs sm:text-sm">
                       {item.kode}
@@ -380,8 +386,7 @@ const JenisTes = () => {
             </Table>
 
             <CustomPagination
-              currentPage={Number(searchParam.get("page") || 1)}
-              links={data?.links || []}
+              pagination={data?.pagination}
               onPageChange={(page) => {
                 // Jika sedang dalam mode edit, jangan ganti halaman
                 if (isEditMode) {
@@ -391,9 +396,6 @@ const JenisTes = () => {
                 searchParam.set("page", page.toString());
                 setSearchParam(searchParam);
               }}
-              hasNextPage={!!data?.next_page_url}
-              hasPrevPage={!!data?.prev_page_url}
-              totalPages={data?.last_page}
             />
           </CustomCard>
         </form>

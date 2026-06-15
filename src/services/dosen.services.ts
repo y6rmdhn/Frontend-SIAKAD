@@ -8,7 +8,6 @@ import {
   OrangtuaParams,
   PasanganParams,
 } from "@/types";
-import { responseParams } from "@/types/response.params";
 
 const dosenServices = {
   //   keluarga
@@ -83,9 +82,11 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/pasangan/` + id),
 
   // kepegawaian
-  getPangkat: (params: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/pangkat`, {
-      params,
+  getPangkat: (page: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/pangkat`, {
+      params: {
+        page: page,
+      },
     }),
   getDataPangkatWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/pangkat`),
@@ -105,9 +106,11 @@ const dosenServices = {
   getDataJabatanakademikWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`),
 
-  getJabatanFungsional: (params: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/jabatan-fungsional`, {
-      params,
+  getJabatanFungsional: (page: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`, {
+      params: {
+        page: page,
+      },
     }),
   getJabatanFungsionalDetail: (id: number | string) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional/` + id),
@@ -125,14 +128,14 @@ const dosenServices = {
   getDataJabatanakstrukturalWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`),
 
-  getHubunganKerja: (params?: responseParams) =>
+  getHubunganKerja: (params?: any) =>
     axiosInstance.get(`${endpoint.VALIDASI}/data-hubungan-kerja`, {
       params,
     }),
   getHubunganKerjaDetail: (id: number | string) =>
-    axiosInstance.get(`${endpoint.VALIDASI}/data-hubungan-kerja/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-hubungan-kerja/${id}`),
   getDataHubunganKerjaWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/hubungankerja`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-hubungan-kerja`),
 
   //  kualifikasi
   getDiklat: (page: any) =>
@@ -198,10 +201,17 @@ const dosenServices = {
         bulan: bulan,
       },
     }),
-  getStatusAbsen: () => axiosInstance.get(`${endpoint.DOSEN}/absensi/status`),
+  getStatusAbsen: () => axiosInstance.get(`${endpoint.ABSENSI}/presensi/today`),
 
-  getHistoryAbsensi: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/absensi/history`),
+  getHistoryAbsensi: (params?: {
+    tgl_mulai?: string;
+    tgl_selesai?: string;
+    bulan?: number;
+    tahun?: number;
+  }) => axiosInstance.get(`${endpoint.ABSENSI}/presensi/me`, { params }),
+
+  getAbsensiDashboard: () =>
+    axiosInstance.get(`${endpoint.ABSENSI}/statistik/dashboard`),
 
   //   kualifikasi
   getDataSertifikasiDosen: (page: any) =>
@@ -227,34 +237,32 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen`),
 
   // operasional
-  getDataIzin: (page: any, search: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-izin-dosen`, {
-      params: {
-        page: page,
-        search: search,
-      },
-    }),
+  getDataIzin: (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    jenis_izin_id?: string;
+  }) => {
+    return axiosInstance.get(`${endpoint.ABSENSI}/izin`, {
+      params,
+    });
+  },
   getDataIzinWithoutParams: (id: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pengajuan-izin-dosen/` + id),
+    axiosInstance.get(`${endpoint.ABSENSI}/izin/` + id),
 
-  getDataCuti: (params: CutiParams) => {
-    const cleanParams: Record<string, any> = { page: params.page || 1 };
-
-    if (params.search) {
-      cleanParams.search = params.search;
-    }
-    if (params.jenis_cuti && params.jenis_cuti !== "semua") {
-      cleanParams.jenis_cuti_id = params.jenis_cuti;
-    }
-    if (params.jumlah_cuti && params.jumlah_cuti !== "semua") {
-      cleanParams.jumlah_cuti = params.jumlah_cuti;
-    }
-    if (params.status_pengajuan && params.status_pengajuan !== "semua") {
-      cleanParams.status_pengajuan = params.status_pengajuan;
-    }
-
-    return axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen`, {
-      params: cleanParams,
+  getDataCuti: (params?: {
+    is_dropdown?: boolean;
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+    unit_kerja_id?: string;
+    start_end?: string;
+    end_date?: string;
+  }) => {
+    return axiosInstance.get(`${endpoint.ABSENSI}/cuti`, {
+      params,
     });
   },
 
@@ -341,13 +349,17 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen/` + id),
 
   // select content
-  getJenisSk: (params?: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/jenis-sk`, {
-      params,
+  getJenisSk: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-sk`, {
+      params: {
+        page: page,
+      },
     }),
-  getJenisKenaikanPangkat: (params?: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/jenis-kenaikan-pangkat`, {
-      params,
+  getJenisKenaikanPangkat: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jenis-kenaikan-pangkat`, {
+      params: {
+        page: page,
+      },
     }),
   getMasterPangkatReferensi: (page?: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/master-pangkat`, {
@@ -361,17 +373,23 @@ const dosenServices = {
         page: page,
       },
     }),
-  getJabatanStrukturalSelect: (params?: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/jabatan-struktural`, {
-      params,
+  getJabatanStrukturalSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/jabatan-struktural`, {
+      params: {
+        page: page,
+      },
     }),
-  getHubunganKerjaSelect: (params?: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/hubungan-kerja`, {
-      params,
+  getHubunganKerjaSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/hubungan-kerja`, {
+      params: {
+        page: page,
+      },
     }),
-  getStatusAktifSelect: (params?: responseParams) =>
-    axiosInstance.get(`${endpoint.MASTER}/status-aktif`, {
-      params,
+  getStatusAktifSelect: (page?: any) =>
+    axiosInstance.get(`${endpoint.DOSEN}/status-aktif`, {
+      params: {
+        page: page,
+      },
     }),
   getProdiSelect: (page?: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/master-prodi-perguruan-tinggi`, {
@@ -410,21 +428,39 @@ const dosenServices = {
         page: page,
       },
     }),
-  getPengajuanCutiDosen: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/daftar-cuti`, {
+  getPengajuanCutiDosen: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/cuti`, {
+      params,
+    }),
+  getPengajuanIzinDosen: (page?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-izin`, {
       params: {
         page: page,
-        search: search,
+        is_dropdown: true,
       },
     }),
-  getPengajuanIzinDosen: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenis-izin`, {
-      params: {
-        page: page,
-        search: search,
+  getProfilPegawai: () => axiosInstance.get(`${endpoint.PEGAWAI}/profile`),
+
+  // update profil mandiri
+  updateProfilPegawai: (payloadData: any) => {
+    const formData = new FormData();
+    Object.keys(payloadData).forEach((key) => {
+      if (
+        payloadData[key] !== null &&
+        payloadData[key] !== undefined &&
+        payloadData[key] !== ""
+      ) {
+        const finalKey = key === "no_bpjs" ? "bpjs" : key;
+        formData.append(finalKey, payloadData[key]);
+      }
+    });
+    return axiosInstance.put(`${endpoint.PEGAWAI}/profile`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
-    }),
-  getProfileUser: () => axiosInstance.get(`${endpoint.DOSEN}/profiles`),
+    });
+  },
+
   getLocation: () => axiosInstance.get(`${endpoint.DOSEN}/setting-kehadiran`),
   getPendidikanFormalDetail: (id: string) =>
     axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen/${id}`),
@@ -434,17 +470,12 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
   getBeritaDetail: (id: string) =>
     axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
-  getSlipGaji: () => axiosInstance.get(`${endpoint.DOSEN}/payroll/slips`),
-  getSlipGajiDetail: (id: string) => {
-    return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips/${id}`);
-  },
+  getSlipGaji: (params?: { pegawai_id?: string; periode_tahun?: string }) =>
+    axiosInstance.get(`${endpoint.GAJI}/gaji/riwayat`, { params }),
   getEvaluasiKinerja: (params: EvaluasiKinerjaParams) => {
     return axiosInstance.get(`${endpoint.DOSEN}/evaluasi-kinerja`, {
       params,
     });
-  },
-  getPeriodeDosen: () => {
-    return axiosInstance.get(`${endpoint.DOSEN}/payroll/slips`);
   },
 };
 

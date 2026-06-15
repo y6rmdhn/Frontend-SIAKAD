@@ -15,6 +15,12 @@ function usePrevious<T>(value: T): T | undefined {
   return ref.current;
 }
 
+const isValidId = (id: any) => {
+  if (!id) return false;
+  const idStr = String(id);
+  return /^\d+$/.test(idStr) || /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(idStr);
+};
+
 // Props interface supporting both interactive and read-only modes
 interface DomisiliSectionProps {
   form: UseFormReturn<DataPegawaiSchema>;
@@ -27,34 +33,83 @@ const DomisiliSection = ({
 }: DomisiliSectionProps) => {
   const { watch, setValue } = form;
 
-  const selectedProvinceId = watch("provinsi");
-  const selectedCityId = watch("kota");
-  const prevProvinceId = usePrevious(selectedProvinceId);
-  const prevCityId = usePrevious(selectedCityId);
+  const selectedProvinceName = watch("provinsi");
+  const selectedCityName = watch("kota");
+  const prevProvinceName = usePrevious(selectedProvinceName);
+  const prevCityName = usePrevious(selectedCityName);
 
-  // Diganti untuk langsung menggunakan API backend via InfiniteScrollSelect
+  const [provinceId, setProvinceId] = React.useState<string>("");
+  const [cityId, setCityId] = React.useState<string>("");
+
+  // Initial load or background reset logic: match name to ID for cascading calls
+  useEffect(() => {
+    const getInitialProvince = async () => {
+      if (selectedProvinceName && !isValidId(selectedProvinceName)) {
+        try {
+          const res = await adminServices.getMasterProvinsi({ search: selectedProvinceName, is_dropdown: true });
+          const items = res.data?.data?.items || [];
+          const matched = items.find((item: any) => item.nama?.toUpperCase() === selectedProvinceName.toUpperCase());
+          if (matched) {
+            setProvinceId(matched.id);
+          }
+        } catch (error) {
+          console.error("Failed to load initial province ID", error);
+        }
+      } else if (isValidId(selectedProvinceName)) {
+        setProvinceId(selectedProvinceName);
+      } else {
+        setProvinceId("");
+      }
+    };
+    getInitialProvince();
+  }, [selectedProvinceName]);
+
+  useEffect(() => {
+    const getInitialCity = async () => {
+      if (selectedCityName && !isValidId(selectedCityName) && provinceId) {
+        try {
+          const res = await adminServices.getMasterKota({ search: selectedCityName, provinsi_id: provinceId, is_dropdown: true });
+          const items = res.data?.data?.items || [];
+          const matched = items.find((item: any) => item.nama?.toUpperCase() === selectedCityName.toUpperCase());
+          if (matched) {
+            setCityId(matched.id);
+          }
+        } catch (error) {
+          console.error("Failed to load initial city ID", error);
+        }
+      } else if (isValidId(selectedCityName)) {
+        setCityId(selectedCityName);
+      } else {
+        setCityId("");
+      }
+    };
+    getInitialCity();
+  }, [selectedCityName, provinceId]);
 
   // Reset dependent fields when parent field changes
   useEffect(() => {
     if (
       !isReadOnly &&
-      prevProvinceId !== undefined &&
-      prevProvinceId !== selectedProvinceId
+      prevProvinceName !== undefined &&
+      prevProvinceName !== selectedProvinceName
     ) {
       setValue("kota", "");
       setValue("kecamatan", "");
+      setProvinceId("");
+      setCityId("");
     }
-  }, [isReadOnly, selectedProvinceId, prevProvinceId, setValue]);
+  }, [isReadOnly, selectedProvinceName, prevProvinceName, setValue]);
 
   useEffect(() => {
     if (
       !isReadOnly &&
-      prevCityId !== undefined &&
-      prevCityId !== selectedCityId
+      prevCityName !== undefined &&
+      prevCityName !== selectedCityName
     ) {
       setValue("kecamatan", "");
+      setCityId("");
     }
-  }, [isReadOnly, selectedCityId, prevCityId, setValue]);
+  }, [isReadOnly, selectedCityName, prevCityName, setValue]);
 
   return (
     <div className="grid lg:grid-rows-6 lg:grid-flow-col gap-y-4 lg:gap-y-0 gap-x-5 mt-10 items-center">
@@ -93,7 +148,7 @@ const DomisiliSection = ({
           placeholder="--Pilih Warga Negara--"
           required={true}
           queryKey="warga-negara-select"
-          queryFn={(page) => adminServices.getWilayahNegara({ page, is_dropdown: true })}
+          queryFn={(page) => adminServices.getMasterNegara({ page, is_dropdown: true })}
           itemValue="id"
           itemLabel="nama"
         />
@@ -117,9 +172,10 @@ const DomisiliSection = ({
           placeholder="--Pilih Provinsi--"
           required={true}
           queryKey="provinsi-select"
-          queryFn={(page) => adminServices.getProvinsi({ page, is_dropdown: true })}
-          itemValue="id"
+          queryFn={(page) => adminServices.getMasterProvinsi({ page, is_dropdown: true })}
+          itemValue="nama"
           itemLabel="nama"
+          onSelectItem={(item) => setProvinceId(item.id)}
         />
       )}
 
@@ -139,12 +195,13 @@ const DomisiliSection = ({
           name="kota"
           labelStyle="text-[#3F6FA9]"
           placeholder="--Pilih Kota--"
-          disabled={!selectedProvinceId}
+          disabled={!provinceId || !isValidId(provinceId)}
           required={true}
-          queryKey={`kota-select-${selectedProvinceId || ""}`}
-          queryFn={(page) => adminServices.getKota({ page, provinsi_id: selectedProvinceId, is_dropdown: true })}
-          itemValue="id"
+          queryKey={`kota-select-${provinceId || ""}`}
+          queryFn={(page) => adminServices.getMasterKota({ page, provinsi_id: isValidId(provinceId) ? provinceId : undefined, is_dropdown: true })}
+          itemValue="nama"
           itemLabel="nama"
+          onSelectItem={(item) => setCityId(item.id)}
         />
       )}
 
@@ -164,11 +221,11 @@ const DomisiliSection = ({
           name="kecamatan"
           labelStyle="text-[#3F6FA9]"
           placeholder="--Pilih Kecamatan--"
-          disabled={!selectedCityId}
+          disabled={!cityId || !isValidId(cityId)}
           required={true}
-          queryKey={`kecamatan-select-${selectedCityId || ""}`}
-          queryFn={(page) => adminServices.getKecamatan({ page, kabupaten_id: selectedCityId, is_dropdown: true })}
-          itemValue="id"
+          queryKey={`kecamatan-select-${cityId || ""}`}
+          queryFn={(page) => adminServices.getMasterKecamatan({ page, kabupaten_id: isValidId(cityId) ? cityId : undefined, is_dropdown: true })}
+          itemValue="nama"
           itemLabel="nama"
         />
       )}
@@ -196,7 +253,7 @@ const DomisiliSection = ({
         <FormFieldInput
           form={form}
           label="Suku"
-          name="suku_id"
+          name="suku"
           labelStyle="text-[#3F6FA9]"
           readOnly
         />
@@ -204,19 +261,12 @@ const DomisiliSection = ({
         <InfiniteScrollSelect
           form={form}
           label="Suku"
-          name="suku_id"
+          name="suku"
           labelStyle="text-[#3F6FA9]"
           placeholder="--Pilih Suku--"
           required={false}
-          // 👇 1. Ganti nama key agar cache lama yang nyangkut langsung terbuang
-          queryKey="master-suku-dropdown"
-          queryFn={async (page) => {
-            const response = await adminServices.getSukuParams({ page, is_dropdown: true });
-
-            // 👇 2. Tembak langsung ke array intinya (data.data.data)
-            // Jika ada error/kosong, pastikan dia me-return array kosong []
-            return response?.data?.data?.data || [];
-          }}
+          queryKey="suku-select"
+          queryFn={(page) => adminServices.getSukuParams({ page, is_dropdown: true })}
           itemValue="id"
           itemLabel="nama"
         />

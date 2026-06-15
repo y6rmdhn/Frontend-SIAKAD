@@ -211,7 +211,7 @@ const TambahHubunganKerja = () => {
               placeholder="--Pilih Hubungan Kerja--"
               required
               queryKey="hubungan_kerja_admin_tambah"
-              queryFn={(page) => dosenServices.getHubunganKerjaSelect({ page, is_dropdown: true })}
+              queryFn={(page) => adminServices.getHubunganKerja({ page, is_dropdown: true })}
               itemValue="id"
               itemLabel="nama"
             />
@@ -224,7 +224,7 @@ const TambahHubunganKerja = () => {
               placeholder="--Pilih Status Aktif--"
               required
               queryKey="status_aktif_admin_tambah"
-              queryFn={(page) => dosenServices.getStatusAktifSelect({ page, is_dropdown: true })}
+              queryFn={(page) => adminServices.getStatusAktif({ page, is_dropdown: true })}
               itemValue="id"
               itemLabel="nama"
             />

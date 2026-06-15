@@ -58,14 +58,17 @@ interface GelarItem {
   nama: string;
 }
 
-// PERBAIKAN: Tipe ini sekarang mencerminkan seluruh objek response
 interface GelarApiResponse {
   data: {
-    data: GelarItem[];
-    current_page: number;
-    last_page: number;
-    next_page_url: string | null;
-    prev_page_url: string | null;
+    items: GelarItem[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
   };
 }
 
@@ -282,14 +285,14 @@ const GelarAkademik = () => {
                         </TableCell>
                       </TableRow>
                     ))
-                  ) : tableData?.data.length === 0 ? (
+                  ) : tableData?.items.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={3} className="text-center h-24">
                         Data tidak ditemukan.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    tableData?.data.map((item) => (
+                    tableData?.items.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell>{item.gelar}</TableCell>
                         <TableCell>{item.nama}</TableCell>
@@ -327,13 +330,10 @@ const GelarAkademik = () => {
               </Table>
             </div>
 
-            {tableData && tableData.data.length > 0 && (
+            {tableData && tableData.items.length > 0 && (
               <CustomPagination
-                currentPage={tableData.current_page}
-                totalPages={tableData.last_page}
+                pagination={tableData.pagination}
                 onPageChange={(page) => handleUrlChange("page", String(page))}
-                hasNextPage={!!tableData.next_page_url}
-                hasPrevPage={!!tableData.prev_page_url}
               />
             )}
           </CustomCard>

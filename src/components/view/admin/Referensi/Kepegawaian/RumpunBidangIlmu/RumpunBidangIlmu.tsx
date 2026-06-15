@@ -61,9 +61,15 @@ export interface RumpunNode extends RumpunItem {
 interface RumpunApiResponse {
   success: boolean;
   data: {
-    data: RumpunItem[];
-    current_page: number;
-    last_page: number;
+    items: RumpunItem[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
   };
 }
 
@@ -117,13 +123,13 @@ const RumpunBidangIlmu = () => {
     useInfiniteQuery<RumpunApiResponse>({
       queryKey: ["rumpun-bidang-ilmu-all"],
       queryFn: async ({ pageParam = 1 }) => {
-        const response = await adminServices.getRumpunBidangIlmu(pageParam);
+        const response = await adminServices.getRumpunBidangIlmu({ page: pageParam });
         return response.data;
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        const currentPage = lastPage.data.current_page;
-        const totalPages = lastPage.data.last_page;
+        const currentPage = lastPage.data.pagination.page;
+        const totalPages = lastPage.data.pagination.totalPages;
         return currentPage < totalPages ? currentPage + 1 : undefined;
       },
     });
@@ -207,7 +213,7 @@ const RumpunBidangIlmu = () => {
   };
 
   const allRumpunData = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data.data) ?? [];
+    return data?.pages.flatMap((page) => page.data.items) ?? [];
   }, [data]);
 
   const treeData = useMemo(() => {

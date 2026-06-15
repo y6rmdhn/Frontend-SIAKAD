@@ -27,10 +27,10 @@ const validasiData: {
           title: "Hubungan Kerja",
           href: "/admin/validasi-data/kepegawaian/hubungan-kerja",
         },
-        {
-          title: "Jabatan Akademik",
-          href: "/admin/validasi-data/kepegawaian/jabatan-akademik",
-        },
+        // {
+        //   title: "Jabatan Akademik",
+        //   href: "/admin/validasi-data/kepegawaian/jabatan-akademik",
+        // },
         {
           title: "Jabatan Fungsional",
           href: "/admin/validasi-data/kepegawaian/jabatan-fungsional",
@@ -161,10 +161,10 @@ const validasiData: {
           title: "Kemampuan Bahasa",
           href: "/admin/validasi-data/pengembangan/kemampuan-bahasa",
         },
-        {
-          title: "Organisasi",
-          href: "/admin/validasi-data/pengembangan/organisasi",
-        },
+        // {
+        //   title: "Organisasi",
+        //   href: "/admin/validasi-data/pengembangan/organisasi",
+        // },
       ],
     },
   ];

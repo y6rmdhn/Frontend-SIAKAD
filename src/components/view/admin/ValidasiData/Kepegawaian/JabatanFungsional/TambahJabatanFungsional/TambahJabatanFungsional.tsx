@@ -239,7 +239,7 @@ const TambahJabatanFungsional = () => {
                             name="jabatan_fungsional_id"
                             required
                             queryKey="jabatan_fungsional_admin_tambah"
-                            queryFn={(page) => dosenServices.getJabatanFungsional({ page, is_dropdown: true })}
+                            queryFn={(page) => adminServices.getJabatanFungsional({ page, is_dropdown: true })}
                             placeholder="-- Pilih Jabatan Fungsional --"
                             labelStyle="text-[#3F6FA9]"
                             itemLabel="nama"

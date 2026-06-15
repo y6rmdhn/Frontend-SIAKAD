@@ -24,6 +24,7 @@ import { useDebounce } from "use-debounce";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import { format, parseISO } from "date-fns";
 import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+import { toast } from "sonner";
 
 // ── Peta warna status ────────────────────────────────────────────────────────
 const statusColor: Record<string, string> = {
@@ -297,7 +298,19 @@ const Cuti = () => {
                         <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
                       </Button>
                     </Link>
-                    <Button size="icon" variant="ghost" className="cursor-pointer">
+                    <Button 
+                      size="icon" 
+                      variant="ghost" 
+                      className="cursor-pointer"
+                      onClick={() => {
+                        const fileUrl = item.file_cuti?.url || item.file_pendukung?.url || item.file_url;
+                        if (fileUrl) {
+                          window.open(fileUrl, "_blank");
+                        } else {
+                          toast.error("File pendukung tidak tersedia");
+                        }
+                      }}
+                    >
                       <IoIosDocument className="w-5 h-5 text-[#26A1F4]" />
                     </Button>
                   </div>
