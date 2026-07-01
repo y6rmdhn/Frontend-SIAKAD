@@ -27,7 +27,7 @@ export function useSsoLogin() {
     const doSso = async () => {
       try {
         const { data } = await axios.get(
-          `${environment.API_URL}/sso/callback`,
+          `${environment.API_URL}sso/callback`,
           { params: { token, role_id, appModule_id } },
         );
 
