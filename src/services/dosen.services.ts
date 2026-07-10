@@ -461,63 +461,44 @@ const dosenServices = {
     });
   },
 
-<<<<<<< Updated upstream
   getLocation: () => axiosInstance.get(`${endpoint.DOSEN}/setting-kehadiran`),
   getPendidikanFormalDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen/${id}`),
+      axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen/${id}`),
   getRiwayatPekerjaanDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen/${id}`),
+      axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen/${id}`),
   getPenghargaanDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
+      axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
   getBeritaDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
+      axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
   getSlipGaji: (params?: { pegawai_id?: string; periode_tahun?: string }) =>
-    axiosInstance.get(`${endpoint.GAJI}/gaji/riwayat`, { params }),
+      axiosInstance.get(`${endpoint.GAJI}/gaji/riwayat`, { params }),
   getEvaluasiKinerja: (params: EvaluasiKinerjaParams) => {
-    return axiosInstance.get(`${endpoint.DOSEN}/evaluasi-kinerja`, {
-      params,
-    });
+      return axiosInstance.get(`${endpoint.PEGAWAI}/evaluasi-kinerja`, {
+          params,
+      });
   },
-=======
-    getLocation: () => axiosInstance.get(`${endpoint.DOSEN}/setting-kehadiran`),
-    getPendidikanFormalDetail: (id: string) =>
-        axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen/${id}`),
-    getRiwayatPekerjaanDetail: (id: string) =>
-        axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen/${id}`),
-    getPenghargaanDetail: (id: string) =>
-        axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
-    getBeritaDetail: (id: string) =>
-        axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
-    getSlipGaji: (params?: { pegawai_id?: string; periode_tahun?: string }) =>
-        axiosInstance.get(`${endpoint.GAJI}/gaji/riwayat`, { params }),
-    getEvaluasiKinerja: (params: EvaluasiKinerjaParams) => {
-        return axiosInstance.get(`${endpoint.PEGAWAI}/evaluasi-kinerja`, {
-            params,
-        });
-    },
-    getPegawaiList: (params?: { search?: string; page?: string | number }) => {
-        return axiosInstance.get(`${endpoint.PEGAWAI}/list`, {
-            params,
-        });
-    },
-    getEvaluasiTemplates: () => {
-        return axiosInstance.get(`${endpoint.PEGAWAI}/evaluasi-template`);
-    },
-    getEvaluasiKinerjaDetail: (id: string) => {
-        return axiosInstance.get(`${endpoint.PEGAWAI}/evaluasi-kinerja/${id}`);
-    },
-    updateNilaiManual: (evaluasiId: string, itemId: string, nilai: number) => {
-        return axiosInstance.put(`${endpoint.PEGAWAI}/evaluasi-kinerja/${evaluasiId}/detail/${itemId}`, {
-            nilai,
-        });
-    },
-    deleteEvaluasiKinerja: (id: string) => {
-        return axiosInstance.delete(`${endpoint.PEGAWAI}/evaluasi-kinerja/${id}`);
-    },
-    getAtasan: () => {
-        return axiosInstance.get(`${endpoint.PEGAWAI}/atasan`);
-    },
->>>>>>> Stashed changes
+  getPegawaiList: (params?: { search?: string; page?: string | number }) => {
+      return axiosInstance.get(`${endpoint.PEGAWAI}/list`, {
+          params,
+      });
+  },
+  getEvaluasiTemplates: () => {
+      return axiosInstance.get(`${endpoint.PEGAWAI}/evaluasi-template`);
+  },
+  getEvaluasiKinerjaDetail: (id: string) => {
+      return axiosInstance.get(`${endpoint.PEGAWAI}/evaluasi-kinerja/${id}`);
+  },
+  updateNilaiManual: (evaluasiId: string, itemId: string, nilai: number) => {
+      return axiosInstance.put(`${endpoint.PEGAWAI}/evaluasi-kinerja/${evaluasiId}/detail/${itemId}`, {
+          nilai,
+      });
+  },
+  deleteEvaluasiKinerja: (id: string) => {
+      return axiosInstance.delete(`${endpoint.PEGAWAI}/evaluasi-kinerja/${id}`);
+  },
+  getAtasan: () => {
+      return axiosInstance.get(`${endpoint.PEGAWAI}/atasan`);
+  },
 };
 
 export default dosenServices;
