@@ -59,7 +59,17 @@ const postDosenServices = {
   postEvaluasiKinerja: (
     data: EvaluasiKerjaFormValues | EvaluasiKerjaPegawaiFormValues
   ) => {
-    return axiosInstance.post(`${endpoint.DOSEN}/evaluasi-kinerja`, data);
+    return axiosInstance.post(`${endpoint.PEGAWAI}/evaluasi-kinerja`, data);
+  },
+  createEvaluasiKinerja: (payload: {
+    pegawai_dinilai_id: string | number;
+    pegawai_penilai_id: string;
+    pegawai_atasan_id: string;
+    template_id: string;
+    periode_start: string;
+    periode_end: string;
+  }) => {
+    return axiosInstance.post(`${endpoint.PEGAWAI}/evaluasi-kinerja`, payload);
   },
 };
 

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useQuery, keepPreviousData } from "@tanstack/react-query"; // Diperbarui
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
+import { toast } from "sonner";
 
 // UI & Custom Components
 import Title from "@/components/blocks/Title";
@@ -20,7 +21,7 @@ import SearchInput from "@/components/blocks/SearchInput";
 import InfoList from "@/components/blocks/InfoList";
 
 // Icons
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdDelete } from "react-icons/md";
 
 // Services
 import dosenServices from "@/services/dosen.services";
@@ -36,33 +37,67 @@ interface Evaluator {
   pendidikan: string;
 }
 
-interface EvaluasiItem {
+interface EvaluasiTransaction {
   id: string;
-  nip: string;
-  nama_pegawai: string;
-  unit_kerja: string;
-  fungsional: string;
-  aksi: {
-    add: boolean;
-    edit: boolean;
-    delete: boolean;
-    evaluation_id: string | null;
+  pegawai_dinilai_id: string;
+  pegawai_penilai_id: string;
+  pegawai_atasan_id: string;
+  template_id: string;
+  total_skor: number | null;
+  periode_start: string;
+  periode_end: string;
+  pegawaiDinilai?: {
+    id: string;
+    nama: string;
+    nip: string;
+  };
+  pegawaiPenilai?: {
+    id: string;
+    nama: string;
+    nip: string;
+  };
+  pegawaiAtasan?: {
+    id: string;
+    nama: string;
+    nip: string;
+  };
+  EvaluasiTemplate?: {
+    id: string;
+    name: string;
   };
 }
 
-// PERBAIKAN: Tipe ini sekarang mencerminkan seluruh objek response dari API
 interface EvaluasiApiResponse {
   success: boolean;
-  evaluator: Evaluator;
-  data: EvaluasiItem[];
-  pagination: {
+  evaluator?: Evaluator;
+  data: EvaluasiTransaction[];
+  pagination?: {
     current_page: number;
     last_page: number;
   };
 }
 
+const formatIndonesianDate = (dateStr: string) => {
+  if (!dateStr) return "-";
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    const months = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  } catch (error) {
+    return dateStr;
+  }
+};
+
 const EvaluasiKerja = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const queryClient = useQueryClient();
 
   // --- State & URL Params ---
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
@@ -77,12 +112,28 @@ const EvaluasiKerja = () => {
         page: currentPage,
         search: debouncedSearch,
       });
-      // PERBAIKAN: Mengembalikan `response.data` agar cocok dengan tipe `EvaluasiApiResponse`
       return response.data;
     },
-    // PERBAIKAN: Menggunakan `placeholderData` untuk TanStack Query v5
     placeholderData: keepPreviousData,
   });
+
+  // --- Delete Mutation ---
+  const { mutate: deleteEval } = useMutation({
+    mutationFn: (id: string) => dosenServices.deleteEvaluasiKinerja(id),
+    onSuccess: () => {
+      toast.success("Evaluasi berhasil dihapus.");
+      queryClient.invalidateQueries({ queryKey: ["evaluasi-kinerja-dosen"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Gagal menghapus evaluasi.");
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus evaluasi ini?")) {
+      deleteEval(id);
+    }
+  };
 
   // --- Event Handlers ---
   const handleUrlChange = (paramName: string, value: string) => {
@@ -156,24 +207,37 @@ const EvaluasiKerja = () => {
     );
   }
 
+  // Handle both dynamic list shapes
+  const transactions = Array.isArray(data?.data) ? data.data : [];
+
   return (
     <div className="mt-10 mb-20">
       <Title title="Evaluasi Kinerja" subTitle="Data Evaluasi Kinerja" />
 
-      {/* PERBAIKAN: 'title' prop dihapus dari InfoList */}
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Informasi Evaluator
-        </h2>
-      </div>
-      <InfoList items={evaluatorInfo} />
+      {evaluatorInfo.length > 0 && (
+        <>
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Informasi Evaluator
+            </h2>
+          </div>
+          <InfoList items={evaluatorInfo} />
+        </>
+      )}
 
-      <div className="mt-6 w-full md:w-80">
-        <SearchInput
-          value={searchData}
-          onChange={(e) => setSearchData(e.target.value)}
-          placeholder="Cari NIP atau Nama Pegawai..."
-        />
+      <div className="mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="w-full md:w-80">
+          <SearchInput
+            value={searchData}
+            onChange={(e) => setSearchData(e.target.value)}
+            placeholder="Cari NIP atau Nama Pegawai..."
+          />
+        </div>
+        <Link to="/operasional/evaluasi-kerja/penilaian">
+          <Button className="bg-[#FDA31A] hover:bg-[#e08c10] text-white">
+            Evaluasi Pegawai
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-5 border rounded-lg">
@@ -182,58 +246,73 @@ const EvaluasiKerja = () => {
             <TableRow className="bg-[#004680]">
               <TableHead className="text-center text-white">NIP</TableHead>
               <TableHead className="text-white">Nama Pegawai</TableHead>
-              <TableHead className="text-white">Unit Kerja</TableHead>
-              <TableHead className="text-center text-white">
-                Fungsional
-              </TableHead>
+              <TableHead className="text-white">Jenis Template</TableHead>
+              <TableHead className="text-center text-white">Periode</TableHead>
+              <TableHead className="text-center text-white">Status / Skor</TableHead>
               <TableHead className="text-center text-white">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* PERBAIKAN: Path data disesuaikan menjadi data.data */}
-            {
-              // @ts-ignore
-              data?.data?.length > 0 ? (
-                data?.data.map((item) => {
-                  const evaluationUrl =
-                    item.fungsional === "Dosen"
-                      ? `/operasional/evaluasi-kerja/form-evaluasi-kerja-dosen/${item.id}`
-                      : `/operasional/evaluasi-kerja/form-evaluasi-kerja-pegawai/${item.id}`;
+            {transactions.length > 0 ? (
+              transactions.map((item) => {
+                const isDosen = item.EvaluasiTemplate?.name?.toLowerCase().includes("dosen");
+                const evaluationUrl = isDosen
+                  ? `/operasional/evaluasi-kerja/form-evaluasi-kerja-dosen/${item.id}`
+                  : `/operasional/evaluasi-kerja/form-evaluasi-kerja-pegawai/${item.id}`;
 
-                  return (
-                    <TableRow key={item.id} className="even:bg-gray-50">
-                      <TableCell className="text-center">{item.nip}</TableCell>
-                      <TableCell>{item.nama_pegawai}</TableCell>
-                      <TableCell>{item.unit_kerja}</TableCell>
-                      <TableCell className="text-center">
-                        {item.fungsional}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex justify-center items-center w-full h-full">
-                          <Link to={evaluationUrl}>
-                            <Button size="icon" variant="ghost">
-                              <MdEdit className="w-5 h-5 text-yellow-500" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center h-48">
-                    Tidak ada data untuk dievaluasi.
-                  </TableCell>
-                </TableRow>
-              )
-            }
+                return (
+                  <TableRow key={item.id} className="even:bg-gray-50">
+                    <TableCell className="text-center">{item.pegawaiDinilai?.nip || "-"}</TableCell>
+                    <TableCell>{item.pegawaiDinilai?.nama || "-"}</TableCell>
+                    <TableCell>{item.EvaluasiTemplate?.name || "-"}</TableCell>
+                    <TableCell className="text-center text-xs">
+                      {formatIndonesianDate(item.periode_start)} s/d {formatIndonesianDate(item.periode_end)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.total_skor !== null ? (
+                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                          Selesai ({item.total_skor})
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">
+                          Draft
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-center items-center gap-2 w-full h-full">
+                        <Link to={evaluationUrl}>
+                          <Button size="icon" variant="ghost" title="Input Nilai">
+                            <MdEdit className="w-5 h-5 text-yellow-500" />
+                          </Button>
+                        </Link>
+                        {item.total_skor === null && (
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            title="Hapus Penilaian"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <MdDelete className="w-5 h-5 text-red-500" />
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center h-48">
+                  Tidak ada data untuk dievaluasi.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
 
-      {/* PERBAIKAN: Path pagination disesuaikan */}
-      {data?.data && data.data.length > 0 && (
+      {data?.pagination && data.pagination.last_page > 1 && (
         <CustomPagination
           currentPage={data.pagination.current_page}
           totalPages={data.pagination.last_page}

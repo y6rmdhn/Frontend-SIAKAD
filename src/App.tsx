@@ -1049,6 +1049,9 @@ const DetailEvaluasiKerjaUserPage = lazy(
 const DetailEvaluasiKerjaPegawaiUserPage = lazy(
   () => import("./pages/operasional/EvaluasiKerja/detailEvaluasiKerjaPegawai")
 );
+const PenilaianPage = lazy(
+  () => import("./pages/operasional/EvaluasiKerja/penilaian")
+);
 const TahapanDataRiwayatPageUser = lazy(
   () => import("./pages/tahapandatariwayat")
 );
@@ -1162,6 +1165,10 @@ function App() {
             </Route>
             <Route path="evaluasi-kerja" Component={EvaluasiKerjaUserPage} />
             <Route path="evaluasi-kerja">
+              <Route
+                path="penilaian"
+                Component={PenilaianPage}
+              />
               <Route
                 path="form-evaluasi-kerja-dosen/:id"
                 Component={DetailEvaluasiKerjaUserPage}
