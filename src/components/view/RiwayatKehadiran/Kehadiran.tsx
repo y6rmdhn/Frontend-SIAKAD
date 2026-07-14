@@ -9,6 +9,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import { useEffect, useState } from "react";
@@ -27,6 +34,8 @@ interface HistoryAbsenItem {
     lokasi_absensi: string | null;
     jenis_kehadiran?: { nama: string };
     keterangan?: string;
+    foto_masuk?: string | null;
+    foto_keluar?: string | null;
 }
 // --- END DEFINISI TIPE ---
 
@@ -116,11 +125,59 @@ const Kehadiran = () => {
                                             {format(parseISO(item.tgl_absensi), "dd-MM-yyyy")}
                                         </TableCell>
                                         <TableCell className="text-center text-gray-600">
-                                            {item.jam_masuk?.substring(0, 5) || "-"}
-                                        </TableCell>
-                                        <TableCell className="text-center text-gray-600">
-                                            {item.jam_keluar?.substring(0, 5) || "-"}
-                                        </TableCell>
+                                            <div className="flex flex-col items-center justify-center gap-1">
+                                                <span>{item.jam_masuk?.substring(0, 5) || "-"}</span>
+                                                {item.foto_masuk && (
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <button className="text-[10px] text-[#106D63] hover:underline cursor-pointer font-semibold">
+                                                                (Lihat Foto)
+                                                            </button>
+                                                        </DialogTrigger>
+                                                        <DialogContent className="max-w-xs md:max-w-sm flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-xl border">
+                                                            <DialogHeader className="w-full text-center">
+                                                                <DialogTitle className="text-base font-bold mb-2">Foto Absen Masuk</DialogTitle>
+                                                            </DialogHeader>
+                                                            <img
+                                                                src={`${import.meta.env.VITE_BACKEND_SIAKAD_PUBLIC_URL}/uploads/absensiRecord/${item.foto_masuk}`}
+                                                                alt="Foto Masuk"
+                                                                className="w-full max-h-64 object-cover rounded-lg border shadow-sm"
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Foto+Tidak+Ditemukan";
+                                                                }}
+                                                            />
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                )}
+                                            </div>
+                                         </TableCell>
+                                         <TableCell className="text-center text-gray-600">
+                                            <div className="flex flex-col items-center justify-center gap-1">
+                                                <span>{item.jam_keluar?.substring(0, 5) || "-"}</span>
+                                                {item.foto_keluar && (
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <button className="text-[10px] text-[#106D63] hover:underline cursor-pointer font-semibold">
+                                                                (Lihat Foto)
+                                                            </button>
+                                                        </DialogTrigger>
+                                                        <DialogContent className="max-w-xs md:max-w-sm flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-xl border">
+                                                            <DialogHeader className="w-full text-center">
+                                                                <DialogTitle className="text-base font-bold mb-2">Foto Absen Keluar</DialogTitle>
+                                                            </DialogHeader>
+                                                            <img
+                                                                src={`${import.meta.env.VITE_BACKEND_SIAKAD_PUBLIC_URL}/uploads/absensiRecord/${item.foto_keluar}`}
+                                                                alt="Foto Keluar"
+                                                                className="w-full max-h-64 object-cover rounded-lg border shadow-sm"
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Foto+Tidak+Ditemukan";
+                                                                }}
+                                                            />
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                )}
+                                            </div>
+                                         </TableCell>
                                         <TableCell className="text-center text-gray-600">
                                             {item.lokasi_absensi || "-"}
                                         </TableCell>

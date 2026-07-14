@@ -48,6 +48,8 @@ interface StatusAbsen {
     is_pulang_awal: boolean;
     lokasi_absensi: string;
     jenis_kehadiran: { nama: string };
+    foto_masuk?: string | null;
+    foto_keluar?: string | null;
   } | null;
 }
 
@@ -401,10 +403,54 @@ const DasboardUser = () => {
                   <div>
                     <span className="font-medium">Jam Masuk: </span>
                     {detailAbsen.jam_masuk?.substring(0, 5) ?? "-"}
+                    {detailAbsen.foto_masuk && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button className="ml-2 text-[#106D63] hover:underline cursor-pointer font-semibold">
+                            (Lihat Foto)
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xs md:max-w-sm flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-xl border">
+                          <DialogHeader className="w-full text-center">
+                            <DialogTitle className="text-base font-bold mb-2">Foto Absen Masuk</DialogTitle>
+                          </DialogHeader>
+                          <img
+                            src={`${import.meta.env.VITE_BACKEND_SIAKAD_PUBLIC_URL}/uploads/absensiRecord/${detailAbsen.foto_masuk}`}
+                            alt="Foto Masuk"
+                            className="w-full max-h-64 object-cover rounded-lg border shadow-sm"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Foto+Tidak+Ditemukan";
+                            }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </div>
                   <div>
                     <span className="font-medium">Jam Keluar: </span>
                     {detailAbsen.jam_keluar?.substring(0, 5) ?? "-"}
+                    {detailAbsen.foto_keluar && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button className="ml-2 text-[#106D63] hover:underline cursor-pointer font-semibold">
+                            (Lihat Foto)
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xs md:max-w-sm flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-xl border">
+                          <DialogHeader className="w-full text-center">
+                            <DialogTitle className="text-base font-bold mb-2">Foto Absen Keluar</DialogTitle>
+                          </DialogHeader>
+                          <img
+                            src={`${import.meta.env.VITE_BACKEND_SIAKAD_PUBLIC_URL}/uploads/absensiRecord/${detailAbsen.foto_keluar}`}
+                            alt="Foto Keluar"
+                            className="w-full max-h-64 object-cover rounded-lg border shadow-sm"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Foto+Tidak+Ditemukan";
+                            }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </div>
                   <div className="col-span-2">
                     <span className="font-medium">Lokasi: </span>

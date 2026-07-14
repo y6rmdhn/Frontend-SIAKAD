@@ -21,10 +21,11 @@ import SearchInput from "@/components/blocks/SearchInput";
 import InfoList from "@/components/blocks/InfoList";
 
 // Icons
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdPrint } from "react-icons/md";
 
 // Services
 import dosenServices from "@/services/dosen.services";
+import { printEvaluasiKinerja } from "@/utils";
 
 // --- Tipe Data ---
 interface Evaluator {
@@ -133,6 +134,23 @@ const EvaluasiKerja = () => {
     if (window.confirm("Apakah Anda yakin ingin menghapus evaluasi ini?")) {
       deleteEval(id);
     }
+  };
+
+  const handlePrint = async (id: string) => {
+    const fetchPromise = async () => {
+      const response = await dosenServices.getEvaluasiKinerjaDetail(id);
+      if (response.data?.success && response.data?.data) {
+        printEvaluasiKinerja(response.data.data);
+        return "Data berhasil dimuat. Jendela cetak dibuka.";
+      }
+      throw new Error("Gagal mengambil detail evaluasi.");
+    };
+
+    toast.promise(fetchPromise(), {
+      loading: "Memuat data evaluasi untuk cetak...",
+      success: (msg) => msg,
+      error: (err: any) => err.message || "Gagal memuat data cetak.",
+    });
   };
 
   // --- Event Handlers ---
@@ -286,6 +304,14 @@ const EvaluasiKerja = () => {
                             <MdEdit className="w-5 h-5 text-yellow-500" />
                           </Button>
                         </Link>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          title="Cetak PDF"
+                          onClick={() => handlePrint(item.id)}
+                        >
+                          <MdPrint className="w-5 h-5 text-blue-600" />
+                        </Button>
                         {item.total_skor === null && (
                           <Button
                             size="icon"
