@@ -18,9 +18,24 @@ import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import CustomPagination from "@/components/blocks/CustomPagination";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, isValid } from "date-fns";
 import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 import { useDebounce } from "use-debounce";
+
+const formatDate = (dateStr?: string | null) => {
+  if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+    return "-";
+  }
+  try {
+    const parsed = parseISO(dateStr);
+    if (isValid(parsed)) {
+      return format(parsed, "dd MMMM yyyy");
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "-";
+};
 
 // ── Tipe data sesuai response BE baru ────────────────────────────────────────
 interface HubunganKerjaItem {
@@ -177,14 +192,10 @@ const HubunganKerja = () => {
             items.map((item) => (
               <TableRow key={item.id} className="even:bg-gray-100">
                 <TableCell className="text-center">
-                  {item.tgl_mulai
-                    ? format(parseISO(item.tgl_mulai), "dd MMMM yyyy")
-                    : "-"}
+                  {formatDate(item.tgl_mulai)}
                 </TableCell>
                 <TableCell className="text-center">
-                  {item.tgl_selesai
-                    ? format(parseISO(item.tgl_selesai), "dd MMMM yyyy")
-                    : "-"}
+                  {formatDate(item.tgl_selesai)}
                 </TableCell>
                 <TableCell className="text-center">
                   {item.hubungan_kerja?.nama || "-"}

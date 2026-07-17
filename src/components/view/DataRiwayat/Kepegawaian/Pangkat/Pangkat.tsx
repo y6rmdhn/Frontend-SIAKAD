@@ -24,17 +24,36 @@ import {
   useEffect,
 } from "react";
 import dosenServices from "@/services/dosen.services.ts";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, isValid } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+
+const formatDate = (dateStr?: string | null) => {
+  if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+    return "-";
+  }
+  try {
+    const parsed = parseISO(dateStr);
+    if (isValid(parsed)) {
+      return format(parsed, "dd MMMM yyyy");
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "-";
+};
 
 const Pangkat = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const { profile } = usePegawaiProfile();
 
   // get data
   const { data } = useQuery({
     queryKey: ["anak", searchParam.get("page")],
     queryFn: async () => {
-      const response = await dosenServices.getPangkat(searchParam.get("page"));
+      const response = await dosenServices.getPangkat({
+        page: searchParam.get("page")
+      });
       console.log(response.data);
       return response.data;
     },
@@ -55,12 +74,13 @@ const Pangkat = () => {
   }, [searchParam, setSearchParam]);
 
   useEffect(() => {
+    const totalPages = data?.data?.pagination?.totalPages;
     if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
+      totalPages &&
+      Number(searchParam.get("page")) > totalPages &&
+      totalPages > 0
     ) {
-      searchParam.set("page", data.last_page.toString());
+      searchParam.set("page", totalPages.toString());
       setSearchParam(searchParam);
     }
   }, [searchParam, data, setSearchParam]);
@@ -82,20 +102,13 @@ const Pangkat = () => {
 
       <InfoList
         items={[
-          { label: "NIP", value: data?.pegawai_info.nip },
-          { label: "Nama", value: data?.pegawai_info.nama },
-          { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
-          { label: "Status", value: data?.pegawai_info.status },
-          { label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik },
-          {
-            label: "Jab. Fungsional",
-            value: data?.pegawai_info.jab_fungsional,
-          },
-          {
-            label: "Jab. Struktural",
-            value: data?.pegawai_info.jab_struktural,
-          },
-          { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+          { label: "NIP", value: profile?.nip ?? "-" },
+          { label: "Nama", value: profile?.nama ?? "-" },
+          { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+          { label: "Status", value: profile?.status ?? "-" },
+          { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+          { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+          { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
         ]}
       />
 
@@ -121,159 +134,70 @@ const Pangkat = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.data.map(
-            (item: {
-              id: Key | null | undefined;
-              tmt_pangkat: string;
-              jenis_sk:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              nama_golongan:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              masa_kerja:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              status_pengajuan:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-            }) => (
-              <TableRow key={item.id} className=" even:bg-gray-100">
-                <TableCell className="text-center">
-                  {item.tmt_pangkat
-                    ? format(parseISO(item.tmt_pangkat), "dd MMMM yyyy")
-                    : "-"}
-                </TableCell>
-                <TableCell className="text-center">{item.jenis_sk}</TableCell>
-                <TableCell className="text-center">
-                  {item.nama_golongan}
-                </TableCell>
-                <TableCell className="text-center">{item.masa_kerja}</TableCell>
-                <TableCell className="text-center">
-                  <Button
-                    size="sm"
-                    className={`w-full text-xs lg:text-sm text-black
-    ${
-      item.status_pengajuan === "draf"
-        ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
-        : item.status_pengajuan === "diajukan"
-        ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
-        : item.status_pengajuan === "disetujui"
-        ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
-        : item.status_pengajuan === "ditolak"
-        ? "bg-red-500 hover:bg-red-500"
-        : "bg-slate-300 hover:bg-slate-300"
-    }
-  `}
-                  >
-                    {item.status_pengajuan}
-                  </Button>
-                </TableCell>
-                <TableCell className="h-full">
-                  <div className="flex justify-center items-center w-full h-full">
-                    <Link
-                      to={
-                        "/data-riwayat/kepegawaian/detail-data-pangkat/" +
-                        item.id
-                      }
+          {data?.data?.items?.map(
+            (item: any) => {
+              const statusVal = item.status || item.status_pengajuan || "-";
+              const golonganVal = item.master_pangkat?.nama || item.nama_golongan || "-";
+              return (
+                <TableRow key={item.id} className=" even:bg-gray-100">
+                  <TableCell className="text-center">
+                    {formatDate(item.tmt_pangkat)}
+                  </TableCell>
+                  <TableCell className="text-center">{item.jenis_sk ?? "-"}</TableCell>
+                  <TableCell className="text-center">
+                    {golonganVal}
+                  </TableCell>
+                  <TableCell className="text-center">{item.masa_kerja ?? "-"}</TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      size="sm"
+                      className={`w-full text-xs lg:text-sm text-black
+      ${statusVal === "draf" || statusVal === "draft"
+                          ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
+                          : statusVal === "diajukan"
+                            ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
+                            : statusVal === "disetujui"
+                              ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
+                              : statusVal === "ditolak"
+                                ? "bg-red-500 hover:bg-red-500"
+                                : "bg-slate-300 hover:bg-slate-300"
+                        }
+    `}
                     >
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
+                      {statusVal}
+                    </Button>
+                  </TableCell>
+                  <TableCell className="h-full">
+                    <div className="flex justify-center items-center w-full h-full">
+                      <Link
+                        to={
+                          "/data-riwayat/kepegawaian/detail-data-pangkat/" +
+                          item.id
+                        }
                       >
-                        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                      </Button>
-                    </Link>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer"
+                        >
+                          <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            }
           )}
         </TableBody>
       </Table>
 
       <CustomPagination
-        currentPage={Number(searchParam.get("page") || 1)}
-        links={data?.links || []}
+        pagination={data?.data?.pagination}
         onPageChange={(page) => {
           searchParam.set("page", page.toString());
           setSearchParam(searchParam);
         }}
-        hasNextPage={!!data?.next_page_url}
-        hasPrevPage={!!data?.prev_page_url}
-        totalPages={data?.last_page}
       />
     </div>
   );

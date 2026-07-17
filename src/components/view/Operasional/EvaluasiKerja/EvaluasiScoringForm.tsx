@@ -151,7 +151,7 @@ export default function EvaluasiScoringForm({ evaluasiId, title }: EvaluasiScori
       <div
         key={node.id}
         className="border-b last:border-b-0 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-gray-50 transition-colors"
-        style={{ paddingLeft: `${depth * 1.5 + 1}rem`, paddingRight: "1rem" }}
+        style={{ paddingLeft: `${depth * 1.5}rem` }}
       >
         <div className="flex-1 padding-10">
           <div className="flex items-center gap-2">
@@ -177,7 +177,6 @@ export default function EvaluasiScoringForm({ evaluasiId, title }: EvaluasiScori
         <div className="flex items-center gap-3">
           {isLeaf ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 font-medium mr-1">(0 - 100)</span>
               <input
                 type="number"
                 disabled={false}
@@ -188,8 +187,8 @@ export default function EvaluasiScoringForm({ evaluasiId, title }: EvaluasiScori
                 onBlur={() => handleScoreBlur(node.item_id, currentValue)}
                 placeholder="N/A"
                 className={`w-20 px-3 py-1.5 border rounded-md text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${node.item?.sumber_nilai === "otomatis"
-                    ? "bg-purple-50 border-purple-200 text-purple-900"
-                    : "bg-white border-gray-300 text-gray-900"
+                  ? "bg-purple-50 border-purple-200 text-purple-900"
+                  : "bg-white border-gray-300 text-gray-900"
                   }`}
               />
               <span className="text-xs text-gray-400">/ 100</span>

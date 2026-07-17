@@ -6,7 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Skema disesuaikan dengan DB backend baru
@@ -40,6 +40,21 @@ interface DetailHubunganKerjaApiResponse {
     data: HubunganKerjaDetail;
     pegawai?: PegawaiInfo;
 }
+
+const formatDate = (dateStr?: string | null) => {
+    if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+        return "-";
+    }
+    try {
+        const parsed = parseISO(dateStr);
+        if (isValid(parsed)) {
+            return format(parsed, "dd MMMM yyyy");
+        }
+    } catch (e) {
+        // ignore
+    }
+    return "-";
+};
 
 const DetailDataHubunganKerja = () => {
     const params = useParams<{ id: string }>();
@@ -136,9 +151,7 @@ const DetailDataHubunganKerja = () => {
                                         Tgl. SK
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.tgl_sk
-                                            ? format(parseISO(data.data.tgl_sk), "dd MMMM yyyy")
-                                            : "-"}
+                                        {formatDate(data?.data.tgl_sk)}
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -146,9 +159,7 @@ const DetailDataHubunganKerja = () => {
                                         Tgl. Mulai
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.tgl_mulai
-                                            ? format(parseISO(data.data.tgl_mulai), "dd MMMM yyyy")
-                                            : "-"}
+                                        {formatDate(data?.data.tgl_mulai)}
                                     </Label>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
@@ -156,9 +167,7 @@ const DetailDataHubunganKerja = () => {
                                         Tgl. Selesai
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.tgl_selesai
-                                            ? format(parseISO(data.data.tgl_selesai), "dd MMMM yyyy")
-                                            : "-"}
+                                        {formatDate(data?.data.tgl_selesai)}
                                     </Label>
                                 </div>
                                 {/*
@@ -198,9 +207,7 @@ const DetailDataHubunganKerja = () => {
                                         Tanggal Disetujui
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.tgl_disetujui
-                                            ? format(parseISO(data.data.tgl_disetujui), "dd MMMM yyyy")
-                                            : "-"}
+                                        {formatDate(data?.data.tgl_disetujui)}
                                     </Label>
                                 </div>
                                 {/* Tanggal Ditolak */}
@@ -209,9 +216,7 @@ const DetailDataHubunganKerja = () => {
                                         Tanggal Ditolak
                                     </Label>
                                     <Label className="text-xs sm:text-sm">
-                                        {data?.data.tgl_ditolak
-                                            ? format(parseISO(data.data.tgl_ditolak), "dd MMMM yyyy")
-                                            : "-"}
+                                        {formatDate(data?.data.tgl_ditolak)}
                                     </Label>
                                 </div>
                                 {/* Dibuat oleh */}
