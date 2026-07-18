@@ -20,7 +20,12 @@ const SimKepegawaianLayout = (props: PropsType) => {
     return <Navigate to="/login" />;
   }
 
-  if (userSelector.role !== "Admin") {
+  const isAdmin =
+    userSelector.role?.toLowerCase() === "admin" ||
+    userSelector.role?.toLowerCase() === "admin kepegawaian" ||
+    userSelector.role_id === 34;
+
+  if (!isAdmin) {
     return <Navigate to="/" />;
   }
 
