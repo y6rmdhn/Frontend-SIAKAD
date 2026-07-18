@@ -111,17 +111,20 @@ const useLogin = () => {
       // Handle successful login
       const userData = {
         id: data.user.id,
-        name: data.user.nama,
+        nama: data.user.nama,
         nip: data.user.nip,
         nidn: data.user.nidn || "",
         pegawai_id: data.user.pegawai_id,
         role: data.user.role,
+        role_id: data.user.role_id ?? 0,
+        permissions: data.permissions ?? [],
         accessToken: data.accessToken,
         refreshToken: data.refresh_token
       };
 
       // Store user data and tokens
       localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("permissions", JSON.stringify(userData.permissions));
       localStorage.setItem("refresh_token", data.refreshToken ?? data.refresh_token ?? "");
       dispatch(setUserData(userData));
 

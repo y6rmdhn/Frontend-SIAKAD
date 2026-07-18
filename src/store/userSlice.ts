@@ -2,22 +2,26 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IUser {
   id: string;
-  name: string;
+  nama: string;
   nip: string;
   nidn: string;
   pegawai_id: string;
   role: string;
+  role_id: number;
+  permissions: string[];
   accessToken: string | null;
   refreshToken: string | null;
 }
 
 const initialState: IUser = {
   id: "",
-  name: "",
+  nama: "",
   nip: "",
   nidn: "",
   pegawai_id: "",
   role: "",
+  role_id: 0,
+  permissions: [],
   accessToken: null,
   refreshToken: null,
 };
@@ -35,11 +39,13 @@ const userSlice = createSlice({
     clearUserData: () => {
       return {
         id: "",
-        name: "",
+        nama: "",
         nip: "",
         nidn: "",
         pegawai_id: "",
         role: "",
+        role_id: 0,
+        permissions: [],
         accessToken: null,
         refreshToken: null,
       };

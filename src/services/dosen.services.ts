@@ -336,35 +336,25 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.DOSEN}/pengajuan-cuti-dosen/` + id),
 
   // select content
-  getJenisSk: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenis-sk`, {
-      params: {
-        page: page,
-      },
+  getJenisSk: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-sk`, {
+      params,
     }),
-  getJenisKenaikanPangkat: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenis-kenaikan-pangkat`, {
-      params: {
-        page: page,
-      },
+  getJenisKenaikanPangkat: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-kenaikan-pangkat`, {
+      params,
     }),
-  getMasterPangkatReferensi: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/master-pangkat`, {
-      params: {
-        page: page,
-      },
+  getMasterPangkatReferensi: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/pangkat`, {
+      params,
     }),
-  getJabatanAkademikSelect: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatan-akademik`, {
-      params: {
-        page: page,
-      },
+  getJabatanAkademikSelect: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jabatan-akademik`, {
+      params,
     }),
-  getJabatanStrukturalSelect: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatan-struktural`, {
-      params: {
-        page: page,
-      },
+  getJabatanStrukturalSelect: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jabatan-struktural`, {
+      params,
     }),
   getHubunganKerjaSelect: (params?: any) =>
     axiosInstance.get(`${endpoint.MASTER}/hubungan-kerja`, {
@@ -374,53 +364,41 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.MASTER}/status-aktif`, {
       params,
     }),
-  getProdiSelect: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/master-prodi-perguruan-tinggi`, {
-      params: {
-        page: page,
-      },
+  getUnivSelect: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/universitas`, {
+      params,
     }),
-  getJenjangPendidikanSelect: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenjang-pendidikan`, {
-      params: {
-        page: page,
-      },
+  getProdiSelect: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/universitas-prodi`, {
+      params,
     }),
-  getJenisSertifikasiReferensi: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/master-jenis-sertifikasi`, {
-      params: {
-        page: page,
-      },
+  getJenjangPendidikanSelect: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenjang-pendidikan`, {
+      params,
     }),
-  getRumpunBidangIlmu: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/rumpun-bidang-ilmu`, {
-      params: {
-        page: page,
-        search: search,
-      },
+  getJenisSertifikasiReferensi: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-sertifikasi`, {
+      params,
     }),
-  getJenisTes: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenis-test`, {
-      params: {
-        page: page,
-      },
+  getRumpunBidangIlmu: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/rumpun-bidang-ilmu`, {
+      params,
     }),
-  getJenisPenghargaanReferensi: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jenis-penghargaan`, {
-      params: {
-        page: page,
-      },
+  getJenisTes: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-test`, {
+      params,
+    }),
+  getJenisPenghargaanReferensi: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-penghargaan`, {
+      params,
     }),
   getPengajuanCutiDosen: (params?: any) =>
     axiosInstance.get(`${endpoint.MASTER}/cuti`, {
       params,
     }),
-  getPengajuanIzinDosen: (page?: any) =>
+  getPengajuanIzinDosen: (params?: any) =>
     axiosInstance.get(`${endpoint.MASTER}/jenis-izin`, {
-      params: {
-        page: page,
-        is_dropdown: true,
-      },
+      params,
     }),
   getProfilPegawai: () => axiosInstance.get(`${endpoint.PEGAWAI}/profile`),
 

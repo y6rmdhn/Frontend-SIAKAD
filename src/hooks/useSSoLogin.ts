@@ -39,16 +39,19 @@ export function useSsoLogin() {
 
         const userData = {
           id: data.data.user.id,
-          name: data.data.user.nama,
+          nama: data.data.user.nama,
           nip: data.data.user.nip,
           nidn: data.data.user.nidn || "",
           pegawai_id: data.data.user.pegawai_id,
           role: data.data.user.role,
+          role_id: data.data.user.role_id,
+          permissions: data.data.permissions ?? [],
           accessToken: data.data.accessToken,
           refreshToken: "",
         };
 
         localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("permissions", JSON.stringify(userData.permissions));
         dispatch(setUserData(userData));
 
         toast.success("Login SSO berhasil!");
