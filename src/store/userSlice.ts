@@ -4,6 +4,7 @@ interface IUser {
   id: string;
   name: string;
   nip: string;
+  nidn: string;
   pegawai_id: string;
   role: string;
   accessToken: string | null;
@@ -14,6 +15,7 @@ const initialState: IUser = {
   id: "",
   name: "",
   nip: "",
+  nidn: "",
   pegawai_id: "",
   role: "",
   accessToken: null,
@@ -35,6 +37,7 @@ const userSlice = createSlice({
         id: "",
         name: "",
         nip: "",
+        nidn: "",
         pegawai_id: "",
         role: "",
         accessToken: null,

@@ -10,86 +10,66 @@ import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomForm
 import InfoList from "@/components/blocks/InfoList";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import dosenServices from "@/services/dosen.services.ts";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import postDosenServices from "@/services/create.dosen.services.ts";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fileSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 
-// --- Skema Zod untuk Form Organisasi ---
 const organisasiSchema = z
   .object({
-    periode_mulai: z.string().min(1, "Tanggal mulai wajib diisi."),
+    tgl_mulai: z.string().min(1, "Tanggal mulai wajib diisi."),
     nama_organisasi: z.string().min(1, "Nama organisasi wajib diisi."),
-    periode_selesai: z.string().min(1, "Tanggal selesai wajib diisi."),
-    tempat_organisasi: z.string().min(1, "Alamat organisasi wajib diisi."),
-
-    jenis_organisasi: z.string().optional(),
-    website: z
-      .string()
-      .url("URL website tidak valid.")
-      .optional()
-      .or(z.literal("")), // Validasi URL jika diisi
+    tgl_selesai: z.string().min(1, "Tanggal selesai wajib diisi."),
+    alamat_organisasi: z.string().min(1, "Alamat organisasi wajib diisi."),
+    lingkup: z.string().min(1, "Lingkup wajib dipilih."),
+    jabatan: z.string().min(1, "Jabatan wajib diisi."),
+    website_organisasi: z.string().optional().or(z.literal("")),
+    refleksi: z.string().optional(),
+    file_organisasi: fileSchema,
     keterangan: z.string().optional(),
-    jabatan_dalam_organisasi: z.string().optional(),
-
-    file_dokumen: fileSchema,
-    submit_type: z.string(),
   })
-  // Validasi perbandingan tanggal
   .refine(
-    (data) => new Date(data.periode_selesai) > new Date(data.periode_mulai),
+    (data) => new Date(data.tgl_selesai) > new Date(data.tgl_mulai),
     {
       message: "Tanggal selesai harus setelah tanggal mulai.",
-      path: ["periode_selesai"], // Tampilkan error pada field tanggal selesai
+      path: ["tgl_selesai"],
     }
   );
 
-// --- Tipe TypeScript dari Skema ---
 type OrganisasiSchema = z.infer<typeof organisasiSchema>;
 
 const DetailOrganisasi = () => {
   const navigate = useNavigate();
+  const { profile } = usePegawaiProfile();
+
   const form = useForm<OrganisasiSchema>({
     resolver: zodResolver(organisasiSchema),
     defaultValues: {
-      periode_mulai: "",
+      tgl_mulai: "",
       nama_organisasi: "",
-      periode_selesai: "",
-      tempat_organisasi: "",
-      jenis_organisasi: "",
-      website: "",
+      tgl_selesai: "",
+      alamat_organisasi: "",
+      lingkup: "",
+      jabatan: "",
+      website_organisasi: "",
+      refleksi: "",
+      file_organisasi: undefined,
       keterangan: "",
-      jabatan_dalam_organisasi: "",
-      submit_type: "submit",
-      file_dokumen: undefined,
     },
   });
 
-  // get data
-  const { data: detailData } = useQuery({
-    queryKey: ["organisasi-detail-dosen"],
-    queryFn: async () => {
-      const response = await dosenServices.getDataOrganisasiWithoutParam();
-
-      return response.data;
-    },
-  });
-
-  // add data
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (formData: FormData) =>
       postDosenServices.addDataOrganisasi(formData),
-    onSuccess: (response) => {
-      console.log("Server response:", response);
+    onSuccess: () => {
       form.reset();
       toast.success("Data berhasil ditambahkan");
       navigate("/data-riwayat/pengembangan-diri/organisasi");
     },
     onError: (error: any) => {
-      console.error("Mutation error:", error);
       const errorMessage =
         error.response?.data?.message || "Gagal menambahkan data.";
       toast.error(errorMessage);
@@ -98,28 +78,29 @@ const DetailOrganisasi = () => {
 
   const handleSubmitOrganisasi = (values: OrganisasiSchema) => {
     const formData = new FormData();
+    formData.append("tgl_mulai", values.tgl_mulai);
+    formData.append("nama_organisasi", values.nama_organisasi);
+    formData.append("tgl_selesai", values.tgl_selesai);
+    formData.append("alamat_organisasi", values.alamat_organisasi);
+    formData.append("lingkup", values.lingkup);
+    formData.append("jabatan", values.jabatan);
+    if (values.website_organisasi) formData.append("website_organisasi", values.website_organisasi);
+    if (values.refleksi) formData.append("refleksi", values.refleksi);
+    if (values.keterangan) formData.append("keterangan", values.keterangan);
 
-    Object.keys(values).forEach((key) => {
-      const valueKey = key as keyof OrganisasiSchema;
-      const value = values[valueKey];
-
-      if (key === "file_dokumen") {
-        if (value instanceof FileList && value.length > 0) {
-          formData.append(key, value[0]);
-        }
-      } else {
-        if (value !== null && value !== undefined && value !== "") {
-          formData.append(key, value as string);
-        }
-      }
-    });
+    if (
+      values.file_organisasi instanceof FileList &&
+      values.file_organisasi.length > 0
+    ) {
+      formData.append("file_organisasi", values.file_organisasi[0]);
+    }
 
     mutate(formData);
   };
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Data Organisasi" subTitle="Detail Organisasi" />
+      <Title title="Data Organisasi" subTitle="Tambah Riwayat Organisasi" />
 
       <Form {...form}>
         <form
@@ -131,51 +112,39 @@ const DetailOrganisasi = () => {
               <div>
                 <div className="w-full flex flex-col sm:flex-row justify-end gap-4">
                   <Link to="/data-riwayat/pengembangan-diri/organisasi">
-                    <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full sm:w-auto">
+                    <Button className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full sm:w-auto text-white">
                       <IoIosArrowBack />
                       Kembali ke Daftar
                     </Button>
                   </Link>
 
-                  <Button className="bg-[#FDA31A] hover:bg-[#329C59] cursor-pointer w-full sm:w-auto">
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                    className="bg-[#FDA31A] hover:bg-[#e69316] text-white cursor-pointer w-full sm:w-auto flex items-center gap-2"
+                  >
                     <MdOutlineFileDownload />
-                    Simpan
+                    {isPending ? "Menyimpan..." : "Simpan"}
                   </Button>
                 </div>
 
                 <InfoList
                   items={[
-                    { label: "NIP", value: detailData?.pegawai_info.nip },
-                    { label: "Nama", value: detailData?.pegawai_info.nama },
-                    {
-                      label: "Unit Kerja",
-                      value: detailData?.pegawai_info.unit_kerja,
-                    },
-                    { label: "Status", value: detailData?.pegawai_info.status },
-                    {
-                      label: "Jab. Akademik",
-                      value: detailData?.pegawai_info.jab_akademik,
-                    },
-                    {
-                      label: "Jab. Fungsional",
-                      value: detailData?.pegawai_info.jab_fungsional,
-                    },
-                    {
-                      label: "Jab. Struktural",
-                      value: detailData?.pegawai_info.jab_struktural,
-                    },
-                    {
-                      label: "Pendidikan",
-                      value: detailData?.pegawai_info.pendidikan,
-                    },
+                    { label: "NIP", value: profile?.nip ?? "-" },
+                    { label: "Nama", value: profile?.nama ?? "-" },
+                    { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+                    { label: "Status", value: profile?.status ?? "-" },
+                    { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+                    { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+                    { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
                   ]}
                 />
 
-                <div className="flex flex-col sm:grid sm:grid-rows-6 grid-flow-col gap-x-5 gap-y-5 sm:gap-y-0 sm:items-center mt-4">
+                <div className="grid md:grid-rows-5 md:grid-flow-col gap-6 items-center mt-10">
                   <FormFieldInput
                     form={form}
                     label="Tgl. Mulai"
-                    name="periode_mulai"
+                    name="tgl_mulai"
                     type="date"
                     required={true}
                     labelStyle="text-[#3F6FA9]"
@@ -187,50 +156,38 @@ const DetailOrganisasi = () => {
                     type="text"
                     required={true}
                     labelStyle="text-[#3F6FA9]"
+                    placeholder="cth: Himpunan Mahasiswa / IDI"
                   />
-                  <FormFieldSelect
-                    form={form}
-                    label="Lingkup"
-                    name="jenis_organisasi"
-                    labelStyle="text-[#3F6FA9]"
-                    options={[
-                      { value: "lokal", label: "lokal" },
-                      { value: "nasional", label: "Nasional" },
-                      { value: "internasional", label: "Internasional" },
-                    ]}
-                    required={false}
-                    placeholder="-- Pilih Lingkup --"
-                  />
-                  {/*<FormFieldInput*/}
-                  {/*    form={form}*/}
-                  {/*    label="SK Penugasan"*/}
-                  {/*    name="sk_penugasan"*/}
-                  {/*    placeholder="--Pilih SK Penugasan--"*/}
-                  {/*    type="text"*/}
-                  {/*    required={true}*/}
-                  {/*    labelStyle="text-[#3F6FA9]"*/}
-                  {/*/>*/}
                   <FormFieldInput
                     form={form}
-                    label="Website"
-                    name="website"
+                    label="Jabatan"
+                    name="jabatan"
+                    type="text"
+                    required={true}
+                    labelStyle="text-[#3F6FA9]"
+                    placeholder="cth: Anggota / Ketua"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Website Organisasi"
+                    name="website_organisasi"
                     type="text"
                     required={false}
                     labelStyle="text-[#3F6FA9]"
+                    placeholder="cth: https://..."
                   />
-                  {/*<FormFieldInput*/}
-                  {/*    form={form}*/}
-                  {/*    label="Tanggal Input"*/}
-                  {/*    name="tanggal_input"*/}
-                  {/*    required={false}*/}
-                  {/*    labelStyle="text-[#3F6FA9]"*/}
-                  {/*    placeholder="22 April 2025"*/}
-                  {/*/>*/}
+                  <FormFieldInputFile
+                    label="File Dokumen SK/KTA"
+                    name="file_organisasi"
+                    classname="border-none shadow-none"
+                    labelStyle="text-[#3F6FA9]"
+                    required={false}
+                  />
 
                   <FormFieldInput
                     form={form}
                     label="Tgl. Selesai"
-                    name="periode_selesai"
+                    name="tgl_selesai"
                     type="date"
                     required={true}
                     labelStyle="text-[#3F6FA9]"
@@ -238,10 +195,33 @@ const DetailOrganisasi = () => {
                   <FormFieldInput
                     form={form}
                     label="Alamat Organisasi"
-                    name="tempat_organisasi"
+                    name="alamat_organisasi"
                     type="text"
                     required={true}
                     labelStyle="text-[#3F6FA9]"
+                    placeholder="Alamat Kantor/Pusat"
+                  />
+                  <FormFieldSelect
+                    form={form}
+                    label="Lingkup"
+                    name="lingkup"
+                    labelStyle="text-[#3F6FA9]"
+                    options={[
+                      { value: "lokal", label: "Lokal" },
+                      { value: "nasional", label: "Nasional" },
+                      { value: "internasional", label: "Internasional" },
+                    ]}
+                    required={true}
+                    placeholder="-- Pilih Lingkup --"
+                  />
+                  <FormFieldInput
+                    form={form}
+                    label="Refleksi"
+                    name="refleksi"
+                    type="text"
+                    required={false}
+                    labelStyle="text-[#3F6FA9]"
+                    placeholder="Refleksi selama mengikuti organisasi"
                   />
                   <FormFieldInput
                     form={form}
@@ -250,29 +230,7 @@ const DetailOrganisasi = () => {
                     type="text"
                     required={false}
                     labelStyle="text-[#3F6FA9]"
-                  />
-                  <FormFieldInput
-                    form={form}
-                    label="Jabatan"
-                    name="jabatan_dalam_organisasi"
-                    type="text"
-                    required={false}
-                    labelStyle="text-[#3F6FA9]"
-                  />
-                  {/*<FormFieldInput*/}
-                  {/*    form={form}*/}
-                  {/*    label="Refleksi"*/}
-                  {/*    name="refleksi"*/}
-                  {/*    type="text"*/}
-                  {/*    required={false}*/}
-                  {/*    labelStyle="text-[#3F6FA9]"*/}
-                  {/*/>*/}
-                  <FormFieldInputFile
-                    label="File Pendukung"
-                    name="file_dokumen"
-                    classname="border-none shadow-none"
-                    labelStyle="text-[#3F6FA9]"
-                    required={false}
+                    placeholder="Keterangan tambahan"
                   />
                 </div>
               </div>

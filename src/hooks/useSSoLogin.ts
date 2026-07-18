@@ -19,10 +19,10 @@ export function useSsoLogin() {
   const token = queryParams.get("token") || "";
   const role_id = queryParams.get("role_id") || "";
   const appModule_id = queryParams.get("appModule_id") || "";
-  const isSsoLogin = !!token && !!role_id && !!appModule_id;
+  const isSsoLogin = !!token && (!!role_id || !!appModule_id || true);
 
   useEffect(() => {
-    if (!isSsoLogin) return;
+    if (!token) return;
 
     const doSso = async () => {
       try {
@@ -41,6 +41,7 @@ export function useSsoLogin() {
           id: data.data.user.id,
           name: data.data.user.nama,
           nip: data.data.user.nip,
+          nidn: data.data.user.nidn || "",
           pegawai_id: data.data.user.pegawai_id,
           role: data.data.user.role,
           accessToken: data.data.accessToken,
@@ -51,7 +52,18 @@ export function useSsoLogin() {
         dispatch(setUserData(userData));
 
         toast.success("Login SSO berhasil!");
-        navigate("/", { replace: true });
+
+        // Role-based redirect berdasarkan role_id
+        const userRoleId = data.data.user.role_id;
+        if (userRoleId === 34) {
+          // Admin Kepegawaian
+          localStorage.setItem("active_mode", "admin");
+          navigate("/admin/dasboard", { replace: true });
+        } else {
+          // Staff (30) / Dosen (21)
+          localStorage.setItem("active_mode", "pegawai");
+          navigate("/dasboard", { replace: true });
+        }
       } catch (error: any) {
         console.error("[SSO Error]", error.response?.data || error.message);
         const msg = error.response?.data?.message || "Sesi tidak valid.";
@@ -61,7 +73,7 @@ export function useSsoLogin() {
     };
 
     doSso();
-  }, [isSsoLogin, token, role_id, appModule_id, navigate, dispatch]);
+  }, [token, role_id, appModule_id, navigate, dispatch]);
 
-  return { isSsoLogin };
+  return { isSsoLogin: !!token };
 }

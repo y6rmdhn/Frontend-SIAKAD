@@ -1,91 +1,262 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
-// UI & Komponen Lokal
-import { Form } from "@/components/ui/form";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+// UI & Komponen
+import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import InfoList from "@/components/blocks/InfoList";
 import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
-import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 
+// Ikon & Notifikasi
 import { IoIosArrowBack } from "react-icons/io";
-import { MdOutlineFileDownload } from "react-icons/md";
-import { HiMiniTrash } from "react-icons/hi2";
-import { IoAdd } from "react-icons/io5";
+import { MdOutlineSave } from "react-icons/md";
+import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
-import dosenServices from "@/services/dosen.services";
+// Servis
 import postDosenServices from "@/services/create.dosen.services";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 
-const fileSchema = z
-  .instanceof(FileList, { message: "File wajib diunggah." })
-  .refine((files) => files?.length >= 1, "File wajib diunggah.");
+const TIPE_DOKUMEN_OPTIONS = [
+  { value: "file", label: "File Upload" },
+  { value: "url", label: "Tautan (URL)" },
+];
 
-const dokumenPendukungSchema = z.object({
-  tipe_dokumen: z.string().min(1, "Tipe wajib dipilih."),
-  nama_dokumen: z.string().min(1, "Nama dokumen wajib diisi."),
-  jenis_dokumen_id: z.string().min(1, "Jenis wajib dipilih."),
-  keterangan: z.string().optional(),
-  file: fileSchema,
-});
+const defaultDokumenRow = {
+  tipe_dokumen: "file" as "file" | "url",
+  file: null as File | null,
+  url_dokumen: "",
+  file_name: "",
+  keterangan: "",
+};
 
-const riwayatPekerjaanSchema = z.object({
-  bidang_usaha: z.string().min(1, "Bidang usaha wajib dipilih."),
-  jenis_pekerjaan: z.string().min(1, "Jenis pekerjaan wajib dipilih."),
-  jabatan: z.string().min(1, "Jabatan wajib diisi."),
-  instansi: z.string().min(1, "Instansi wajib diisi."),
-  divisi: z.string().optional(),
-  deskripsi: z.string().optional(),
-  mulai_bekerja: z.string().min(1, "Tanggal mulai wajib diisi."),
-  selesai_bekerja: z.string().min(1, "Tanggal selesai wajib diisi."),
-  area_pekerjaan: z.string({ required_error: "Area pekerjaan wajib dipilih." }),
-  dokumen_pendukung: z
-    .array(dokumenPendukungSchema)
-    .min(1, "Minimal satu dokumen pendukung wajib diunggah."),
-  submit_type: z.string().optional(),
-});
+const dokumenRowSchema = z.discriminatedUnion("tipe_dokumen", [
+  z.object({
+    tipe_dokumen: z.literal("file"),
+    file: z.instanceof(File, { message: "File wajib diupload" }),
+    url_dokumen: z.string().optional(),
+    file_name: z.string().optional(),
+    keterangan: z.string().optional(),
+  }),
+  z.object({
+    tipe_dokumen: z.literal("url"),
+    file: z.null().optional(),
+    url_dokumen: z.string().url({ message: "Format URL tidak valid" }),
+    file_name: z.string().min(1, { message: "Nama dokumen wajib diisi" }),
+    keterangan: z.string().optional(),
+  }),
+]);
+
+const riwayatPekerjaanSchema = z
+  .object({
+    bidang_usaha: z.string().min(1, "Bidang usaha wajib diisi."),
+    jenis_pekerjaan: z.string().min(1, "Jenis pekerjaan wajib diisi."),
+    nama_perusahaan: z.string().min(1, "Nama perusahaan wajib diisi."),
+    jabatan: z.string().min(1, "Jabatan wajib diisi."),
+    divisi: z.string().min(1, "Divisi wajib diisi."),
+    deskripsi_pekerjaan: z.string().min(1, "Deskripsi pekerjaan wajib diisi."),
+    tgl_mulai: z.string().min(1, "Tanggal mulai wajib diisi."),
+    tgl_selesai: z.string().min(1, "Tanggal selesai wajib diisi."),
+    is_lokasi: z.enum(["1", "0"], {
+      required_error: "Area pekerjaan wajib dipilih.",
+    }),
+    keterangan: z.string().optional(),
+    dokumen: z.array(dokumenRowSchema).optional(),
+  })
+  .refine(
+    (data) => {
+      return new Date(data.tgl_selesai) > new Date(data.tgl_mulai);
+    },
+    {
+      message: "Tanggal selesai harus setelah tanggal mulai.",
+      path: ["tgl_selesai"],
+    }
+  );
 
 type RiwayatPekerjaanValues = z.infer<typeof riwayatPekerjaanSchema>;
 
+const DokumenRow = ({
+  form,
+  index,
+  onRemove,
+}: {
+  form: any;
+  index: number;
+  onRemove: () => void;
+}) => {
+  const tipe = form.watch(`dokumen.${index}.tipe_dokumen`);
+
+  return (
+    <tr className="border-b hover:bg-gray-50">
+      <td className="px-3 py-2 align-top">
+        <FormField
+          control={form.control}
+          name={`dokumen.${index}.tipe_dokumen`}
+          render={({ field }) => (
+            <FormItem>
+              <Select
+                value={field.value}
+                onValueChange={(val: "file" | "url") => {
+                  field.onChange(val);
+                  form.setValue(`dokumen.${index}.file`, null);
+                  form.setValue(`dokumen.${index}.url_dokumen`, "");
+                  form.setValue(`dokumen.${index}.file_name`, "");
+                }}
+              >
+                <SelectTrigger className="h-8 text-xs w-32">
+                  <SelectValue placeholder="Pilih tipe" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TIPE_DOKUMEN_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage className="text-[10px]" />
+            </FormItem>
+          )}
+        />
+      </td>
+
+      <td className="px-3 py-2 align-top">
+        {tipe === "file" ? (
+          <FormField
+            control={form.control}
+            name={`dokumen.${index}.file`}
+            render={({ field: { onChange } }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="h-8 text-xs w-48"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      onChange(file);
+                      if (file) form.setValue(`dokumen.${index}.file_name`, file.name);
+                    }}
+                  />
+                </FormControl>
+                <p className="text-[10px] text-gray-400">pdf, jpg, jpeg, png (maks 2MB)</p>
+                <FormMessage className="text-[10px]" />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <FormField
+            control={form.control}
+            name={`dokumen.${index}.url_dokumen`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="url"
+                    placeholder="https://..."
+                    className="h-8 text-xs w-48"
+                  />
+                </FormControl>
+                <FormMessage className="text-[10px]" />
+              </FormItem>
+            )}
+          />
+        )}
+      </td>
+
+      <td className="px-3 py-2 align-top">
+        <FormField
+          control={form.control}
+          name={`dokumen.${index}.file_name`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={tipe === "file" ? "Otomatis dari file..." : "Nama dokumen..."}
+                  readOnly={tipe === "file"}
+                  className={cn(
+                    "h-8 text-xs",
+                    tipe === "file" && "bg-gray-100 cursor-not-allowed text-gray-500"
+                  )}
+                />
+              </FormControl>
+              <FormMessage className="text-[10px]" />
+            </FormItem>
+          )}
+        />
+      </td>
+
+      <td className="px-3 py-2 align-top">
+        <FormField
+          control={form.control}
+          name={`dokumen.${index}.keterangan`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input {...field} placeholder="Keterangan..." className="h-8 text-xs" />
+              </FormControl>
+              <FormMessage className="text-[10px]" />
+            </FormItem>
+          )}
+        />
+      </td>
+
+      <td className="px-3 py-2 align-top text-center">
+        <button
+          type="button"
+          onClick={onRemove}
+          className="text-red-500 hover:text-red-700 p-1 rounded cursor-pointer"
+        >
+          <Trash2 size={14} />
+        </button>
+      </td>
+    </tr>
+  );
+};
+
 const DetailRiwayatPekerjaan = () => {
   const navigate = useNavigate();
+  const { profile } = usePegawaiProfile();
 
   const form = useForm<RiwayatPekerjaanValues>({
     resolver: zodResolver(riwayatPekerjaanSchema),
     defaultValues: {
-      area_pekerjaan: "1",
-      dokumen_pendukung: [],
-      submit_type: "submit",
+      bidang_usaha: "",
+      jenis_pekerjaan: "",
+      nama_perusahaan: "",
+      jabatan: "",
+      divisi: "",
+      deskripsi_pekerjaan: "",
+      tgl_mulai: "",
+      tgl_selesai: "",
+      is_lokasi: "1",
+      keterangan: "",
+      dokumen: [],
     },
-    mode: "onChange",
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "dokumen_pendukung",
-  });
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["riwayat-pekerjaan-dosen-tambah"],
-    queryFn: async () => {
-      const response = await dosenServices.getRiwayatPekerjaan();
-      return response.data;
-    },
+    name: "dokumen",
   });
 
   const { mutate, isPending } = useMutation({
@@ -105,64 +276,43 @@ const DetailRiwayatPekerjaan = () => {
 
   const handleSubmitData = (values: RiwayatPekerjaanValues) => {
     const formData = new FormData();
+    formData.append("bidang_usaha", values.bidang_usaha);
+    formData.append("jenis_pekerjaan", values.jenis_pekerjaan);
+    formData.append("nama_perusahaan", values.nama_perusahaan);
+    formData.append("jabatan", values.jabatan);
+    formData.append("divisi", values.divisi);
+    formData.append("deskripsi_pekerjaan", values.deskripsi_pekerjaan);
+    formData.append("tgl_mulai", values.tgl_mulai);
+    formData.append("tgl_selesai", values.tgl_selesai);
+    formData.append("is_lokasi", values.is_lokasi === "1" ? "true" : "false");
+    if (values.keterangan) formData.append("keterangan", values.keterangan);
 
-    Object.entries(values).forEach(([key, value]) => {
-      if (key !== "dokumen_pendukung") {
-        formData.append(key, value as string);
-      }
-    });
+    // Dokumen metadata JSON
+    const dokumenMeta = (values.dokumen ?? []).map((dok) => ({
+      tipe_dokumen: dok.tipe_dokumen,
+      file_name:
+        dok.tipe_dokumen === "file" ? (dok.file as File).name : dok.file_name,
+      url_dokumen: dok.tipe_dokumen === "url" ? dok.url_dokumen : null,
+      keterangan: dok.keterangan || null,
+    }));
 
-    values.dokumen_pendukung.forEach((dokumen, index) => {
-      formData.append(
-        `dokumen_pendukung[${index}][tipe_dokumen]`,
-        dokumen.tipe_dokumen
-      );
-      formData.append(
-        `dokumen_pendukung[${index}][nama_dokumen]`,
-        dokumen.nama_dokumen
-      );
-      formData.append(
-        `dokumen_pendukung[${index}][jenis_dokumen_id]`,
-        dokumen.jenis_dokumen_id
-      );
-      if (dokumen.keterangan) {
-        formData.append(
-          `dokumen_pendukung[${index}][keterangan]`,
-          dokumen.keterangan
-        );
-      }
-      if (dokumen.file && dokumen.file.length > 0) {
-        formData.append(`dokumen_pendukung[${index}][file]`, dokumen.file[0]);
+    if (dokumenMeta.length > 0) {
+      formData.append("dokumen", JSON.stringify(dokumenMeta));
+    }
+
+    // File fisik
+    (values.dokumen ?? []).forEach((dok, index) => {
+      if (dok.tipe_dokumen === "file" && dok.file instanceof File) {
+        formData.append(`dokumen[${index}][file]`, dok.file);
       }
     });
 
     mutate(formData);
   };
 
-  const addDocumentRow = () => {
-    append({
-      tipe_dokumen: "file",
-      nama_dokumen: "",
-      jenis_dokumen_id: "",
-      keterangan: "",
-      file: new DataTransfer().files,
-    });
-  };
-
-  if (isLoading) {
-    return (
-      <div className="mt-10 mb-20">
-        <Title title="Riwayat Pekerjaan" subTitle="Detail Riwayat Pekerjaan" />
-        <CustomCard>
-          <Skeleton className="h-40 w-full mb-6" />
-        </CustomCard>
-      </div>
-    );
-  }
-
   return (
     <div className="mt-10 mb-20">
-      <Title title="Riwayat Pekerjaan" subTitle="Detail Riwayat Pekerjaan" />
+      <Title title="Riwayat Pekerjaan" subTitle="Tambah Riwayat Pekerjaan" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitData)}>
           <CustomCard>
@@ -181,34 +331,22 @@ const DetailRiwayatPekerjaan = () => {
                 disabled={isPending}
                 className="bg-[#FDA31A] w-full md:w-auto text-white hover:bg-[#e69310]"
               >
-                <MdOutlineFileDownload className="mr-2" />
+                <MdOutlineSave className="mr-2" />
                 {isPending ? "Menyimpan..." : "Simpan"}
               </Button>
             </div>
 
-            {data?.pegawai_info && (
-              <InfoList
-                items={[
-                  { label: "NIP", value: data.pegawai_info.nip },
-                  { label: "Nama", value: data.pegawai_info.nama },
-                  { label: "Unit Kerja", value: data.pegawai_info.unit_kerja },
-                  { label: "Status", value: data.pegawai_info.status },
-                  {
-                    label: "Jab. Akademik",
-                    value: data.pegawai_info.jab_akademik,
-                  },
-                  {
-                    label: "Jab. Fungsional",
-                    value: data.pegawai_info.jab_fungsional,
-                  },
-                  {
-                    label: "Jab. Struktural",
-                    value: data.pegawai_info.jab_struktural,
-                  },
-                  { label: "Pendidikan", value: data.pegawai_info.pendidikan },
-                ]}
-              />
-            )}
+            <InfoList
+              items={[
+                { label: "NIP", value: profile?.nip ?? "-" },
+                { label: "Nama", value: profile?.nama ?? "-" },
+                { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+                { label: "Status", value: profile?.status ?? "-" },
+                { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+                { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+                { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
+              ]}
+            />
 
             <div className="mt-10">
               <div className="border-b-2 border-[#FDA31A] pb-2 mb-6">
@@ -217,16 +355,16 @@ const DetailRiwayatPekerjaan = () => {
                 </h2>
               </div>
               <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
-                {/* Menggunakan FormField dari file lain */}
                 <FormFieldInput
                   name="bidang_usaha"
                   label="Bidang Usaha"
                   form={form}
                   required
+                  placeholder="cth: Pendidikan, Keuangan, TI"
                 />
                 <FormFieldInput
-                  name="instansi"
-                  label="Instansi/Perusahaan"
+                  name="nama_perusahaan"
+                  label="Nama Perusahaan / Instansi"
                   form={form}
                   required
                   placeholder="Nama Instansi"
@@ -236,6 +374,7 @@ const DetailRiwayatPekerjaan = () => {
                   label="Jenis Pekerjaan"
                   form={form}
                   required
+                  placeholder="cth: Dosen, Programmer, Manager"
                 />
                 <FormFieldInput
                   name="jabatan"
@@ -245,23 +384,15 @@ const DetailRiwayatPekerjaan = () => {
                   placeholder="Posisi Jabatan"
                 />
                 <FormFieldInput
-                  name="mulai_bekerja"
-                  label="Tanggal Mulai"
-                  type="date"
+                  name="divisi"
+                  label="Divisi / Bagian"
                   form={form}
                   required
+                  placeholder="Posisi Divisi"
                 />
-                <FormFieldInput
-                  name="selesai_bekerja"
-                  label="Tanggal Selesai"
-                  type="date"
-                  form={form}
-                  required
-                />
-                <FormFieldInput
-                  name="area_pekerjaan"
-                  label="Area Pekerjaan"
-                  type="radio"
+                <FormFieldSelect
+                  name="is_lokasi"
+                  label="Lokasi Pekerjaan"
                   form={form}
                   required
                   options={[
@@ -269,97 +400,88 @@ const DetailRiwayatPekerjaan = () => {
                     { value: "0", label: "Luar Negeri" },
                   ]}
                 />
+                <FormFieldInput
+                  name="tgl_mulai"
+                  label="Tanggal Mulai"
+                  type="date"
+                  form={form}
+                  required
+                />
+                <FormFieldInput
+                  name="tgl_selesai"
+                  label="Tanggal Selesai"
+                  type="date"
+                  form={form}
+                  required
+                />
+                <div className="md:col-span-2">
+                  <FormFieldInput
+                    name="deskripsi_pekerjaan"
+                    label="Deskripsi Pekerjaan"
+                    form={form}
+                    required
+                    placeholder="Tuliskan deskripsi ringkas pekerjaan Anda"
+                    type="textarea"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <FormFieldInput
+                    name="keterangan"
+                    label="Keterangan"
+                    form={form}
+                    placeholder="Keterangan tambahan"
+                    type="textarea"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="mt-10">
-              <div className="border-b-2 border-[#FDA31A] pb-2 mb-6">
-                <h2 className="text-lg font-semibold text-green-600">
-                  Dokumen Pendukung
-                </h2>
+            {/* Dokumen Pendukung Dinamis */}
+            <div className="mt-10 space-y-4">
+              <div className="flex items-center justify-between border-b border-teal-600 pb-2">
+                <h3 className="text-teal-600 font-semibold">Dokumen Pendukung</h3>
               </div>
-              <Table className="mt-4">
-                <TableHeader>
-                  <TableRow className="bg-[#002E5A] hover:bg-[#002E5A]">
-                    <TableHead className="text-white">Tipe Dokumen</TableHead>
-                    <TableHead className="text-white">Nama Dokumen</TableHead>
-                    <TableHead className="text-white">Jenis Dokumen</TableHead>
-                    <TableHead className="text-white">File</TableHead>
-                    <TableHead className="text-white">Keterangan</TableHead>
-                    <TableHead className="text-center text-white w-[100px]">
-                      <Button
-                        type="button"
-                        size="sm"
-                        className="bg-[#FDA31A] hover:bg-[#e69310]"
-                        onClick={addDocumentRow}
-                      >
-                        <IoAdd className="h-5 w-5" />
-                      </Button>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {fields.map((field, index) => (
-                    <TableRow key={field.id} className="align-top">
-                      <TableCell className="min-w-[150px]">
-                        <FormFieldSelect
-                          name={`dokumen_pendukung.${index}.tipe_dokumen`}
-                          form={form}
-                          options={[{ value: "file", label: "File" }]}
-                        />
-                      </TableCell>
-                      <TableCell className="min-w-[200px]">
-                        <FormFieldInput
-                          name={`dokumen_pendukung.${index}.nama_dokumen`}
-                          form={form}
-                          placeholder="Surat Keterangan Kerja"
-                        />
-                      </TableCell>
-                      <TableCell className="min-w-[200px]">
-                        <FormFieldSelect
-                          name={`dokumen_pendukung.${index}.jenis_dokumen_id`}
-                          form={form}
-                          placeholder="Pilih Jenis"
-                          options={[
-                            { value: "file", label: "File" },
-                            { value: "gambar", label: "Gambar" },
-                            { value: "pdf", label: "PDF" },
-                            { value: "lainnya", label: "Lainnya" },
-                          ]}
-                        />
-                      </TableCell>
-                      <TableCell className="min-w-[250px]">
-                        <FormFieldInputFile
-                          name={`dokumen_pendukung.${index}.file`}
-                          description="Pilih file..."
-                        />
-                      </TableCell>
-                      <TableCell className="min-w-[200px]">
-                        <FormFieldInput
-                          name={`dokumen_pendukung.${index}.keterangan`}
-                          form={form}
-                          placeholder="Keterangan tambahan"
-                        />
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Button
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-[#1B3A5C] text-white">
+                      <th className="px-3 py-2 text-left w-36">Tipe Dokumen</th>
+                      <th className="px-3 py-2 text-left w-52">Dokumen</th>
+                      <th className="px-3 py-2 text-left">Nama Dokumen</th>
+                      <th className="px-3 py-2 text-left">Keterangan</th>
+                      <th className="px-3 py-2 w-12 text-center">
+                        <button
                           type="button"
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => remove(index)}
+                          onClick={() => append({ ...defaultDokumenRow })}
+                          className="bg-green-50 hover:bg-green-600 text-white rounded p-1 cursor-pointer"
                         >
-                          <HiMiniTrash className="w-5 h-5 text-red-500" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {form.formState.errors.dokumen_pendukung && (
-                <p className="text-sm font-medium text-destructive mt-2">
-                  {form.formState.errors.dokumen_pendukung.message}
-                </p>
-              )}
+                          <Plus size={14} />
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fields.map((field, index) => (
+                      <DokumenRow
+                        key={field.id}
+                        form={form}
+                        index={index}
+                        onRemove={() => remove(index)}
+                      />
+                    ))}
+                    {fields.length === 0 && (
+                      <tr>
+                        <td
+                          colSpan={5}
+                          className="text-center py-6 text-gray-400 italic text-sm"
+                        >
+                          Belum ada dokumen. Klik <strong>+</strong> untuk menambah.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </CustomCard>
         </form>

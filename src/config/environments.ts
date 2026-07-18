@@ -3,6 +3,7 @@ const environment = {
   API_IMAGE_URL: import.meta.env.VITE_API_BASE_URL,
   API_IMAGE_URL_SECOND: import.meta.env
     .VITE_BACKEND_SIAKAD_API_IMAGE_URL_SECOND,
+  EPORTAL_URL: import.meta.env.VITE_EPORTAL_URL,
 };
 
 export default environment;

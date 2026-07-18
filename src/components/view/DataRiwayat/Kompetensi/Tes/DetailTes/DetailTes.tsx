@@ -1,13 +1,12 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 
 // UI & Komponen Lokal
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import CustomCard from "@/components/blocks/Card";
 import Title from "@/components/blocks/Title";
 import InfoList from "@/components/blocks/InfoList";
@@ -20,38 +19,38 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { toast } from "sonner";
 
 // Servis API
-import dosenServices from "@/services/dosen.services";
+import adminServices from "@/services/admin.services";
 import postDosenServices from "@/services/create.dosen.services";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
-
-const fileSchema = z
-  .instanceof(FileList, { message: "File wajib diunggah." })
-  .refine((files) => files?.length >= 1, "File wajib diunggah.");
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+import { fileSchema } from "@/components/view/admin/DataPegawai/DataPegawai";
 
 const tesSchema = z.object({
-  jenis_tes_id: z.string().min(1, "Jenis tes wajib dipilih."),
-  nama_tes: z.string().min(1, "Nama tes wajib diisi."),
+  jenis_test_id: z.string().min(1, "Jenis tes wajib dipilih."),
+  nama: z.string().min(1, "Nama tes wajib diisi."),
   penyelenggara: z.string().min(1, "Penyelenggara wajib diisi."),
-  tgl_tes: z.string().min(1, "Tanggal tes wajib diisi."),
-  skor: z.string().min(1, "Skor wajib diisi."),
-  file_pendukung: fileSchema,
+  tgl_test: z.string().min(1, "Tanggal tes wajib diisi."),
+  nilai: z.string().min(1, "Nilai / Skor wajib diisi."),
+  file_test: fileSchema,
+  keterangan: z.string().optional(),
 });
 
 type TesValues = z.infer<typeof tesSchema>;
 
 const DetailTes = () => {
   const navigate = useNavigate();
+  const { profile } = usePegawaiProfile();
 
   const form = useForm<TesValues>({
     resolver: zodResolver(tesSchema),
-    mode: "onChange",
-  });
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["tes-tambah-dosen"],
-    queryFn: async () => {
-      const response = await dosenServices.getDataTesDosen();
-      return response.data;
+    defaultValues: {
+      jenis_test_id: "",
+      nama: "",
+      penyelenggara: "",
+      tgl_test: "",
+      nilai: "",
+      file_test: undefined,
+      keterangan: "",
     },
   });
 
@@ -71,36 +70,25 @@ const DetailTes = () => {
 
   const handleSubmitData = (values: TesValues) => {
     const formData = new FormData();
+    formData.append("jenis_test_id", values.jenis_test_id);
+    formData.append("nama", values.nama);
+    formData.append("penyelenggara", values.penyelenggara);
+    formData.append("tgl_test", values.tgl_test);
+    formData.append("nilai", values.nilai);
+    if (values.keterangan) {
+      formData.append("keterangan", values.keterangan);
+    }
 
-    Object.entries(values).forEach(([key, value]) => {
-      if (key === "file_pendukung") {
-        if (value instanceof FileList && value.length > 0) {
-          formData.append(key, value[0]);
-        }
-      } else {
-        formData.append(key, value as string);
-      }
-    });
-
-    formData.append("submit_type", "submit");
+    if (values.file_test instanceof FileList && values.file_test.length > 0) {
+      formData.append("file_test", values.file_test[0]);
+    }
 
     mutate(formData);
   };
 
-  if (isLoading) {
-    return (
-      <div className="mt-10 mb-20">
-        <Title title="Tes" subTitle="Detail Tes" />
-        <CustomCard>
-          <Skeleton className="h-40 w-full mb-6" />
-        </CustomCard>
-      </div>
-    );
-  }
-
   return (
     <div className="mt-10 mb-20">
-      <Title title="Tes" subTitle="Detail Tes" />
+      <Title title="Tes" subTitle="Tambah Riwayat Tes" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitData)}>
           <CustomCard>
@@ -124,83 +112,78 @@ const DetailTes = () => {
               </Button>
             </div>
 
-            {data?.pegawai_info && (
-              <InfoList
-                items={[
-                  { label: "NIP", value: data.pegawai_info.nip },
-                  { label: "Nama", value: data.pegawai_info.nama },
-                  { label: "Unit Kerja", value: data.pegawai_info.unit_kerja },
-                  { label: "Status", value: data.pegawai_info.status },
-                  {
-                    label: "Jab. Akademik",
-                    value: data.pegawai_info.jab_akademik,
-                  },
-                  {
-                    label: "Jab. Fungsional",
-                    value: data.pegawai_info.jab_fungsional,
-                  },
-                  {
-                    label: "Jab. Struktural",
-                    value: data.pegawai_info.jab_struktural,
-                  },
-                  { label: "Pendidikan", value: data.pegawai_info.pendidikan },
-                ]}
-              />
-            )}
+            <InfoList
+              items={[
+                { label: "NIP", value: profile?.nip ?? "-" },
+                { label: "Nama", value: profile?.nama ?? "-" },
+                { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+                { label: "Status", value: profile?.status ?? "-" },
+                { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+                { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+                { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
+              ]}
+            />
 
             <div className="mt-10">
               <div className="border-b-2 border-[#FDA31A] pb-2 mb-6">
                 <h2 className="text-lg font-semibold text-green-600">
-                  Formulir Tes
+                  Formulir Riwayat Tes
                 </h2>
               </div>
               <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
                 <InfiniteScrollSelect
                   form={form}
                   label="Jenis Tes"
-                  name="jenis_tes_id"
+                  name="jenis_test_id"
                   placeholder="--Pilih Jenis Tes--"
                   required
                   queryKey="jenis-tes-datariwayat"
-                  queryFn={dosenServices.getJenisTes}
+                  queryFn={(page) => adminServices.getJenisTes({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="jenis_tes"
                 />
                 <FormFieldInput
-                  name="nama_tes"
+                  name="nama"
                   label="Nama Tes"
                   form={form}
                   required
-                  placeholder="cth: IELTS Academic Test"
+                  placeholder="cth: TOEFL / IELTS"
                 />
                 <FormFieldInput
                   name="penyelenggara"
                   label="Penyelenggara"
                   form={form}
                   required
-                  placeholder="cth: British Council Indonesia"
+                  placeholder="cth: ETS / British Council"
                 />
                 <FormFieldInput
-                  name="tgl_tes"
+                  name="tgl_test"
                   label="Tanggal Tes"
                   type="date"
                   form={form}
                   required
                 />
                 <FormFieldInput
-                  name="skor"
-                  label="Skor Tes"
-                  type="number"
+                  name="nilai"
+                  label="Skor / Nilai"
                   form={form}
                   required
-                  placeholder="cth: 7.5"
+                  placeholder="cth: 550 / 7.5"
                 />
                 <FormFieldInputFile
-                  name="file_pendukung"
-                  label="File Pendukung"
-                  required
-                  description="Sertifikat/bukti tes"
+                  name="file_test"
+                  label="File Sertifikat Tes"
+                  required={false}
                 />
+                <div className="md:col-span-2">
+                  <FormFieldInput
+                    name="keterangan"
+                    label="Keterangan"
+                    form={form}
+                    placeholder="Keterangan tambahan"
+                    type="textarea"
+                  />
+                </div>
               </div>
             </div>
           </CustomCard>

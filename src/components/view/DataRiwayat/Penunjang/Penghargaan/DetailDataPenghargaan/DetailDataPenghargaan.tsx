@@ -7,226 +7,204 @@ import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FaFileDownload } from "react-icons/fa";
+import { format, parseISO, isValid } from "date-fns";
+
+const formatDate = (dateStr?: string | null) => {
+  if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+    return "-";
+  }
+  try {
+    const parsed = parseISO(dateStr);
+    if (isValid(parsed)) {
+      return format(parsed, "dd MMMM yyyy");
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "-";
+};
+
+interface DokumenDetail {
+  id: string;
+  file_name: string;
+  file_path: string;
+  kategori_dokumen: string | null;
+  url: string;
+}
+
+interface PenghargaanDetail {
+  id: string;
+  nama_penghargaan: string;
+  instansi: string;
+  tgl_penghargaan: string;
+  no_sk: string;
+  status: string;
+  createdAt: string;
+  tgl_disetujui: string | null;
+  tgl_ditolak: string | null;
+  keterangan_penolakan?: string | null;
+  jenis_penghargaan?: {
+    nama: string;
+  };
+  dokumen?: DokumenDetail[];
+}
+
+interface PegawaiInfo {
+  nama: string;
+  nip: string;
+}
+
+interface DetailPenghargaanApiResponse {
+  data: PenghargaanDetail;
+  pegawai: PegawaiInfo;
+}
 
 const DetailDataPenghargaan = () => {
   const { id } = useParams<{ id: string }>();
 
-  const { data, isLoading, isError } = useQuery({
-    // 1. Mengganti queryKey agar unik untuk penghargaan
+  const { data, isLoading, isError } = useQuery<DetailPenghargaanApiResponse>({
     queryKey: ["penghargaan-dosen-detail", id],
     queryFn: async () => {
       if (!id) throw new Error("ID tidak ditemukan");
-      // 2. Memanggil service yang sesuai untuk penghargaan
       const response = await dosenServices.getPenghargaanDetail(id);
       return response.data;
     },
     enabled: !!id,
   });
 
-  // Helper untuk format tanggal
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return "-";
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-  };
-
-  // Helper untuk warna status
-  const getStatusColor = (color?: string) => {
-    switch (color) {
-      case "success":
-        return "bg-green-500";
-      case "info":
-        return "bg-blue-500";
-      case "warning":
-        return "bg-yellow-500";
-      case "danger":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
-  // Tampilan saat loading
   if (isLoading) {
     return (
       <div className="mt-10 mb-20">
-        <Title title="Penghargaan" subTitle="Detail Penghargaan" />
-        <CustomCard
-          actions={
-            <div className="flex flex-col gap-4">
-              <div className="flex justify-end">
-                <Skeleton className="h-10 w-48" />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-gray-200 rounded-lg p-4">
-                <div className="space-y-4 p-2">
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
-                </div>
-                <div className="space-y-4 p-2">
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
-                </div>
-              </div>
-            </div>
-          }
-        />
+        <Title title="Detail Penghargaan" subTitle="Memuat data..." />
+        <CustomCard>
+          <div className="p-6 space-y-4">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        </CustomCard>
       </div>
     );
   }
 
-  // Tampilan saat error
-  if (isError) {
+  if (isError || !data?.data) {
     return (
-      <div className="mt-10 mb-20 text-center">
-        <Title title="Penghargaan" subTitle="Detail Penghargaan" />
-        <p className="text-red-500">Gagal memuat data penghargaan.</p>
+      <div className="mt-10 mb-20 text-center text-red-500">
+        Gagal memuat detail data penghargaan.
       </div>
     );
   }
+
+  const detail = data.data;
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Penghargaan" subTitle="Detail Penghargaan" />
+      <div className="flex flex-col md:flex-row justify-between gap-2">
+        <Title title="Detail Penghargaan" subTitle="Rincian data" />
+        <Link className="w-full md:w-auto" to="/data-riwayat/penunjang/penghargaan">
+          <Button className="bg-[#3ABC67] w-full md:w-auto hover:bg-[#2e9851]">
+            <IoIosArrowBack className="mr-2" /> Kembali ke Daftar
+          </Button>
+        </Link>
+      </div>
 
       <CustomCard
         actions={
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-end">
-              <Link
-                className="w-full md:w-auto"
-                to="/data-riwayat/penunjang/penghargaan"
-              >
-                <Button className="bg-[#3ABC67] w-full md:w-auto hover:bg-[#32a95c]">
-                  <IoIosArrowBack className="mr-2" /> Kembali ke Daftar
-                </Button>
-              </Link>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-black rounded-lg p-4 mt-5">
+            {/* KIRI */}
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Nama Penghargaan
+                </Label>
+                <Label className="text-xs sm:text-sm font-semibold">{detail.nama_penghargaan || "-"}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Jenis Penghargaan
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.jenis_penghargaan?.nama || "-"}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Instansi Pemberi
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.instansi || "-"}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Tanggal Penghargaan
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.tgl_penghargaan)}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Nomor SK
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.no_sk || "-"}</Label>
+              </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4 border border-gray-200 rounded-lg p-4">
-              {/* === KOLOM KIRI === */}
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Nama Penghargaan
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {data?.data.nama_penghargaan || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Jenis Penghargaan
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {data?.data.jenis_penghargaan || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Instansi Pemberi
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {data?.data.instansi_pemberi || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Tanggal Penghargaan
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.tanggal_penghargaan)}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Nomor SK
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {data?.data.no_sk || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Tanggal SK
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.tanggal_sk)}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Keterangan
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {data?.data.keterangan || "-"}
-                  </Label>
-                </div>
+
+            {/* KANAN */}
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Status Pengajuan
+                </Label>
+                <Label className="text-xs sm:text-sm font-semibold capitalize">{detail.status}</Label>
               </div>
 
-              {/* === KOLOM KANAN === */}
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Status Pengajuan
+              {detail.status === "ditolak" && detail.keterangan_penolakan && (
+                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2 bg-red-50 text-red-700">
+                  <Label className="text-red-700 font-semibold text-xs sm:text-sm shrink-0 w-38">
+                    Alasan Penolakan
                   </Label>
-                  <Label className="text-sm font-medium text-right">
-                    <span
-                      className={`capitalize px-2 py-1 text-xs rounded-md text-white ${getStatusColor(
-                        data?.data.status_info.color
-                      )}`}
-                    >
-                      {data?.data.status_info.label || "-"}
-                    </span>
-                  </Label>
+                  <Label className="text-xs sm:text-sm font-semibold">{detail.keterangan_penolakan}</Label>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Tanggal Diajukan
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.timestamps.tgl_diajukan)}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Tanggal Disetujui
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {formatDate(data?.data.timestamps.tgl_disetujui)}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Dibuat Oleh
-                  </Label>
-                  <Label className="text-sm font-medium text-right">
-                    {data?.pegawai.nama || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-sm text-[#2572BE] shrink-0 w-48">
-                    Dokumen
-                  </Label>
-                  <div className="text-sm font-medium text-right">
-                    {data?.data.dokumen.url ? (
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Tanggal Diajukan
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.createdAt)}</Label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Tanggal Disetujui
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.tgl_disetujui)}</Label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Dibuat Oleh
+                </Label>
+                <Label className="text-xs sm:text-sm">{data.pegawai?.nama || "-"}</Label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Dokumen SK / Piagam
+                </Label>
+                <div className="flex flex-col gap-1 w-full text-right sm:text-left">
+                  {detail.dokumen && detail.dokumen.length > 0 ? (
+                    detail.dokumen.map((doc) => (
                       <a
-                        href={data.data.dokumen.url}
+                        key={doc.id}
+                        href={doc.url}
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline flex items-center justify-end"
+                        rel="noreferrer"
+                        className="text-blue-500 hover:underline text-xs sm:text-sm block truncate w-full"
+                        title={doc.file_name}
                       >
-                        <FaFileDownload className="mr-2" />
-                        Lihat Dokumen
+                        {doc.file_name}
                       </a>
-                    ) : (
-                      "-"
-                    )}
-                  </div>
+                    ))
+                  ) : (
+                    <span className="text-gray-400 italic text-xs sm:text-sm">Tidak ada dokumen</span>
+                  )}
                 </div>
               </div>
             </div>

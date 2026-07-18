@@ -16,83 +16,104 @@ import SearchInput from "@/components/blocks/SearchInput";
 import InfoList from "@/components/blocks/InfoList";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { format } from "date-fns";
+import { parseISO, format, isValid } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+
+const formatDate = (dateStr?: string | null) => {
+  if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+    return "-";
+  }
+  try {
+    const parsed = parseISO(dateStr);
+    if (isValid(parsed)) {
+      return format(parsed, "dd MMMM yyyy");
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "-";
+};
+
+interface TesItem {
+  id: string;
+  nama: string;
+  nilai: string;
+  penyelenggara: string;
+  tgl_test: string;
+  status: string;
+  jenis_test?: {
+    nama: string;
+  };
+}
+
+interface PaginatedData {
+  items: TesItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
+const statusColor: Record<string, string> = {
+  draft: "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65",
+  diajukan: "bg-[#FFC951]/50 hover:bg-[#FFC951]/50",
+  disetujui: "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50",
+  ditolak: "bg-red-500 hover:bg-red-500 text-white",
+};
 
 const Tes = () => {
   const [searchParam, setSearchParam] = useSearchParams();
   const [searchData, setSearchData] = useState(searchParam.get("search") || "");
   const [debouncedInput] = useDebounce(searchData, 500);
 
-  // get data
-  const { data } = useQuery({
-    queryKey: [
-      "kompetensi-tes-dosen",
-      searchParam.get("page"),
-      searchParam.get("search"),
-    ],
+  const { profile } = usePegawaiProfile();
+
+  const currentPage = Number(searchParam.get("page") || 1);
+  const currentSearch = searchParam.get("search") || "";
+
+  const { data: rawData, isLoading } = useQuery<PaginatedData>({
+    queryKey: ["kompetensi-tes-pegawai", currentPage, currentSearch],
     queryFn: async () => {
-      const response = await dosenServices.getDataTesDosen(
-        searchParam.get("page")
-      );
-      console.log(response.data);
-      return response.data;
+      const response = await dosenServices.getDataTesDosen({
+        page: currentPage,
+        search: currentSearch,
+      });
+      return response.data.data;
     },
   });
 
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return "-";
-    try {
-      return format(new Date(dateString), "dd MMMM yyyy");
-    } catch (error) {
-      return "Tanggal tidak valid";
-    }
-  };
+  const items = rawData?.items ?? [];
+  const pagination = rawData?.pagination;
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const next = new URLSearchParams(searchParam);
+      next.set("page", String(page));
+      setSearchParam(next);
+    },
+    [searchParam, setSearchParam],
+  );
 
   useEffect(() => {
-    const newSearchParam = new URLSearchParams(searchParam);
-
-    if (debouncedInput.length > 3) {
-      newSearchParam.set("search", debouncedInput);
-      newSearchParam.set("page", "1");
-    } else {
-      newSearchParam.delete("search");
-    }
-
-    if (searchParam.toString() !== newSearchParam.toString()) {
-      setSearchParam(newSearchParam);
+    const activeSearch = searchParam.get("search") || "";
+    if (debouncedInput !== activeSearch) {
+      const next = new URLSearchParams(searchParam);
+      if (debouncedInput) {
+        next.set("search", debouncedInput);
+      } else {
+        next.delete("search");
+      }
+      next.set("page", "1");
+      setSearchParam(next);
     }
   }, [debouncedInput, searchParam, setSearchParam]);
-
-  useEffect(() => {
-    if (!searchParam.get("page")) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", "1");
-      setSearchParam(newSearchParam);
-    }
-  }, [searchParam, setSearchParam]);
-
-  useEffect(() => {
-    if (Number(searchParam.get("page")) < 1) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", "1");
-      setSearchParam(newSearchParam);
-    }
-  }, [searchParam, setSearchParam]);
-
-  useEffect(() => {
-    if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
-    ) {
-      const newSearchParam = new URLSearchParams(searchParam);
-      newSearchParam.set("page", data.last_page.toString());
-      setSearchParam(newSearchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
@@ -111,20 +132,13 @@ const Tes = () => {
 
       <InfoList
         items={[
-          { label: "NIP", value: data?.pegawai_info.nip },
-          { label: "Nama", value: data?.pegawai_info.nama },
-          { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
-          { label: "Status", value: data?.pegawai_info.status },
-          { label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik },
-          {
-            label: "Jab. Fungsional",
-            value: data?.pegawai_info.jab_fungsional,
-          },
-          {
-            label: "Jab. Struktural",
-            value: data?.pegawai_info.jab_struktural,
-          },
-          { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+          { label: "NIP", value: profile?.nip ?? "-" },
+          { label: "Nama", value: profile?.nama ?? "-" },
+          { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+          { label: "Status", value: profile?.status ?? "-" },
+          { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+          { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+          { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
         ]}
       />
 
@@ -132,89 +146,75 @@ const Tes = () => {
         <SearchInput
           value={searchData}
           onChange={(e) => setSearchData(e.target.value)}
+          placeholder="Cari data..."
         />
       </div>
 
       <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
-          <TableRow className="bg-[#E7ECF2] ">
+          <TableRow className="bg-gray-300">
             <TableHead className="text-center text-black">Nama Tes</TableHead>
-            <TableHead className="text-center text-black">Skor Tes</TableHead>
+            <TableHead className="text-center text-black">Skor/Nilai</TableHead>
             <TableHead className="text-center text-black">Jenis Tes</TableHead>
-            <TableHead className="text-center text-black">
-              Penyelenggara
-            </TableHead>
-            <TableHead className="text-center text-black">
-              Tanggal Tes
-            </TableHead>
-            <TableHead className="text-center text-black">
-              Status Pengajuan
-            </TableHead>
+            <TableHead className="text-center text-black">Penyelenggara</TableHead>
+            <TableHead className="text-center text-black">Tanggal Tes</TableHead>
+            <TableHead className="text-center text-black">Status</TableHead>
             <TableHead className="text-center text-black">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.data.map((item: any) => (
-            <TableRow className=" even:bg-[#E7ECF2]">
-              <TableCell className="text-center">{item.nama_tes}</TableCell>
-              <TableCell className="text-center">{item.skor}</TableCell>
-              <TableCell className="text-center">{item.jenis_tes}</TableCell>
-              <TableCell className="text-center">
-                {item.penyelenggara}
-              </TableCell>
-              <TableCell className="text-center">
-                {formatDate(item.tgl_tes)}
-              </TableCell>
-              <TableCell className="text-center">
-                <Button
-                  size="sm"
-                  className={`w-full text-xs lg:text-sm text-black
-                    ${
-                      item.status_pengajuan === "draf"
-                        ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
-                        : item.status_pengajuan === "diajukan"
-                        ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
-                        : item.status_pengajuan === "disetujui"
-                        ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
-                        : item.status_pengajuan === "ditolak"
-                        ? "bg-red-500 hover:bg-red-500"
-                        : "bg-slate-300 hover:bg-slate-300"
-                    }
-                  `}
-                >
-                  {item.status_pengajuan}
-                </Button>
-              </TableCell>
-              <TableCell className="h-full">
-                <div className="flex justify-center items-center w-full h-full">
-                  <Link
-                    to={`/data-riwayat/kompetensi/detail-data-tes/${item.id}`}
-                  >
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="cursor-pointer"
-                    >
-                      <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                    </Button>
-                  </Link>
-                </div>
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-8">
+                Memuat data...
               </TableCell>
             </TableRow>
-          ))}
+          ) : items.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                Tidak ada data
+              </TableCell>
+            </TableRow>
+          ) : (
+            items.map((item) => (
+              <TableRow key={item.id} className="even:bg-gray-100">
+                <TableCell className="text-center">{item.nama}</TableCell>
+                <TableCell className="text-center">{item.nilai}</TableCell>
+                <TableCell className="text-center">{item.jenis_test?.nama || "-"}</TableCell>
+                <TableCell className="text-center">{item.penyelenggara}</TableCell>
+                <TableCell className="text-center">{formatDate(item.tgl_test)}</TableCell>
+                <TableCell className="text-center">
+                  <Button
+                    size="sm"
+                    className={`w-full text-xs lg:text-sm text-black ${
+                      statusColor[item.status] ?? "bg-slate-300 hover:bg-slate-300"
+                    }`}
+                  >
+                    {item.status}
+                  </Button>
+                </TableCell>
+                <TableCell className="h-full">
+                  <div className="flex justify-center items-center w-full h-full">
+                    <Link to={`/data-riwayat/kompetensi/detail-data-tes/${item.id}`}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
+                      >
+                        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                      </Button>
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
 
       <CustomPagination
-        currentPage={Number(searchParam.get("page") || 1)}
-        links={data?.links || []}
-        onPageChange={(page) => {
-          searchParam.set("page", page.toString());
-          setSearchParam(searchParam);
-        }}
-        hasNextPage={!!data?.next_page_url}
-        hasPrevPage={!!data?.prev_page_url}
-        totalPages={data?.last_page}
+        pagination={pagination}
+        onPageChange={handlePageChange}
       />
     </div>
   );

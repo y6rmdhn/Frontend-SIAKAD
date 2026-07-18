@@ -6,29 +6,58 @@ import { IoIosArrowBack } from "react-icons/io";
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// --- START DEFINISI TIPE ---
+const formatDate = (dateStr?: string | null) => {
+  if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+    return "-";
+  }
+  try {
+    const parsed = parseISO(dateStr);
+    if (isValid(parsed)) {
+      return format(parsed, "dd MMMM yyyy");
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "-";
+};
+
+interface DokumenDetail {
+  id: string;
+  file_name: string;
+  file_path: string;
+  kategori_dokumen: string | null;
+  url: string;
+}
 
 interface PangkatDetail {
-  jenis_sk: string;
-  jenis_pangkat: string;
-  nama_golongan: string;
-  tmt_pangkat: string; // ISO string date
+  id: string;
+  tmt_pangkat: string;
   no_sk: string;
-  tgl_sk: string; // ISO string date
+  tgl_sk: string;
   pejabat_penetap: string;
   masa_kerja_tahun: number;
   masa_kerja_bulan: number;
-  acuan_masa_kerja: boolean;
-  status_pengajuan: string;
-  timestamps: {
-    tgl_diajukan: string; // ISO string date
-    tgl_disetujui: string | null; // ISO string date or null
+  acuan_masa_kerja: string | number | boolean;
+  status: string;
+  createdAt: string;
+  tgl_disetujui: string | null;
+  tgl_ditolak: string | null;
+  keterangan_penolakan?: string | null;
+  jenis_sk?: {
+    jenis_sk: string;
   };
+  jenis_kenaikan_pangkat?: {
+    jenis_pangkat: string;
+  };
+  pangkat?: {
+    nama: string;
+  };
+  dokumen?: DokumenDetail[];
 }
 
 interface PegawaiInfo {
@@ -40,55 +69,38 @@ interface DetailPangkatApiResponse {
   pegawai: PegawaiInfo;
 }
 
-// --- END DEFINISI TIPE ---
-
 const DetailDataPangkat = () => {
   const params = useParams<{ id: string }>();
 
-  // get data
   const { data, isLoading, isError } = useQuery<DetailPangkatApiResponse>({
     queryKey: ["detail-pangkat-dosen", params.id],
     queryFn: async () => {
-      // FIX: Memastikan params.id ada sebelum memanggil service
       if (!params.id) {
-        throw new Error("ID Pangkat tidak ditemukan di URL");
+        throw new Error("ID tidak ditemukan");
       }
       const response = await dosenServices.getDataPangkatDetail(params.id);
       return response.data;
     },
-    // Query hanya akan berjalan jika params.id ada
     enabled: !!params.id,
   });
 
-  // Menampilkan state loading
   if (isLoading) {
     return (
       <div className="mt-10 mb-20">
-        <Title title="Data Pangkat" subTitle="Detail Pangkat" />
+        <Title title="Detail Pangkat" subTitle="Memuat data..." />
         <CustomCard>
           <div className="p-6 space-y-4">
-            <Skeleton className="h-10 w-48 self-end" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </div>
-              <div className="space-y-4">
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </div>
-            </div>
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
           </div>
         </CustomCard>
       </div>
     );
   }
 
-  // Menampilkan state error
-  if (isError) {
+  if (isError || !data?.data) {
     return (
       <div className="mt-10 mb-20 text-center text-red-500">
         Gagal memuat detail data pangkat.
@@ -96,159 +108,158 @@ const DetailDataPangkat = () => {
     );
   }
 
+  const detail = data.data;
+
   return (
     <div className="mt-10 mb-20">
-      <Title title="Data Pangkat" subTitle="Detail Pangkat" />
+      <div className="flex flex-col md:flex-row justify-between gap-2">
+        <Title title="Detail Pangkat" subTitle="Rincian data" />
+        <Link className="w-full md:w-auto" to="/data-riwayat/kepegawaian/pangkat">
+          <Button className="bg-[#3ABC67] w-full md:w-auto hover:bg-[#2e9851]">
+            <IoIosArrowBack className="mr-2" /> Kembali ke Daftar
+          </Button>
+        </Link>
+      </div>
 
       <CustomCard
         actions={
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-end">
-              <Link
-                className="w-full md:w-auto"
-                to="/data-riwayat/kepegawaian/pangkat"
-              >
-                <Button className="bg-[#3ABC67] w-full md:w-auto hover:bg-hover-blue-200">
-                  <IoIosArrowBack /> Kembali ke Daftar
-                </Button>
-              </Link>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-black rounded-lg p-4 mt-5">
+            {/* KIRI */}
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Jenis SK
+                </Label>
+                <Label className="text-xs sm:text-sm">
+                  {detail.jenis_sk?.jenis_sk || "-"}
+                </Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Jenis Kenaikan Pangkat
+                </Label>
+                <Label className="text-xs sm:text-sm">
+                  {detail.jenis_kenaikan_pangkat?.jenis_pangkat || "-"}
+                </Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Nama Pangkat
+                </Label>
+                <Label className="text-xs sm:text-sm">
+                  {detail.pangkat?.nama || "-"}
+                </Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  TMT. Pangkat
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.tmt_pangkat)}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  No. SK
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.no_sk || "-"}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Tanggal SK
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.tgl_sk)}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Pejabat Penetap
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.pejabat_penetap || "-"}</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Masa Kerja (Tahun)
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.masa_kerja_tahun} Tahun</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Masa Kerja (Bulan)
+                </Label>
+                <Label className="text-xs sm:text-sm">{detail.masa_kerja_bulan} Bulan</Label>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Acuan Masa Kerja
+                </Label>
+                <Label className="text-xs sm:text-sm">
+                  {String(detail.acuan_masa_kerja) === "1" || detail.acuan_masa_kerja === true ? (
+                    <FaCheck className="text-green-500 w-4 h-4" />
+                  ) : (
+                    <IoClose className="text-red-500 w-4 h-4" />
+                  )}
+                </Label>
+              </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-black rounded-lg p-4">
-              {/* KIRI */}
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Jenis SK
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.jenis_sk || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Jenis Kenaikan Pangkat
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.jenis_pangkat || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Nama Pangkat
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.nama_golongan || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    TMT. Pangkat
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.tmt_pangkat
-                      ? format(parseISO(data.data.tmt_pangkat), "dd MMMM yyyy")
-                      : "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    No. SK
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.no_sk || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Tanggal SK
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.tgl_sk
-                      ? format(parseISO(data.data.tgl_sk), "dd MMMM yyyy")
-                      : "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Pejabat Penetap
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.pejabat_penetap || "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Masa Kerja(Tahun)
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.masa_kerja_tahun} Tahun
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Masa Kerja(Bulan)
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.masa_kerja_bulan} Bulan
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Acuan Masa Kerja
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.acuan_masa_kerja ? (
-                      <FaCheck className="text-green-500 w-4 h-4" />
-                    ) : (
-                      <IoClose className="text-red-500 w-4 h-4" />
-                    )}
-                  </Label>
-                </div>
+
+            {/* KANAN */}
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Status Pengajuan
+                </Label>
+                <Label className="text-xs sm:text-sm font-semibold capitalize">{detail.status}</Label>
               </div>
 
-              {/* KANAN */}
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Status Pengajuan
+              {detail.status === "ditolak" && detail.keterangan_penolakan && (
+                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2 bg-red-50 text-red-700">
+                  <Label className="text-red-700 font-semibold text-xs sm:text-sm shrink-0 w-38">
+                    Alasan Penolakan
                   </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.status_pengajuan || "-"}
-                  </Label>
+                  <Label className="text-xs sm:text-sm font-semibold">{detail.keterangan_penolakan}</Label>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Tanggal Diajukan
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.timestamps.tgl_diajukan
-                      ? format(
-                          parseISO(data.data.timestamps.tgl_diajukan),
-                          "dd MMMM yyyy"
-                        )
-                      : "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Tanggal Disetujui
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.data.timestamps.tgl_disetujui
-                      ? format(
-                          parseISO(data.data.timestamps.tgl_disetujui),
-                          "dd MMMM yyyy"
-                        )
-                      : "-"}
-                  </Label>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
-                  <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
-                    Dibuat Oleh
-                  </Label>
-                  <Label className="text-xs sm:text-sm">
-                    {data?.pegawai.nama || "-"}
-                  </Label>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Tanggal Diajukan
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.createdAt)}</Label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Tanggal Disetujui
+                </Label>
+                <Label className="text-xs sm:text-sm">{formatDate(detail.tgl_disetujui)}</Label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Dibuat Oleh
+                </Label>
+                <Label className="text-xs sm:text-sm">{data.pegawai?.nama || "-"}</Label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-between border-b p-2">
+                <Label className="font-semibold text-[#2572BE] text-xs sm:text-sm shrink-0 w-38">
+                  Dokumen SK
+                </Label>
+                <div className="flex flex-col gap-1 w-full text-right sm:text-left">
+                  {detail.dokumen && detail.dokumen.length > 0 ? (
+                    detail.dokumen.map((doc) => (
+                      <a
+                        key={doc.id}
+                        href={doc.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 hover:underline text-xs sm:text-sm block truncate w-full"
+                        title={doc.file_name}
+                      >
+                        {doc.file_name}
+                      </a>
+                    ))
+                  ) : (
+                    <span className="text-gray-400 italic text-xs sm:text-sm">Tidak ada dokumen</span>
+                  )}
                 </div>
               </div>
             </div>

@@ -10,13 +10,14 @@ import { useForm } from "react-hook-form";
 import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
 import InfoList from "@/components/blocks/InfoList";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import dosenServices from "@/services/dosen.services.ts";
 import postDosenServices from "@/services/create.dosen.services.ts";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -41,83 +42,25 @@ const fileSchema = z
   );
 
 const pangkatSchema = z.object({
-  jenis_sk_id: z
-    .string({ required_error: "Jenis SK tidak boleh kosong." })
-    .min(1, "Jenis SK tidak boleh kosong."),
-  jenis_kenaikan_pangkat_id: z
-    .string({ required_error: "Jenis kenaikan pangkat tidak boleh kosong." })
-    .min(1, "Jenis kenaikan pangkat tidak boleh kosong."),
-  pangkat_id: z
-    .string({ required_error: "Nama pangkat tidak boleh kosong." })
-    .min(1, "Nama pangkat tidak boleh kosong."),
-
-  tmt_pangkat: z
-    .string({ required_error: "TMT. Pangkat tidak boleh kosong." })
-    .min(1, "TMT. Pangkat tidak boleh kosong.")
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      "Format TMT. Pangkat tidak valid (YYYY-MM-DD)"
-    ),
-  no_sk: z
-    .string({ required_error: "No SK tidak boleh kosong." })
-    .min(1, "No SK tidak boleh kosong."),
-
-  file_pangkat: fileSchema, // Menggunakan skema file PDF saja
-
-  tgl_sk: z
-    .string({ required_error: "Tanggal SK tidak boleh kosong." })
-    .min(1, "Tanggal SK tidak boleh kosong.")
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format Tgl. SK tidak valid (YYYY-MM-DD)"),
-
-  pejabat_penetap: z
-    .string({ required_error: "Pejabat penetap tidak boleh kosong." })
-    .min(1, "Pejabat penetap tidak boleh kosong."),
-
-  masa_kerja_tahun: z.preprocess((val) => {
-    if (
-      val === "" ||
-      val === null ||
-      val === undefined ||
-      Number.isNaN(Number(val))
-    ) {
-      return Number(val);
-    }
-    return Number(val);
-  }, z.coerce.number({ required_error: "Masa Kerja (Tahun) tidak boleh kosong.", invalid_type_error: "Masa Kerja (Tahun) harus berupa angka." }).int("Masa Kerja (Tahun) harus bilangan bulat.").nonnegative("Masa Kerja (Tahun) tidak boleh negatif.").max(50, "Masa Kerja (Tahun) tidak boleh lebih dari 50.")),
-
-  masa_kerja_bulan: z.preprocess(
-    (val) =>
-      val === "" ||
-      val === null ||
-      val === undefined ||
-      Number.isNaN(Number(val))
-        ? undefined
-        : Number(val), // Konversi ke angka atau undefined
-    z.coerce
-      .number({ invalid_type_error: "Masa Kerja (Bulan) harus berupa angka." })
-      .int("Masa Kerja (Bulan) harus bilangan bulat.") // Validasi baru
-      .nonnegative("Masa kerja (Bulan) tidak boleh negatif.") // Tambahan asumsi
-      .optional()
-      .nullable()
-  ),
-  acuan_masa_kerja: z.enum(["1", "0"], {
-    errorMap: (issue, ctx) => {
-      if (issue.code === z.ZodIssueCode.invalid_enum_value) {
-        return { message: "Acuan Masa Kerja harus dipilih (Ya/Tidak)." };
-      }
-      return { message: ctx.defaultError };
-    },
-  }),
-
-  tanggal_input: z.string().optional().nullable(),
-  submit_type: z.string(),
-  is_aktif: z.string(),
+  jenis_sk_id: z.string().min(1, "Jenis SK tidak boleh kosong."),
+  jenis_kenaikan_pangkat_id: z.string().min(1, "Jenis kenaikan pangkat tidak boleh kosong."),
+  pangkat_id: z.string().min(1, "Nama pangkat tidak boleh kosong."),
+  tmt_pangkat: z.string().min(1, "TMT. Pangkat tidak boleh kosong."),
+  no_sk: z.string().min(1, "No SK tidak boleh kosong."),
+  file_pangkat: fileSchema,
+  tgl_sk: z.string().min(1, "Tanggal SK tidak boleh kosong."),
+  pejabat_penetap: z.string().min(1, "Pejabat penetap tidak boleh kosong."),
+  masa_kerja_tahun: z.coerce.number().int().nonnegative().max(50),
+  masa_kerja_bulan: z.coerce.number().int().nonnegative().max(11).optional().nullable(),
+  acuan_masa_kerja: z.enum(["1", "0"]),
+  keterangan: z.string().optional(),
 });
 
 type PangkatFormData = z.infer<typeof pangkatSchema>;
 
 const DetailPangkat = () => {
   const navigate = useNavigate();
+  const { profile } = usePegawaiProfile();
 
   const form = useForm({
     defaultValues: {
@@ -132,35 +75,20 @@ const DetailPangkat = () => {
       masa_kerja_tahun: 0,
       masa_kerja_bulan: undefined,
       acuan_masa_kerja: "0",
-      tanggal_input: null,
-      submit_type: "submit",
-      is_aktif: "1",
+      keterangan: "",
     },
     resolver: zodResolver(pangkatSchema),
   });
 
-  // get data
-  const { data: detailData } = useQuery({
-    queryKey: ["pangkat-detail-dosen"],
-    queryFn: async () => {
-      const response = await dosenServices.getDataPangkatWithoutParam();
-
-      return response.data;
-    },
-  });
-
-  // add data
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: (formData: FormData) =>
       postDosenServices.addDataPangkat(formData),
-    onSuccess: (response) => {
-      console.log("Server response:", response);
+    onSuccess: () => {
       form.reset();
       toast.success("Data berhasil ditambahkan");
       navigate("/data-riwayat/kepegawaian/pangkat");
     },
     onError: (error: any) => {
-      console.error("Mutation error:", error);
       const errorMessage =
         error.response?.data?.message || "Gagal menambahkan data.";
       toast.error(errorMessage);
@@ -169,64 +97,54 @@ const DetailPangkat = () => {
 
   const handleSubmitPangkat = (values: PangkatFormData) => {
     const formData = new FormData();
+    formData.append("jenis_sk_id", values.jenis_sk_id);
+    formData.append("jenis_kenaikan_pangkat_id", values.jenis_kenaikan_pangkat_id);
+    formData.append("pangkat_id", values.pangkat_id);
+    formData.append("tmt_pangkat", values.tmt_pangkat);
+    formData.append("no_sk", values.no_sk);
+    formData.append("tgl_sk", values.tgl_sk);
+    formData.append("pejabat_penetap", values.pejabat_penetap);
+    formData.append("masa_kerja_tahun", String(values.masa_kerja_tahun));
+    if (values.masa_kerja_bulan !== null && values.masa_kerja_bulan !== undefined) {
+      formData.append("masa_kerja_bulan", String(values.masa_kerja_bulan));
+    }
+    formData.append("acuan_masa_kerja", values.acuan_masa_kerja);
+    if (values.keterangan) {
+      formData.append("keterangan", values.keterangan);
+    }
 
     if (values.file_pangkat && values.file_pangkat.length > 0) {
       formData.append("file_pangkat", values.file_pangkat[0]);
     }
-
-    (Object.keys(values) as Array<keyof PangkatFormData>).forEach((key) => {
-      if (key !== "file_pangkat") {
-        let valueToAppend = values[key];
-
-        if (
-          key === "masa_kerja_tahun" &&
-          (valueToAppend === null || valueToAppend === undefined)
-        ) {
-          valueToAppend = 0;
-        }
-
-        if (valueToAppend !== null && valueToAppend !== undefined) {
-          formData.append(key, String(valueToAppend));
-        } else {
-          // @ts-ignore
-          if (key === "masa_kerja_tahun" && valueToAppend === 0) {
-            formData.append(key, String(valueToAppend));
-          }
-        }
-      }
-    });
 
     mutate(formData);
   };
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Pangkat" subTitle="Detail Pangkat" />
+      <Title title="Pangkat" subTitle="Tambah Pangkat Baru" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmitPangkat)}>
           <CustomCard
             actions={
-              <div className=" flex justify-start md:justify-end mt-10">
+              <div className="flex justify-start md:justify-end mt-10">
                 <div className="flex w-full md:w-auto flex-col md:flex-row gap-4">
                   <Button
-                    onClick={() =>
-                      navigate("/data-riwayat/kepegawaian/pangkat")
-                    }
+                    type="button"
+                    onClick={() => navigate("/data-riwayat/kepegawaian/pangkat")}
                     className="bg-green-light-uika hover:bg-[#329C59] cursor-pointer w-full md:w-auto flex items-center gap-2 text-xs md:text-sm"
                   >
-                    <IoIosArrowBack className="w-3! h-3! md:w-4! h-4!" />
+                    <IoIosArrowBack />
                     Kembali ke Daftar
                   </Button>
 
-                  <Button className="w-full sm:w-auto bg-[#FDA31A] hover:bg-[#329C59] cursor-pointer flex items-center gap-2 text-xs md:text-sm">
-                    {isSubmitting ? (
-                      "Menyimpan..."
-                    ) : (
-                      <>
-                        <MdOutlineFileDownload />
-                        Simpan
-                      </>
-                    )}
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto bg-[#FDA31A] hover:bg-[#e08c10] cursor-pointer flex items-center gap-2 text-xs md:text-sm text-white"
+                  >
+                    <MdOutlineFileDownload />
+                    {isSubmitting ? "Menyimpan..." : "Simpan"}
                   </Button>
                 </div>
               </div>
@@ -235,39 +153,23 @@ const DetailPangkat = () => {
 
           <InfoList
             items={[
-              { label: "NIP", value: detailData?.pegawai_info.nip },
-              { label: "Nama", value: detailData?.pegawai_info.nama },
-              {
-                label: "Unit Kerja",
-                value: detailData?.pegawai_info.unit_kerja,
-              },
-              { label: "Status", value: detailData?.pegawai_info.status },
-              {
-                label: "Jab. Akademik",
-                value: detailData?.pegawai_info.jab_akademik,
-              },
-              {
-                label: "Jab. Fungsional",
-                value: detailData?.pegawai_info.jab_fungsional,
-              },
-              {
-                label: "Jab. Struktural",
-                value: detailData?.pegawai_info.jab_struktural,
-              },
-              {
-                label: "Pendidikan",
-                value: detailData?.pegawai_info.pendidikan,
-              },
+              { label: "NIP", value: profile?.nip ?? "-" },
+              { label: "Nama", value: profile?.nama ?? "-" },
+              { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+              { label: "Status", value: profile?.status ?? "-" },
+              { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+              { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+              { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
             ]}
           />
 
-          <div className="grid md:grid-rows-6 md:grid-flow-col gap-5 items-center mt-4">
+          <div className="grid md:grid-rows-6 md:grid-flow-col gap-5 items-center mt-10">
             <InfiniteScrollSelect
               form={form}
-              label="Jenis Sk"
+              label="Jenis SK"
               name="jenis_sk_id"
               labelStyle="text-[#3F6FA9]"
-              placeholder="--Pilih Jenis Sk--"
+              placeholder="--Pilih Jenis SK--"
               required={true}
               queryKey="jenis_sk_datariwayat_pangkat"
               queryFn={dosenServices.getJenisSk}
@@ -310,7 +212,7 @@ const DetailPangkat = () => {
               form={form}
               label="No. SK"
               name="no_sk"
-              required={false}
+              required={true}
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
             />
             <FormFieldInputFile
@@ -326,14 +228,14 @@ const DetailPangkat = () => {
               label="Tgl. SK"
               name="tgl_sk"
               type="date"
-              required={false}
+              required={true}
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
             />
             <FormFieldInput
               form={form}
               label="Pejabat Penetap"
               name="pejabat_penetap"
-              required={false}
+              required={true}
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
             />
 
@@ -342,7 +244,7 @@ const DetailPangkat = () => {
               label="Masa Kerja (Tahun)"
               name="masa_kerja_tahun"
               type="number"
-              required={false}
+              required={true}
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
             />
 
@@ -361,20 +263,19 @@ const DetailPangkat = () => {
               name="acuan_masa_kerja"
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
               options={[
-                { value: "1", label: "Ya" }, // <<< Ubah value menjadi "1"
-                { value: "0", label: "Tidak" }, // <<< Ubah value menjadi "0"
+                { value: "1", label: "Ya" },
+                { value: "0", label: "Tidak" },
               ]}
-              required={false} // Tetap false karena skema Zod Anda .optional().nullable()
+              required={true}
               placeholder="-- Pilih Acuan --"
             />
 
             <FormFieldInput
               form={form}
-              label="Tanggal Input"
-              name="tanggal_input"
+              label="Keterangan"
+              name="keterangan"
               required={false}
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
-              placeholder="22 April 2025"
             />
           </div>
         </form>

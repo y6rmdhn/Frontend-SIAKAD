@@ -31,6 +31,16 @@ const dosenServices = {
     // Ganti dengan endpoint yang benar untuk mengambil detail profil pegawai
     return axiosInstance.get(`${endpoint.DOSEN}/profil-pegawai`);
   },
+  getDataKeluarga: (params?: {
+    page?: number | string;
+    search?: string;
+    status?: string;
+  }) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-keluarga`, {
+      params,
+    }),
+  getDataKeluargaDetail: (id: string | number) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-keluarga/${id}`),
   getDataAnakWithoutParam: () => axiosInstance.get(`${endpoint.DOSEN}/anak`),
 
   getDataAnakDetail: (id: number | string) =>
@@ -89,7 +99,7 @@ const dosenServices = {
   getDataPangkatWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/pangkat`),
   getDataPangkatDetail: (id: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pangkat/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-pangkat/` + id),
 
   getJabatanAkademik: (page: any) =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`, {
@@ -104,27 +114,23 @@ const dosenServices = {
   getDataJabatanakademikWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/jabatanakademik`),
 
-  getJabatanFungsional: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`, {
-      params: {
-        page: page,
-      },
+  getJabatanFungsional: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-fungsional`, {
+      params,
     }),
   getJabatanFungsionalDetail: (id: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-fungsional/` + id),
   getDataJabatanakfungsionalWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatanfungsional`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-fungsional`),
 
-  getJabatanStruktural: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`, {
-      params: {
-        page: page,
-      },
+  getJabatanStruktural: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-struktural`, {
+      params,
     }),
   getJabatanStrukturalDetail: (id: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-struktural/` + id),
   getDataJabatanakstrukturalWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/jabatanstruktural`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-jabatan-struktural`),
 
   getHubunganKerja: (params?: any) =>
     axiosInstance.get(`${endpoint.VALIDASI}/data-hubungan-kerja`, {
@@ -147,43 +153,33 @@ const dosenServices = {
   getDataDiklatWithoutParam: () =>
     axiosInstance.get(`${endpoint.DOSEN}/data-diklat`),
 
-  getRiwayatPekerjaan: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen`, {
-      params: {
-        page: page,
-        search: search,
-      },
+  getRiwayatPekerjaan: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-riwayat-pekerjaan`, {
+      params,
     }),
-  getPenghargaan: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen`, {
-      params: {
-        page: page,
-        search: search,
-      },
+  getPenghargaan: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-penghargaan`, {
+      params,
     }),
 
   // Pengenbangan Diri
-  getKemampuanBahasa: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`, {
-      params: {
-        page: page,
-      },
+  getKemampuanBahasa: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-kemampuan-bahasa`, {
+      params,
     }),
   getKemampuanBahasaDetail: (id: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-kemampuan-bahasa/` + id),
   getDataKemampuanBahasaWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/datakemampuanbahasa`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-kemampuan-bahasa`),
 
-  getOrganisasi: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi`, {
-      params: {
-        page: page,
-      },
+  getOrganisasi: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-organisasi`, {
+      params,
     }),
   getOrganisasiDetail: (id: number | string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-organisasi/` + id),
   getDataOrganisasiWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/dataorganisasi`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-organisasi`),
 
   // riwayat kehadiran
   getDataRiwayatKehadiran: (tahun: number | string) =>
@@ -212,27 +208,23 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.ABSENSI}/statistik/dashboard`),
 
   //   kualifikasi
-  getDataSertifikasiDosen: (page: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen`, {
-      params: {
-        page: page,
-      },
+  getDataSertifikasiDosen: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-sertifikasi`, {
+      params,
     }),
-  getDataTesDosen: (page?: any) =>
-    axiosInstance.get(`${endpoint.DOSEN}/datariwayattes`, {
-      params: {
-        page: page,
-      },
+  getDataTesDosen: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-test`, {
+      params,
     }),
 
   getDetailDataSertifikasiDosen: (id: string | number) =>
-    axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-sertifikasi/` + id),
 
   getDetailDataTesDosen: (id: string | number) =>
-    axiosInstance.get(`${endpoint.DOSEN}/datariwayattes/` + id),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-test/` + id),
 
   getDataDataSertifikasiWithoutParam: () =>
-    axiosInstance.get(`${endpoint.DOSEN}/datasertifikasidosen`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-sertifikasi`),
 
   // operasional
   getDataIzin: (params?: {
@@ -282,12 +274,9 @@ const dosenServices = {
       params: cleanParams,
     });
   },
-  getDataPendidikanFormalUser: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen`, {
-      params: {
-        page: page,
-        search: search,
-      },
+  getDataPendidikanFormalUser: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-pendidikan-formal`, {
+      params,
     }),
   getDataPelanggaran: (page?: any, search?: string | undefined) =>
     axiosInstance.get(`${endpoint.DOSEN}/riwayatpelanggarandosen`, {
@@ -457,11 +446,11 @@ const dosenServices = {
 
   getLocation: () => axiosInstance.get(`${endpoint.DOSEN}/setting-kehadiran`),
   getPendidikanFormalDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/pendidikanformaldosen/${id}`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-pendidikan-formal/${id}`),
   getRiwayatPekerjaanDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/data-riwayat-pekerjaan-dosen/${id}`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-riwayat-pekerjaan/${id}`),
   getPenghargaanDetail: (id: string) =>
-    axiosInstance.get(`${endpoint.DOSEN}/penghargaandosen/${id}`),
+    axiosInstance.get(`${endpoint.VALIDASI}/data-penghargaan/${id}`),
   getBeritaDetail: (id: string) =>
     axiosInstance.get(`${endpoint.DOSEN}/berita/${id}`),
   getSlipGaji: (params?: { pegawai_id?: string; periode_tahun?: string }) =>

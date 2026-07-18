@@ -1,266 +1,435 @@
-import CustomCard from "@/components/blocks/Card";
-import Title from "@/components/blocks/Title";
-import { Button } from "@/components/ui/button";
-import { MdOutlineFileDownload } from "react-icons/md";
-import InfoList from "@/components/blocks/InfoList";
-import { Link, useNavigate } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
-import { Form } from "@/components/ui/form";
-import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
-import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import dosenServices from "@/services/dosen.services";
-import postDosenServices from "@/services/create.dosen.services";
-import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
-
-// Import Zod dan resolvernya
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormFieldInputFile } from "@/components/blocks/CustomFormInputFile/CustomFormInputFile";
-import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
-import { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
-// Definisikan skema validasi dengan Zod
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+// UI & Komponen
+import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import CustomCard from "@/components/blocks/Card";
+import Title from "@/components/blocks/Title";
+import InfoList from "@/components/blocks/InfoList";
+import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormInput";
+import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
+
+// Ikon & Notifikasi
+import { IoIosArrowBack } from "react-icons/io";
+import { MdOutlineSave } from "react-icons/md";
+import { Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+
+// Servis
+import dosenServices from "@/services/dosen.services";
+import adminServices from "@/services/admin.services.ts";
+import postDosenServices from "@/services/create.dosen.services";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+
+const TIPE_DOKUMEN_OPTIONS = [
+  { value: "file", label: "File Upload" },
+  { value: "url", label: "Tautan (URL)" },
+];
+
+const defaultDokumenRow = {
+  tipe_dokumen: "file" as "file" | "url",
+  file: null as File | null,
+  url_dokumen: "",
+  file_name: "",
+  keterangan: "",
+};
+
+const dokumenRowSchema = z.discriminatedUnion("tipe_dokumen", [
+  z.object({
+    tipe_dokumen: z.literal("file"),
+    file: z.instanceof(File, { message: "File wajib diupload" }),
+    url_dokumen: z.string().optional(),
+    file_name: z.string().optional(),
+    keterangan: z.string().optional(),
+  }),
+  z.object({
+    tipe_dokumen: z.literal("url"),
+    file: z.null().optional(),
+    url_dokumen: z.string().url({ message: "Format URL tidak valid" }),
+    file_name: z.string().min(1, { message: "Nama dokumen wajib diisi" }),
+    keterangan: z.string().optional(),
+  }),
+]);
 
 const penghargaanSchema = z.object({
-  jenis_penghargaan_id: z.string().min(1, "Jenis penghargaan wajib diisi."),
+  jenis_penghargaan_id: z.string().min(1, "Jenis penghargaan wajib dipilih."),
   nama_penghargaan: z.string().min(1, "Nama penghargaan wajib diisi."),
-  instansi_pemberi: z.string().min(1, "Instansi pemberi wajib diisi."),
-  tanggal_penghargaan: z.string().min(1, "Tanggal penghargaan wajib diisi."),
-  no_sk: z.string().min(1, "No. SK wajib diisi."),
-  tanggal_sk: z.string().min(1, "Tanggal SK wajib diisi."),
-  keterangan: z.string().min(1, "Keterangan wajib diisi."),
-  file_penghargaan: z
-    .instanceof(FileList)
-    .refine((files) => files?.length > 0, "File pendukung wajib diunggah.")
-    .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      "Ukuran file maksimal 2MB."
-    )
-    .refine(
-      (files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type),
-      "Format file harus .pdf, .jpg, atau .png"
-    ),
-  submit_type: z.string().optional(),
+  instansi: z.string().min(1, "Instansi pemberi wajib diisi."),
+  tgl_penghargaan: z.string().min(1, "Tanggal penghargaan wajib diisi."),
+  no_sk: z.string().min(1, "Nomor SK wajib diisi."),
+  keterangan: z.string().optional(),
+  dokumen: z.array(dokumenRowSchema).optional(),
 });
 
-type PenghargaanFormalValues = z.infer<typeof penghargaanSchema>;
+type PenghargaanValues = z.infer<typeof penghargaanSchema>;
+
+const DokumenRow = ({
+  form,
+  index,
+  onRemove,
+}: {
+  form: any;
+  index: number;
+  onRemove: () => void;
+}) => {
+  const tipe = form.watch(`dokumen.${index}.tipe_dokumen`);
+
+  return (
+    <tr className="border-b hover:bg-gray-50">
+      <td className="px-3 py-2 align-top">
+        <FormField
+          control={form.control}
+          name={`dokumen.${index}.tipe_dokumen`}
+          render={({ field }) => (
+            <FormItem>
+              <Select
+                value={field.value}
+                onValueChange={(val: "file" | "url") => {
+                  field.onChange(val);
+                  form.setValue(`dokumen.${index}.file`, null);
+                  form.setValue(`dokumen.${index}.url_dokumen`, "");
+                  form.setValue(`dokumen.${index}.file_name`, "");
+                }}
+              >
+                <SelectTrigger className="h-8 text-xs w-32">
+                  <SelectValue placeholder="Pilih tipe" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TIPE_DOKUMEN_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage className="text-[10px]" />
+            </FormItem>
+          )}
+        />
+      </td>
+
+      <td className="px-3 py-2 align-top">
+        {tipe === "file" ? (
+          <FormField
+            control={form.control}
+            name={`dokumen.${index}.file`}
+            render={({ field: { onChange } }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="h-8 text-xs w-48"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      onChange(file);
+                      if (file) form.setValue(`dokumen.${index}.file_name`, file.name);
+                    }}
+                  />
+                </FormControl>
+                <p className="text-[10px] text-gray-400">pdf, jpg, jpeg, png (maks 2MB)</p>
+                <FormMessage className="text-[10px]" />
+              </FormItem>
+            )}
+          />
+        ) : (
+          <FormField
+            control={form.control}
+            name={`dokumen.${index}.url_dokumen`}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="url"
+                    placeholder="https://..."
+                    className="h-8 text-xs w-48"
+                  />
+                </FormControl>
+                <FormMessage className="text-[10px]" />
+              </FormItem>
+            )}
+          />
+        )}
+      </td>
+
+      <td className="px-3 py-2 align-top">
+        <FormField
+          control={form.control}
+          name={`dokumen.${index}.file_name`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={tipe === "file" ? "Otomatis dari file..." : "Nama dokumen..."}
+                  readOnly={tipe === "file"}
+                  className={cn(
+                    "h-8 text-xs",
+                    tipe === "file" && "bg-gray-100 cursor-not-allowed text-gray-500"
+                  )}
+                />
+              </FormControl>
+              <FormMessage className="text-[10px]" />
+            </FormItem>
+          )}
+        />
+      </td>
+
+      <td className="px-3 py-2 align-top">
+        <FormField
+          control={form.control}
+          name={`dokumen.${index}.keterangan`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input {...field} placeholder="Keterangan..." className="h-8 text-xs" />
+              </FormControl>
+              <FormMessage className="text-[10px]" />
+            </FormItem>
+          )}
+        />
+      </td>
+
+      <td className="px-3 py-2 align-top text-center">
+        <button
+          type="button"
+          onClick={onRemove}
+          className="text-red-500 hover:text-red-700 p-1 rounded cursor-pointer"
+        >
+          <Trash2 size={14} />
+        </button>
+      </td>
+    </tr>
+  );
+};
 
 const DetailPenghargaan = () => {
   const navigate = useNavigate();
+  const { profile } = usePegawaiProfile();
 
-  const form = useForm({
+  const form = useForm<PenghargaanValues>({
     resolver: zodResolver(penghargaanSchema),
     defaultValues: {
       jenis_penghargaan_id: "",
       nama_penghargaan: "",
-      instansi_pemberi: "",
-      tanggal_penghargaan: "",
+      instansi: "",
+      tgl_penghargaan: "",
       no_sk: "",
-      tanggal_sk: "",
       keterangan: "",
-      file_penghargaan: undefined,
-      submit_type: "submit",
+      dokumen: [],
     },
   });
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["penghargaan-dosen-detail"],
-    queryFn: async () => {
-      const response = await dosenServices.getPenghargaan();
-      return response.data;
-    },
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "dokumen",
   });
 
-  const { mutate: addPenghargaan, isPending } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (formData: FormData) =>
       postDosenServices.addDataPenghargaan(formData),
     onSuccess: () => {
-      toast.success("Data berhasil ditambahkan");
+      toast.success("Data penghargaan berhasil ditambahkan");
+      form.reset();
       navigate("/data-riwayat/penunjang/penghargaan");
     },
-    onError: (error) => {
-      console.error("Mutation error:", error);
-      let errorMessage = "Gagal menambahkan data.";
-
-      if (error instanceof AxiosError) {
-        errorMessage = error.response?.data?.message || errorMessage;
-      }
-
+    onError: (error: any) => {
+      const errorMessage =
+        error.response?.data?.message || "Gagal menambahkan data.";
       toast.error(errorMessage);
     },
   });
 
-  // ✨ FIX: Fungsi handleSubmitData diperbarui
-  const handleSubmitData = (values: PenghargaanFormalValues) => {
+  const handleSubmitData = (values: PenghargaanValues) => {
     const formData = new FormData();
+    formData.append("jenis_penghargaan_id", values.jenis_penghargaan_id);
+    formData.append("nama_penghargaan", values.nama_penghargaan);
+    formData.append("instansi", values.instansi);
+    formData.append("tgl_penghargaan", values.tgl_penghargaan);
+    formData.append("no_sk", values.no_sk);
+    if (values.keterangan) formData.append("keterangan", values.keterangan);
 
-    Object.keys(values).forEach((key) => {
-      // Lakukan type assertion pada `key`
-      const typedKey = key as keyof PenghargaanFormalValues;
-      const value = values[typedKey];
+    // Dokumen metadata JSON
+    const dokumenMeta = (values.dokumen ?? []).map((dok) => ({
+      tipe_dokumen: dok.tipe_dokumen,
+      file_name:
+        dok.tipe_dokumen === "file" ? (dok.file as File).name : dok.file_name,
+      url_dokumen: dok.tipe_dokumen === "url" ? dok.url_dokumen : null,
+      keterangan: dok.keterangan || null,
+    }));
 
-      if (
-        typedKey === "file_penghargaan" &&
-        value instanceof FileList &&
-        value.length > 0
-      ) {
-        formData.append(typedKey, value[0]);
-      } else if (typeof value === "string") {
-        formData.append(typedKey, value);
+    if (dokumenMeta.length > 0) {
+      formData.append("dokumen", JSON.stringify(dokumenMeta));
+    }
+
+    // File fisik
+    (values.dokumen ?? []).forEach((dok, index) => {
+      if (dok.tipe_dokumen === "file" && dok.file instanceof File) {
+        formData.append(`dokumen[${index}][file]`, dok.file);
       }
     });
 
-    addPenghargaan(formData);
+    mutate(formData);
   };
-
-  if (isLoading) {
-    return (
-      <div className="mt-10 mb-20">
-        <Title title="Pendidikan Formal" subTitle="Detail Pendidikan Formal" />
-        <CustomCard>
-          <Skeleton className="h-40 w-full mb-6" />
-          <div className="space-y-6">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-        </CustomCard>
-      </div>
-    );
-  }
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Penghargaan" subTitle="Detail Penghargaan" />
-
+      <Title title="Penghargaan" subTitle="Tambah Penghargaan Baru" />
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleSubmitData)}
-          className="mt-10 space-y-6"
-        >
+        <form onSubmit={form.handleSubmit(handleSubmitData)}>
           <CustomCard>
-            <div className="w-full flex justify-end gap-4 mb-6">
+            <div className="flex justify-end gap-2 w-full flex-col md:flex-row mb-5">
               <Link to="/data-riwayat/penunjang/penghargaan">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <IoIosArrowBack />
-                  Kembali ke Daftar
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full md:w-auto"
+                >
+                  <IoIosArrowBack className="mr-2" /> Kembali ke Daftar
                 </Button>
               </Link>
               <Button
                 type="submit"
-                className="bg-[#FDA31A] hover:bg-[#e69316] cursor-pointer flex items-center gap-2"
                 disabled={isPending}
+                className="bg-[#FDA31A] w-full md:w-auto text-white hover:bg-[#e69310]"
               >
-                <MdOutlineFileDownload />
+                <MdOutlineSave className="mr-2" />
                 {isPending ? "Menyimpan..." : "Simpan"}
               </Button>
             </div>
 
-            {data?.pegawai_info && (
-              <InfoList
-                items={[
-                  { label: "NIP", value: data.pegawai_info.nip },
-                  { label: "Nama", value: data.pegawai_info.nama },
-                  { label: "Unit Kerja", value: data.pegawai_info.unit_kerja },
-                  { label: "Status", value: data.pegawai_info.status },
-                  {
-                    label: "Jab. Akademik",
-                    value: data.pegawai_info.jab_akademik,
-                  },
-                  {
-                    label: "Jab. Fungsional",
-                    value: data.pegawai_info.jab_fungsional,
-                  },
-                  {
-                    label: "Jab. Struktural",
-                    value: data.pegawai_info.jab_struktural,
-                  },
-                  { label: "Pendidikan", value: data.pegawai_info.pendidikan },
-                ]}
-              />
-            )}
+            <InfoList
+              items={[
+                { label: "NIP", value: profile?.nip ?? "-" },
+                { label: "Nama", value: profile?.nama ?? "-" },
+                { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+                { label: "Status", value: profile?.status ?? "-" },
+                { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+                { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+                { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
+              ]}
+            />
 
-            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-x-10 gap-y-4 mt-6">
-              <InfiniteScrollSelect
-                form={form}
-                label="Jenis Penghargaan"
-                name="jenis_penghargaan_id"
-                placeholder="--Pilih Jenis Penghargaan--"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-                queryKey="penghargaan-select"
-                queryFn={dosenServices.getJenisPenghargaanReferensi}
-                itemValue="id"
-                itemLabel="nama"
-              />
-              <FormFieldInput
-                form={form}
-                label="Nama Penghargaan"
-                name="nama_penghargaan"
-                type="text"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-                placeholder="Contoh: Penghargaan Dosen Berprestasi"
-              />
+            <div className="mt-10">
+              <div className="border-b-2 border-[#FDA31A] pb-2 mb-6">
+                <h2 className="text-lg font-semibold text-green-600">
+                  Formulir Penghargaan
+                </h2>
+              </div>
+              <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
+                <InfiniteScrollSelect
+                  form={form}
+                  label="Jenis Penghargaan"
+                  name="jenis_penghargaan_id"
+                  placeholder="--Pilih Jenis Penghargaan--"
+                  required
+                  queryKey="jenis-penghargaan-user"
+                  queryFn={(page) => adminServices.getJenisPenghargaan({ page, is_dropdown: true })}
+                  itemValue="id"
+                  itemLabel="nama"
+                />
+                <FormFieldInput
+                  name="nama_penghargaan"
+                  label="Nama Penghargaan"
+                  form={form}
+                  required
+                  placeholder="Masukkan nama penghargaan"
+                />
+                <FormFieldInput
+                  name="instansi"
+                  label="Instansi Pemberi"
+                  form={form}
+                  required
+                  placeholder="Masukkan instansi pemberi"
+                />
+                <FormFieldInput
+                  name="tgl_penghargaan"
+                  label="Tanggal Penghargaan"
+                  type="date"
+                  form={form}
+                  required
+                />
+                <FormFieldInput
+                  name="no_sk"
+                  label="Nomor SK"
+                  form={form}
+                  required
+                  placeholder="Masukkan nomor SK"
+                />
+                <div className="md:col-span-2">
+                  <FormFieldInput
+                    name="keterangan"
+                    label="Keterangan"
+                    form={form}
+                    placeholder="Keterangan tambahan"
+                    type="textarea"
+                  />
+                </div>
+              </div>
+            </div>
 
-              <FormFieldInput
-                form={form}
-                label="Instansi Pemberi"
-                name="instansi_pemberi"
-                type="text"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-                placeholder="Contoh: Kementerian Pendidikan"
-              />
-
-              <FormFieldInput
-                form={form}
-                label="Tanggal Penghargaan"
-                name="tanggal_penghargaan"
-                type="date"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-              />
-
-              <FormFieldInput
-                form={form}
-                label="Nomor SK"
-                name="no_sk"
-                type="text"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-                placeholder="Contoh: 123/SK/VI/2025"
-              />
-
-              <FormFieldInput
-                form={form}
-                label="Tanggal SK"
-                name="tanggal_sk"
-                type="date"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-              />
-
-              <FormFieldInput
-                form={form}
-                label="Keterangan"
-                name="keterangan"
-                type="textarea"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-                placeholder="Jelaskan prestasi atau detail penghargaan"
-              />
-
-              <FormFieldInputFile
-                label="File Pendukung"
-                name="file_penghargaan"
-                required={true}
-                labelStyle="text-[#3F6FA9]"
-              />
+            {/* Dokumen Pendukung Dinamis */}
+            <div className="mt-10 space-y-4">
+              <div className="flex items-center justify-between border-b border-teal-600 pb-2">
+                <h3 className="text-teal-600 font-semibold">Dokumen Pendukung</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-[#1B3A5C] text-white">
+                      <th className="px-3 py-2 text-left w-36">Tipe Dokumen</th>
+                      <th className="px-3 py-2 text-left w-52">Dokumen</th>
+                      <th className="px-3 py-2 text-left">Nama Dokumen</th>
+                      <th className="px-3 py-2 text-left">Keterangan</th>
+                      <th className="px-3 py-2 w-12 text-center">
+                        <button
+                          type="button"
+                          onClick={() => append({ ...defaultDokumenRow })}
+                          className="bg-green-50 hover:bg-green-600 text-white rounded p-1 cursor-pointer"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fields.map((field, index) => (
+                      <DokumenRow
+                        key={field.id}
+                        form={form}
+                        index={index}
+                        onRemove={() => remove(index)}
+                      />
+                    ))}
+                    {fields.length === 0 && (
+                      <tr>
+                        <td
+                          colSpan={5}
+                          className="text-center py-6 text-gray-400 italic text-sm"
+                        >
+                          Belum ada dokumen. Klik <strong>+</strong> untuk menambah.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </CustomCard>
         </form>

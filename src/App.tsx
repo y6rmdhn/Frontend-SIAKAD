@@ -1,4 +1,7 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import environment from "@/config/environments";
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -1014,30 +1017,12 @@ const DetailDataPenunjangLainUserPage = lazy(
       "./pages/dataRiwayat/Penunjang/PenunjangLain/detaildataPenunjangLain"
     )
 );
-const AnakUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga/Anak"));
-const DetailAnakUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Anak/detailAnak")
+const KeluargaUserPage = lazy(() => import("./pages/dataRiwayat/Keluarga"));
+const TambahKeluargaUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/tambahKeluarga")
 );
-const DetailDataAnakUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Anak/detaildataAnak")
-);
-const OrangtuaUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Orangtua")
-);
-const DetailOrangtuaUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Orangtua/detailOrangtua")
-);
-const DetailDataOrangtuaUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Orangtua/detaildataOrangtua")
-);
-const PasanganUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Pasangan")
-);
-const DetailPasanganUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Pasangan/detailPasangan")
-);
-const DetailDataPasanganUserPage = lazy(
-  () => import("./pages/dataRiwayat/Keluarga/Pasangan/detaildataPasangan")
+const DetailKeluargaUserPage = lazy(
+  () => import("./pages/dataRiwayat/Keluarga/DetailKeluarga")
 );
 const BiodataPageUser = lazy(() => import("./pages/biodata"));
 const EvaluasiKerjaUserPage = lazy(
@@ -1075,6 +1060,32 @@ import DetailDataOrganisasiKepegawaianPage from "./pages/admin/validasiData/peng
 import DetailDataKemampuanBahasaKepegawaianPage from "./pages/admin/validasiData/pengembangan/kemampuanBahasa/detaildataKemampuanBahasa";
 import DetailDataPenghargaanKepegawaianPage from "./pages/admin/validasiData/penunjang/penghargaan/detaildataPenghargaan";
 
+// Komponen untuk redirect root berdasarkan role
+const RootRedirect = () => {
+  const user = useSelector((state: RootState) => state.user);
+
+  if (!user.accessToken) {
+    // Belum login, redirect ke ePortal
+    const eportalUrl = environment.EPORTAL_URL;
+    if (eportalUrl) {
+      window.location.href = eportalUrl;
+    }
+    return (
+      <div className="flex flex-col gap-2 justify-center items-center w-screen h-screen">
+        <div className="w-12 h-12 border-4 border-emerald-800/30 border-t-emerald-800 rounded-full animate-spin" />
+        <p className="text-gray-600">Mengalihkan ke Portal Login...</p>
+      </div>
+    );
+  }
+
+  // Sudah login, redirect berdasarkan role
+  const role = user.role;
+  if (role === "Admin" || role === "Admin Kepegawaian") {
+    return <Navigate to="/admin/dasboard" replace />;
+  }
+  return <Navigate to="/dasboard" replace />;
+};
+
 function App() {
   const { isHydrate } = useHydration();
 
@@ -1100,7 +1111,7 @@ function App() {
       <Toaster position="top-right" />
       <Suspense fallback={<SuspenseLoadingFallback />}>
         <Routes>
-          <Route path="/" Component={ModulePage} />
+          <Route path="/" element={<RootRedirect />} />
           <Route path="/login" Component={LoginPage} />
           <Route path="/forget-password" Component={ForgetPasswordPage} />
           <Route path="/profil" Component={ProfilPage} />
@@ -1241,30 +1252,9 @@ function App() {
 
             {/* DATA RIWAYAT > KELUARGA */}
             <Route path="keluarga">
-              <Route path="anak" Component={AnakUserPage} />
-              <Route path="detail-anak" Component={DetailAnakUserPage} />
-              <Route
-                path="detail-data-anak/:id"
-                Component={DetailDataAnakUserPage}
-              />
-              <Route path="orangtua" Component={OrangtuaUserPage} />
-              <Route
-                path="detail-orangtua"
-                Component={DetailOrangtuaUserPage}
-              />
-              <Route
-                path="detail-data-orangtua/:id"
-                Component={DetailDataOrangtuaUserPage}
-              />
-              <Route path="pasangan" Component={PasanganUserPage} />
-              <Route
-                path="detail-pasangan"
-                Component={DetailPasanganUserPage}
-              />
-              <Route
-                path="detail-data-pasangan/:id"
-                Component={DetailDataPasanganUserPage}
-              />
+              <Route index Component={KeluargaUserPage} />
+              <Route path="tambah-keluarga" Component={TambahKeluargaUserPage} />
+              <Route path="detail-data/:id" Component={DetailKeluargaUserPage} />
             </Route>
 
             {/* DATA RIWAYAT > KUALIFIKASI */}

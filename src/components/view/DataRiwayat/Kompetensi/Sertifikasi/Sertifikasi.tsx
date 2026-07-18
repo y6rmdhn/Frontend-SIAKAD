@@ -16,60 +16,115 @@ import InfoList from "@/components/blocks/InfoList";
 import SearchInput from "@/components/blocks/SearchInput";
 import dosenServices from "@/services/dosen.services";
 import { useQuery } from "@tanstack/react-query";
-import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-} from "react";
-import { formatDate, parseISO } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
+import { parseISO, format, isValid } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
+import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+import { useDebounce } from "use-debounce";
+
+const formatDate = (dateStr?: string | null) => {
+  if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
+    return "-";
+  }
+  try {
+    const parsed = parseISO(dateStr);
+    if (isValid(parsed)) {
+      return format(parsed, "dd MMMM yyyy");
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "-";
+};
+
+interface SertifikasiItem {
+  id: string;
+  no_sk: string;
+  tgl_sk: string;
+  no_register: string;
+  no_peserta: string;
+  peran: string;
+  penyelenggara: string;
+  tempat: string;
+  status: string;
+  sertifikasi_detail?: {
+    nama_sertifikasi: string;
+    jenis_sertifikasi: string;
+  };
+  rumpun_bidang_ilmu_detail?: {
+    nama: string;
+  };
+}
+
+interface PaginatedData {
+  items: SertifikasiItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
+const statusColor: Record<string, string> = {
+  draft: "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65",
+  diajukan: "bg-[#FFC951]/50 hover:bg-[#FFC951]/50",
+  disetujui: "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50",
+  ditolak: "bg-red-500 hover:bg-red-500 text-white",
+};
 
 const Sertifikasi = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
 
-  // get data
-  const { data } = useQuery({
-    queryKey: ["kompetensi-sertifikasi-dosen", searchParam.get("page")],
+  const { profile } = usePegawaiProfile();
+
+  const currentPage = Number(searchParam.get("page") || 1);
+  const currentSearch = searchParam.get("search") || "";
+
+  const { data: rawData, isLoading } = useQuery<PaginatedData>({
+    queryKey: ["kompetensi-sertifikasi-pegawai", currentPage, currentSearch],
     queryFn: async () => {
-      const response = await dosenServices.getDataSertifikasiDosen(
-        searchParam.get("page")
-      );
-      console.log(response.data);
-      return response.data;
+      const response = await dosenServices.getDataSertifikasiDosen({
+        page: currentPage,
+        search: currentSearch,
+      });
+      return response.data.data;
     },
   });
 
-  useEffect(() => {
-    if (!searchParam.get("page")) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, setSearchParam]);
+  const items = rawData?.items ?? [];
+  const pagination = rawData?.pagination;
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const next = new URLSearchParams(searchParam);
+      next.set("page", String(page));
+      setSearchParam(next);
+    },
+    [searchParam, setSearchParam],
+  );
 
   useEffect(() => {
-    if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
+    const activeSearch = searchParam.get("search") || "";
+    if (debouncedInput !== activeSearch) {
+      const next = new URLSearchParams(searchParam);
+      if (debouncedInput) {
+        next.set("search", debouncedInput);
+      } else {
+        next.delete("search");
+      }
+      next.set("page", "1");
+      setSearchParam(next);
     }
-  }, [searchParam, setSearchParam]);
-
-  useEffect(() => {
-    if (
-      data?.last_page &&
-      Number(searchParam.get("page")) > data.last_page &&
-      data.last_page > 0
-    ) {
-      searchParam.set("page", data.last_page.toString());
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
+  }, [debouncedInput, searchParam, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
-      <Title title="Sertifikasi" subTitle="Detail Sertifikasi" />
+      <Title title="Sertifikasi" subTitle="Daftar Sertifikasi" />
       <CustomCard
         actions={
           <div className="flex justify-end">
@@ -84,199 +139,74 @@ const Sertifikasi = () => {
 
       <InfoList
         items={[
-          { label: "NIP", value: data?.pegawai_info.nip },
-          { label: "Nama", value: data?.pegawai_info.nama },
-          { label: "Unit Kerja", value: data?.pegawai_info.unit_kerja },
-          { label: "Status", value: data?.pegawai_info.status },
-          { label: "Jab. Akademik", value: data?.pegawai_info.jab_akademik },
-          {
-            label: "Jab. Fungsional",
-            value: data?.pegawai_info.jab_fungsional,
-          },
-          {
-            label: "Jab. Struktural",
-            value: data?.pegawai_info.jab_struktural,
-          },
-          { label: "Pendidikan", value: data?.pegawai_info.pendidikan },
+          { label: "NIP", value: profile?.nip ?? "-" },
+          { label: "Nama", value: profile?.nama ?? "-" },
+          { label: "Unit Kerja", value: profile?.unit_kerja ?? "-" },
+          { label: "Status", value: profile?.status ?? "-" },
+          { label: "Jab. Fungsional", value: profile?.jab_fungsional ?? "-" },
+          { label: "Jab. Struktural", value: profile?.jab_struktural ?? "-" },
+          { label: "Pendidikan", value: profile?.pendidikan ?? "-" },
         ]}
       />
 
       <div className="gap-5 flex flex-col md:flex-row mt-5">
-        <SearchInput />
+        <SearchInput
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+          placeholder="Cari data..."
+        />
       </div>
 
       <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
-          <TableRow className="bg-[#E7ECF2] ">
-            <TableHead className="text-center text-black">
-              Jenis Sertifikasi
-            </TableHead>
-            <TableHead className="text-center text-black">
-              Bidang Studi
-            </TableHead>
-            <TableHead className="text-center text-black">
-              No. Registrasi
-            </TableHead>
-            <TableHead className="text-center text-black">
-              No. Sertifikasi
-            </TableHead>
-            <TableHead className="text-center text-black">
-              Tahun Sertifikasi
-            </TableHead>
-            <TableHead className="text-center text-black">
-              Tgl Sinkron
-            </TableHead>
-            <TableHead className="text-center text-black">
-              Status Pengajuan
-            </TableHead>
+          <TableRow className="bg-gray-300">
+            <TableHead className="text-center text-black">Jenis Sertifikasi</TableHead>
+            <TableHead className="text-center text-black">Bidang Studi</TableHead>
+            <TableHead className="text-center text-black">No. Registrasi</TableHead>
+            <TableHead className="text-center text-black">No. Peserta</TableHead>
+            <TableHead className="text-center text-black">No. SK</TableHead>
+            <TableHead className="text-center text-black">Tgl. SK</TableHead>
+            <TableHead className="text-center text-black">Penyelenggara</TableHead>
+            <TableHead className="text-center text-black">Status</TableHead>
             <TableHead className="text-center text-black">Aksi</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody className="divide-y divide-gray-200">
-          {data?.data.data.map(
-            (item: {
-              id: Key | null | undefined;
-              jenis_sertifikasi:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              bidang_ilmu:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              no_registrasi:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              no_sertifikasi:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-              tgl_sertifikasi: string;
-              status_pengajuan:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<unknown, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                | null
-                | undefined;
-            }) => (
-              <TableRow key={item.id} className=" even:bg-[#E7ECF2]">
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={9} className="text-center py-8">
+                Memuat data...
+              </TableCell>
+            </TableRow>
+          ) : items.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={9} className="text-center py-8 text-gray-500">
+                Tidak ada data
+              </TableCell>
+            </TableRow>
+          ) : (
+            items.map((item) => (
+              <TableRow key={item.id} className="even:bg-gray-100">
                 <TableCell className="text-center">
-                  {item.jenis_sertifikasi ? item.jenis_sertifikasi : "-"}
+                  {item.sertifikasi_detail?.nama_sertifikasi || item.sertifikasi_detail?.jenis_sertifikasi || "-"}
                 </TableCell>
                 <TableCell className="text-center">
-                  {item.bidang_ilmu ? item.bidang_ilmu : "-"}
+                  {item.rumpun_bidang_ilmu_detail?.nama || "-"}
                 </TableCell>
-                <TableCell className="text-center">
-                  {item.no_registrasi}
-                </TableCell>
-                <TableCell className="text-center">
-                  {item.no_sertifikasi}
-                </TableCell>
-                <TableCell className="text-center">
-                  {formatDate(parseISO(item.tgl_sertifikasi), "dd MMM yyyy")}
-                </TableCell>
-                <TableCell className="text-center"></TableCell>
+                <TableCell className="text-center">{item.no_register || "-"}</TableCell>
+                <TableCell className="text-center">{item.no_peserta || "-"}</TableCell>
+                <TableCell className="text-center">{item.no_sk || "-"}</TableCell>
+                <TableCell className="text-center">{formatDate(item.tgl_sk)}</TableCell>
+                <TableCell className="text-center">{item.penyelenggara || "-"}</TableCell>
                 <TableCell className="text-center">
                   <Button
                     size="sm"
-                    className={`w-full text-xs lg:text-sm text-black
-                    ${
-                      item.status_pengajuan === "draf"
-                        ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
-                        : item.status_pengajuan === "diajukan"
-                        ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
-                        : item.status_pengajuan === "disetujui"
-                        ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
-                        : item.status_pengajuan === "ditolak"
-                        ? "bg-red-500 hover:bg-red-500"
-                        : "bg-slate-300 hover:bg-slate-300"
-                    }
-                  `}
+                    className={`w-full text-xs lg:text-sm text-black ${
+                      statusColor[item.status] ?? "bg-slate-300 hover:bg-slate-300"
+                    }`}
                   >
-                    {item.status_pengajuan}
+                    {item.status}
                   </Button>
                 </TableCell>
                 <TableCell className="h-full">
@@ -298,21 +228,14 @@ const Sertifikasi = () => {
                   </div>
                 </TableCell>
               </TableRow>
-            )
+            ))
           )}
         </TableBody>
       </Table>
 
       <CustomPagination
-        currentPage={Number(searchParam.get("page") || 1)}
-        links={data?.links || []}
-        onPageChange={(page) => {
-          searchParam.set("page", page.toString());
-          setSearchParam(searchParam);
-        }}
-        hasNextPage={!!data?.next_page_url}
-        hasPrevPage={!!data?.prev_page_url}
-        totalPages={data?.last_page}
+        pagination={pagination}
+        onPageChange={handlePageChange}
       />
     </div>
   );

@@ -5,21 +5,7 @@ const dataRiwayat: {
 }[] = [
     {
       title: "Keluarga",
-      href: "",
-      childrenItems: [
-        {
-          title: "Anak",
-          href: "/data-riwayat/keluarga/anak",
-        },
-        {
-          title: "Orangtua",
-          href: "/data-riwayat/keluarga/orangtua",
-        },
-        {
-          title: "Pasangan",
-          href: "/data-riwayat/keluarga/pasangan",
-        },
-      ],
+      href: "/data-riwayat/keluarga",
     },
     {
       title: "Kepegawaian",

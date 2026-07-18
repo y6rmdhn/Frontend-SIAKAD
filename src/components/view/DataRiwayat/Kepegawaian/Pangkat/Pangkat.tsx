@@ -14,19 +14,13 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link, useSearchParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-} from "react";
 import dosenServices from "@/services/dosen.services.ts";
 import { parseISO, format, isValid } from "date-fns";
 import CustomPagination from "@/components/blocks/CustomPagination";
 import usePegawaiProfile from "@/hooks/usePegawaiProfile";
+import { useDebounce } from "use-debounce";
 
 const formatDate = (dateStr?: string | null) => {
   if (!dateStr || dateStr.trim() === "" || dateStr.startsWith("0000-00-00")) {
@@ -43,57 +37,94 @@ const formatDate = (dateStr?: string | null) => {
   return "-";
 };
 
+interface PangkatItem {
+  id: string;
+  no_sk: string;
+  tgl_sk: string;
+  tmt_pangkat: string;
+  jenis_sk: string;
+  masa_kerja: string;
+  status: string;
+  master_pangkat?: {
+    nama: string;
+  };
+}
+
+interface PaginatedData {
+  items: PangkatItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
+const statusColor: Record<string, string> = {
+  draft: "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65",
+  diajukan: "bg-[#FFC951]/50 hover:bg-[#FFC951]/50",
+  disetujui: "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50",
+  ditolak: "bg-red-500 hover:bg-red-500 text-white",
+};
+
 const Pangkat = () => {
   const [searchParam, setSearchParam] = useSearchParams();
+  const [searchData, setSearchData] = useState(searchParam.get("search") || "");
+  const [debouncedInput] = useDebounce(searchData, 500);
+
   const { profile } = usePegawaiProfile();
 
-  // get data
-  const { data } = useQuery({
-    queryKey: ["anak", searchParam.get("page")],
+  const currentPage = Number(searchParam.get("page") || 1);
+  const currentSearch = searchParam.get("search") || "";
+
+  const { data: rawData, isLoading } = useQuery<PaginatedData>({
+    queryKey: ["pangkat-pegawai", currentPage, currentSearch],
     queryFn: async () => {
       const response = await dosenServices.getPangkat({
-        page: searchParam.get("page")
+        page: currentPage,
+        search: currentSearch,
       });
-      console.log(response.data);
-      return response.data;
+      return response.data.data;
     },
   });
 
-  useEffect(() => {
-    if (!searchParam.get("page")) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, setSearchParam]);
+  const items = rawData?.items ?? [];
+  const pagination = rawData?.pagination;
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const next = new URLSearchParams(searchParam);
+      next.set("page", String(page));
+      setSearchParam(next);
+    },
+    [searchParam, setSearchParam],
+  );
 
   useEffect(() => {
-    if (Number(searchParam.get("page")) < 1) {
-      searchParam.set("page", "1");
-      setSearchParam(searchParam);
+    const activeSearch = searchParam.get("search") || "";
+    if (debouncedInput !== activeSearch) {
+      const next = new URLSearchParams(searchParam);
+      if (debouncedInput) {
+        next.set("search", debouncedInput);
+      } else {
+        next.delete("search");
+      }
+      next.set("page", "1");
+      setSearchParam(next);
     }
-  }, [searchParam, setSearchParam]);
-
-  useEffect(() => {
-    const totalPages = data?.data?.pagination?.totalPages;
-    if (
-      totalPages &&
-      Number(searchParam.get("page")) > totalPages &&
-      totalPages > 0
-    ) {
-      searchParam.set("page", totalPages.toString());
-      setSearchParam(searchParam);
-    }
-  }, [searchParam, data, setSearchParam]);
+  }, [debouncedInput, searchParam, setSearchParam]);
 
   return (
     <div className="mt-10 mb-20">
       <Title title="Pangkat" subTitle="Daftar Pangkat" />
       <CustomCard
         actions={
-          <div className="flex justify-end ">
+          <div className="flex justify-end">
             <Link to="/data-riwayat/kepegawaian/detail-pangkat">
               <Button className="bg-yellow-uika hover:bg-hover-yellow-uika text-xs md:text-sm">
-                <FaPlus className="w-3! h-3! md:w-4! h-4!" /> Tambah Baru
+                <FaPlus /> Tambah Baru
               </Button>
             </Link>
           </div>
@@ -112,92 +143,89 @@ const Pangkat = () => {
         ]}
       />
 
-      <div className="lg:gap-5 gap-2 flex flex-col md:flex-row mt-5">
-        <SearchInput />
+      <div className="gap-5 flex flex-col md:flex-row mt-5">
+        <SearchInput
+          value={searchData}
+          onChange={(e) => setSearchData(e.target.value)}
+          placeholder="Cari data..."
+        />
       </div>
 
-      <Table className="mt-10 table-auto text-sm">
+      <Table className="mt-10 table-auto text-xs lg:text-sm">
         <TableHeader>
-          <TableRow className="bg-gray-300 ">
-            <TableHead className="text-center text-black">
-              TMT Pangkas
-            </TableHead>
+          <TableRow className="bg-gray-300">
+            <TableHead className="text-center text-black">No. SK</TableHead>
+            <TableHead className="text-center text-black">Tgl. SK</TableHead>
+            <TableHead className="text-center text-black">TMT Pangkat</TableHead>
+            <TableHead className="text-center text-black">Nama Pangkat</TableHead>
             <TableHead className="text-center text-black">Jenis SK</TableHead>
-            <TableHead className="text-center text-black">
-              Nama Pangkat
-            </TableHead>
             <TableHead className="text-center text-black">Masa Kerja</TableHead>
-            <TableHead className="text-center text-black">
-              Status Pengajuan
-            </TableHead>
+            <TableHead className="text-center text-black">Status</TableHead>
             <TableHead className="text-center text-black">Aksi</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody className="divide-y divide-gray-200">
-          {data?.data?.items?.map(
-            (item: any) => {
-              const statusVal = item.status || item.status_pengajuan || "-";
-              const golonganVal = item.master_pangkat?.nama || item.nama_golongan || "-";
-              return (
-                <TableRow key={item.id} className=" even:bg-gray-100">
-                  <TableCell className="text-center">
-                    {formatDate(item.tmt_pangkat)}
-                  </TableCell>
-                  <TableCell className="text-center">{item.jenis_sk ?? "-"}</TableCell>
-                  <TableCell className="text-center">
-                    {golonganVal}
-                  </TableCell>
-                  <TableCell className="text-center">{item.masa_kerja ?? "-"}</TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      size="sm"
-                      className={`w-full text-xs lg:text-sm text-black
-      ${statusVal === "draf" || statusVal === "draft"
-                          ? "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65"
-                          : statusVal === "diajukan"
-                            ? "bg-[#FFC951]/50 hover:bg-[#FFC951]/50"
-                            : statusVal === "disetujui"
-                              ? "bg-[#0EE03C]/50 hover:bg-[#0EE03C]/50"
-                              : statusVal === "ditolak"
-                                ? "bg-red-500 hover:bg-red-500"
-                                : "bg-slate-300 hover:bg-slate-300"
-                        }
-    `}
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={8} className="text-center py-8">
+                Memuat data...
+              </TableCell>
+            </TableRow>
+          ) : items.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={8} className="text-center py-8 text-gray-500">
+                Tidak ada data
+              </TableCell>
+            </TableRow>
+          ) : (
+            items.map((item) => (
+              <TableRow key={item.id} className="even:bg-gray-100">
+                <TableCell className="text-center">{item.no_sk || "-"}</TableCell>
+                <TableCell className="text-center">{formatDate(item.tgl_sk)}</TableCell>
+                <TableCell className="text-center">{formatDate(item.tmt_pangkat)}</TableCell>
+                <TableCell className="text-center">
+                  {item.master_pangkat?.nama || "-"}
+                </TableCell>
+                <TableCell className="text-center">{item.jenis_sk || "-"}</TableCell>
+                <TableCell className="text-center">{item.masa_kerja || "-"}</TableCell>
+                <TableCell className="text-center">
+                  <Button
+                    size="sm"
+                    className={`w-full text-xs lg:text-sm text-black ${
+                      statusColor[item.status] ?? "bg-slate-300 hover:bg-slate-300"
+                    }`}
+                  >
+                    {item.status}
+                  </Button>
+                </TableCell>
+                <TableCell className="h-full">
+                  <div className="flex justify-center items-center w-full h-full">
+                    <Link
+                      to={
+                        "/data-riwayat/kepegawaian/detail-data-pangkat/" +
+                        item.id
+                      }
                     >
-                      {statusVal}
-                    </Button>
-                  </TableCell>
-                  <TableCell className="h-full">
-                    <div className="flex justify-center items-center w-full h-full">
-                      <Link
-                        to={
-                          "/data-riwayat/kepegawaian/detail-data-pangkat/" +
-                          item.id
-                        }
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer"
                       >
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="cursor-pointer"
-                        >
-                          <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            }
+                        <IoEyeOutline className="w-5! h-5! text-[#26A1F4]" />
+                      </Button>
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
           )}
         </TableBody>
       </Table>
 
       <CustomPagination
-        pagination={data?.data?.pagination}
-        onPageChange={(page) => {
-          searchParam.set("page", page.toString());
-          setSearchParam(searchParam);
-        }}
+        pagination={pagination}
+        onPageChange={handlePageChange}
       />
     </div>
   );

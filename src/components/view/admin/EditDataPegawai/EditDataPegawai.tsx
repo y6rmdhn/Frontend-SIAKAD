@@ -71,7 +71,7 @@ const dataPegawaiSchema = z.object({
   tanggal_lahir: z.coerce.date({
     errorMap: () => ({ message: "Format tanggal lahir tidak valid" }),
   }),
-  kode_status_pernikahan: z.string().min(1, "Status pernikahan wajib dipilih"),
+  status_pernikahan_id: z.string().min(1, "Status pernikahan wajib dipilih"),
   golongan_darah: cleanOptionalString,
   unit_kerja_id: z.string().min(1, "Unit kerja wajib dipilih"),
   status_aktif_id: z.string().min(1, "Status aktif wajib dipilih"),
@@ -200,7 +200,7 @@ const EditDataPegawai = () => {
         tanggal_lahir: data.tanggal_lahir
           ? data.tanggal_lahir.split("T")[0]
           : "",
-        kode_status_pernikahan: data.status_pernikahan_id?.id?.toString() || data.status_pernikahan_id?.toString() || "",
+        status_pernikahan_id: data.status_pernikahan_id?.id?.toString() || data.status_pernikahan_id?.toString() || "",
         golongan_darah: data.golongan_darah || "",
 
         // Data kepegawaian

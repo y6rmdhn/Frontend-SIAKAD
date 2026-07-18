@@ -113,6 +113,7 @@ const useLogin = () => {
         id: data.user.id,
         name: data.user.nama,
         nip: data.user.nip,
+        nidn: data.user.nidn || "",
         pegawai_id: data.user.pegawai_id,
         role: data.user.role,
         accessToken: data.accessToken,
