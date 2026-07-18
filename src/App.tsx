@@ -1079,8 +1079,9 @@ const RootRedirect = () => {
   }
 
   // Sudah login, redirect berdasarkan role
-  const role = user.role;
-  if (role === "Admin" || role === "Admin Kepegawaian") {
+  const role = user.role?.toLowerCase();
+  const roleId = user.role_id;
+  if (role === "admin" || role === "admin kepegawaian" || roleId === 34) {
     return <Navigate to="/admin/dasboard" replace />;
   }
   return <Navigate to="/dasboard" replace />;

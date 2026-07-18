@@ -43,6 +43,7 @@ axiosInstance.interceptors.response.use(
             reduxStore.dispatch(clearUserData());
             localStorage.removeItem("user");
             localStorage.removeItem("refresh_token");
+            localStorage.removeItem("permissions");
             toast.error("Sesi kamu habis. Silakan login kembali.");
             window.location.href = "/login";
         } else if (status === 422) {

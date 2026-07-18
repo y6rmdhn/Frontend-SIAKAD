@@ -57,14 +57,14 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (userSelector.name) {
-      const initials = userSelector.name
+    if (userSelector.nama) {
+      const initials = userSelector.nama
         .split(" ")
         .map((word) => word.charAt(0))
         .join("");
       setInitials(initials);
     }
-  }, [userSelector.name]);
+  }, [userSelector.nama]);
 
   return (
     <header className="h-16 md:h-20 font-roboto grid grid-cols-[2fr_1fr] gap-4 justify-between items-center ">
@@ -127,7 +127,7 @@ const Header = () => {
                 <MdPerson className="h-5 w-5 text-white" />
                 <div className="flex flex-col text-start text-white">
                   <p className="font-medium text-sm">
-                    {userSelector.name.toUpperCase()}
+                    {(userSelector.nama ?? "").toUpperCase()}
                   </p>
                   <p className="text-xs">{userSelector.role}</p>
                 </div>
@@ -159,7 +159,7 @@ const Header = () => {
                 </div>
 
                 <div className="my-5 text-center">
-                  <h1>{userSelector.name}</h1>
+                  <h1>{userSelector.nama}</h1>
                   <p className="mt-2 text-muted-foreground">
                     {userSelector.role}
                   </p>
