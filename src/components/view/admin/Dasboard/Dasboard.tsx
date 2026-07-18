@@ -98,6 +98,21 @@ interface PensiunItem {
   unit_kerja_nama: string;
 }
 
+interface KbpItem {
+  id: string | number;
+  pegawai_id: string;
+  nip: string;
+  nama: string;
+  unit_kerja_nama: string;
+  tmt_pangkat: string;
+  no_sk: string;
+  tgl_sk: string;
+  pangkat_id: number;
+  pangkat_nama: string;
+  jenis_kenaikan_pangkat: string;
+  jenis_kenaikan_pangkat_kode: string;
+}
+
 interface DashboardData {
   staff_summary: {
     active_employees: number;
@@ -115,6 +130,7 @@ interface DashboardData {
     total: number;
     data: PensiunItem[];
   };
+  kbp?: KbpItem[];
 }
 
 const generateGajiSchema = z.object({
@@ -214,6 +230,7 @@ const dummyDashboardData: DashboardData = {
     total: 0,
     data: [],
   },
+  kbp: [],
 };
 
 // =================================================================================
@@ -524,6 +541,34 @@ const Dasboard = () => {
             </div>
 
             <div className="flex flex-col gap-5 min-w-0">
+              <CustomCard
+                actions={
+                  <h1 className="flex gap-3 items-center text-green-uika">
+                    <FaFileInvoiceDollar className="w-5 h-5" />{" "}
+                    <span className="text-lg font-semibold">Kenaikan Pangkat Berkala Bulan Ini</span>
+                  </h1>
+                }
+                cardStyle="border-t-green-uika border-t-2"
+              >
+                {!displayData.kbp || displayData.kbp.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-2">Tidak ada pegawai yang naik pangkat berkala bulan ini.</p>
+                ) : (
+                  <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto pr-1">
+                    {displayData.kbp.map((item) => (
+                      <div key={item.id} className="min-w-0 border-b pb-2 last:border-b-0">
+                        <h1 className="truncate font-semibold">{item.nama} ({item.nip})</h1>
+                        <p className="text-xs text-muted-foreground">
+                          Pangkat: {item.pangkat_nama} &bull; TMT: {formatDate(item.tmt_pangkat)}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {item.unit_kerja_nama} &bull; {item.jenis_kenaikan_pangkat}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CustomCard>
+
               <CustomCard
                 actions={
                   <h1 className="flex gap-3 items-center text-[#DA2A21]">
