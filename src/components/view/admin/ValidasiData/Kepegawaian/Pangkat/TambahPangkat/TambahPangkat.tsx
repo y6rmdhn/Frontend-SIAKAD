@@ -53,7 +53,7 @@ const formSchema = z.object({
     masa_kerja_bulan: z.string().min(1, "Masa Kerja Bulan wajib diisi."),
     pejabat_penetap: z.string().min(1, "Pejabat Penetap wajib diisi."),
     is_acuan_masa_kerja: z.boolean().default(false),
-    file_dokumen: fileSchema, // Skema untuk upload file
+    file_pangkat: fileSchema, // Skema untuk upload file
 });
 
 type FormSchemaType = z.infer<typeof formSchema>;
@@ -89,7 +89,7 @@ const TambahPangkat = () => {
             masa_kerja_bulan: "",
             pejabat_penetap: "",
             is_acuan_masa_kerja: false,
-            file_dokumen: undefined,
+            file_pangkat: undefined,
         },
         resolver: zodResolver(formSchema),
     });
@@ -146,8 +146,8 @@ const TambahPangkat = () => {
         formData.append("is_acuan_masa_kerja", values.is_acuan_masa_kerja.toString());
 
         // Upload File
-        if (values.file_dokumen instanceof FileList && values.file_dokumen.length > 0) {
-            formData.append("file_dokumen", values.file_dokumen[0]);
+        if (values.file_pangkat instanceof FileList && values.file_pangkat.length > 0) {
+            formData.append("file_pangkat", values.file_pangkat[0]);
         }
 
         mutate(formData);
