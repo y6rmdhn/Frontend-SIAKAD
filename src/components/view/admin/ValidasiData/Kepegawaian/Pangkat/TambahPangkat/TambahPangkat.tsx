@@ -253,7 +253,7 @@ const TambahPangkat = () => {
                             placeholder="--Pilih Pangkat--"
                             required
                             queryKey="pangkat_admin_tambah"
-                            queryFn={(page) => dosenServices.getPangkat({ page, is_dropdown: true })}
+                            queryFn={(page) => dosenServices.getMasterPangkatReferensi({ page, is_dropdown: true })}
                             itemValue="id"
                             itemLabel="nama"
                         />
