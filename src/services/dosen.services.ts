@@ -402,14 +402,37 @@ const dosenServices = {
   // update profil mandiri
   updateProfilPegawai: (payloadData: any) => {
     const formData = new FormData();
+    const appendedKeys = new Set<string>();
+
     Object.keys(payloadData).forEach((key) => {
-      if (
-        payloadData[key] !== null &&
-        payloadData[key] !== undefined &&
-        payloadData[key] !== ""
-      ) {
-        const finalKey = key === "no_bpjs" ? "bpjs" : key;
-        formData.append(finalKey, payloadData[key]);
+      let finalKey = key === "no_bpjs" ? "bpjs" : key;
+      if (finalKey === "file_kapreg") finalKey = "file_karpeg";
+
+      const val = payloadData[key];
+      if (val !== null && val !== undefined && val !== "") {
+        if (typeof FileList !== "undefined" && val instanceof FileList) {
+          if (val.length > 0 && !appendedKeys.has(finalKey)) {
+            formData.append(finalKey, val[0]);
+            appendedKeys.add(finalKey);
+          }
+        } else if (Array.isArray(val) && val[0] instanceof File) {
+          if (!appendedKeys.has(finalKey)) {
+            formData.append(finalKey, val[0]);
+            appendedKeys.add(finalKey);
+          }
+        } else if (val instanceof File) {
+          if (!appendedKeys.has(finalKey)) {
+            formData.append(finalKey, val);
+            appendedKeys.add(finalKey);
+          }
+        } else if (typeof val === "object" && !(val instanceof Blob)) {
+          // Ignore plain objects or metadata objects that are not File/Blob
+        } else {
+          if (!appendedKeys.has(finalKey)) {
+            formData.append(finalKey, val);
+            appendedKeys.add(finalKey);
+          }
+        }
       }
     });
     return axiosInstance.put(`${endpoint.PEGAWAI}/profile`, formData, {

@@ -590,10 +590,17 @@ function PegawaiSearchSection({
     staleTime: 5 * 60 * 1000,
   });
 
-  // Extract data pegawai dari response API - langsung handle triple nested structure
+  // Extract data pegawai dari response API
   const availablePegawai = React.useMemo(() => {
-    // Langsung akses struktur triple nested berdasarkan response Anda
-    const apiData = pegawaiData?.data?.data?.data || [];
+    const rawData =
+      pegawaiData?.data?.items ??
+      pegawaiData?.data?.data?.items ??
+      pegawaiData?.data?.data?.data ??
+      pegawaiData?.data?.data ??
+      pegawaiData?.data ??
+      [];
+
+    const apiData = Array.isArray(rawData) ? rawData : [];
 
     console.log("Available pegawai data:", apiData); // Debug log
 
@@ -605,8 +612,8 @@ function PegawaiSearchSection({
       )
       .map((pegawai: any) => ({
         id: pegawai.id,
-        nama: pegawai.nama_pegawai,
-        nip: pegawai.nip,
+        nama: pegawai.nama || pegawai.nama_pegawai || "-",
+        nip: pegawai.nip || "-",
       }));
   }, [pegawaiData, excludedPegawai]);
 
@@ -833,9 +840,8 @@ function ItemsTable({ title, items, onRemoveItem, type }: any) {
                 </TableCell>
                 <TableCell>{item.deskripsi}</TableCell>
                 <TableCell
-                  className={`text-right font-medium ${
-                    isAllowance ? "text-green-600" : "text-red-600"
-                  }`}
+                  className={`text-right font-medium ${isAllowance ? "text-green-600" : "text-red-600"
+                    }`}
                 >
                   Rp {item.nominal.toLocaleString("id-ID")}
                 </TableCell>
@@ -860,9 +866,8 @@ function ItemsTable({ title, items, onRemoveItem, type }: any) {
                 Total {isAllowance ? "Tunjangan" : "Potongan"}:
               </TableCell>
               <TableCell
-                className={`text-right font-semibold ${
-                  isAllowance ? "text-green-600" : "text-red-600"
-                }`}
+                className={`text-right font-semibold ${isAllowance ? "text-green-600" : "text-red-600"
+                  }`}
               >
                 Rp {total.toLocaleString("id-ID")}
               </TableCell>

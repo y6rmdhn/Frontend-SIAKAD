@@ -26,20 +26,38 @@ import dosenServices from "@/services/dosen.services";
 
 // --- Skema Validasi dan Tipe Data ---
 
-const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+const ACCEPTED_FILE_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "image/webp",
+];
 
 const fileSchema = z
   .any()
   .optional()
   .refine(
-    (file) => !file || file.size <= MAX_FILE_SIZE_BYTES,
+    (file) => {
+      if (!file) return true;
+      const targetFile = file instanceof FileList ? file[0] : file;
+      if (!targetFile) return true;
+      if (!(targetFile instanceof File) && targetFile?.size === undefined) return true;
+      return targetFile.size <= MAX_FILE_SIZE_BYTES;
+    },
     `Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB.`
   )
   .refine(
-    (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
-    "Format file harus PDF, JPG, atau PNG."
+    (file) => {
+      if (!file) return true;
+      const targetFile = file instanceof FileList ? file[0] : file;
+      if (!targetFile) return true;
+      if (!(targetFile instanceof File) && targetFile?.type === undefined) return true;
+      return ACCEPTED_FILE_TYPES.includes(targetFile.type);
+    },
+    "Format file harus PDF, JPG, JPEG, PNG, atau WEBP."
   );
 
 const optionalEmail = z
@@ -252,16 +270,18 @@ const EditBiodataPageUserComponent = () => {
           : undefined,
         berat_badan: data.berat_badan ? Number(data.berat_badan) : undefined,
 
-        // File fields
-        file_kapreg: undefined,
-        file_npwp: undefined,
-        file_rekening: undefined,
-        file_kk: undefined,
-        file_ktp: undefined,
-        file_sertifikasi_dosen: undefined,
-        file_bpjs: undefined,
-        file_bpjs_ketenagakerjaan: undefined,
-        file_tanda_tangan: undefined,
+        // File fields & dokumen array
+        dokumen: data.dokumen || [],
+        file_kapreg: data.file_karpeg || data.file_kapreg || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KARPEG") : undefined),
+        file_karpeg: data.file_karpeg || data.file_kapreg || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KARPEG") : undefined),
+        file_npwp: data.file_npwp || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE NPWP") : undefined),
+        file_rekening: data.file_rekening || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE REKENING") : undefined),
+        file_kk: data.file_kk || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KK") : undefined),
+        file_ktp: data.file_ktp || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KTP") : undefined),
+        file_sertifikasi_dosen: data.file_sertifikasi_dosen || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE SERTIFIKASI DOSEN") : undefined),
+        file_bpjs: data.file_bpjs || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE BPJS") : undefined),
+        file_bpjs_ketenagakerjaan: data.file_bpjs_ketenagakerjaan || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE BPJS KETENAGA KERJAAN") : undefined),
+        file_tanda_tangan: data.file_tanda_tangan || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE TANDA TANGAN") : undefined),
       }
       : {
         nip: "",

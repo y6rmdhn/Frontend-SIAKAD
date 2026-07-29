@@ -3,51 +3,113 @@ import { FormFieldInputFile } from "../CustomFormInputFile/CustomFormInputFile";
 import { UseFormReturn } from "react-hook-form";
 import { DataPegawaiSchema } from "@/components/view/admin/DataPegawai/DataPegawai.tsx";
 
-// A small helper component for displaying read-only file links
-const ReadOnlyFileLink = ({ label, value }: { label: string; value: any }) => (
-  <div className="flex flex-col gap-2">
-    <label className="text-sm font-medium text-[#3F6FA9]">{label}</label>
-    <div className="text-sm">
-      {value && typeof value === "string" ? (
-        <a
-          href={value}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:underline"
-        >
-          Lihat Dokumen
-        </a>
-      ) : (
-        <p className="text-gray-500">Tidak ada file</p>
-      )}
-    </div>
-  </div>
-);
+// Helper function for resolving URL and file name from object, string, or File instance
+const getDocInfo = (value: any) => {
+  if (!value) return null;
+  if (typeof value === "string" && value.trim() !== "") {
+    const fileName = value.split("/").pop() || "Lihat Dokumen";
+    return { url: value, fileName };
+  }
+  if (typeof value === "object") {
+    if (value instanceof File) {
+      return { url: URL.createObjectURL(value), fileName: value.name };
+    }
+    const url = value.url || value.file_path;
+    const fileName =
+      value.file_name || (url ? url.split("/").pop() : "Lihat Dokumen");
+    if (url) return { url, fileName };
+  }
+  return null;
+};
 
-// 1. Add isReadOnly to the props interface
+// Component for displaying read-only file links
+const ReadOnlyFileLink = ({ label, value }: { label: string; value: any }) => {
+  const docInfo = getDocInfo(value);
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-medium text-[#3F6FA9]">{label}</label>
+      <div className="text-sm">
+        {docInfo ? (
+          <a
+            href={docInfo.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline inline-flex items-center gap-1 font-medium"
+          >
+            📄 {docInfo.fileName}
+          </a>
+        ) : (
+          <p className="text-gray-500 text-xs italic">Tidak ada file</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Component for showing existing file preview when editing form
+const ExistingFilePreview = ({ value }: { value: any }) => {
+  const docInfo = getDocInfo(value);
+  if (!docInfo) return null;
+  return (
+    <div className="text-xs mt-1">
+      <span className="text-gray-500">File tersimpan: </span>
+      <a
+        href={docInfo.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:underline font-medium"
+      >
+        {docInfo.fileName}
+      </a>
+    </div>
+  );
+};
+
 interface DokumenSectionProps {
   form: UseFormReturn<DataPegawaiSchema>;
   isReadOnly?: boolean;
 }
 
 const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
-  // Watch file values to display links in read-only mode
   const { watch } = form;
+  const dokumenList = watch("dokumen" as any);
+
+  const getDoc = (fieldName: string, categoryName: string) => {
+    const fieldVal = watch(fieldName as any);
+    if (fieldVal) return fieldVal;
+    if (Array.isArray(dokumenList)) {
+      return (
+        dokumenList.find(
+          (d: any) =>
+            d.kategori_dokumen?.toUpperCase() === categoryName.toUpperCase()
+        ) || null
+      );
+    }
+    return null;
+  };
+
   const fileValues = {
-    file_kapreg: watch("file_kapreg"),
-    file_npwp: watch("file_npwp"),
-    file_rekening: watch("file_rekening"),
-    file_kk: watch("file_kk"),
-    file_ktp: watch("file_ktp"),
-    file_sertifikasi_dosen: watch("file_sertifikasi_dosen"),
-    file_bpjs: watch("file_bpjs"),
-    file_bpjs_ketenagakerjaan: watch("file_bpjs_ketenagakerjaan"),
-    file_tanda_tangan: watch("file_tanda_tangan"),
+    file_karpeg:
+      getDoc("file_karpeg", "FILE KARPEG") ||
+      getDoc("file_kapreg", "FILE KARPEG"),
+    file_npwp: getDoc("file_npwp", "FILE NPWP"),
+    file_rekening: getDoc("file_rekening", "FILE REKENING"),
+    file_kk: getDoc("file_kk", "FILE KK"),
+    file_ktp: getDoc("file_ktp", "FILE KTP"),
+    file_sertifikasi_dosen: getDoc(
+      "file_sertifikasi_dosen",
+      "FILE SERTIFIKASI DOSEN"
+    ),
+    file_bpjs: getDoc("file_bpjs", "FILE BPJS"),
+    file_bpjs_ketenagakerjaan: getDoc(
+      "file_bpjs_ketenagakerjaan",
+      "FILE BPJS KETENAGA KERJAAN"
+    ),
+    file_tanda_tangan: getDoc("file_tanda_tangan", "FILE TANDA TANGAN"),
   };
 
   return (
     <div className="grid lg:grid-rows-8 lg:grid-flow-col gap-y-6 gap-x-4 mt-10 items-start">
-      {/* 2. Make all regular inputs read-only based on the prop */}
       <FormFieldInput
         form={form}
         label="KAPREG"
@@ -57,16 +119,18 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
         readOnly={isReadOnly}
       />
 
-      {/* 3. Conditionally render file inputs or links */}
       {isReadOnly ? (
-        <ReadOnlyFileLink label="File KAPREG" value={fileValues.file_kapreg} />
+        <ReadOnlyFileLink label="File KARPEG" value={fileValues.file_karpeg} />
       ) : (
-        <FormFieldInputFile
-          label="File KAPREG"
-          name="file_kapreg"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File KARPEG"
+            name="file_karpeg"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_karpeg} />
+        </div>
       )}
 
       <FormFieldInput
@@ -81,12 +145,15 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
       {isReadOnly ? (
         <ReadOnlyFileLink label="File NPWP" value={fileValues.file_npwp} />
       ) : (
-        <FormFieldInputFile
-          label="File NPWP"
-          name="file_npwp"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File NPWP"
+            name="file_npwp"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_npwp} />
+        </div>
       )}
 
       {isReadOnly ? (
@@ -95,34 +162,43 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
           value={fileValues.file_rekening}
         />
       ) : (
-        <FormFieldInputFile
-          label="File Rekening"
-          name="file_rekening"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File Rekening"
+            name="file_rekening"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_rekening} />
+        </div>
       )}
 
       {isReadOnly ? (
         <ReadOnlyFileLink label="File KK" value={fileValues.file_kk} />
       ) : (
-        <FormFieldInputFile
-          label="File KK"
-          name="file_kk"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File KK"
+            name="file_kk"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_kk} />
+        </div>
       )}
 
       {isReadOnly ? (
         <ReadOnlyFileLink label="File KTP" value={fileValues.file_ktp} />
       ) : (
-        <FormFieldInputFile
-          label="File KTP"
-          name="file_ktp"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File KTP"
+            name="file_ktp"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_ktp} />
+        </div>
       )}
 
       {isReadOnly ? (
@@ -131,12 +207,15 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
           value={fileValues.file_sertifikasi_dosen}
         />
       ) : (
-        <FormFieldInputFile
-          label="File Sertifikasi Dosen"
-          name="file_sertifikasi_dosen"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File Sertifikasi Dosen"
+            name="file_sertifikasi_dosen"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_sertifikasi_dosen} />
+        </div>
       )}
 
       <FormFieldInput
@@ -172,12 +251,15 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
       {isReadOnly ? (
         <ReadOnlyFileLink label="File BPJS" value={fileValues.file_bpjs} />
       ) : (
-        <FormFieldInputFile
-          label="File BPJS"
-          name="file_bpjs"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File BPJS"
+            name="file_bpjs"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_bpjs} />
+        </div>
       )}
 
       {isReadOnly ? (
@@ -186,12 +268,15 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
           value={fileValues.file_bpjs_ketenagakerjaan}
         />
       ) : (
-        <FormFieldInputFile
-          label="File BPJS Ketenagakerjaan"
-          name="file_bpjs_ketenagakerjaan"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File BPJS Ketenagakerjaan"
+            name="file_bpjs_ketenagakerjaan"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_bpjs_ketenagakerjaan} />
+        </div>
       )}
 
       {isReadOnly ? (
@@ -200,12 +285,15 @@ const DokumenSection = ({ form, isReadOnly = false }: DokumenSectionProps) => {
           value={fileValues.file_tanda_tangan}
         />
       ) : (
-        <FormFieldInputFile
-          label="File Tanda Tangan"
-          name="file_tanda_tangan"
-          labelStyle="text-[#3F6FA9]"
-          required={false}
-        />
+        <div>
+          <FormFieldInputFile
+            label="File Tanda Tangan"
+            name="file_tanda_tangan"
+            labelStyle="text-[#3F6FA9]"
+            required={false}
+          />
+          <ExistingFilePreview value={fileValues.file_tanda_tangan} />
+        </div>
       )}
     </div>
   );

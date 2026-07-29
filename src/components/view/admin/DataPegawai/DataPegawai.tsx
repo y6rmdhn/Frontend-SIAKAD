@@ -24,27 +24,39 @@ import adminServices from "../../../../services/admin.services";
 import { AxiosError } from "axios";
 import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/InfiniteScrollSelect";
 
-const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const ACCEPTED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+const ACCEPTED_FILE_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "image/webp",
+];
 
-// Skema untuk validasi file, sekarang hanya ada satu yang benar
+// Skema untuk validasi file
 export const fileSchema = z
   .any()
   .optional()
   .refine(
-    (fileList) =>
-      !fileList ||
-      fileList.length === 0 ||
-      fileList[0].size <= MAX_FILE_SIZE_BYTES,
+    (file) => {
+      if (!file) return true;
+      const targetFile = file instanceof FileList ? file[0] : file;
+      if (!targetFile) return true;
+      if (!(targetFile instanceof File) && targetFile?.size === undefined) return true;
+      return targetFile.size <= MAX_FILE_SIZE_BYTES;
+    },
     `Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB.`
   )
   .refine(
-    (fileList) =>
-      !fileList ||
-      fileList.length === 0 ||
-      ACCEPTED_FILE_TYPES.includes(fileList[0].type),
-    "Format file harus PDF, JPG, atau PNG."
+    (file) => {
+      if (!file) return true;
+      const targetFile = file instanceof FileList ? file[0] : file;
+      if (!targetFile) return true;
+      if (!(targetFile instanceof File) && targetFile?.type === undefined) return true;
+      return ACCEPTED_FILE_TYPES.includes(targetFile.type);
+    },
+    "Format file harus PDF, JPG, JPEG, PNG, atau WEBP."
   );
 
 const optionalEmail = z

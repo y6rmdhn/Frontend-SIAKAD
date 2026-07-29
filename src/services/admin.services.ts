@@ -804,7 +804,7 @@ const adminServices = {
       params,
     }),
   getPegawaiPayrollParams: (search?: string) =>
-    axiosInstance.get(`${endpoint.ADMIN}/pegawai`, {
+    axiosInstance.get(`${endpoint.PEGAWAI}/`, {
       params: {
         search: search,
       },

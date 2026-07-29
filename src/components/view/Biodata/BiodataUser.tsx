@@ -143,8 +143,18 @@ const BiodataUser = () => {
         jenis_kendaraan: data.jenis_kendaraan || "",
         merk_kendaraan: data.merk_kendaraan || "",
         tinggi_badan: data.tinggi_badan || undefined,
-        berat_badan: data.berat_badan || undefined,
-        kode_status_pernikahan: data.status_pernikahan?.nama || ""
+        kode_status_pernikahan: data.status_pernikahan?.nama || "",
+        dokumen: data.dokumen || [],
+        file_kapreg: data.file_karpeg || data.file_kapreg || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KARPEG") : undefined),
+        file_karpeg: data.file_karpeg || data.file_kapreg || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KARPEG") : undefined),
+        file_npwp: data.file_npwp || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE NPWP") : undefined),
+        file_rekening: data.file_rekening || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE REKENING") : undefined),
+        file_kk: data.file_kk || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KK") : undefined),
+        file_ktp: data.file_ktp || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE KTP") : undefined),
+        file_sertifikasi_dosen: data.file_sertifikasi_dosen || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE SERTIFIKASI DOSEN") : undefined),
+        file_bpjs: data.file_bpjs || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE BPJS") : undefined),
+        file_bpjs_ketenagakerjaan: data.file_bpjs_ketenagakerjaan || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE BPJS KETENAGA KERJAAN") : undefined),
+        file_tanda_tangan: data.file_tanda_tangan || (Array.isArray(data.dokumen) ? data.dokumen.find((d: any) => d.kategori_dokumen?.toUpperCase() === "FILE TANDA TANGAN") : undefined),
       });
     }
   }, [getBiodata, form]);
