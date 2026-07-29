@@ -19,6 +19,23 @@ import SearchInput from "@/components/blocks/SearchInput";
 import SelectFilter from "@/components/blocks/SelectFilter";
 import Title from "@/components/blocks/Title";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+// Helper for photo URL
+const getPhotoUrl = (filename: string | null) => {
+  if (!filename) return "";
+  if (filename.startsWith("http://") || filename.startsWith("https://")) {
+    return filename;
+  }
+  const baseUrl = import.meta.env.VITE_BACKEND_SIAKAD_PUBLIC_URL || "";
+  return `${baseUrl}/uploads/absensiRecord/${filename}`;
+};
 
 // Icons
 import { FaCalendarAlt, FaRegClock, FaMapMarkerAlt, FaUsers, FaUserClock, FaTimesCircle, FaCheckCircle } from "react-icons/fa";
@@ -343,14 +360,14 @@ const DaftarMonitoringKehadiran = () => {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50 border-b border-gray-100 hover:bg-gray-50">
-                <TableHead className="font-bold text-gray-700">Pegawai</TableHead>
-                <TableHead className="font-bold text-gray-700 text-center">Tanggal</TableHead>
-                <TableHead className="font-bold text-gray-700 text-center">Jam Masuk</TableHead>
-                <TableHead className="font-bold text-gray-700 text-center">Jam Keluar</TableHead>
-                <TableHead className="font-bold text-gray-700 text-center">Status</TableHead>
-                <TableHead className="font-bold text-gray-700 text-center">Lokasi</TableHead>
-                <TableHead className="font-bold text-gray-700 text-center">Durasi Kerja</TableHead>
+              <TableRow className="bg-[#004680] border-b border-gray-100 hover:bg-[#004680]">
+                <TableHead className="font-bold text-white">Pegawai</TableHead>
+                <TableHead className="font-bold text-white text-center">Tanggal</TableHead>
+                <TableHead className="font-bold text-white text-center">Jam Masuk</TableHead>
+                <TableHead className="font-bold text-white text-center">Jam Keluar</TableHead>
+                <TableHead className="font-bold text-white text-center">Status</TableHead>
+                <TableHead className="font-bold text-white text-center">Lokasi</TableHead>
+                <TableHead className="font-bold text-white text-center">Durasi Kerja</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -397,12 +414,34 @@ const DaftarMonitoringKehadiran = () => {
                       {/* Jam Masuk */}
                       <TableCell className="text-center">
                         {item.jam_masuk ? (
-                          <div className="space-y-1">
+                          <div className="space-y-1 flex flex-col items-center justify-center">
                             <span className="font-bold text-gray-800">{item.jam_masuk}</span>
                             {item.is_terlambat && (
                               <p className="text-[10px] text-rose-600 font-extrabold bg-rose-50 border border-rose-100 rounded px-1.5 py-0.5 inline-block mx-auto">
                                 Terlambat {item.durasi_terlambat}m
                               </p>
+                            )}
+                            {item.foto_masuk && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <button className="text-[#106D63] hover:underline cursor-pointer font-semibold text-xs block mx-auto mt-0.5">
+                                    (Lihat Foto)
+                                  </button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-xs md:max-w-sm flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-xl border">
+                                  <DialogHeader className="w-full text-center">
+                                    <DialogTitle className="text-base font-bold mb-2">Foto Absen Masuk</DialogTitle>
+                                  </DialogHeader>
+                                  <img
+                                    src={getPhotoUrl(item.foto_masuk)}
+                                    alt="Foto Masuk"
+                                    className="w-full max-h-64 object-cover rounded-lg border shadow-sm"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Foto+Tidak+Ditemukan";
+                                    }}
+                                  />
+                                </DialogContent>
+                              </Dialog>
                             )}
                           </div>
                         ) : (
@@ -413,12 +452,34 @@ const DaftarMonitoringKehadiran = () => {
                       {/* Jam Keluar */}
                       <TableCell className="text-center">
                         {item.jam_keluar ? (
-                          <div className="space-y-1">
+                          <div className="space-y-1 flex flex-col items-center justify-center">
                             <span className="font-bold text-gray-800">{item.jam_keluar}</span>
                             {item.is_pulang_awal && (
                               <p className="text-[10px] text-amber-600 font-extrabold bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5 inline-block mx-auto">
                                 Pulang Cepat {item.durasi_pulang_awal}m
                               </p>
+                            )}
+                            {item.foto_keluar && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <button className="text-[#106D63] hover:underline cursor-pointer font-semibold text-xs block mx-auto mt-0.5">
+                                    (Lihat Foto)
+                                  </button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-xs md:max-w-sm flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-xl border">
+                                  <DialogHeader className="w-full text-center">
+                                    <DialogTitle className="text-base font-bold mb-2">Foto Absen Keluar</DialogTitle>
+                                  </DialogHeader>
+                                  <img
+                                    src={getPhotoUrl(item.foto_keluar)}
+                                    alt="Foto Keluar"
+                                    className="w-full max-h-64 object-cover rounded-lg border shadow-sm"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Foto+Tidak+Ditemukan";
+                                    }}
+                                  />
+                                </DialogContent>
+                              </Dialog>
                             )}
                           </div>
                         ) : (
