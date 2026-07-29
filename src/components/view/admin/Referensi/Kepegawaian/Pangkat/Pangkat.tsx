@@ -41,6 +41,7 @@ interface pangkatItem {
   id: string;
   kode: string;
   nama: string;
+  urutan?: number;
   tunjangan: number | string;
   potongan: number | string;
 }
@@ -61,6 +62,7 @@ const pangkatSchema = z.object({
   id: z.string().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong"),
   nama: z.string().min(1, "Nama Golongan tidak boleh kosong"),
+  urutan: z.coerce.number().optional(),
   tunjangan: z.coerce.number().min(0, "Tunjangan tidak boleh negatif"),
   potongan: z.coerce.number().min(0, "Potongan tidak boleh negatif"),
 });
@@ -85,6 +87,7 @@ const Pangkat = () => {
       id: "",
       kode: "",
       nama: "",
+      urutan: undefined,
       tunjangan: 0,
       potongan: 0,
     },
@@ -110,6 +113,9 @@ const Pangkat = () => {
   const { mutate: postPangkat } = useMutation({
     mutationFn: (data: pangkatFormvalue) => {
       const { id, ...createData } = data;
+      if (!createData.urutan) {
+        delete createData.urutan;
+      }
       return potsReferensiServices.pangkat(createData);
     },
     onSuccess: () => {
@@ -183,6 +189,7 @@ const Pangkat = () => {
       id: item.id,
       kode: item.kode,
       nama: item.nama,
+      urutan: item.urutan,
       tunjangan: Number(item.tunjangan) || 0,
       potongan: Number(item.potongan) || 0,
     });
@@ -274,6 +281,9 @@ const Pangkat = () => {
               <TableHeader>
                 <TableRow className="bg-gray-100">
                   <TableHead className="text-center text-xs sm:text-sm">
+                    Urutan
+                  </TableHead>
+                  <TableHead className="text-center text-xs sm:text-sm">
                     Kode
                   </TableHead>
                   <TableHead className="text-center text-xs sm:text-sm">
@@ -293,6 +303,17 @@ const Pangkat = () => {
               <TableBody className="divide-y divide-gray-200">
                 {(isAddData || isEditMode) && currentPage === 1 && (
                   <TableRow className="even:bg-gray-100">
+                    <TableCell className="text-center text-xs sm:text-sm">
+                      <FormFieldInput
+                        inputStyle="w-full"
+                        position={true}
+                        form={form}
+                        name="urutan"
+                        placeholder="Urutan"
+                        required={false}
+                        type="number"
+                      />
+                    </TableCell>
                     <TableCell className="text-center text-xs sm:text-sm">
                       <FormFieldInput
                         inputStyle="w-full"
@@ -362,19 +383,22 @@ const Pangkat = () => {
                 )}
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
+                    <TableCell colSpan={6} className="text-center py-8">
                       Memuat data...
                     </TableCell>
                   </TableRow>
                 ) : items.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
                       Tidak ada data
                     </TableCell>
                   </TableRow>
                 ) : (
                   items.map((item, index) => (
                     <TableRow key={item.id || index} className="even:bg-gray-100">
+                      <TableCell className="text-center text-xs sm:text-sm font-semibold text-gray-700">
+                        {item.urutan ?? "-"}
+                      </TableCell>
                       <TableCell className="text-center text-xs sm:text-sm">
                         {item.kode || "-"}
                       </TableCell>

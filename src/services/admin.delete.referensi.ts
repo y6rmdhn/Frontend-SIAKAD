@@ -63,6 +63,8 @@ const deleteReferensiServices = {
     axiosInstance.delete(`${endpoint.MASTER}/rumpun-bidang-ilmu/${id}`),
   deleteGelarAkademik: (id: string) =>
     axiosInstance.delete(`${endpoint.MASTER}/gelar-pendidikan/${id}`),
+  deleteKomponenGaji: (id: string) =>
+    axiosInstance.delete(`${endpoint.MASTER}/komponen-gaji/${id}`),
 
   // ── TETAP DI ADMIN (tidak ada di master data baru) ────────
   deteleEselon: (id: string) =>
@@ -87,6 +89,8 @@ const deleteReferensiServices = {
     axiosInstance.post(`${endpoint.PEGAWAI}/bulk-delete`, {
       ids: payload,
     }),
+  deleteSettingKehadiran: (id: string) =>
+    axiosInstance.delete(`${endpoint.ABSENSI}/setting-presensi/${id}`),
 };
 
 export default deleteReferensiServices;

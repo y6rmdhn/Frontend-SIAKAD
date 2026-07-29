@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MdEdit, MdArrowBack, MdAdd, MdQrCode2 } from "react-icons/md";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import adminServices from "@/services/admin.services.ts";
 import { useState } from "react";
@@ -18,6 +19,8 @@ import { FormFieldInput } from "@/components/blocks/CustomFormInput/CustomFormIn
 import { IoSaveOutline } from "react-icons/io5";
 import { z } from "zod";
 import putReferensiServices from "@/services/put.admin.referensi";
+import deleteReferensiServices from "@/services/admin.delete.referensi";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import StatusSettingkehadiran from "@/components/blocks/StatusSettingKehadiran/StatusSettingkehadiran";
@@ -130,6 +133,30 @@ const SettingKehadiran = () => {
       toast.error(error.message || "Gagal membuat data");
     },
   });
+
+  // --- MUTATION: DELETE ---
+  const { mutate: deleteSettingKehadiran } = useMutation({
+    mutationFn: (id: string) =>
+      deleteReferensiServices.deleteSettingKehadiran(id),
+    onSuccess: () => {
+      toast.success("Setting kehadiran berhasil dihapus");
+      queryClient.invalidateQueries({ queryKey: ["setting-kehadiran"] });
+      if (selectedId) {
+        handleCancel();
+      }
+    },
+    onError: (error: any) => {
+      const msg =
+        error.response?.data?.message ||
+        error.message ||
+        "Gagal menghapus setting kehadiran";
+      toast.error(msg);
+    },
+  });
+
+  const handleDeleteClick = (id: string) => {
+    deleteSettingKehadiran(id);
+  };
 
   const handleCreateClick = () => {
     setIsCreateMode(true);
@@ -263,14 +290,29 @@ const SettingKehadiran = () => {
                     </TableCell>
 
                     <TableCell className="text-center">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEditClick(items)}
-                        className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 border-yellow-300"
-                      >
-                        <MdEdit className="mr-1" /> Edit
-                      </Button>
+                      <div className="flex justify-center items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditClick(items)}
+                          className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 border-yellow-300"
+                        >
+                          <MdEdit className="mr-1" /> Edit
+                        </Button>
+                        <ConfirmDialog
+                          title="Hapus Setting Kehadiran?"
+                          description="Apakah Anda yakin ingin menghapus setting kehadiran gedung ini?"
+                          onConfirm={() => handleDeleteClick(items.id)}
+                        >
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-red-100 hover:bg-red-200 text-red-700 border-red-300"
+                          >
+                            <FaRegTrashAlt className="mr-1" /> Hapus
+                          </Button>
+                        </ConfirmDialog>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

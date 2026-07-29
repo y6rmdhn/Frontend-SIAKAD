@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MdEdit } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
@@ -26,6 +26,8 @@ import { IoSaveOutline } from "react-icons/io5";
 import { RiResetLeftFill } from "react-icons/ri";
 import { zodResolver } from "@hookform/resolvers/zod";
 import putReferensiServices from "@/services/put.admin.referensi.ts";
+import deleteReferensiServices from "@/services/admin.delete.referensi.ts";
+import { ConfirmDialog } from "@/components/blocks/ConfirmDialog/ConfirmDialog.tsx";
 import { FormFieldSelect } from "@/components/blocks/CustomFormSelect/CustomFormSelect";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
@@ -240,6 +242,32 @@ const PotongGaji = () => {
       );
     },
   });
+
+  const { mutate: deleteKomponenGaji } = useMutation({
+    mutationFn: (id: string) =>
+      deleteReferensiServices.deleteKomponenGaji(id),
+    onSuccess: () => {
+      toast.success("Komponen gaji berhasil dihapus");
+      queryClient.invalidateQueries({ queryKey: ["master-komponen-gaji"] });
+      if (editingItemId) {
+        form.reset();
+        setEditingItemId(null);
+        setIsEditMode(false);
+        setIsAddData(false);
+      }
+    },
+    onError: (error: any) => {
+      const msg =
+        error.response?.data?.message ||
+        error.message ||
+        "Gagal menghapus komponen gaji";
+      toast.error(msg);
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    deleteKomponenGaji(id);
+  };
 
   // ─── Handlers ─────────────────────────────────────────────────────────────
 
@@ -526,7 +554,7 @@ const PotongGaji = () => {
                         </span>
                       </TableCell>
                       <TableCell className="h-full">
-                        <div className="flex justify-center items-center w-full h-full">
+                        <div className="flex justify-center items-center w-full h-full gap-1">
                           <Button
                             size="icon"
                             type="button"
@@ -537,6 +565,20 @@ const PotongGaji = () => {
                           >
                             <MdEdit className="w-5! h-5! text-[#26A1F4]" />
                           </Button>
+                          <ConfirmDialog
+                            title="Hapus Komponen Gaji?"
+                            description="Apakah Anda yakin ingin menghapus komponen gaji ini?"
+                            onConfirm={() => handleDelete(item.id)}
+                          >
+                            <Button
+                              size="icon"
+                              type="button"
+                              variant="ghost"
+                              className="cursor-pointer"
+                            >
+                              <FaRegTrashAlt className="w-4! h-4! text-red-500" />
+                            </Button>
+                          </ConfirmDialog>
                         </div>
                       </TableCell>
                     </TableRow>
