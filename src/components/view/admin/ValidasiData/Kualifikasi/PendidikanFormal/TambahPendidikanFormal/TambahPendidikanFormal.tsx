@@ -208,7 +208,12 @@ const TambahPendidikanFormal = () => {
     queryKey: ["search-pegawai-admin", debouncedSearch],
     queryFn: async () => {
       const res = await adminServices.searchPegawai({ search: debouncedSearch, is_dropdown: true });
-      return res.data?.data?.data ?? res.data?.data ?? res.data ?? [];
+      const data = res.data?.data;
+      if (Array.isArray(data?.items)) return data.items;
+      if (Array.isArray(data?.data)) return data.data;
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(res.data)) return res.data;
+      return [];
     },
   });
 
@@ -349,7 +354,7 @@ const TambahPendidikanFormal = () => {
                                 {isLoadingPegawai ? (<CommandEmpty>Mencari...</CommandEmpty>) : !pegawaiOptions?.length ? (<CommandEmpty>Pegawai tidak ditemukan.</CommandEmpty>) : (
                                     <CommandGroup>
                                         {pegawaiOptions.map((p) => (
-                                            <CommandItem key={p.id} value={p.id} onSelect={() => {
+                                            <CommandItem key={p.id} value={`${p.nip} ${p.nama} ${p.id}`} onSelect={() => {
                                                 setSelectedPegawai(p);
                                                 form.setValue("pegawai_id", p.id, { shouldValidate: true });
                                                 setOpenPegawai(false);

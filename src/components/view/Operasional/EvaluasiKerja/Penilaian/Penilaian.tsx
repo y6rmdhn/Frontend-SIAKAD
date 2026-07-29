@@ -134,7 +134,12 @@ const Penilaian = () => {
       const res = await dosenServices.getPegawaiList({
         search: debouncedSearch,
       });
-      return res.data?.data?.data ?? res.data?.data ?? res.data ?? [];
+      const data = res.data?.data;
+      if (Array.isArray(data?.items)) return data.items;
+      if (Array.isArray(data?.data)) return data.data;
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(res.data)) return res.data;
+      return [];
     },
   });
 

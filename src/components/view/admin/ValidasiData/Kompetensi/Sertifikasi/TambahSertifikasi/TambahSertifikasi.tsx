@@ -299,7 +299,12 @@ const TambahSertifikasi = () => {
         queryKey: ["search-pegawai-admin", debouncedSearch],
         queryFn: async () => {
             const res = await adminServices.searchPegawai({ search: debouncedSearch, is_dropdown: true });
-            return res.data?.data?.data ?? res.data?.data ?? res.data ?? [];
+            const data = res.data?.data;
+            if (Array.isArray(data?.items)) return data.items;
+            if (Array.isArray(data?.data)) return data.data;
+            if (Array.isArray(data)) return data;
+            if (Array.isArray(res.data)) return res.data;
+            return [];
         },
     });
 
@@ -415,7 +420,7 @@ const TambahSertifikasi = () => {
                                                     {pegawaiOptions.map((p) => (
                                                         <CommandItem
                                                             key={p.id}
-                                                            value={p.id}
+                                                            value={`${p.nip} ${p.nama} ${p.id}`}
                                                             onSelect={() => {
                                                                 setSelectedPegawai(p);
                                                                 form.setValue("pegawai_id", p.id, { shouldValidate: true });
