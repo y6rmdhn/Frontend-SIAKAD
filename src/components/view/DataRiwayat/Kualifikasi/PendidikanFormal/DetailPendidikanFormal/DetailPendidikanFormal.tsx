@@ -576,7 +576,7 @@ const TambahPendidikanFormal = () => {
                       required
                       queryKey="universitas"
                       queryFn={(page) =>
-                        dosenServices.getUniversitasSelect({ page, is_dropdown: true })
+                        dosenServices.getMasterUniversitas({ page, is_dropdown: true })
                       }
                       itemValue="id"
                       itemLabel="nama"

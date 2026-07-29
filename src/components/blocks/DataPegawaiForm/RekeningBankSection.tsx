@@ -34,6 +34,14 @@ const RekeningBankSection = ({
         queryFn={(page) => adminServices.getBankPelangkap({ page, is_dropdown: true })}
         itemValue="id"
         itemLabel="nama"
+        initialSelectedItem={
+          form.watch("bank_id") || form.watch("nama_bank")
+            ? {
+                id: form.watch("bank_id") || form.watch("nama_bank"),
+                nama: form.watch("nama_bank") || "Bank",
+              }
+            : undefined
+        }
       />
     )}
 

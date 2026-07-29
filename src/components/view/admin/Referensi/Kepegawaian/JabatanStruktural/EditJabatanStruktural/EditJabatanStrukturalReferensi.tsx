@@ -170,9 +170,11 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
               labelStyle="text-[#3F6FA9]"
               placeholder="--Pilih Jabatan Struktural--"
               queryKey="jenis-jabatan-struktural-select-referensi-edit"
-              queryFn={adminServices.getJenisJabatanStruktural}
+              queryFn={(page) =>
+                adminServices.getJenisJabatanStruktural({ page, is_dropdown: true })
+              }
               itemValue="id"
-              itemLabel="jenis_jabatan_struktural"
+              itemLabel="nama"
               initialSelectedItem={initialData?.jenis_jabatan_struktural}
             />
             <FormFieldInput
@@ -189,9 +191,9 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
               placeholder="--Pilih Parent Jabatan Struktural--"
               queryKey="parent-jabatan-struktural-select-referensi-edit"
               queryFn={(page) =>
-                adminServices.getJabatanStrukturalReferensi(page, "")
+                adminServices.getJabatanStrukturalReferensi({ page, is_dropdown: true })
               }
-              itemValue="kode"
+              itemValue="id"
               itemLabel="singkatan"
               initialSelectedItem={initialData?.parent}
             />
@@ -203,9 +205,11 @@ const JabatanStrukturalForm = ({ initialData }: { initialData: any }) => {
               placeholder="--Pilih Unit Kerja--"
               required={true}
               queryKey="unit-kerja-referensi-select-edit"
-              queryFn={adminServices.getUnitKerja}
+              queryFn={(page) =>
+                adminServices.getUnitKerja({ page, is_dropdown: true })
+              }
               itemValue="id"
-              itemLabel="nama_unit"
+              itemLabel="nama"
               initialSelectedItem={initialData?.unit_kerja}
             />
             <FormFieldInput

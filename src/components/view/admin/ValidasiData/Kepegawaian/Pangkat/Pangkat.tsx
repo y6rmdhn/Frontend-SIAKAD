@@ -268,9 +268,15 @@ const Pangkat = () => {
                   </TableCell>
                   <TableCell className="text-center">{item.pegawai?.nip ?? "-"}</TableCell>
                   <TableCell>{item.pegawai?.nama ?? "-"}</TableCell>
-                  <TableCell>{item.master_pangkat?.nama ?? "-"}</TableCell>
+                  <TableCell>{item.pangkat?.nama || item.master_pangkat?.nama || "-"}</TableCell>
                   <TableCell className="text-center">{formatDate(item.tmt_pangkat)}</TableCell>
-                  <TableCell className="text-center">{item.jenis_sk ?? "-"}</TableCell>
+                  <TableCell className="text-center">
+                    {typeof item.jenis_sk === "object" && item.jenis_sk
+                      ? item.jenis_sk.jenis_sk || item.jenis_sk.nama
+                      : typeof item.jenis_sk === "string"
+                      ? item.jenis_sk
+                      : "-"}
+                  </TableCell>
                   <TableCell className="text-center">
                     {item.dokumen && item.dokumen.length > 0 ? (
                       <Button variant="link" className="p-0 h-auto text-blue-600 hover:underline" onClick={() => { setSelectedDokumen(item.dokumen!); setIsFileDialogOpen(true); }}>

@@ -166,9 +166,9 @@ const DetailJabatanAkademik = () => {
               placeholder="--Pilih Jabatan--"
               required={true}
               queryKey="jenis_jabatan_akademik_datariwayat_pangkat"
-              queryFn={dosenServices.getJabatanAkademikSelect}
+              queryFn={(page) => dosenServices.getJabatanAkademikSelect({ page, is_dropdown: true })}
               itemValue="id"
-              itemLabel="jabatan_akademik"
+              itemLabel="nama"
             />
             <FormFieldInput
               form={form}

@@ -156,9 +156,9 @@ const DetailJabatanStruktural = () => {
               placeholder="--Pilih Jabatan--"
               required={true}
               queryKey="jenis_jabatan_struktural_datariwayat"
-              queryFn={(page) => adminServices.getJabatanStruktural({ page, is_dropdown: true })}
+              queryFn={(page) => dosenServices.getMasterJabatanStruktural({ page, is_dropdown: true })}
               itemValue="id"
-              itemLabel="nama"
+              itemLabel="singkatan"
             />
 
             <FormFieldInput

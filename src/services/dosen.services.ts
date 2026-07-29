@@ -278,12 +278,9 @@ const dosenServices = {
     axiosInstance.get(`${endpoint.VALIDASI}/data-pendidikan-formal`, {
       params,
     }),
-  getDataPelanggaran: (page?: any, search?: string | undefined) =>
-    axiosInstance.get(`${endpoint.DOSEN}/riwayatpelanggarandosen`, {
-      params: {
-        page: page,
-        search: search,
-      },
+  getDataPelanggaran: (params?: any) =>
+    axiosInstance.get(`${endpoint.VALIDASI}/data-pelanggaran`, {
+      params,
     }),
   getDataKegiatanHarian: (
     page?: any,
@@ -459,6 +456,15 @@ const dosenServices = {
   },
   getAtasan: () => {
     return axiosInstance.get(`${endpoint.PEGAWAI}/atasan`);
+  },
+  getMasterJabatanStruktural: (params?: any) => {
+    return axiosInstance.get(`${endpoint.MASTER}/jabatan-struktural`, { params });
+  },
+  getMasterUniversitas: (params?: any) => {
+    return axiosInstance.get(`${endpoint.MASTER}/universitas`, { params });
+  },
+  getMasterJenisPenghargaan: (params?: any) => {
+    return axiosInstance.get(`${endpoint.MASTER}/jenis-penghargaan`, { params });
   },
 };
 

@@ -340,7 +340,7 @@ const DetailPenghargaan = () => {
                   placeholder="--Pilih Jenis Penghargaan--"
                   required
                   queryKey="jenis-penghargaan-user"
-                  queryFn={(page) => adminServices.getJenisPenghargaan({ page, is_dropdown: true })}
+                  queryFn={(page) => dosenServices.getMasterJenisPenghargaan({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="nama"
                 />

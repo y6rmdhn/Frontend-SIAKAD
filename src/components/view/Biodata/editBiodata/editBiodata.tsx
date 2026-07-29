@@ -44,9 +44,11 @@ const fileSchema = z
 
 const optionalEmail = z
   .string()
-  .email("Format email tidak valid.")
+  .trim()
   .optional()
-  .or(z.literal(""));
+  .nullable()
+  .or(z.literal(""))
+  .or(z.literal("-"));
 
 const cleanOptionalString = z
   .string()
@@ -77,7 +79,7 @@ const dataPegawaiSchema = z.object({
   unit_kerja_id: z.string().min(1, "Unit kerja wajib dipilih"),
   status_aktif_id: z.string().min(1, "Status aktif wajib dipilih"),
   status_kerja: z.string().min(1, "Hubungan kerja wajib dipilih"),
-  email_pegawai: z.string().email("Format email tidak valid"),
+  email_pegawai: optionalEmail,
   email_pribadi: optionalEmail,
   golongan: cleanOptionalString,
   jabatan_fungsional_id: cleanOptionalString,
@@ -101,8 +103,10 @@ const dataPegawaiSchema = z.object({
   no_handphone: cleanOptionalString,
   nama_bank: cleanOptionalString,
   cabang_bank: cleanOptionalString,
+  atas_nama_rekening: cleanOptionalString,
   nama_rekening: cleanOptionalString,
   no_rekening: cleanOptionalString,
+  bank_id: cleanOptionalString,
   kapreg: cleanOptionalString,
   file_kapreg: fileSchema,
   npwp: cleanOptionalString,
@@ -186,26 +190,26 @@ const EditBiodataPageUserComponent = () => {
         gelar_depan: data.gelar_depan || "",
         gelar_belakang: data.gelar_belakang || "",
         jenis_kelamin:
-          data.jenis_kelamin === "L"
+          data.jenis_kelamin === "L" || data.jenis_kelamin?.toUpperCase() === "LAKI-LAKI" || data.jenis_kelamin === "Laki-laki"
             ? "Laki-laki"
-            : data.jenis_kelamin === "P"
+            : data.jenis_kelamin === "P" || data.jenis_kelamin?.toUpperCase() === "PEREMPUAN" || data.jenis_kelamin === "Perempuan"
               ? "Perempuan"
               : undefined,
         agama: data.agama || "",
         tempat_lahir: data.tempat_lahir || "",
         tanggal_lahir: data.tanggal_lahir
-          ? new Date(data.tanggal_lahir)
-          : undefined,
-        kode_status_pernikahan: data.status_pernikahan_id?.toString() || "",
+          ? data.tanggal_lahir.split("T")[0]
+          : "",
+        kode_status_pernikahan: data.status_pernikahan_id?.id?.toString() || data.status_pernikahan_id?.toString() || data.status_pernikahan?.id?.toString() || "",
         golongan_darah: data.golongan_darah || "",
 
         // Data kepegawaian (Read-Only)
-        unit_kerja_id: data.unit_kerja_id?.nama || "",
-        status_aktif_id: data.status_aktif_id?.nama || "",
-        status_kerja: data.hubungan_kerja_id?.nama || "",
-        email_pegawai: data.email_pegawai || "",
-        email_pribadi: data.email_pribadi || "",
-        jabatan_fungsional_id: data.jabatan_fungsional?.nama || "",
+        unit_kerja_id: data.unit_kerja_id?.nama || (typeof data.unit_kerja_id === "string" ? data.unit_kerja_id : ""),
+        status_aktif_id: data.status_aktif_id?.nama || (typeof data.status_aktif_id === "string" ? data.status_aktif_id : ""),
+        status_kerja: data.hubungan_kerja_id?.nama || data.status_kerja || "",
+        email_pegawai: data.email_pegawai && data.email_pegawai !== "-" ? data.email_pegawai : "",
+        email_pribadi: data.email_pribadi && data.email_pribadi !== "-" ? data.email_pribadi : "",
+        jabatan_fungsional_id: data.jabatan_fungsional?.nama || data.jabatan_fungsional_id?.nama || "",
         pangkat_id: data.pangkat_id?.nama || "",
         eselon_id: data.eselon_id?.nama || "",
         role_id: data.role_id?.nama || "",
@@ -219,7 +223,7 @@ const EditBiodataPageUserComponent = () => {
         kecamatan: data.kecamatan || "",
         alamat_domisili: data.alamat_domisili || "",
         kode_pos: data.kode_pos || "",
-        suku: data.suku_id?.toString() || "",
+        suku: data.suku?.nama || data.suku_id?.nama || data.suku_id?.toString() || "",
         jarak_rumah_domisili: data.jarak_rumah_domisili?.toString() || "",
         no_whatsapp: data.no_whatsapp || "",
         no_handphone: data.no_handphone || "",
@@ -227,8 +231,10 @@ const EditBiodataPageUserComponent = () => {
         // Data rekening
         nama_bank: data.nama_bank || "",
         cabang_bank: data.cabang_bank || "",
+        atas_nama_rekening: data.atas_nama_rekening || "",
         nama_rekening: data.atas_nama_rekening || "",
         no_rekening: data.no_rekening || "",
+        bank_id: data.bank_id?.id?.toString() || data.bank_id?.toString() || "",
 
         // Data dokumen
         npwp: data.npwp || "",
@@ -283,25 +289,7 @@ const EditBiodataPageUserComponent = () => {
     }
   };
 
-  const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => (
-    <div>
-      <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
-        <KepegawaianSection form={form} isReadOnly={false} isLecturerEdit={true} />
-      </div>
-      <div style={{ display: show === "domisili" ? "block" : "none" }}>
-        <DomisiliSection form={form} />
-      </div>
-      <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
-        <RekeningBankSection form={form} />
-      </div>
-      <div style={{ display: show === "dokumen" ? "block" : "none" }}>
-        <DokumenSection form={form} />
-      </div>
-      <div style={{ display: show === "detail-kendaraan" ? "block" : "none" }}>
-        <DetailKendaraanSection form={form} />
-      </div>
-    </div>
-  );
+
 
   return (
     <div className="mt-10 mb-10">
@@ -406,6 +394,7 @@ const EditBiodataPageUserComponent = () => {
                   queryFn={(page) => adminServices.getAgama({ page, is_dropdown: true })}
                   itemValue="nama"
                   itemLabel="nama"
+                  initialSelectedItem={data?.agama ? { nama: data.agama } : undefined}
                 />
                 <FormFieldInput
                   form={form}
@@ -433,6 +422,15 @@ const EditBiodataPageUserComponent = () => {
                   queryFn={(page) => adminServices.getStatusPernikahan({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="nama"
+                  initialSelectedItem={
+                    data?.status_pernikahan
+                      ? { id: data.status_pernikahan.id, nama: data.status_pernikahan.nama }
+                      : typeof data?.status_pernikahan_id === "object" && data?.status_pernikahan_id?.id
+                      ? { id: data.status_pernikahan_id.id, nama: data.status_pernikahan_id.nama || "Status Pernikahan" }
+                      : data?.status_pernikahan_id
+                      ? { id: data.status_pernikahan_id.toString(), nama: "Status Pernikahan" }
+                      : undefined
+                  }
                 />
                 <InfiniteScrollSelect
                   form={form}
@@ -445,6 +443,7 @@ const EditBiodataPageUserComponent = () => {
                   queryFn={(page) => adminServices.getGolonganDarah({ page, is_dropdown: true })}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
+                  initialSelectedItem={data?.golongan_darah ? { golongan_darah: data.golongan_darah } : undefined}
                 />
               </div>
 
@@ -466,7 +465,21 @@ const EditBiodataPageUserComponent = () => {
                   ))}
                 </div>
                 <div className="w-full pb-10">
-                  <FormDataPegawai show={show} form={form} />
+                  <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
+                    <KepegawaianSection form={form} isReadOnly={false} isLecturerEdit={true} />
+                  </div>
+                  <div style={{ display: show === "domisili" ? "block" : "none" }}>
+                    <DomisiliSection form={form} />
+                  </div>
+                  <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
+                    <RekeningBankSection form={form} />
+                  </div>
+                  <div style={{ display: show === "dokumen" ? "block" : "none" }}>
+                    <DokumenSection form={form} />
+                  </div>
+                  <div style={{ display: show === "detail-kendaraan" ? "block" : "none" }}>
+                    <DetailKendaraanSection form={form} />
+                  </div>
                 </div>
               </div>
             </CardContent>

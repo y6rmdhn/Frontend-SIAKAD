@@ -195,9 +195,15 @@ const Pangkat = () => {
                   <TableCell className="text-center">
                     {item.tmt_pangkat_formatted}
                   </TableCell>
-                  <TableCell className="text-center">{item.jenis_sk}</TableCell>
                   <TableCell className="text-center">
-                    {item.nama_pangkat}
+                    {typeof item.jenis_sk === "object" && item.jenis_sk
+                      ? item.jenis_sk.jenis_sk || item.jenis_sk.nama
+                      : typeof item.jenis_sk === "string"
+                      ? item.jenis_sk
+                      : "-"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {item.pangkat?.nama || item.master_pangkat?.nama || item.nama_pangkat || "-"}
                   </TableCell>
                   <TableCell className="text-center">
                     {item.masa_kerja}

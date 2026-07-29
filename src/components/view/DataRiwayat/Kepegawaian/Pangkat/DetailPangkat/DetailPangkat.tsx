@@ -49,10 +49,12 @@ const pangkatSchema = z.object({
   no_sk: z.string().min(1, "No SK tidak boleh kosong."),
   file_pangkat: fileSchema,
   tgl_sk: z.string().min(1, "Tanggal SK tidak boleh kosong."),
-  pejabat_penetap: z.string().min(1, "Pejabat penetap tidak boleh kosong."),
   masa_kerja_tahun: z.coerce.number().int().nonnegative().max(50),
   masa_kerja_bulan: z.coerce.number().int().nonnegative().max(11).optional().nullable(),
-  acuan_masa_kerja: z.enum(["1", "0"]),
+  acuan_masa_kerja: z.preprocess(
+    (val) => (typeof val === "string" ? val === "true" || val === "1" : Boolean(val)),
+    z.boolean()
+  ),
   keterangan: z.string().optional(),
 });
 
@@ -74,7 +76,7 @@ const DetailPangkat = () => {
       pejabat_penetap: "",
       masa_kerja_tahun: 0,
       masa_kerja_bulan: undefined,
-      acuan_masa_kerja: "0",
+      acuan_masa_kerja: false,
       keterangan: "",
     },
     resolver: zodResolver(pangkatSchema),
@@ -105,10 +107,8 @@ const DetailPangkat = () => {
     formData.append("tgl_sk", values.tgl_sk);
     formData.append("pejabat_penetap", values.pejabat_penetap);
     formData.append("masa_kerja_tahun", String(values.masa_kerja_tahun));
-    if (values.masa_kerja_bulan !== null && values.masa_kerja_bulan !== undefined) {
-      formData.append("masa_kerja_bulan", String(values.masa_kerja_bulan));
-    }
-    formData.append("acuan_masa_kerja", values.acuan_masa_kerja);
+    formData.append("masa_kerja_bulan", String(values.masa_kerja_bulan ?? 0));
+    formData.append("is_acuan_masa_kerja", String(values.acuan_masa_kerja));
     if (values.keterangan) {
       formData.append("keterangan", values.keterangan);
     }
@@ -172,7 +172,7 @@ const DetailPangkat = () => {
               placeholder="--Pilih Jenis SK--"
               required={true}
               queryKey="jenis_sk_datariwayat_pangkat"
-              queryFn={dosenServices.getJenisSk}
+              queryFn={(page) => dosenServices.getJenisSk({ page, is_dropdown: true })}
               itemValue="id"
               itemLabel="jenis_sk"
             />
@@ -184,9 +184,9 @@ const DetailPangkat = () => {
               placeholder="--Pilih Jenis Kenaikan Pangkat--"
               required={true}
               queryKey="jenis_kenaikan_pangkat_datariwayat_pangkat"
-              queryFn={dosenServices.getJenisKenaikanPangkat}
+              queryFn={(page) => dosenServices.getJenisKenaikanPangkat({ page, is_dropdown: true })}
               itemValue="id"
-              itemLabel="jenis_pangkat"
+              itemLabel="nama"
             />
             <InfiniteScrollSelect
               form={form}
@@ -196,9 +196,9 @@ const DetailPangkat = () => {
               placeholder="--Pilih Nama Pangkat--"
               required={true}
               queryKey="jenis_pangkat_datariwayat_pangkat"
-              queryFn={dosenServices.getMasterPangkatReferensi}
+              queryFn={(page) => dosenServices.getMasterPangkatReferensi({ page, is_dropdown: true })}
               itemValue="id"
-              itemLabel="nama_golongan"
+              itemLabel="nama"
             />
             <FormFieldInput
               form={form}
@@ -263,8 +263,8 @@ const DetailPangkat = () => {
               name="acuan_masa_kerja"
               labelStyle="text-[#3F6FA9] text-xs md:text-sm"
               options={[
-                { value: "1", label: "Ya" },
-                { value: "0", label: "Tidak" },
+                { value: true, label: "Ya" },
+                { value: false, label: "Tidak" },
               ]}
               required={true}
               placeholder="-- Pilih Acuan --"

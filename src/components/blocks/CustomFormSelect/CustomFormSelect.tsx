@@ -18,7 +18,7 @@ type FormFieldSelectProps = {
   name: string;
   label?: string;
   placeholder?: string;
-  options: { label: string; value: string | number }[];
+  options: { label: string; value: string | number | boolean }[];
   labelStyle?: string;
   disabled?: boolean;
   required?: boolean;
@@ -56,19 +56,19 @@ export const FormFieldSelect = ({
                 <div className="w-full flex flex-col gap-1">
                   <Select
                       onValueChange={(value) => {
-                        // Logika Anda untuk mengubah kembali ke number sudah bagus
-                        // dan tidak perlu diubah.
                         const matchedOption = options.find(
-                            (opt) => opt.value.toString() === value
+                            (opt) => opt.value?.toString() === value
                         );
                         const parsedValue =
                             typeof matchedOption?.value === "number"
                                 ? Number(value)
+                                : typeof matchedOption?.value === "boolean"
+                                ? value === "true"
                                 : value;
 
                         field.onChange(parsedValue);
                       }}
-                      value={field.value?.toString()}
+                      value={field.value !== undefined && field.value !== null ? field.value.toString() : ""}
                       disabled={disabled}
                   >
                     <FormControl>

@@ -42,12 +42,23 @@ interface PangkatItem {
   no_sk: string;
   tgl_sk: string;
   tmt_pangkat: string;
-  jenis_sk: string;
-  masa_kerja: string;
+  jenis_sk?: {
+    id?: string;
+    jenis_sk?: string;
+    nama?: string;
+  } | string | null;
+  masa_kerja_tahun?: number | null;
+  masa_kerja_bulan?: number | null;
+  masa_kerja?: string | null;
   status: string;
+  pangkat?: {
+    id?: string;
+    nama?: string;
+  } | string | null;
   master_pangkat?: {
-    nama: string;
-  };
+    id?: string;
+    nama?: string;
+  } | null;
 }
 
 interface PaginatedData {
@@ -61,6 +72,47 @@ interface PaginatedData {
     hasPrevPage: boolean;
   };
 }
+
+const getPangkatName = (item: PangkatItem): string => {
+  if (!item) return "-";
+  if (typeof item.pangkat === "object" && item.pangkat !== null) {
+    const p = item.pangkat as any;
+    if (p.nama) return p.nama;
+    if (p.nama_pangkat) return p.nama_pangkat;
+    if (p.nama_golongan) return p.nama_golongan;
+    if (p.jenis_pangkat) return p.jenis_pangkat;
+    if (p.pangkat) return p.pangkat;
+  }
+  if (typeof item.pangkat === "string" && item.pangkat.trim() !== "") {
+    return item.pangkat;
+  }
+  if (typeof item.master_pangkat === "object" && item.master_pangkat !== null) {
+    const mp = item.master_pangkat as any;
+    if (mp.nama) return mp.nama;
+    if (mp.nama_pangkat) return mp.nama_pangkat;
+  }
+  const rawItem = item as any;
+  if (rawItem.nama_pangkat) return rawItem.nama_pangkat;
+  if (rawItem.pangkat_nama) return rawItem.pangkat_nama;
+  if (rawItem.nama_golongan) return rawItem.nama_golongan;
+  return "-";
+};
+
+const getJenisSkName = (item: PangkatItem): string => {
+  if (!item) return "-";
+  if (typeof item.jenis_sk === "object" && item.jenis_sk !== null) {
+    const js = item.jenis_sk as any;
+    if (js.jenis_sk) return js.jenis_sk;
+    if (js.nama) return js.nama;
+    if (js.name) return js.name;
+  }
+  if (typeof item.jenis_sk === "string" && item.jenis_sk.trim() !== "") {
+    return item.jenis_sk;
+  }
+  const rawItem = item as any;
+  if (rawItem.nama_jenis_sk) return rawItem.nama_jenis_sk;
+  return "-";
+};
 
 const statusColor: Record<string, string> = {
   draft: "bg-[#C4C4C4]/65 hover:bg-[#C4C4C4]/65",
@@ -185,10 +237,16 @@ const Pangkat = () => {
                 <TableCell className="text-center">{formatDate(item.tgl_sk)}</TableCell>
                 <TableCell className="text-center">{formatDate(item.tmt_pangkat)}</TableCell>
                 <TableCell className="text-center">
-                  {item.master_pangkat?.nama || "-"}
+                  {getPangkatName(item)}
                 </TableCell>
-                <TableCell className="text-center">{item.jenis_sk || "-"}</TableCell>
-                <TableCell className="text-center">{item.masa_kerja || "-"}</TableCell>
+                <TableCell className="text-center">
+                  {getJenisSkName(item)}
+                </TableCell>
+                <TableCell className="text-center">
+                  {item.masa_kerja_tahun !== undefined && item.masa_kerja_tahun !== null
+                    ? `${item.masa_kerja_tahun} Thn ${item.masa_kerja_bulan || 0} Bln`
+                    : item.masa_kerja || "-"}
+                </TableCell>
                 <TableCell className="text-center">
                   <Button
                     size="sm"

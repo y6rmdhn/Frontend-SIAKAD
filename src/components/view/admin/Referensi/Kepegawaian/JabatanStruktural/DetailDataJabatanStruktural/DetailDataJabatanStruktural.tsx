@@ -105,7 +105,7 @@ const DetailDataJabatanStrukturalReferensi = () => {
                     {queryData?.singkatan || "-"}
                   </Label>
                 </div>
-                <div className="flex flex-col sm:flex-row border-b p-2 gap-4">
+                {/* <div className="flex flex-col sm:flex-row border-b p-2 gap-4">
                   <Label className="text-[#2572BE] text-xs sm:text-sm w-43 shrink-0">
                     Jenis Jabatan Struktural
                   </Label>
@@ -113,7 +113,7 @@ const DetailDataJabatanStrukturalReferensi = () => {
                     {queryData?.jenis_jabatan_struktural
                       ?.jenis_jabatan_struktural || "-"}
                   </Label>
-                </div>
+                </div> */}
                 <div className="flex flex-col sm:flex-row border-b p-2 gap-4">
                   <Label className="text-[#2572BE] text-xs sm:text-sm w-43 shrink-0">
                     Singkatan
@@ -135,7 +135,7 @@ const DetailDataJabatanStrukturalReferensi = () => {
                     Unit Kerja
                   </Label>
                   <Label className="text-xs sm:text-sm text-left flex-1">
-                    {queryData?.unit_kerja?.nama_unit || "-"}
+                    {queryData?.unit_kerja?.nama || "-"}
                   </Label>
                 </div>
                 <div className="flex flex-col sm:flex-row border-b p-2 gap-4">

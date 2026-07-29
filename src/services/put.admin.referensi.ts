@@ -127,7 +127,7 @@ const putReferensiServices = {
   inputPresensi: (id: string, payload: InputPresensiFormValue) =>
     axiosInstance.put(`${endpoint.ADMIN}/input-presensi/${id}`, payload),
   pegawai: (id: string, payload: any) =>
-    axiosInstance.put(`${endpoint.ADMIN}/pegawai/${id}`, payload),
+    axiosInstance.put(`${endpoint.PEGAWAI}/${id}`, payload),
   berita: (id: string, payload: any) =>
     axiosInstance.post(`${endpoint.ADMIN}/berita/${id}`, payload),
   potongGaji: (id: string, data: any) =>

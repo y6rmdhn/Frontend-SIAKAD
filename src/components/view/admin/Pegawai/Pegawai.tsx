@@ -88,9 +88,33 @@ const Pegawai = () => {
 
   const currentPage = searchParam.get("page") || "1";
   const unitKerjaFilter = searchParam.get("unit_kerja_id") || "";
-  const pendidikanTerakhirFilter = searchParam.get("hubungan_kerja_id") || "";
   const statusAktifFilter = searchParam.get("status_aktif_id") || "";
   const hubunganKerjaFilter = searchParam.get("hubungan_kerja_id") || "";
+
+  // --- Fetch Master Data for Filter Dropdowns ---
+  const { data: masterUnitKerjaData } = useQuery({
+    queryKey: ["master-unit-kerja-dropdown"],
+    queryFn: async () => {
+      const res = await adminServices.getUnitKerja({ is_dropdown: true });
+      return res.data?.data?.items || res.data?.data || [];
+    },
+  });
+
+  const { data: masterStatusAktifData } = useQuery({
+    queryKey: ["master-status-aktif-dropdown"],
+    queryFn: async () => {
+      const res = await adminServices.getStatusAktif({ is_dropdown: true });
+      return res.data?.data?.items || res.data?.data || [];
+    },
+  });
+
+  const { data: masterHubunganKerjaData } = useQuery({
+    queryKey: ["master-hubungan-kerja-dropdown"],
+    queryFn: async () => {
+      const res = await adminServices.getHubunganKerja({ is_dropdown: true });
+      return res.data?.data?.items || res.data?.data || [];
+    },
+  });
 
   // --- Data Fetching ---
   const { data, isLoading, isError, error } = useQuery<PegawaiApiResponse>({
@@ -99,7 +123,6 @@ const Pegawai = () => {
       currentPage,
       debouncedSearch,
       unitKerjaFilter,
-      pendidikanTerakhirFilter,
       statusAktifFilter,
       hubunganKerjaFilter,
     ],
@@ -118,25 +141,42 @@ const Pegawai = () => {
 
   // --- Memos & Event Handlers ---
   const filterOptions = useMemo(() => {
-    const filters = data?.filters;
+    const unitKerjaOpts = Array.isArray(masterUnitKerjaData)
+      ? masterUnitKerjaData.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama || opt.nama_unit || opt.kode,
+        }))
+      : [];
+
+    const statusAktifOpts = Array.isArray(masterStatusAktifData)
+      ? masterStatusAktifData.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama || opt.kode,
+        }))
+      : [];
+
+    const hubunganKerjaOpts = Array.isArray(masterHubunganKerjaData)
+      ? masterHubunganKerjaData.map((opt: any) => ({
+          value: String(opt.id),
+          label: opt.nama || opt.nama_hub_kerja || opt.kode,
+        }))
+      : [];
+
     return {
-      unitKerja:
-        filters?.unit_kerja_id?.map((opt: any) => ({
-          value: String(opt.id),
-          label: opt.nama_unit,
-        })) || [],
-      statusAktif:
-        filters?.status_aktif_id?.map((opt: any) => ({
-          value: String(opt.id),
-          label: opt.nama,
-        })) || [],
-      hubunganKerja:
-        filters?.hubungan_kerja?.map((opt: any) => ({
-          value: String(opt.id),
-          label: opt.nama_hub_kerja,
-        })) || [],
+      unitKerja: [
+        { label: "-- Semua Unit Kerja --", value: "semua" },
+        ...unitKerjaOpts,
+      ],
+      statusAktif: [
+        { label: "-- Semua Status --", value: "semua" },
+        ...statusAktifOpts,
+      ],
+      hubunganKerja: [
+        { label: "-- Semua Hubungan --", value: "semua" },
+        ...hubunganKerjaOpts,
+      ],
     };
-  }, [data]);
+  }, [masterUnitKerjaData, masterStatusAktifData, masterHubunganKerjaData]);
 
   const handleUrlChange = (paramName: string, value: string) => {
     const newSearchParams = new URLSearchParams(searchParam);

@@ -2,7 +2,8 @@ import React from "react";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
-import { FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import {
@@ -16,6 +17,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { JabatanStrukturalNode } from "@/components/view/admin/Referensi/Kepegawaian/JabatanStruktural/JabatanStruktural";
+
+const formatNumber = (val: number | string | undefined | null): string => {
+  if (val === undefined || val === null || val === "" || val === "-") return "-";
+  const num = typeof val === "number" ? val : parseFloat(String(val).replace(/[^0-9.-]+/g, "")) || 0;
+  return new Intl.NumberFormat("en-US").format(num);
+};
 
 // The props now expect the clean JabatanStrukturalNode type
 interface JabatanStrukturalRowProps {
@@ -74,16 +81,16 @@ const JabatanStrukturalRow: React.FC<JabatanStrukturalRowProps> = ({
           {node.unit_kerja_nama}
         </TableCell>
         <TableCell className="text-center text-xs sm:text-sm">
-          {node.tunjangan}
+          {formatNumber(node.tunjangan)}
         </TableCell>
         <TableCell className="text-center">
           <div className="flex justify-center items-center w-full h-full">
             {/* The links can be made more generic if needed */}
             <Link
-              to={`/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural`}
+              to={`/admin/referensi/kepegawaian/jabatan-struktural/detail-jabatan-struktural/edit-jabatan-struktural/${node.id}`}
             >
               <Button size="icon" variant="ghost">
-                <FaPlus className="w-5 h-5 text-green-500" />
+                <MdEdit className="w-5 h-5 text-yellow-500" />
               </Button>
             </Link>
             <Link

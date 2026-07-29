@@ -74,8 +74,9 @@ export const InfiniteScrollSelect = ({
   const options =
     data?.pages
       .flatMap((page) => {
-        if (page?.items && Array.isArray(page.items)) {
-          return page.items;
+        const items = page?.data?.items ?? page?.items ?? page?.data ?? page;
+        if (Array.isArray(items)) {
+          return items;
         }
         return [];
       })
@@ -84,7 +85,7 @@ export const InfiniteScrollSelect = ({
   let selectOptions = options
     .filter((item) => item && item[itemValue] !== undefined && item[itemValue] !== null)
     .map((item) => ({
-      label: item[itemLabel] || "Unknown",
+      label: item[itemLabel] || item.nama || item.jenis_jabatan_struktural || item.singkatan || item.nama_unit || "Unknown",
       value: item[itemValue].toString(),
     }));
   if (

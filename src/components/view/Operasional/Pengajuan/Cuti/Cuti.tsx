@@ -277,10 +277,10 @@ const Cuti = () => {
                   {formatDate(item.tgl_selesai)}
                 </TableCell>
                 <TableCell className="text-center">
-                  {item.jumlah_cuti ? `${item.jumlah_cuti} hari` : "-"}
+                  {item.jumlah_hari ? `${item.jumlah_hari} hari` : "-"}
                 </TableCell>
                 <TableCell className="text-center">
-                  {item.alasan_cuti ?? "-"}
+                  {item.keterangan ?? "-"}
                 </TableCell>
                 <TableCell className="text-center">
                   <Button
@@ -298,9 +298,9 @@ const Cuti = () => {
                         <IoEyeOutline className="w-5 h-5 text-[#26A1F4]" />
                       </Button>
                     </Link>
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
+                    <Button
+                      size="icon"
+                      variant="ghost"
                       className="cursor-pointer"
                       onClick={() => {
                         const fileUrl = item.file_cuti?.url || item.file_pendukung?.url || item.file_url;

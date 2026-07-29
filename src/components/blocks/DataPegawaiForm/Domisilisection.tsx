@@ -149,8 +149,9 @@ const DomisiliSection = ({
           required={true}
           queryKey="warga-negara-select"
           queryFn={(page) => adminServices.getMasterNegara({ page, is_dropdown: true })}
-          itemValue="id"
+          itemValue="nama"
           itemLabel="nama"
+          initialSelectedItem={watch("warga_negara") ? { nama: watch("warga_negara"), id: watch("warga_negara") } : undefined}
         />
       )}
 
@@ -176,6 +177,7 @@ const DomisiliSection = ({
           itemValue="nama"
           itemLabel="nama"
           onSelectItem={(item) => setProvinceId(item.id)}
+          initialSelectedItem={selectedProvinceName ? { nama: selectedProvinceName } : undefined}
         />
       )}
 
@@ -195,13 +197,14 @@ const DomisiliSection = ({
           name="kota"
           labelStyle="text-[#3F6FA9]"
           placeholder="--Pilih Kota--"
-          disabled={!provinceId || !isValidId(provinceId)}
+          disabled={!provinceId && !selectedCityName}
           required={true}
           queryKey={`kota-select-${provinceId || ""}`}
           queryFn={(page) => adminServices.getMasterKota({ page, provinsi_id: isValidId(provinceId) ? provinceId : undefined, is_dropdown: true })}
           itemValue="nama"
           itemLabel="nama"
           onSelectItem={(item) => setCityId(item.id)}
+          initialSelectedItem={selectedCityName ? { nama: selectedCityName } : undefined}
         />
       )}
 
@@ -221,12 +224,13 @@ const DomisiliSection = ({
           name="kecamatan"
           labelStyle="text-[#3F6FA9]"
           placeholder="--Pilih Kecamatan--"
-          disabled={!cityId || !isValidId(cityId)}
+          disabled={!cityId && !watch("kecamatan")}
           required={true}
           queryKey={`kecamatan-select-${cityId || ""}`}
           queryFn={(page) => adminServices.getMasterKecamatan({ page, kabupaten_id: isValidId(cityId) ? cityId : undefined, is_dropdown: true })}
           itemValue="nama"
           itemLabel="nama"
+          initialSelectedItem={watch("kecamatan") ? { nama: watch("kecamatan") } : undefined}
         />
       )}
 
@@ -267,8 +271,9 @@ const DomisiliSection = ({
           required={false}
           queryKey="suku-select"
           queryFn={(page) => adminServices.getSukuParams({ page, is_dropdown: true })}
-          itemValue="id"
+          itemValue="nama"
           itemLabel="nama"
+          initialSelectedItem={watch("suku") ? { id: watch("suku"), nama: watch("suku") } : undefined}
         />
       )}
 

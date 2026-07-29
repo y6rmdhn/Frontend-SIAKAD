@@ -17,6 +17,12 @@ import { InfiniteScrollSelect } from "@/components/blocks/InfiniteScrollSelect/I
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+const formatNumber = (val: number | string | undefined | null): string => {
+  if (val === undefined || val === null || val === "" || val === "-") return "0";
+  const num = typeof val === "number" ? val : parseFloat(String(val).replace(/[^0-9.-]+/g, "")) || 0;
+  return new Intl.NumberFormat("en-US").format(num);
+};
+
 export const jabatanStrukturalSchema = z.object({
   kode: z.string().min(1, { message: "Kode is required" }),
   jenis_jabatan_struktural_id: z.string().optional(),
@@ -127,10 +133,12 @@ const DetailJabatanStruktural = () => {
                 labelStyle="text-[#3F6FA9]"
                 placeholder="--Pilih Jabatan Struktural--"
                 required={false}
-                queryKey="jabatan-struktural-select-referensi"
-                queryFn={adminServices.getJenisJabatanStruktural}
+                queryKey="jenis-jabatan-struktural-select-referensi"
+                queryFn={(page) =>
+                  adminServices.getJenisJabatanStruktural({ page, is_dropdown: true })
+                }
                 itemValue="id"
-                itemLabel="jenis_jabatan_struktural"
+                itemLabel="nama"
               />
               <FormFieldInput
                 form={form}
@@ -148,9 +156,9 @@ const DetailJabatanStruktural = () => {
                 required={false}
                 queryKey="parent-jabatan-struktural-select-referensi"
                 queryFn={(page) =>
-                  adminServices.getJabatanStrukturalReferensi(page, "")
+                  adminServices.getJabatanStrukturalReferensi({ page, is_dropdown: true })
                 }
-                itemValue="kode"
+                itemValue="id"
                 itemLabel="singkatan"
               />
               <InfiniteScrollSelect
@@ -161,9 +169,11 @@ const DetailJabatanStruktural = () => {
                 placeholder="--Pilih Unit Kerja--"
                 required={true}
                 queryKey="unit-kerja-referensi-select"
-                queryFn={adminServices.getUnitKerja}
+                queryFn={(page) =>
+                  adminServices.getUnitKerja({ page, is_dropdown: true })
+                }
                 itemValue="id"
-                itemLabel="nama_unit"
+                itemLabel="nama"
               />
               <FormFieldInput
                 form={form}
@@ -196,13 +206,19 @@ const DetailJabatanStruktural = () => {
                 itemValue="id"
                 itemLabel="nama_golongan"
               /> */}
-              <FormFieldInput
-                form={form}
-                label="Tunjangan"
-                name="tunjangan"
-                labelStyle="text-[#3F6FA9]"
-                required={false}
-              />
+              <div>
+                <FormFieldInput
+                  form={form}
+                  label="Tunjangan"
+                  name="tunjangan"
+                  labelStyle="text-[#3F6FA9]"
+                  required={false}
+                  type="number"
+                />
+                <span className="text-[10px] text-gray-500 block mt-1">
+                  Rp {formatNumber(form.watch("tunjangan"))}
+                </span>
+              </div>
               <FormFieldInput
                 form={form}
                 label="Beban Sks"

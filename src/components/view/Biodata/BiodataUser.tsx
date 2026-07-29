@@ -98,12 +98,16 @@ const BiodataUser = () => {
         gelar_depan: data.gelar_depan || "",
         gelar_belakang: data.gelar_belakang || "",
         jenis_kelamin:
-          data.jenis_kelamin === "L" ? "Laki-laki" : data.jenis_kelamin === "P" ? "Perempuan" : undefined,
+          data.jenis_kelamin === "L" || data.jenis_kelamin?.toUpperCase() === "LAKI-LAKI" || data.jenis_kelamin === "Laki-laki"
+            ? "Laki-laki"
+            : data.jenis_kelamin === "P" || data.jenis_kelamin?.toUpperCase() === "PEREMPUAN" || data.jenis_kelamin === "Perempuan"
+              ? "Perempuan"
+              : undefined,
         agama: data.agama || "",
         tempat_lahir: data.tempat_lahir || "",
         tanggal_lahir: data.tanggal_lahir
-          ? new Date(data.tanggal_lahir)
-          : undefined,
+          ? data.tanggal_lahir.split("T")[0]
+          : "",
         golongan_darah: data.golongan_darah || "",
         alamat_domisili: data.alamat_domisili || "",
         warga_negara: data.warga_negara || "",
@@ -145,31 +149,7 @@ const BiodataUser = () => {
     }
   }, [getBiodata, form]);
 
-  const FormDataPegawai = ({
-    show,
-    form,
-    isReadOnly,
-  }: FormDataPegawaiProps) => {
-    return (
-      <div>
-        <div className={show === "kepegawaian" ? "block" : "hidden"}>
-          <KepegawaianSection form={form} isReadOnly={isReadOnly} />
-        </div>
-        <div className={show === "domisili" ? "block" : "hidden"}>
-          <DomisiliSection form={form} isReadOnly={isReadOnly} />
-        </div>
-        <div className={show === "rekening-bank" ? "block" : "hidden"}>
-          <RekeningBankSection form={form} isReadOnly={isReadOnly} />
-        </div>
-        <div className={show === "dokumen" ? "block" : "hidden"}>
-          <DokumenSection form={form} isReadOnly={isReadOnly} />
-        </div>
-        <div className={show === "detail-kendaraan" ? "block" : "hidden"}>
-          <DetailKendaraanSection form={form} isReadOnly={isReadOnly} />
-        </div>
-      </div>
-    );
-  };
+
 
   return (
     <div className="mt-10 mb-10">
@@ -298,7 +278,21 @@ const BiodataUser = () => {
                   ))}
                 </div>
                 <div className="w-full pb-10">
-                  <FormDataPegawai show={show} form={form} isReadOnly={true} />
+                  <div className={show === "kepegawaian" ? "block" : "hidden"}>
+                    <KepegawaianSection form={form} isReadOnly={true} />
+                  </div>
+                  <div className={show === "domisili" ? "block" : "hidden"}>
+                    <DomisiliSection form={form} isReadOnly={true} />
+                  </div>
+                  <div className={show === "rekening-bank" ? "block" : "hidden"}>
+                    <RekeningBankSection form={form} isReadOnly={true} />
+                  </div>
+                  <div className={show === "dokumen" ? "block" : "hidden"}>
+                    <DokumenSection form={form} isReadOnly={true} />
+                  </div>
+                  <div className={show === "detail-kendaraan" ? "block" : "hidden"}>
+                    <DetailKendaraanSection form={form} isReadOnly={true} />
+                  </div>
                 </div>
               </div>
             </CardContent>

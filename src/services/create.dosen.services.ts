@@ -20,7 +20,7 @@ const postDosenServices = {
   addDataJabatanfungsional: (payload: FormData) =>
     axiosInstance.post(`${endpoint.VALIDASI}/data-jabatan-fungsional`, payload),
   addDataJabatanstruktural: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/jabatanstruktural`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-jabatan-struktural`, payload),
   addDataHubungankerja: (payload: FormData) =>
     axiosInstance.post(`${endpoint.VALIDASI}/data-hubungan-kerja`, payload),
   addDataDiklat: (payload: FormData) =>
@@ -28,7 +28,7 @@ const postDosenServices = {
   addDataKemampuanbahasa: (params?: FormData) =>
     axiosInstance.post(`${endpoint.VALIDASI}/data-kemampuan-bahasa`, params),
   addDataOrganisasi: (payload: FormData) =>
-    axiosInstance.post(`${endpoint.DOSEN}/dataorganisasi`, payload),
+    axiosInstance.post(`${endpoint.VALIDASI}/data-organisasi`, payload),
   addDataAbsensiMasuk: (payload: FormData) =>
     axiosInstance.post(`${endpoint.ABSENSI}/presensi/masuk`, payload),
   addDataAbsensiKeluar: (payload: FormData) =>

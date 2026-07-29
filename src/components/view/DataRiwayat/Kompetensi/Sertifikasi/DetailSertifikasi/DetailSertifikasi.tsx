@@ -356,7 +356,7 @@ const DetailSertifikasi = () => {
                   placeholder="--Pilih Jenis Sertifikasi--"
                   required
                   queryKey="jenis-sertif-user"
-                  queryFn={(page) => adminServices.getJenisSertifikasi({ page, is_dropdown: true })}
+                  queryFn={(page) => adminServices.getMasterJenisSertifikasi({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="nama_sertifikasi"
                 />

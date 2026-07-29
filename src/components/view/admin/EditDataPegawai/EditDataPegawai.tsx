@@ -43,9 +43,11 @@ const fileSchema = z
 
 const optionalEmail = z
   .string()
-  .email("Format email tidak valid.")
+  .trim()
   .optional()
-  .or(z.literal(""));
+  .nullable()
+  .or(z.literal(""))
+  .or(z.literal("-"));
 
 const cleanOptionalString = z
   .string()
@@ -76,7 +78,7 @@ const dataPegawaiSchema = z.object({
   unit_kerja_id: z.string().min(1, "Unit kerja wajib dipilih"),
   status_aktif_id: z.string().min(1, "Status aktif wajib dipilih"),
   status_kerja: z.string().min(1, "Hubungan kerja wajib dipilih"),
-  email_pegawai: z.string().email("Format email tidak valid"),
+  email_pegawai: optionalEmail,
   email_pribadi: optionalEmail,
   golongan: cleanOptionalString,
   jabatan_fungsional_id: cleanOptionalString,
@@ -207,8 +209,8 @@ const EditDataPegawai = () => {
         unit_kerja_id: data.unit_kerja_id?.id?.toString() || data.unit_kerja_id?.toString() || "",
         status_aktif_id: data.status_aktif_id?.id?.toString() || data.status_aktif_id?.toString() || "",
         status_kerja: data.hubungan_kerja_id?.id?.toString() || data.hubungan_kerja_id?.toString() || data.status_kerja?.toString() || "",
-        email_pegawai: data.email_pegawai || "",
-        email_pribadi: data.email_pribadi || "",
+        email_pegawai: data.email_pegawai && data.email_pegawai !== "-" ? data.email_pegawai : "",
+        email_pribadi: data.email_pribadi && data.email_pribadi !== "-" ? data.email_pribadi : "",
         jabatan_fungsional_id: data.jabatan_fungsional_id?.id?.toString() || data.jabatan_fungsional_id?.toString() || "",
         // jabatan_akademik_id: data.jabatan_struktural_id?.id?.toString() || data.jabatan_struktural_id?.toString() || "",
 
@@ -312,25 +314,7 @@ const EditDataPegawai = () => {
     }
   };
 
-  const FormDataPegawai = ({ show, form }: FormDataPegawaiProps) => (
-    <div>
-      <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
-        <KepegawaianSection form={form} />
-      </div>
-      <div style={{ display: show === "domisili" ? "block" : "none" }}>
-        <DomisiliSection form={form} />
-      </div>
-      <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
-        <RekeningBankSection form={form} />
-      </div>
-      <div style={{ display: show === "dokumen" ? "block" : "none" }}>
-        <DokumenSection form={form} />
-      </div>
-      <div style={{ display: show === "detail-kendaraan" ? "block" : "none" }}>
-        <DetailKendaraanSection form={form} />
-      </div>
-    </div>
-  );
+
 
   return (
     <div className="mt-10 mb-10">
@@ -435,6 +419,7 @@ const EditDataPegawai = () => {
                   queryFn={(page) => adminServices.getAgama({ page, is_dropdown: true })}
                   itemValue="nama"
                   itemLabel="nama"
+                  initialSelectedItem={data?.agama ? { nama: data.agama } : undefined}
                 />
                 <FormFieldInput
                   form={form}
@@ -462,6 +447,15 @@ const EditDataPegawai = () => {
                   queryFn={(page) => adminServices.getStatusPernikahan({ page, is_dropdown: true })}
                   itemValue="id"
                   itemLabel="nama"
+                  initialSelectedItem={
+                    data?.status_pernikahan
+                      ? { id: data.status_pernikahan.id, nama: data.status_pernikahan.nama }
+                      : typeof data?.status_pernikahan_id === "object" && data?.status_pernikahan_id?.id
+                      ? { id: data.status_pernikahan_id.id, nama: data.status_pernikahan_id.nama || "Status Pernikahan" }
+                      : data?.status_pernikahan_id
+                      ? { id: data.status_pernikahan_id.toString(), nama: "Status Pernikahan" }
+                      : undefined
+                  }
                 />
                 <InfiniteScrollSelect
                   form={form}
@@ -474,6 +468,7 @@ const EditDataPegawai = () => {
                   queryFn={(page) => adminServices.getGolonganDarah({ page, is_dropdown: true })}
                   itemValue="golongan_darah"
                   itemLabel="golongan_darah"
+                  initialSelectedItem={data?.golongan_darah ? { golongan_darah: data.golongan_darah } : undefined}
                 />
               </div>
 
@@ -495,7 +490,21 @@ const EditDataPegawai = () => {
                   ))}
                 </div>
                 <div className="w-full pb-10">
-                  <FormDataPegawai show={show} form={form} />
+                  <div style={{ display: show === "kepegawaian" ? "block" : "none" }}>
+                    <KepegawaianSection form={form} />
+                  </div>
+                  <div style={{ display: show === "domisili" ? "block" : "none" }}>
+                    <DomisiliSection form={form} />
+                  </div>
+                  <div style={{ display: show === "rekening-bank" ? "block" : "none" }}>
+                    <RekeningBankSection form={form} />
+                  </div>
+                  <div style={{ display: show === "dokumen" ? "block" : "none" }}>
+                    <DokumenSection form={form} />
+                  </div>
+                  <div style={{ display: show === "detail-kendaraan" ? "block" : "none" }}>
+                    <DetailKendaraanSection form={form} />
+                  </div>
                 </div>
               </div>
             </CardContent>

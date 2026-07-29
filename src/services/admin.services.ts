@@ -168,6 +168,10 @@ const adminServices = {
     axiosInstance.get(`${endpoint.MASTER}/jenis-sk`, {
       params,
     }),
+  getMasterJenisSertifikasi: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jenis-sertifikasi`, {
+      params,
+    }),
   getJenisTes: (params?: {
     is_dropdown?: boolean;
     page?: number;
@@ -751,14 +755,12 @@ const adminServices = {
       params,
     });
   },
-  getJenisJabatanStruktural: (page?: any) =>
-    axiosInstance.get(`${endpoint.ADMIN}/jenis-jabatan-struktural`, {
-      params: {
-        page: page,
-      },
+  getJenisJabatanStruktural: (params?: any) =>
+    axiosInstance.get(`${endpoint.MASTER}/jabatan-struktural`, {
+      params,
     }),
   getJabatanStrukturalById: (id?: any) =>
-    axiosInstance.get(`${endpoint.ADMIN}/jabatan-struktural/${id}`),
+    axiosInstance.get(`${endpoint.MASTER}/jabatan-struktural/${id}`),
 
   getBeritaSelect: () => axiosInstance.get(`${endpoint.ADMIN}/berita`),
 
