@@ -349,9 +349,9 @@ const TambahPendidikanFormal = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
                         <Command shouldFilter={false}>
-                            <CommandInput placeholder="Ketik NIP atau nama..." value={pegawaiSearch} onValueChange={setPegawaiSearch} />
+                            <CommandInput placeholder="Ketik NIP atau nama..." value={pegawaiSearch} onValueChange={setPegawaiSearch} onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }} />
                             <CommandList>
-                                {isLoadingPegawai ? (<CommandEmpty>Mencari...</CommandEmpty>) : !pegawaiOptions?.length ? (<CommandEmpty>Pegawai tidak ditemukan.</CommandEmpty>) : (
+                                {isLoadingPegawai || pegawaiSearch !== debouncedSearch ? (<CommandEmpty>Mencari...</CommandEmpty>) : !pegawaiOptions?.length ? (<CommandEmpty>Pegawai tidak ditemukan.</CommandEmpty>) : (
                                     <CommandGroup>
                                         {pegawaiOptions.map((p) => (
                                             <CommandItem key={p.id} value={`${p.nip} ${p.nama} ${p.id}`} onSelect={() => {

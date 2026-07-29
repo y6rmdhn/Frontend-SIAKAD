@@ -194,9 +194,12 @@ const TambahKemampuanBahasa = () => {
                                             placeholder="Ketik NIP atau nama..."
                                             value={pegawaiSearch}
                                             onValueChange={setPegawaiSearch}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") e.preventDefault();
+                                            }}
                                         />
                                         <CommandList>
-                                            {isLoadingPegawai ? (
+                                            {isLoadingPegawai || pegawaiSearch !== debouncedSearch ? (
                                                 <CommandEmpty>Mencari...</CommandEmpty>
                                             ) : !pegawaiOptions?.length ? (
                                                 <CommandEmpty>Pegawai tidak ditemukan.</CommandEmpty>

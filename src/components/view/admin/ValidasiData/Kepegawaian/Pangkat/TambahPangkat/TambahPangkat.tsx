@@ -69,7 +69,7 @@ const TambahPangkat = () => {
     const [pegawaiSearch, setPegawaiSearch] = useState("");
     const [openPegawai, setOpenPegawai] = useState(false);
     const [selectedPegawai, setSelectedPegawai] = useState<PegawaiOption | null>(null);
-    const [debouncedSearch] = useDebounce(pegawaiSearch, 400);
+    const [debouncedSearch] = useDebounce(pegawaiSearch, 300);
 
     /* 
       =============================================================================
@@ -208,9 +208,12 @@ const TambahPangkat = () => {
                                             placeholder="Ketik NIP atau nama..."
                                             value={pegawaiSearch}
                                             onValueChange={setPegawaiSearch}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") e.preventDefault();
+                                            }}
                                         />
                                         <CommandList>
-                                            {isLoadingPegawai ? (
+                                            {isLoadingPegawai || pegawaiSearch !== debouncedSearch ? (
                                                 <CommandEmpty>Mencari...</CommandEmpty>
                                             ) : !pegawaiOptions?.length ? (
                                                 <CommandEmpty>Pegawai tidak ditemukan.</CommandEmpty>
