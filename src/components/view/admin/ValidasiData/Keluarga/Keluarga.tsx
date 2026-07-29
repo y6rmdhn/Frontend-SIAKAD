@@ -86,14 +86,17 @@ const Keluarga = () => {
   const { data: rawData, isError, isLoading, error } = useQuery<PaginatedData>({
     queryKey: ["keluarga-validasi", currentPage, debouncedInput, statusFilter, startDate, endDate, unitKerjaId],
     queryFn: async () => {
-      const response = await adminServices.getKeluargaValidasiData({
+      const params: Record<string, any> = {
         page: Number(currentPage),
-        search: debouncedInput,
-        status: statusFilter,
-        start_date: startDate,
-        end_date: endDate,
-        unit_kerja_id: unitKerjaId,
-      });
+        limit: 10,
+      };
+      if (debouncedInput) params.search = debouncedInput;
+      if (statusFilter && statusFilter !== "semua") params.status = statusFilter;
+      if (startDate) params.start_date = startDate;
+      if (endDate) params.end_date = endDate;
+      if (unitKerjaId) params.unit_kerja_id = unitKerjaId;
+
+      const response = await adminServices.getKeluargaValidasiData(params);
       return response.data.data;
     },
     placeholderData: (prev) => prev,

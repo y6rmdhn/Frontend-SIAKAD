@@ -147,10 +147,6 @@ const HubunganKerjaKepegawaian = () => {
       const params: Record<string, string> = {
         page: currentPage,
         limit: "10",
-        status: statusFilter,
-        start_date: startDate,
-        end_date: endDate,
-        unit_kerja_id: unitKerjaId,
       };
       if (statusFilter && statusFilter !== "semua") params.status = statusFilter;
       if (debouncedInput) params.search = debouncedInput;
