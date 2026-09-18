@@ -3,13 +3,9 @@ import { useState } from "react";
 import { MdPerson } from "react-icons/md";
 import { IoExit } from "react-icons/io5";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { clearUserData } from "@/store/userSlice";
-import { useMutation } from "@tanstack/react-query";
-import authServices from "@/services/auth.services";
-import { toast } from "sonner";
-import { ILogout } from "@/types/auth";
+import environment from "@/config/environments";
 
 const Module = () => {
   const [role, setRole] = useState<string | null>(null);
@@ -18,41 +14,14 @@ const Module = () => {
   const navigate = useNavigate();
   const userSelector = useSelector((state: RootState) => state.user);
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const dispatch = useDispatch();
-
-  const { mutate } = useMutation({
-    mutationFn: (data: ILogout) => authServices.logout(data),
-    onSuccess: (response) => {
-      localStorage.removeItem("user");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("active_mode");
-      dispatch(clearUserData());
-      navigate("/login");
-      toast.success(response.data.message ?? "Berhasil Keluar");
-    },
-    onError: () => {
-      // Tetap bersihkan state lokal meskipun request gagal
-      localStorage.removeItem("user");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("active_mode");
-      dispatch(clearUserData());
-      navigate("/login");
-    },
-  });
 
   if (!accessToken) return <Navigate to="/login" />;
 
   const handleLogout = () => {
-    const refresh_token = localStorage.getItem("refresh_token") ?? "";
-    if (!refresh_token) {
-      // Tidak ada token, langsung bersihkan state
-      localStorage.removeItem("user");
-      dispatch(clearUserData());
-      navigate("/login");
-      return;
+    const eportalUrl = environment.EPORTAL_URL;
+    if (eportalUrl) {
+      window.location.href = eportalUrl;
     }
-
-    mutate({ accessToken: accessToken ?? "", refresh_token } as any);
   };
 
   return (

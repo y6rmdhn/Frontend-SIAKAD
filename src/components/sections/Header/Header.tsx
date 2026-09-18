@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MdPerson } from "react-icons/md";
 import { IoIosHelpCircleOutline, IoMdArrowDropdown } from "react-icons/io";
 import { FaBell } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import {
   DropdownMenu,
@@ -15,12 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { BsGrid3X2GapFill, BsPersonFill } from "react-icons/bs";
 import { IoLogOutOutline } from "react-icons/io5";
-import { useMutation } from "@tanstack/react-query";
-import authServices from "@/services/auth.services";
-import { ILogout } from "@/types/auth";
-import { toast } from "sonner";
-import { useNavigate, Link } from "react-router-dom";
-import { clearUserData } from "@/store/userSlice";
+import { Link } from "react-router-dom";
 import HamburgerButton from "@/components/blocks/HamburgerMenu/Hamburger";
 import AvatarMobile from "@/components/blocks/AvatarMobile/AvatarMobile";
 import environment from "@/config/environments";
@@ -28,32 +23,17 @@ import usePegawaiProfile from "@/hooks/usePegawaiProfile";
 
 const Header = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const userSelector = useSelector((state: RootState) => state.user);
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [initials, setInitials] = useState<string>("");
 
   const { profile } = usePegawaiProfile();
   const profileData = profile;
 
-  const { mutate } = useMutation({
-    mutationFn: (data: ILogout) => authServices.logout(data),
-    onSuccess: (response) => {
-      localStorage.removeItem("user");
-      dispatch(clearUserData());
-      navigate("/login");
-      toast.success(response.data.message);
-    },
-  });
-
   const handleLogout = () => {
-    if (!accessToken || typeof accessToken !== "string") {
-      toast.error("Please login again.");
-      return;
+    const eportalUrl = environment.EPORTAL_URL;
+    if (eportalUrl) {
+      window.location.href = eportalUrl;
     }
-
-    mutate({ accessToken });
   };
 
   useEffect(() => {

@@ -5,13 +5,10 @@ import { IoExit } from "react-icons/io5";
 import { FaUser } from "react-icons/fa6";
 
 import { Navigate, useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { clearUserData } from "@/store/userSlice";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import authServices from "@/services/auth.services";
 import { toast } from "sonner";
-import { ILogout } from "@/types/auth";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -95,11 +92,8 @@ interface UserProfile {
 const Profil = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
-  const refreshToken = useSelector((state: RootState) => state.user.refreshToken);
-  const userId = useSelector((state: RootState) => state.user.id);
   const role = useSelector((state: RootState) => state.user.role);
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
 
   const [isChangePassword, setIsChangePassword] = useState(false);
   const [isChangeProfileModalOpen, setIsChangeProfileModalOpen] =
@@ -203,32 +197,13 @@ const Profil = () => {
       },
     });
 
-  // Mutation untuk logout
-  const { mutate: logoutMutation, isPending: isLoggingOut } = useMutation({
-    mutationFn: (data: ILogout) => authServices.logout(data),
-    onSuccess: (response) => {
-      localStorage.removeItem("user");
-      dispatch(clearUserData());
-      navigate("/login");
-      toast.success(response.data.message || "Berhasil keluar.");
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Gagal keluar.");
-    },
-  });
-
   if (!accessToken) return <Navigate to="/login" />;
 
   const handleLogout = () => {
-    if (!accessToken || typeof accessToken !== "string") {
-      toast.error("Token akses tidak valid. Silakan login kembali.");
-      return;
+    const eportalUrl = environment.EPORTAL_URL;
+    if (eportalUrl) {
+      window.location.href = eportalUrl;
     }
-    logoutMutation({
-      accessToken: accessToken,
-      refresh_token: refreshToken || "",
-      userId: userId,
-    } as any);
   };
 
   const onSubmitPasswordChange = (
@@ -290,10 +265,8 @@ const Profil = () => {
                 <Button
                   onClick={handleLogout}
                   className="bg-[#00325B]/50 hover:bg-[#00325B]/70 cursor-pointer rounded-md px-4 py-2 flex items-center gap-2"
-                  disabled={isLoggingOut}
                 >
-                  <IoExit className="text-2xl text-white" />{" "}
-                  {isLoggingOut ? "Keluar..." : "Keluar"}
+                  <IoExit className="text-2xl text-white" /> Keluar
                 </Button>
               </div>
             </div>
