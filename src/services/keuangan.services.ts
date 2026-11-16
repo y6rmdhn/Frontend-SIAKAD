@@ -1,0 +1,95 @@
+import axiosInstance from "@/lib/axios/axiosInstance";
+import endpoint from "./endpoint.constant";
+
+const BASE = `${endpoint.KEUANGAN}/slip`;
+
+export interface PenerimaSlip {
+  id: string;
+  nama: string;
+  nip: string | null;
+  nidn: string | null;
+  email: string | null;
+  role: string | null;
+  unit_kerja: string | null;
+}
+
+export type StatusKirim = "pending" | "terkirim" | "gagal" | "dilewati";
+
+export interface ItemSlip {
+  id: string;
+  pegawai_id: string;
+  nama: string;
+  nip: string | null;
+  nidn: string | null;
+  email: string | null;
+  nominal: number;
+  keterangan: string;
+  email_status: StatusKirim;
+  email_error: string | null;
+  push_status: StatusKirim;
+  push_error: string | null;
+}
+
+export interface RingkasanSlip {
+  jumlah_item: number;
+  jumlah_penerima: number;
+  total_nominal: number;
+}
+
+export interface HitungKirim {
+  email: Record<string, number>;
+  push: Record<string, number>;
+}
+
+export interface DraftSlip {
+  id: string;
+  status: string;
+  items: ItemSlip[];
+  ringkasan: RingkasanSlip;
+}
+
+export interface RiwayatSlip {
+  id: string;
+  judul: string | null;
+  status: string;
+  dikirim_pada: string | null;
+  jumlah_item: number;
+  jumlah_penerima: number;
+  total_nominal: number;
+  jumlah_gagal: number;
+}
+
+export interface DetailRiwayatSlip extends DraftSlip {
+  judul: string | null;
+  dikirim_pada: string | null;
+  hasil: HitungKirim;
+}
+
+const unwrap = <T>(r: { data: { data: T } }) => r.data.data;
+
+const keuanganServices = {
+  cariPenerima: (params: { q?: string; page?: number; limit?: number }) =>
+    axiosInstance.get(`${BASE}/penerima`, { params }).then(unwrap<PenerimaSlip[]>),
+  getDraft: () => axiosInstance.get(`${BASE}/draft`).then(unwrap<DraftSlip>),
+  tambahItems: (items: { pegawai_id: string; nominal: string; keterangan: string }[]) =>
+    axiosInstance.post(`${BASE}/draft/items`, { items }).then(unwrap<DraftSlip>),
+  ubahItem: (id: string, body: { nominal?: string; keterangan?: string }) =>
+    axiosInstance.put(`${BASE}/draft/items/${id}`, body).then(unwrap<DraftSlip>),
+  hapusItem: (id: string) =>
+    axiosInstance.delete(`${BASE}/draft/items/${id}`).then(unwrap<DraftSlip>),
+  kosongkanDraft: () => axiosInstance.delete(`${BASE}/draft`).then(unwrap<DraftSlip>),
+  kirim: (judul?: string) =>
+    axiosInstance.post(`${BASE}/draft/kirim`, { judul }).then(
+      unwrap<{ batch_id: string; hasil: HitungKirim; items: ItemSlip[] }>
+    ),
+  getRiwayat: (params: { page?: number; limit?: number }) =>
+    axiosInstance.get(`${BASE}/riwayat`, { params }).then(unwrap<RiwayatSlip[]>),
+  getDetailRiwayat: (id: string) =>
+    axiosInstance.get(`${BASE}/riwayat/${id}`).then(unwrap<DetailRiwayatSlip>),
+  kirimUlang: (id: string) =>
+    axiosInstance.post(`${BASE}/riwayat/${id}/kirim-ulang`).then(
+      unwrap<{ batch_id: string; diulang: number; hasil: HitungKirim }>
+    ),
+};
+
+export default keuanganServices;

@@ -20,6 +20,7 @@ import operasionalAdminNav from "@/constant/NavbarMenu/operasional";
 import referensiAdminNav from "@/constant/NavbarMenu/referensi";
 import validasiDataAdminNav from "@/constant/NavbarMenu/validasiData";
 import payroll from "@/constant/NavbarMenu/payroll/payroll";
+import keuangan from "@/constant/NavbarMenu/keuangan/keuangan";
 
 const HamburgerButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -223,6 +224,15 @@ const HamburgerButton = () => {
                     </AccordionTrigger>
                     <AccordionContent>
                       {renderNavItems(payroll, "operasional-admin")}
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="keuangan-admin">
+                    <AccordionTrigger className="text-xs">
+                      Keuangan
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {renderNavItems(keuangan, "keuangan-admin")}
                     </AccordionContent>
                   </AccordionItem>
 

@@ -10,6 +10,13 @@ export default defineConfig({
     setupFiles: "./src/setupTests.ts",
   },
   plugins: [react(), tailwindcss()],
+  // Build produksi: tanpa source map & tanpa console.log/debug/info (log API/token
+  // tidak boleh terbaca di DevTools pengunjung).
+  build: { sourcemap: false },
+  esbuild: {
+    pure: ["console.log", "console.debug", "console.info"],
+    drop: ["debugger"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

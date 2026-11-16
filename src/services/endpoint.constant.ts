@@ -8,7 +8,8 @@ const endpoint = {
   VALIDASI: "validasi",
   ABSENSI: "absensi",
   STATISTIK: "statistik",
-  GAJI: "penggajian"
+  GAJI: "penggajian",
+  KEUANGAN: "keuangan"
 };
 
 export default endpoint;

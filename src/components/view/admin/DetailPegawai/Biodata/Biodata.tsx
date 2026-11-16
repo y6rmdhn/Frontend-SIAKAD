@@ -17,6 +17,9 @@ import {
   formatDistricts,
 } from "@/services/wilayahService";
 
+// Alamat penyimpanan berkas pegawai: atur via VITE_STORAGE_URL (tanpa slash akhir).
+const STORAGE_URL = (import.meta.env.VITE_STORAGE_URL as string | undefined) ?? "/storage";
+
 // --- START DEFINISI TIPE ---
 
 // Tipe untuk hubungan kerja
@@ -280,7 +283,7 @@ const Biodata = () => {
   const dataAlamatLeft = [
     data?.file_sertifikasi_dosen ? (
       <a
-        href={`http://103.158.196.106/storage/${data.file_sertifikasi_dosen}`}
+        href={`${STORAGE_URL}/${data.file_sertifikasi_dosen}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline"
@@ -327,7 +330,7 @@ const Biodata = () => {
     getSuku?.nama_suku || "-",
     data?.file_ktp ? (
       <a
-        href={`http://103.158.196.106/storage/${data.file_ktp}`}
+        href={`${STORAGE_URL}/${data.file_ktp}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline"
@@ -343,7 +346,7 @@ const Biodata = () => {
   const dataRekeningLeft = [
     data?.file_kk ? (
       <a
-        href={`http://103.158.196.106/storage/${data.file_kk}`}
+        href={`${STORAGE_URL}/${data.file_kk}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline"
@@ -360,7 +363,7 @@ const Biodata = () => {
   const dataRekeningRight = [
     data?.file_rekening ? (
       <a
-        href={`http://103.158.196.106/storage/${data.file_rekening}`}
+        href={`${STORAGE_URL}/${data.file_rekening}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline"
@@ -378,7 +381,7 @@ const Biodata = () => {
     data?.karpeg || "-",
     data?.file_karpeg ? (
       <a
-        href={`http://103.158.196.106/storage/${data.file_karpeg}`}
+        href={`${STORAGE_URL}/${data.file_karpeg}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline"
@@ -391,7 +394,7 @@ const Biodata = () => {
     data?.npwp || "-",
     data?.file_npwp ? (
       <a
-        href={`http://103.158.196.106/storage/${data.file_npwp}`}
+        href={`${STORAGE_URL}/${data.file_npwp}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-500 hover:underline"

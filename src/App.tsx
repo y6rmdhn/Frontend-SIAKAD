@@ -1046,6 +1046,7 @@ const GeneratePayroll = lazy(
 );
 
 const SlipGaji = lazy(() => import("./pages/admin/payroll/slipGaji"));
+const KirimSlipPage = lazy(() => import("./pages/admin/keuangan/kirimSlip"));
 const PotongGajiPage = lazy(
   () => import("./pages/admin/referensi/kepegawaian/potongGaji")
 );
@@ -1567,6 +1568,9 @@ function App() {
             />
 
             <Route path="payroll/slip-gaji" Component={SlipGaji} />
+
+            {/* KEUANGAN */}
+            <Route path="keuangan/kirim-slip" Component={KirimSlipPage} />
 
             {/* DETAIL PEGAWAI */}
             <Route path="detail-pegawai">

@@ -18,6 +18,7 @@ import operasional from "@/constant/NavbarMenu/operasional";
 import validasiData from "@/constant/NavbarMenu/validasiData";
 import referensi from "@/constant/NavbarMenu/referensi";
 import payroll from "@/constant/NavbarMenu/payroll/payroll";
+import keuangan from "@/constant/NavbarMenu/keuangan/keuangan";
 
 // Definisikan tipe untuk setiap item di dalam menu
 interface MenuItem {
@@ -77,6 +78,7 @@ const Navigation = () => {
         ))}
 
         <MenuGroup title="Payroll" items={payroll} path="/admin/payroll" />
+        <MenuGroup title="Keuangan" items={keuangan} path="/admin/keuangan" />
         <MenuGroup
           title="Operasional"
           items={operasional}
