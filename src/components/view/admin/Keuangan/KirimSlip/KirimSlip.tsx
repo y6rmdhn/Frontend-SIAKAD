@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Plus, RefreshCw, Search, Send, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Plus, RefreshCw, RotateCcw, Save, Search, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -697,6 +697,160 @@ const Riwayat = () => {
   );
 };
 
+// ── Template pesan (kalimat utama surat, pakai variabel) ─────────────────────
+const DATA_CONTOH: Record<string, string> = {
+  nama: "Budi Santoso",
+  instansi: "UNIVERSITAS IBN KHALDUN BOGOR",
+  nominal: "500.000",
+  bank: "BSI",
+  no_rekening: "7123456789",
+  no_ref: "REF-001",
+  tanggal: "18 November 2026",
+  judul: "Honor November 2026",
+  keterangan: "Honor mengajar semester ganjil",
+};
+
+const renderPratinjau = (template: string) =>
+  template.replace(/\{\{\s*([a-z_]+)\s*\}\}/gi, (full, key) => DATA_CONTOH[key] ?? full);
+
+const TemplatePesan = () => {
+  const qc = useQueryClient();
+  const [isi, setIsi] = useState("");
+  const [dimuat, setDimuat] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const q = useQuery({
+    queryKey: ["slip-template"],
+    queryFn: () => keuanganServices.getTemplate(),
+  });
+
+  useEffect(() => {
+    if (q.data && !dimuat) {
+      setIsi(q.data.template);
+      setDimuat(true);
+    }
+  }, [q.data, dimuat]);
+
+  const simpan = useMutation({
+    mutationFn: () => keuanganServices.simpanTemplate(isi.trim()),
+    onSuccess: (r) => {
+      toast.success("Template pesan disimpan.");
+      qc.setQueryData(["slip-template"], r);
+    },
+    onError: (e) => toast.error(pesanError(e, "Gagal menyimpan template.")),
+  });
+
+  const sisipkan = (key: string) => {
+    const token = `{{${key}}}`;
+    const el = textareaRef.current;
+    if (!el) {
+      setIsi((s) => s + token);
+      return;
+    }
+    const start = el.selectionStart ?? isi.length;
+    const end = el.selectionEnd ?? isi.length;
+    const baru = isi.slice(0, start) + token + isi.slice(end);
+    setIsi(baru);
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + token.length, start + token.length);
+    });
+  };
+
+  const berubah = q.data ? isi.trim() !== q.data.template : false;
+
+  if (q.isLoading) {
+    return (
+      <Card>
+        <CardContent className="pt-6 text-center text-muted-foreground">Memuat…</CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Template Pesan Kirim Slip</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Kalimat utama yang muncul di email & notifikasi mobile (bagian kop surat, salam, dan
+            daftar PENDAPATAN tetap baku). Klik variabel di bawah untuk menyisipkannya ke posisi
+            kursor.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {q.data?.variabel.map((v) => (
+              <Button
+                key={v.key}
+                type="button"
+                variant="outline"
+                size="sm"
+                title={v.label}
+                onClick={() => sisipkan(v.key)}
+              >
+                {`{{${v.key}}}`}
+              </Button>
+            ))}
+          </div>
+
+          <Textarea
+            ref={textareaRef}
+            rows={4}
+            maxLength={2000}
+            value={isi}
+            onChange={(e) => setIsi(e.target.value)}
+            placeholder="mis. Bersama ini kami informasikan bahwa {{instansi}} telah mentransfer Dana sebesar Rp {{nominal}} ke Nomor Rekening {{bank}} {{no_rekening}} pada tanggal {{tanggal}}."
+          />
+          <p className="text-xs text-muted-foreground text-right">{isi.length}/2000 karakter</p>
+
+          <div className="space-y-2">
+            <Label>Pratinjau (pakai data contoh)</Label>
+            <div className="rounded-md border bg-muted/40 p-4 text-sm leading-relaxed">
+              <p className="mb-2 font-medium">Yth. {DATA_CONTOH.nama}</p>
+              <p>{renderPratinjau(isi) || "(kosong)"}</p>
+              <p className="mt-3 font-semibold">PENDAPATAN</p>
+              <p>
+                {DATA_CONTOH.keterangan} : {DATA_CONTOH.nominal} (Ref: {DATA_CONTOH.no_ref})
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            {q.data?.updated_at ? (
+              <p className="text-xs text-muted-foreground">Terakhir diubah: {tgl(q.data.updated_at)}</p>
+            ) : (
+              <p className="text-xs text-muted-foreground">Belum pernah diubah (masih bawaan default).</p>
+            )}
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => q.data && setIsi(q.data.default)}
+              >
+                <RotateCcw className="mr-2 h-4 w-4" /> Reset ke Default
+              </Button>
+              <Button
+                size="sm"
+                disabled={!berubah || !isi.trim() || simpan.isPending}
+                onClick={() => simpan.mutate()}
+              >
+                {simpan.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
+                Simpan
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 // ── Halaman ──────────────────────────────────────────────────────────────────
 const KirimSlip = () => {
   const qc = useQueryClient();
@@ -706,10 +860,14 @@ const KirimSlip = () => {
         <TabsList>
           <TabsTrigger value="draft">Kirim Slip</TabsTrigger>
           <TabsTrigger value="riwayat">Riwayat</TabsTrigger>
+          <TabsTrigger value="template">Template Pesan</TabsTrigger>
         </TabsList>
         <TabsContent value="draft" className="space-y-4">
           <FormTambah onDone={() => qc.invalidateQueries({ queryKey: ["slip-draft"] })} />
           <DraftCard />
+        </TabsContent>
+        <TabsContent value="template">
+          <TemplatePesan />
         </TabsContent>
         <TabsContent value="riwayat">
           <Riwayat />

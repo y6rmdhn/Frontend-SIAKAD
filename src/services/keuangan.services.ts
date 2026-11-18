@@ -68,6 +68,18 @@ export interface DetailRiwayatSlip extends DraftSlip {
   hasil: HitungKirim;
 }
 
+export interface VariabelTemplate {
+  key: string;
+  label: string;
+}
+
+export interface TemplatePesan {
+  template: string;
+  updated_at: string | null;
+  default: string;
+  variabel: VariabelTemplate[];
+}
+
 const unwrap = <T>(r: { data: { data: T } }) => r.data.data;
 
 const keuanganServices = {
@@ -103,6 +115,9 @@ const keuanganServices = {
     axiosInstance.post(`${BASE}/riwayat/${id}/kirim-ulang`).then(
       unwrap<{ batch_id: string; diulang: number; hasil: HitungKirim }>
     ),
+  getTemplate: () => axiosInstance.get(`${BASE}/template`).then(unwrap<TemplatePesan>),
+  simpanTemplate: (template: string) =>
+    axiosInstance.put(`${BASE}/template`, { template }).then(unwrap<TemplatePesan>),
 };
 
 export default keuanganServices;
