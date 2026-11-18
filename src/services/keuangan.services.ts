@@ -22,6 +22,9 @@ export interface ItemSlip {
   nip: string | null;
   nidn: string | null;
   email: string | null;
+  nama_bank: string | null;
+  no_rekening: string | null;
+  no_ref: string | null;
   nominal: number;
   keterangan: string;
   email_status: StatusKirim;
@@ -71,10 +74,20 @@ const keuanganServices = {
   cariPenerima: (params: { q?: string; page?: number; limit?: number }) =>
     axiosInstance.get(`${BASE}/penerima`, { params }).then(unwrap<PenerimaSlip[]>),
   getDraft: () => axiosInstance.get(`${BASE}/draft`).then(unwrap<DraftSlip>),
-  tambahItems: (items: { pegawai_id: string; nominal: string; keterangan: string }[]) =>
-    axiosInstance.post(`${BASE}/draft/items`, { items }).then(unwrap<DraftSlip>),
-  ubahItem: (id: string, body: { nominal?: string; keterangan?: string }) =>
-    axiosInstance.put(`${BASE}/draft/items/${id}`, body).then(unwrap<DraftSlip>),
+  tambahItems: (
+    items: {
+      pegawai_id: string;
+      nominal: string;
+      keterangan: string;
+      nomor_rekening?: string;
+      bank_name?: string;
+      no_ref?: string;
+    }[]
+  ) => axiosInstance.post(`${BASE}/draft/items`, { items }).then(unwrap<DraftSlip>),
+  ubahItem: (
+    id: string,
+    body: { nominal?: string; keterangan?: string; nomor_rekening?: string; bank_name?: string; no_ref?: string }
+  ) => axiosInstance.put(`${BASE}/draft/items/${id}`, body).then(unwrap<DraftSlip>),
   hapusItem: (id: string) =>
     axiosInstance.delete(`${BASE}/draft/items/${id}`).then(unwrap<DraftSlip>),
   kosongkanDraft: () => axiosInstance.delete(`${BASE}/draft`).then(unwrap<DraftSlip>),

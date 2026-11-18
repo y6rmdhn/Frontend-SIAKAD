@@ -81,6 +81,9 @@ const FormTambah = ({ onDone }: { onDone: () => void }) => {
   const [dipilih, setDipilih] = useState<Record<string, PenerimaSlip>>({});
   const [nominal, setNominal] = useState("");
   const [keterangan, setKeterangan] = useState("");
+  const [nomorRekening, setNomorRekening] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [noRef, setNoRef] = useState("");
 
   useEffect(() => {
     const t = setTimeout(() => setQ(kata.trim()), 350);
@@ -99,6 +102,9 @@ const FormTambah = ({ onDone }: { onDone: () => void }) => {
           pegawai_id: id,
           nominal,
           keterangan: keterangan.trim(),
+          ...(nomorRekening.trim() && { nomor_rekening: nomorRekening.trim() }),
+          ...(bankName.trim() && { bank_name: bankName.trim() }),
+          ...(noRef.trim() && { no_ref: noRef.trim() }),
         }))
       ),
     onSuccess: () => {
@@ -106,6 +112,9 @@ const FormTambah = ({ onDone }: { onDone: () => void }) => {
       setDipilih({});
       setNominal("");
       setKeterangan("");
+      setNomorRekening("");
+      setBankName("");
+      setNoRef("");
       onDone();
     },
     onError: (e) => toast.error(pesanError(e, "Gagal menambahkan ke draft.")),
@@ -207,9 +216,41 @@ const FormTambah = ({ onDone }: { onDone: () => void }) => {
             />
           </div>
         </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="space-y-2">
+            <Label htmlFor="nomor-rekening">Nomor Rekening (opsional)</Label>
+            <Input
+              id="nomor-rekening"
+              placeholder="Kosongkan = pakai data pegawai"
+              value={nomorRekening}
+              onChange={(e) => setNomorRekening(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="bank-name">Nama Bank (opsional)</Label>
+            <Input
+              id="bank-name"
+              placeholder="Kosongkan = pakai data pegawai"
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="no-ref">Nomor Referensi (opsional)</Label>
+            <Input
+              id="no-ref"
+              placeholder="mis. no bukti transfer"
+              value={noRef}
+              onChange={(e) => setNoRef(e.target.value)}
+            />
+          </div>
+        </div>
+
         <p className="text-xs text-muted-foreground">
           Nominal & keterangan yang sama diterapkan ke semua penerima terpilih. Bisa diubah per
-          baris di draft. Ulangi untuk penerima lain dengan nominal berbeda.
+          baris di draft. Rekening/bank/referensi kosong akan otomatis memakai data rekening
+          pegawai. Ulangi untuk penerima lain dengan nominal berbeda.
         </p>
 
         <Button disabled={!siap || tambah.isPending} onClick={() => tambah.mutate()}>
@@ -232,6 +273,9 @@ const DraftCard = () => {
   const [edit, setEdit] = useState<ItemSlip | null>(null);
   const [eNominal, setENominal] = useState("");
   const [eKet, setEKet] = useState("");
+  const [eRekening, setERekening] = useState("");
+  const [eBank, setEBank] = useState("");
+  const [eRef, setERef] = useState("");
   const [konfirmasi, setKonfirmasi] = useState(false);
   const [kosongkanOpen, setKosongkanOpen] = useState(false);
 
@@ -251,7 +295,13 @@ const DraftCard = () => {
   });
   const ubah = useMutation({
     mutationFn: () =>
-      keuanganServices.ubahItem(edit!.id, { nominal: eNominal, keterangan: eKet.trim() }),
+      keuanganServices.ubahItem(edit!.id, {
+        nominal: eNominal,
+        keterangan: eKet.trim(),
+        nomor_rekening: eRekening.trim(),
+        bank_name: eBank.trim(),
+        no_ref: eRef.trim(),
+      }),
     onSuccess: () => {
       setEdit(null);
       refresh();
@@ -293,6 +343,9 @@ const DraftCard = () => {
     setEdit(it);
     setENominal(String(it.nominal));
     setEKet(it.keterangan);
+    setERekening(it.no_rekening ?? "");
+    setEBank(it.nama_bank ?? "");
+    setERef(it.no_ref ?? "");
   };
 
   return (
@@ -313,20 +366,21 @@ const DraftCard = () => {
                 <TableHead>Penerima</TableHead>
                 <TableHead className="text-right">Nominal</TableHead>
                 <TableHead>Keterangan</TableHead>
+                <TableHead>Rekening Tujuan</TableHead>
                 <TableHead className="w-24" />
               </TableRow>
             </TableHeader>
             <TableBody>
               {draftQ.isLoading && (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center text-muted-foreground">
                     Memuat…
                   </TableCell>
                 </TableRow>
               )}
               {!draftQ.isLoading && items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center text-muted-foreground">
                     Draft kosong. Pilih penerima di atas lalu tambahkan.
                   </TableCell>
                 </TableRow>
@@ -343,6 +397,15 @@ const DraftCard = () => {
                   <TableCell className="text-right whitespace-nowrap">{rupiah(it.nominal)}</TableCell>
                   <TableCell className="max-w-xs whitespace-pre-wrap break-words">
                     {it.keterangan}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-sm">
+                    {it.nama_bank && it.no_rekening ? (
+                      <>
+                        {it.nama_bank} {it.no_rekening}
+                      </>
+                    ) : (
+                      <span className="text-muted-foreground">-</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-end gap-1">
@@ -417,6 +480,20 @@ const DraftCard = () => {
             <div className="space-y-2">
               <Label>Keterangan</Label>
               <Textarea rows={3} maxLength={500} value={eKet} onChange={(e) => setEKet(e.target.value)} />
+            </div>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Nomor Rekening</Label>
+                <Input value={eRekening} onChange={(e) => setERekening(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Nama Bank</Label>
+                <Input value={eBank} onChange={(e) => setEBank(e.target.value)} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Nomor Referensi</Label>
+              <Input value={eRef} onChange={(e) => setERef(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
@@ -572,6 +649,7 @@ const Riwayat = () => {
                 <TableRow>
                   <TableHead>Penerima</TableHead>
                   <TableHead className="text-right">Nominal</TableHead>
+                  <TableHead>Rekening Tujuan</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Push UCL</TableHead>
                 </TableRow>
@@ -584,6 +662,9 @@ const Riwayat = () => {
                       <p className="text-xs text-muted-foreground">{it.keterangan}</p>
                     </TableCell>
                     <TableCell className="text-right whitespace-nowrap">{rupiah(it.nominal)}</TableCell>
+                    <TableCell className="whitespace-nowrap text-sm">
+                      {it.nama_bank && it.no_rekening ? `${it.nama_bank} ${it.no_rekening}` : "-"}
+                    </TableCell>
                     <TableCell>
                       <StatusBadge status={it.email_status} error={it.email_error} />
                     </TableCell>
